@@ -11,8 +11,8 @@ export default new Router({
       component: require('@/components/LoginForm').default
     ***REMOVED***,
     {
-      path: '/wallets',
-      name: 'wallets-view',
+      path: '/wallet',
+      name: 'wallet-view',
       component: require('@/components/WalletView').default
     ***REMOVED***,
     {
