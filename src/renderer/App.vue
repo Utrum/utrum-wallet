@@ -2,19 +2,27 @@
   <div id="app">
     <button @click="$store.commit('USER_LOGIN')">LOGIN</button>
     <button @click="$store.commit('USER_LOGOUT')">LOGOUT</button>
-    <wallet-view></wallet-view>
-    <!-- <login-form v-if="$store.state.User.loggedIn"></login-form>
-    <router-view v-else></router-view> -->
+    <login-form v-if="!userLoggedIn"></login-form>
+    <router-view v-else></router-view>
   </div>
 </template>
 
 <script>
   export default {
     components: {
-      'wallet-view': require('@/components/WalletView').default,
       'login-form': require('@/components/LoginForm').default
     },
-    name: 'vue-dico'
+    name: 'vue-dico',
+    data () {
+      return {
+        
+      }
+    },
+    computed: {
+      userLoggedIn() {
+        return this.$store.state.User.loggedIn
+      }
+    }
   }
 </script>
 

@@ -8,8 +8,8 @@
                 <div class="row">
                     <div class="col">
                         <form id="login" class="row login" method="POST" enctype="multipart/form-data">
-                            <textarea onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="passphrase" class="" type="text" name="input-login"></textarea>
-                            <button :class="btnSendStatus"><img src="~@/assets/icon-send-login.svg"></button>
+                            <textarea v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="passphrase" class="" type="text" name="input-login"></textarea>
+                            <button @click.prevent="validatePassPhrase()" :class="btnSendStatus"><img src="~@/assets/icon-send-login.svg"></button>
                         </form>
                     </div>
                 </div>
@@ -27,9 +27,18 @@ export default {
 	name: 'login-form',
   data() {
     return {
+			passphrase: '',
       btnSendStatus: 'btn-send-enabled',
     }
-  }
+	},
+	methods: {
+		validatePassPhrase() {
+			if(this.passphrase) {
+				$store.state.commit("USER_LOGIN")
+				$router.push('/wallet')
+			}
+		}
+	}
 }
 </script>
 

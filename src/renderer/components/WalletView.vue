@@ -1,5 +1,5 @@
 <template>
-  
+  <h1>Welcome in the Monaize Wallet :-)</h1>
 </template>
 
 <script>
