@@ -33,9 +33,10 @@
 	***REMOVED***,
 	methods: {
 		validatePassPhrase() {
+			console.log(this.passphrase)
 			if(this.passphrase) {
-				$store.state.commit("USER_LOGIN")
-				$router.push('/wallet')
+				this.$store.dispatch("login", passphrase)
+				this.$router.push('/wallet')
 			***REMOVED***
 		***REMOVED***
 	***REMOVED***
