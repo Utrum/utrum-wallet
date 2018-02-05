@@ -34,8 +34,8 @@ export default {
 	methods: {
 		validatePassPhrase() {
 			if(this.passphrase) {
-				$store.state.commit("USER_LOGIN")
-				$router.push('/wallet')
+				this.$store.commit("USER_LOGIN")
+				this.$router.push('/wallet')
 			}
 		}
 	}
