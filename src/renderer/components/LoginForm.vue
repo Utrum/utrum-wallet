@@ -43,6 +43,13 @@
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #fafafa;
+***REMOVED***
+
 #login-background {
 	width: 100%;
 	position: absolute;
@@ -155,5 +162,22 @@ textarea {
 	padding: 10px;
 	padding-right: 15px;
 	padding-left: 15px;
+***REMOVED***
+
+.row-main-item {
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+	margin-bottom: 20px;
+***REMOVED***
+
+.col {
+	flex-grow: 1;
+***REMOVED***
+
+.row {
+	margin: 0px;
+	display: flex;
+	justify-content: space-between;
 ***REMOVED***
 </style>
