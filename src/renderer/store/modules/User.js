@@ -29,8 +29,6 @@ const mutations = {
 
 const actions = {
   login ({ commit }, passphrase) {
-    console.log('LOGIN ACTION')
-    console.log(passphrase.value)
     commit('SET_PASSPHRASE', passphrase.value)
     commit('USER_LOGIN')
   },
