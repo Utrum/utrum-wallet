@@ -34,7 +34,7 @@
 	methods: {
 		validatePassPhrase() {
 			if(this.passphrase) {
-				this.$store.commit("USER_LOGIN")
+				this.$store.dispatch("toggleLoggedIn")
 				this.$router.push('/wallet')
 			***REMOVED***
 		***REMOVED***
