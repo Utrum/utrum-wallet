@@ -123,6 +123,7 @@ a, a:hover, a:focus {
 #sidebar {
   font-weight: 600;
   font-size: 0.9em;
+  padding-right: 0px;
   width: 50%;
   padding: 20px;
   min-width: 225px;
