@@ -16,7 +16,7 @@ export default new Router({
       component: require('@/components/WalletView').default,
       children: [
         {
-          path: '/', 
+          path: '/balance', 
           name: 'balance',
           component: require('@/components/WalletViews/Balance').default
         ***REMOVED***,
