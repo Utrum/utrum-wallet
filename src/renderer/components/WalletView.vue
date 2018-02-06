@@ -5,7 +5,6 @@
       <router-link tag="li" to="balance">[balance]</router-link>
       <router-link tag="li" to="buy">[buy]</router-link>
       <router-link tag="li" to="withdraw">[withdraw]</router-link>
-
     </ul>
     <router-view></router-view>
   </div>
