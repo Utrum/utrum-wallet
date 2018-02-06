@@ -1,12 +1,9 @@
 <template>
   <div id="wallet-view">
-    <h1>Welcome in the Monaize Wallet :-)</h1>
-    <ul>
-      <router-link tag="button" class="btn btn-primary" to="balance">[balance]</router-link>
-      <router-link tag="button" class="btn btn-primary" to="buy">[buy]</router-link>
-      <router-link tag="button" class="btn btn-primary" to="withdraw">[withdraw]</router-link>
-    </ul>
-    <router-view></router-view>
+    <sidebar></sidebar>
+    <div id="content">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -15,7 +12,8 @@
 ***REMOVED***
   name: 'wallet-view',
   components: {
-    'balance': require('@/components/WalletViews/Balance').default
+    'balance': require('@/components/WalletViews/Balance').default,
+    'sidebar': require('@/components/SideBar').default
   ***REMOVED***,
   mounted() {
     this.init()
