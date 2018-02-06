@@ -2,9 +2,9 @@
   <div id="wallet-view">
     <h1>Welcome in the Monaize Wallet :-)</h1>
     <ul>
-      <router-link tag="li" to="balance">[balance]</router-link>
-      <router-link tag="li" to="buy">[buy]</router-link>
-      <router-link tag="li" to="withdraw">[withdraw]</router-link>
+      <router-link tag="button" class="btn btn-primary" to="balance">[balance]</router-link>
+      <router-link tag="button" class="btn btn-primary" to="buy">[buy]</router-link>
+      <router-link tag="button" class="btn btn-primary" to="withdraw">[withdraw]</router-link>
     </ul>
     <router-view></router-view>
   </div>
