@@ -1,5 +1,15 @@
 const state = {
-  loggedIn: false
+  loggedIn: false,
+  passphrase: ''
+}
+
+const getters = {
+  isLogged: (state) => {
+    return state.loggedIn
+  },
+  passphrase: (state) => {
+    return state.passphrase
+  }
 }
 
 const mutations = {
@@ -8,21 +18,26 @@ const mutations = {
   },
   USER_LOGOUT (state) {
     state.loggedIn = false
+  },
+  SET_PASSPHRASE (state, passphrase) {
+    state.passphrase = passphrase
   }
 }
 
 const actions = {
-  toggleLoggedIn (context) {
-    if (state.loggedIn) {
-      this.commit('USER_LOGOUT')
-    } else {
-      this.commit('USER_LOGIN')
-    }
+  login ({ commit }, passphrase) {
+    commit('SET_PASSPHRASE', passphrase)
+    commit('USER_LOGIN')
+  },
+  logout({commit}) {
+    commit('SET_PASSPHRASE', '')
+    commit('USER_LOGOUT')
   }
 }
 
 export default {
   state,
+  getters,
   mutations,
   actions
 }

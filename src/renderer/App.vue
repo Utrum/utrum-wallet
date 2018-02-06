@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <button v-if="!userLoggedIn" @click="$store.dispatch('toggleLoggedIn')">LOGIN</button>
-    <button v-else @click="$store.dispatch('toggleLoggedIn')">LOGOUT</button>
+    <button v-if="userLoggedIn" @click="$store.dispatch('logout')">LOGOUT</button>
     <login-form v-if="!userLoggedIn"></login-form>
     <router-view v-else></router-view>
   </div>
