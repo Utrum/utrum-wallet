@@ -1,7 +1,7 @@
 <template>
   <div id="balance-view">
     <h2>Balance View</h2>
-    <div v-for="wallet in wallets" v-bind:key="wallet.address">
+    <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
       <balance-item :wallet="wallet"/>
     </div>
   </div>
