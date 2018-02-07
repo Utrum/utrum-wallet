@@ -15,7 +15,7 @@
     'balance': require('@/components/WalletViews/Balance').default,
     'sidebar': require('@/components/SideBar').default
   ***REMOVED***,
-  mounted() {
+  created() {
     this.init()
   ***REMOVED***,
   methods: {

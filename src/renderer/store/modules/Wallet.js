@@ -1,4 +1,4 @@
-import { Wallet, coins ***REMOVED***  from 'libwallet'
+import { Wallet, coins ***REMOVED***  from 'libwallet-mnz'
 
 ***REMOVED***
   wallets: [],
@@ -20,7 +20,7 @@ import { Wallet, coins ***REMOVED***  from 'libwallet'
     let coin = coins.get(payload.coin)
     let wallet = new Wallet(payload.passphrase, payload.coin, 0)
     wallet.ticker = payload.coin.ticker
-    state.wallets.push(wallet)
+    state.wallets.push(Object.assign({***REMOVED***, wallet))
   ***REMOVED***,
   SET_CALCULATING (state, calculating) {
     state.calculating = calculating
@@ -31,12 +31,13 @@ import { Wallet, coins ***REMOVED***  from 'libwallet'
 ***REMOVED***
 
 ***REMOVED***
-  initWallets ({commit***REMOVED***, passphrase) {
-    console.log(coins.all)
+  initWallets ({commit, dispatch***REMOVED***, passphrase) {
+    if(state.wallets.length > 0) 
+      dispatch('destroyWallets')
     commit('SET_CALCULATING', true)
     coins.all.forEach(coin => {
       let payload = {
-        coin: coin,
+        coin: Object.assign({***REMOVED***, coin),
         passphrase: passphrase
       ***REMOVED***
       commit('INIT_WALLET', payload)
