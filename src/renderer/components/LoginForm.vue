@@ -36,7 +36,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 #login-background {
 	width: 100%;

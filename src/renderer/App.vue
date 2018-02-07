@@ -117,7 +117,6 @@ a, a:hover, a:focus {
 #content {
   margin-left: 240px;
   height: 100vh;
-  width: 100%;
 }
 
 .number-view {
