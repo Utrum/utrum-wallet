@@ -20,9 +20,11 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
     useContentSize: true,
-    width: 1000,
+    // titleBarStyle: 'hidden',
+    center: true,
+    width: 1100, 
+    height: 650,
     nodeIntegration: "iframe", // and this line
     webPreferences: {
       webSecurity: false
