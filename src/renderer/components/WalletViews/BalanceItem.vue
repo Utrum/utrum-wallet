@@ -6,8 +6,8 @@
 </template>
 
 <script>
-var ElectrumCli = require('electrum-client')
-var simple_jsonrpc = require('simple-jsonrpc-js')
+var sb = require('satoshi-bitcoin')
+
 export default {
   name: 'balance-item',
   props: {
@@ -22,18 +22,18 @@ export default {
     }
   },
   mounted () {  
-    let electrumHost = this.walletData.coin.electrum
-    let url = `http://${electrumHost[0].host}:${electrumHost[0].port}/`
+    let url = `http://localhost:8000/`
     console.log(url)
     let payload = {
-      "id": 0,
+      "ticker": this.wallet.ticker,
       "method":"blockchain.address.get_balance",
-      "params": {
-        "address": this.wallet.address
-      }
+      "params": [
+        this.wallet.address
+      ]
     }
     // payload = JSON.stringify(payload)
     this.$http.post(url,payload).then(response => {
+      this.balance = sb.toBitcoin(response.data.confirmed)
       console.log(response)
     }).catch(error => {
       console.log(error.response)
