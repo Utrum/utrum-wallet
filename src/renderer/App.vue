@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <button @click="$store.commit('USER_LOGIN')">LOGIN</button>
-    <button @click="$store.commit('USER_LOGOUT')">LOGOUT</button>
     <login-form v-if="!userLoggedIn"></login-form>
     <router-view v-else></router-view>
   </div>
@@ -125,6 +123,7 @@ a, a:hover, a:focus {
 #sidebar {
   font-weight: 600;
   font-size: 0.9em;
+  padding-right: 0px;
   width: 50%;
   padding: 20px;
   min-width: 225px;

@@ -13,7 +13,24 @@ export default new Router({
     {
       path: '/wallet',
       name: 'wallet-view',
-      component: require('@/components/WalletView').default
+      component: require('@/components/WalletView').default,
+      children: [
+        {
+          path: '/balance', 
+          name: 'balance',
+          component: require('@/components/WalletViews/Balance').default
+        },
+        {
+          path: '/buy',
+          name: 'buy',
+          component: require('@/components/WalletViews/Buy').default
+        },
+        {
+          path: '/withdraw',
+          name: 'withdraw',
+          component: require('@/components/WalletViews/Withdraw').default
+        }
+      ]
     },
     {
       path: '*',
