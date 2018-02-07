@@ -56,14 +56,10 @@ function createWindow () {
         req.on('data', chunk => chunks.push(chunk));
         req.on('end', () => {
           const data = Buffer.concat(chunks);
-          console.log('Data: ', data);
           var payload = JSON.parse(data)
-          console.log(payload)
-          console.log('firing electrum! ')
-          
-          electrum.call(payload.ticker, payload.method, payload.params, function(response){
-            console.log('in electrum.call '+ response)
-            res.end(response)
+          electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
+            if (err) throw new Error("ERROR: An electrum error has been detected. Please try again or relaunch the app.\n" + err)
+            return res.end(JSON.stringify(response))
           ***REMOVED***)
         ***REMOVED***)
       ***REMOVED***

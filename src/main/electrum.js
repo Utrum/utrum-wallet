@@ -8,15 +8,10 @@ function call(ticker, method, params, done) {
   let coin = coins.get(ticker)
   let electrumServer = coin.electrum[0]
   var client = new Client(parseInt(electrumServer.port), electrumServer.host);
-  console.log(`firing ${method***REMOVED***`)
+  console.log(`firing ${method***REMOVED*** with ${params[0]***REMOVED***`)
   
   var result = ''
-  client.call(method, params, function(err, response){
-    // if (err) return done(err);
-    console.log('client.call + '+ response.result)
-    console.log(response) // here we see reponse
-    done(response)
-  ***REMOVED***)
+  client.call(method, params, done)
 ***REMOVED***
 
 
