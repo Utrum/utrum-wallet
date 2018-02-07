@@ -27,7 +27,5 @@ export default {
 </script>
 
 <style>
-li {
-  display: inline;
-}
+
 </style>

@@ -1,4 +1,3 @@
-var jayson = require('jayson');
 
 var coins = require('libwallet-mnz').coins
 var Client = require("jsonrpc-node").TCP.Client;
