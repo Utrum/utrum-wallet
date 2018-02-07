@@ -37,6 +37,12 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #fafafa;
+}
 
 #login-background {
 	width: 100%;
@@ -195,5 +201,4 @@ textarea {
 	display: flex;
 	justify-content: space-between;
 }
-
 </style>
