@@ -42,4 +42,27 @@ export default {
 	color: #ffffff !important;
 }
 
+.logo {
+  display: block;
+  margin: auto;
+  margin-top: 100px;
+  margin-bottom: 80px;
+  width: 50%;
+      width: 92px;
+}
+
+#sidebar {
+  font-weight: 600;
+  font-size: 0.9em;
+  width: 50%;
+  padding: 15px;
+  min-width: 240px;
+  max-width: 240px;
+  height: 100vh;
+  background: rgb(250,250,250);
+  transition: all 0.3s;
+  position: fixed;
+  background-color: #180d39;
+}
+
 </style>

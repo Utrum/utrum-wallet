@@ -39,6 +39,17 @@ const actions = {
   }
 }
 
+const actions = {
+  login ({ commit }, passphrase) {
+    commit('SET_PASSPHRASE', passphrase)
+    commit('USER_LOGIN')
+  },
+  logout({commit}) {
+    commit('SET_PASSPHRASE', '')
+    commit('USER_LOGOUT')
+  }
+}
+
 export default {
   state,
   getters,
