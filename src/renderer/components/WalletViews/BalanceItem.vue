@@ -23,8 +23,8 @@
 </template>
 
 <script>
-var ElectrumCli = require('electrum-client')
-var simple_jsonrpc = require('simple-jsonrpc-js')
+var sb = require('satoshi-bitcoin')
+
 ***REMOVED***
   name: 'balance-item',
   props: {
@@ -39,30 +39,17 @@ var simple_jsonrpc = require('simple-jsonrpc-js')
     ***REMOVED***
   ***REMOVED***,
   mounted () {  
-    let electrumHost = this.walletData.coin.electrum
-    let url = `http://${electrumHost[0].host***REMOVED***:${electrumHost[0].port***REMOVED***/`
-    console.log(url)
+    let url = `http://localhost:8000/`
     let payload = {
-      "id": 0,
+      "ticker": this.wallet.ticker,
       "method":"blockchain.address.get_balance",
-      "params": {
-        "address": this.wallet.address
-      ***REMOVED***
+      "params": [
+        this.wallet.address
+      ]
     ***REMOVED***
-    // payload = JSON.stringify(payload)
     this.$http.post(url,payload).then(response => {
-      console.log(response)
-    ***REMOVED***).catch(error => {
-      console.log(error.response)
+      this.balance = sb.toBitcoin(response.data.confirmed)
     ***REMOVED***)
-    // console.log(electrumHost[0].port)
-    // let ecl = new ElectrumCli(electrumHost[0].port, electrumHost[0].host, electrumHost[0].mode)
-    // try {
-    //   this.balance = await ecl.blockchainAddress_getBalance(this.wallet.address)
-    // ***REMOVED*** catch (e) {
-    //   console.log(e)
-    // ***REMOVED***
-    // await ecl.close()
   ***REMOVED***,
   computed: {
     walletData()  {
