@@ -15,7 +15,7 @@ export default {
     'balance': require('@/components/WalletViews/Balance').default,
     'sidebar': require('@/components/SideBar').default
   },
-  mounted() {
+  created() {
     this.init()
   },
   methods: {

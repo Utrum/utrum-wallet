@@ -1,4 +1,4 @@
-import { Wallet, coins }  from 'libwallet'
+import { Wallet, coins }  from 'libwallet-mnz'
 
 const state = {
   wallets: [],
@@ -20,7 +20,7 @@ const mutations = {
     let coin = coins.get(payload.coin)
     let wallet = new Wallet(payload.passphrase, payload.coin, 0)
     wallet.ticker = payload.coin.ticker
-    state.wallets.push(wallet)
+    state.wallets.push(Object.assign({}, wallet))
   },
   SET_CALCULATING (state, calculating) {
     state.calculating = calculating
@@ -31,12 +31,13 @@ const mutations = {
 }
 
 const actions = {
-  initWallets ({commit}, passphrase) {
-    console.log(coins.all)
+  initWallets ({commit, dispatch}, passphrase) {
+    if(state.wallets.length > 0) 
+      dispatch('destroyWallets')
     commit('SET_CALCULATING', true)
     coins.all.forEach(coin => {
       let payload = {
-        coin: coin,
+        coin: Object.assign({}, coin),
         passphrase: passphrase
       }
       commit('INIT_WALLET', payload)
