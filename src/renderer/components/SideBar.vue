@@ -4,9 +4,24 @@
 			<img src="../assets/icon-logo-monaize.svg" />
 		</div>
 		<ul class="list-unstyled">
-			<router-link to="balance"><li><a id="balance-view" class="item active"><img id="icon-balances" src="../assets/icon-balances.svg" class="number-view" />BALANCES</a></li></router-link>
-			<router-link to="buy"><li><a id="buy-view" class="item"><img id="icon-buy-mnz" src="../assets/icon-buy-mnz-grey.svg" class="number-view" />BUY MNZ</a></li></router-link>
-			<router-link to="withdraw"><li><a id="withdrawal-view" class="item"><img id="icon-withdrawal" src="../assets/icon-withdrawal-grey.svg" class="number-view" />WITHDRAWAL</a></li></router-link>
+			<li>
+				<router-link active-class="active" tag="a" to="balance">
+					<img id="icon-balances" src="../assets/icon-balances.svg" class="number-view" />
+					BALANCES
+				</router-link>
+			</li>
+			<li>
+				<router-link active-class="active" tag="a" to="buy">
+					<img id="icon-buy-mnz" src="../assets/icon-buy-mnz-grey.svg" class="number-view" />
+					BUY MNZ
+				</router-link>
+			</li>
+			<li>
+				<router-link active-class="active" tag="a" to="withdraw">
+					<img id="icon-withdrawal" src="../assets/icon-withdrawal-grey.svg" class="number-view" />
+					WITHDRAWAL
+				</router-link>
+			</li>
 		</ul>
 		<a href="" id="logout" @click="$store.dispatch('logout')">
 			<p><img id="icon-logout" src="../assets/icon-logout.svg"/>Log out</p>
@@ -20,6 +35,34 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
+.active {
+	transition: all 0.3s;
+	color: #ffffff !important;
+}
+
+.logo {
+  display: block;
+  margin: auto;
+  margin-top: 100px;
+  margin-bottom: 80px;
+  width: 50%;
+      width: 92px;
+}
+
+#sidebar {
+  font-weight: 600;
+  font-size: 0.9em;
+  width: 50%;
+  padding: 15px;
+  min-width: 240px;
+  max-width: 240px;
+  height: 100vh;
+  background: rgb(250,250,250);
+  transition: all 0.3s;
+  position: fixed;
+  background-color: #180d39;
+}
 
 </style>
