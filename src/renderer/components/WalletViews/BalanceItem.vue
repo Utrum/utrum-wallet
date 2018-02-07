@@ -23,7 +23,6 @@ export default {
   },
   mounted () {  
     let url = `http://localhost:8000/`
-    console.log(url)
     let payload = {
       "ticker": this.wallet.ticker,
       "method":"blockchain.address.get_balance",
@@ -31,21 +30,9 @@ export default {
         this.wallet.address
       ]
     }
-    // payload = JSON.stringify(payload)
     this.$http.post(url,payload).then(response => {
       this.balance = sb.toBitcoin(response.data.confirmed)
-      console.log(response)
-    }).catch(error => {
-      console.log(error.response)
     })
-    // console.log(electrumHost[0].port)
-    // let ecl = new ElectrumCli(electrumHost[0].port, electrumHost[0].host, electrumHost[0].mode)
-    // try {
-    //   this.balance = await ecl.blockchainAddress_getBalance(this.wallet.address)
-    // } catch (e) {
-    //   console.log(e)
-    // }
-    // await ecl.close()
   },
   computed: {
     walletData()  {
