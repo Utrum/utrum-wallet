@@ -115,31 +115,9 @@ a, a:hover, a:focus {
 ***REMOVED***
 
 #content {
-  margin-left: 225px;
+  margin-left: 240px;
   height: 100vh;
   width: 100%;
-***REMOVED***
-
-#sidebar {
-  font-weight: 600;
-  font-size: 0.9em;
-  width: 50%;
-  padding: 20px;
-  min-width: 225px;
-  max-width: 225px;
-  height: 100vh;
-  background: rgb(250,250,250);
-  transition: all 0.3s;
-  position: fixed;
-  background-color: #180d39;
-***REMOVED***
-
-.logo {
-  display: block;
-  margin: auto;
-  margin-top: 100px;
-  margin-bottom: 80px;
-  width: 50%;
 ***REMOVED***
 
 .number-view {
