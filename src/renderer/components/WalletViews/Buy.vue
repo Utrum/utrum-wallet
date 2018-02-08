@@ -9,7 +9,7 @@
 					<div class="row-main div-total-mnz">
 						<h5 class="col-custom">TOTAL</h5>
 						<div id="total-mnz" class="col-custom">
-							totalMNZ MNZ
+							{{getMnzBalance}} MNZ
 						</div>
 					</div>
 				</div>
@@ -32,7 +32,7 @@
 							<p id="add-coin">+</p>
 						</div>
 						<div class="col-custom">
-							<select2 :options="listData" :value="select"></select2>
+							<select2 :options="listData" :value="select" @input="valueChange"></select2>
 						</div>
 					</div>
 				</div>
@@ -54,7 +54,7 @@
 						YOUR CURRENCY BALANCES
 					</div>
 					<div id="balance-value">
-						balance<span id="balance-coin"> currentcoin</span>
+						balance<span id="balance-coin"> {{getBalance}}</span>
 					</div>
 				</div>
 			</div>
@@ -136,6 +136,19 @@ export default {
 			'BCC'
 			],
 			select: 'BTC',
+		}
+	},
+	methods: {
+		valueChange(value) {
+			this.select = value
+		}
+	},
+	computed: {
+		getBalance() {
+			return this.$store.getters.getWalletByTicker(this.select).balance
+		},
+		getMnzBalance() {
+			return this.$store.getters.getWalletByTicker('MNZ').balance
 		}
 	}
 }

@@ -9,7 +9,7 @@
           <h5>TOTAL BALANCES</h5>
         </div>
         <div>
-          <span id="totalBalanceUsd"><img src="@/assets/icon-usdollar.svg"/>TOTAL_USD</span>
+          <span id="totalBalanceUsd"><img src="@/assets/icon-usdollar.svg"/>{{totalBalance}}</span>
         </div>
       </div>
     </div>
@@ -28,6 +28,9 @@ export default {
   computed: {
     wallets() {
       return this.$store.getters.getWallets
+    },
+    totalBalance() {
+      return this.$store.getters.getTotalBalance
     }
   }
 }
