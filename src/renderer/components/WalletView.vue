@@ -1,5 +1,5 @@
 <template>
-  <div id="wallet-view">
+  <div id="wallet">
     <sidebar></sidebar>
     <div id="content">
       <router-view></router-view>
@@ -10,24 +10,13 @@
 <script>
 
 ***REMOVED***
-  name: 'wallet-view',
+  name: 'wallet',
   components: {
-    'balance': require('@/components/WalletViews/Balance').default,
     'sidebar': require('@/components/SideBar').default
   ***REMOVED***,
   created() {
-    this.init()
-  ***REMOVED***,
-  methods: {
-    init() {
-      this.$store.dispatch('initWallets', this.$store.getters.passphrase)
-    ***REMOVED***
-  ***REMOVED***,
+    this.$store.dispatch('initWallets', this.$store.getters.passphrase)
+    this.$router.push('balance')
+  ***REMOVED***
 ***REMOVED***
 </script>
-
-<style>
-li {
-  display: inline;
-***REMOVED***
-</style>
