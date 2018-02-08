@@ -5,7 +5,7 @@
       <h2 id="coin-item">{{wallet.ticker***REMOVED******REMOVED***</h2>
     </div>
     <div class="row-content">
-      <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/>balance_usd (USD)</p>
+      <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/>{{wallet.balance_usd***REMOVED******REMOVED*** (USD)</p>
       <button :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></img></button>
     </div>
     <div class="row-footer">

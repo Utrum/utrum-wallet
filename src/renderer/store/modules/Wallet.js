@@ -11,10 +11,20 @@ import Vue from 'vue'
 
 ***REMOVED***
   getWalletByTicker: (state) => (ticker) => {
-    return state.wallets.find(wallet => wallet.ticker === ticker)
+    return state.wallets[ticker]
   ***REMOVED***,
   getWallets: (state) => {
     return state.wallets
+  ***REMOVED***,
+  getTotalBalance: (state) => {
+    let walletKeys = Object.keys(state.wallets);
+    let totalBalanceUsd = 0;
+
+    walletKeys.forEach(function(key) {
+        totalBalanceUsd += state.wallets[key].balance_usd;
+    ***REMOVED***);
+
+    return totalBalanceUsd;
   ***REMOVED***
 ***REMOVED***
 
@@ -24,6 +34,7 @@ import Vue from 'vue'
     let wallet = new Wallet(payload.passphrase, payload.coin, 0)
     wallet.ticker = payload.coin.ticker
     wallet.balance = 0
+    wallet.balance_usd = 0
     state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet)
   ***REMOVED***,
   SET_CALCULATING (state, calculating) {
@@ -38,6 +49,8 @@ import Vue from 'vue'
 ***REMOVED***
 
 import {getBalance***REMOVED*** from '../../lib/electrum'
+import {getCmcData***REMOVED*** from '../../lib/coinmarketcap'
+
 
 ***REMOVED***
   initWallets ({commit, dispatch***REMOVED***, passphrase) {
@@ -57,12 +70,23 @@ import {getBalance***REMOVED*** from '../../lib/electrum'
   destroyWallets ({commit***REMOVED***) {
     commit('DESTROY_WALLETS')
   ***REMOVED***,
-  updateBalance({commit***REMOVED***, wallet) {
+  updateBalance({commit, getters***REMOVED***, wallet) {
     getBalance(wallet).then(response => {
+      // wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance = sb.toBitcoin(response.data.confirmed);
-      commit('UPDATE_BALANCE', wallet)
+      if (wallet.coin.name !== "monaize") {
+        getCmcData(wallet.coin.name).then(response => {
+          response.data.forEach(function(cmcCoin) {
+            wallet.balance_usd = wallet.balance * cmcCoin.price_usd;
+          ***REMOVED***)
+        ***REMOVED***)
+      ***REMOVED*** else {
+        let price_btc = 0.00006666;
+        wallet.balance_usd = wallet.balance * Number(getters.getWalletByTicker('BTC').balance_usd); 
+      ***REMOVED***
     ***REMOVED***)
-  ***REMOVED***
+    commit('UPDATE_BALANCE', wallet)
+  ***REMOVED*** 
 ***REMOVED***
 
 ***REMOVED***
