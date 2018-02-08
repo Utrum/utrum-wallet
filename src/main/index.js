@@ -29,6 +29,10 @@ function createWindow () {
     webPreferences: {
       webSecurity: false
     }
+    // titleBarStyle: 'hidden',
+    center: true,
+    width: 1100, 
+    height: 650
   })
 
   var ipc = require('electron').ipcMain
