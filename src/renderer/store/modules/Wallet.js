@@ -1,7 +1,10 @@
 import { Wallet, coins ***REMOVED***  from 'libwallet-mnz'
+import sb from 'satoshi-bitcoin'
+import Vue from 'vue'
+
 
 ***REMOVED***
-  wallets: [],
+  wallets: {***REMOVED***,
   coins: [],
   calculating: false
 ***REMOVED***
@@ -17,22 +20,28 @@ import { Wallet, coins ***REMOVED***  from 'libwallet-mnz'
 
 ***REMOVED***
   INIT_WALLET (state, payload) {
-    let coin = coins.get(payload.coin)
+    let coin = Vue.util.extend({***REMOVED***, coins.get(payload.coin))
     let wallet = new Wallet(payload.passphrase, payload.coin, 0)
     wallet.ticker = payload.coin.ticker
-    state.wallets.push(Object.assign({***REMOVED***, wallet))
+    wallet.balance = 0
+    state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet)
   ***REMOVED***,
   SET_CALCULATING (state, calculating) {
     state.calculating = calculating
   ***REMOVED***,
   DESTROY_WALLETS (state) {
-    state.wallets = []
+    state.wallets = {***REMOVED***
+  ***REMOVED***,
+  UPDATE_BALANCE (state, wallet) {
+    Vue.set(state.wallets, wallet.ticker, wallet)
   ***REMOVED***
 ***REMOVED***
 
+import {getBalance***REMOVED*** from '../../lib/electrum'
+
 ***REMOVED***
   initWallets ({commit, dispatch***REMOVED***, passphrase) {
-    if(state.wallets.length > 0) 
+    if(Object.keys(state.wallets).length > 0) 
       dispatch('destroyWallets')
     commit('SET_CALCULATING', true)
     coins.all.forEach(coin => {
@@ -41,11 +50,18 @@ import { Wallet, coins ***REMOVED***  from 'libwallet-mnz'
         passphrase: passphrase
       ***REMOVED***
       commit('INIT_WALLET', payload)
+      dispatch('updateBalance', state.wallets[payload.coin.ticker])
     ***REMOVED***)
     commit('SET_CALCULATING', false)
   ***REMOVED***,
   destroyWallets ({commit***REMOVED***) {
     commit('DESTROY_WALLETS')
+  ***REMOVED***,
+  updateBalance({commit***REMOVED***, wallet) {
+    getBalance(wallet).then(response => {
+      wallet.balance = sb.toBitcoin(response.data.confirmed);
+      commit('UPDATE_BALANCE', wallet)
+    ***REMOVED***)
   ***REMOVED***
 ***REMOVED***
 
