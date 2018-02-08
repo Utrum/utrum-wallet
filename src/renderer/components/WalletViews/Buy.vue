@@ -23,21 +23,17 @@
 				<hr class="col-custom" id="line-cut"/>
 			</div>
 		</div>
+
 		<div class="col-custom">
-			<div class="row-buy">
+			<div class="row-custom">
 				<div class="col-custom">
-					<div class="row select-coin-buy">
-						<div class="btn select-all">
+					<div class="row-custom">
+						<div class="col-custom select-all">
 							<p id="add-coin">+</p>
 						</div>
-						<select id="select-coin" class="select-header">
-							<option>MNZ</option>
-							<option>BTC</option>
-
-<!-- 							{{#each categories}}
-							<option>{{this}}</option>
-							{{/each}} -->
-						</select>
+						<div class="col-custom">
+							<select2 :options="listData" :value="select"></select2>
+						</div>
 					</div>
 				</div>
 				<div class="col-custom arrow-buy">
@@ -126,11 +122,54 @@
 
 <script>
 export default {
-	name: 'buy'
+	name: 'buy',
+	components: {
+		'select2': require('../Utils/Select2.vue').default
+	},
+	data() {
+		return {
+			listData: [
+			'BTC',
+			'KMD',
+			'LTC',
+			'DASH',
+			'BCC'
+			],
+			select: 'BTC',
+		}
+	}
 }
 </script>
 
 <style>
+
+.row-custom {
+	display: flex;
+	flex-direction: row;
+}
+#selector-plus {
+	flex-direction: row;
+}
+
+.selected-tag {
+	position: absolute;
+}
+
+.select-coin {
+	text-align: center;
+
+}
+
+.select-header {
+	flex-grow: 1;
+}
+
+.card {
+	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+	border-radius: 4px;
+	border: none;
+}
+
 .center{
 	width: 150px;
 	margin: 40px auto;
@@ -179,6 +218,10 @@ input[type=number]::-webkit-outer-spin-button {
 	color: #180d39;
 }
 
+.col {
+	flex-grow: 0;
+
+}
 .row {
 	margin: 0px;
 	display: flex;
@@ -225,9 +268,33 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .select-coin-buy {
-	justify-content: flex-start !important;
-	width: 150px;
+	justify-content: flex-start;
+	flex-direction: row;
+	display: flex;
+}
+
+.select-coin-buy .dropdown {
 	height: 100%;
+}
+
+.select-coin-buy .form-control {
+/*	width: 150px;
+height: 75px;*/
+}
+
+.select-coin-buy .dropdown-toggle {
+	height: 100%;
+	width: 150px;
+/*	width: 150px;
+height: 75px;*/
+}
+
+.dropdown-toggle button {
+	visibility: hidden;
+}
+
+.dropdown-toggle i {
+	visibility: hidden;
 }
 
 #buy-mnz-box {
@@ -363,4 +430,270 @@ input[type=number]::-webkit-outer-spin-button {
 #add-coin {
 	color: #7c398a !important;
 }
+.title-amount {
+	margin-bottom: 20px;
+}
+
+.sub-title {
+	font-weight: 300;
+	color: #180d39 !important;
+}
+
+.select-header{
+	margin: 50px;
+	border: 1px solid #7c398a;
+	background: transparent;
+	width: 150px;
+	padding: 5px 5px 5px 5px;
+	font-size: 16px;
+	text-align: center;
+	border-radius: 4px;
+	border-color: black !important;
+	height: 800px;
+	font-size: 1.9em;
+	font-weight: 300;
+	text-align-last:center;
+}
+
+.select-header:hover{
+	background-color: black;
+	color: white;
+}
+
+.select2-selection__rendered {
+	line-height: 75px !important;
+	text-align: center;
+	color: #7c398a !important;
+	font-weight: 200;
+}
+
+.select2-results__options {
+	overflow:hidden; 
+	overflow-y:scroll;
+
+}
+
+.select2-results__option {
+	display: inline-block;
+	
+}
+
+.select2-selection {
+	height: 75px !important;
+	width: 126px;
+		outline: none;
+	border-color: #7c398a !important;
+	font-size: 1.8em;
+	font-weight: 300;
+	border-top-left-radius: 0px 0px !important;
+	border-bottom-left-radius: 0px 0px !important;
+}
+
+.select2-selection__arrow {
+	display: none;
+}
+
+.select2-selection__rendered {
+	padding: 0px !important;
+}
+
+.select2-container--open .select2-dropdown--below {
+	width: 151px !important;
+	margin-left: -25px !important;
+}
+
+.select2-search__field {
+	outline: none;
+}
+
+.select-all {
+	background-color: transparent;
+	padding-top: auto;
+	padding-bottom: auto;
+	width: 25px;
+	border-top-left-radius: 4px 4px;
+	border-bottom-left-radius: 4px 4px;
+	border: 1px solid #7c398a;
+	border-width: 1px 0px 1px 1px;
+	text-align: center;
+	color: red;
+	cursor: pointer;
+}
+
+#str-current-balances {
+	text-align: right;
+}
+
+.row {
+	margin: 0px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.row-header {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.row .btn{
+	padding: 0px;
+	margin: 0px;
+	border-top-right-radius: 0px 0px !important;
+	border-bottom-right-radius: 0px 0px !important;
+}
+
+.row .btn:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.vl {
+	border-left: 1px solid rgba(0,0,0,0.1);
+	height: 45px;
+	margin-top: 15px;
+}
+
+.current-balance {
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	cursor: pointer;
+}
+
+#card-current-balance {
+	text-align: right;
+	font-size: 1.8em;
+	max-width: 300px;
+}
+
+#add-coin {
+	color: black;
+	font-size: 1.8em;
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+	line-height: 73px;
+	text-align: center;
+	background-color: white;
+	border-radius: 4px;
+}
+
+.col {
+	flex-grow: 1;
+}
+
+.content .select2-selection:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+#title {
+	margin-bottom: 40px;
+}
+
+.input-field {
+	outline: none;
+	box-shadow: none;
+	text-align: right;
+}
+
+hr {
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 1px solid rgba(0,0,0, 0.1);;
+	padding: 0;
+}
+
+#first-line {
+	margin-top: 10px;
+}
+
+.btn-center {
+	text-align: center;
+}
+
+.disableSendCoins {
+	border: 1px solid rgba(0,0,0,0.1) !important;
+	color: rgba(0,0,0,0.1) !important;
+	cursor: not-allowed;
+}
+
+.disableSendCoins:hover {
+	border: 1px solid rgba(0,0,0,0.1) !important;
+	color: rgba(0,0,0,0.1) !important;
+	cursor: not-allowed;
+	background-color: transparent !important;
+}
+
+#sendcoins {
+	border: 1px solid #7c398a;
+	border-radius: 4px !important;
+	background-color: transparent;
+	font-size: 1.4em;
+	width: 160px;
+	height: 45px;
+	text-align: center;
+	outline: none;
+	box-shadow: none;
+	color: #7c398a;
+}
+
+#sendcoins:hover {
+	background-color: #7c398a;
+	color: white;
+}
+
+.disableSendCoins {
+	opacity: 0.65; 
+	cursor: not-allowed;
+}
+
+#addr {
+	background-color: transparent;
+	border: none;
+	font-size: 1.1em;
+	font-weight: 300;
+	color: #687078;
+}
+
+#amount {
+	background-color: transparent;
+	border: none;
+	font-size: 1.8em;
+	font-weight: 300;
+	color: rgb(151,151,151);
+}
+
+::-webkit-input-placeholder {
+	color: rgba(104,112,120,0.4);
+	font-weight: 200;
+}
+
+#current-coin {
+	font-size: 1.8em;
+	color: #687078;
+	font-weight: 200;
+}
+
+.card span {
+	color: #687078;
+	font-weight: 200;
+}
+
+.title-content {
+	font-weight: 400;
+	color: #180d39;
+	margin: auto;
+}
+
+.horizontal-line {
+	margin-bottom: 50px;
+}
+
+#value-current-balance {
+	font-weight: 400;
+	color: #687078;
+}
+
 </style>
