@@ -112,7 +112,11 @@ let rendererConfig = {
         : false
     ***REMOVED***),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    ***REMOVED***)
   ],
   output: {
     filename: '[name].js',
