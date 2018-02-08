@@ -1,7 +1,7 @@
 <template>
   <div class="row-main-item">
     <div class="row-title">
-      <h2 id="balance-item">{{balance***REMOVED******REMOVED***</h2>
+      <h2 id="balance-item">{{wallet.balance***REMOVED******REMOVED***</h2>
       <h2 id="coin-item">{{wallet.ticker***REMOVED******REMOVED***</h2>
     </div>
     <div class="row-content">
@@ -12,7 +12,7 @@
       <p class="col-header">Your deposit {{wallet.coin.name***REMOVED******REMOVED*** address :</p>
       <div class="card">
         <button type="button" class="btn btn-copy-link btn-smartaddress" :data-clipboard-text="wallet.address">
-          <div :id="smartaddress-wallet.ticker" class="btn-inside-qrcode">
+          <div :id="wallet.ticker" class="btn-inside-qrcode">
             {{wallet.address***REMOVED******REMOVED***
           </div>
         </button>
@@ -24,6 +24,7 @@
 
 <script>
 var sb = require('satoshi-bitcoin')
+var electrum = require('../../lib/electrum')
 
 ***REMOVED***
   name: 'balance-item',
@@ -33,29 +34,6 @@ var sb = require('satoshi-bitcoin')
       default: () => ({***REMOVED***)
     ***REMOVED***
   ***REMOVED***,
-  data () {
-    return {
-      balance: 0,
-    ***REMOVED***
-  ***REMOVED***,
-  mounted () {  
-    let url = `http://localhost:8000/`
-    let payload = {
-      "ticker": this.wallet.ticker,
-      "method":"blockchain.address.get_balance",
-      "params": [
-        this.wallet.address
-      ]
-    ***REMOVED***
-    this.$http.post(url,payload).then(response => {
-      this.balance = sb.toBitcoin(response.data.confirmed)
-    ***REMOVED***)
-  ***REMOVED***,
-  computed: {
-    walletData()  {
-      return this.$props.wallet ? this.$props.wallet : null
-    ***REMOVED***
-  ***REMOVED***
 ***REMOVED***
 </script>
 
