@@ -308,6 +308,130 @@ height: 75px;*/
 	background-color: white;
 }
 
+.select2-selection {
+	width: 126px !important;
+}
+
+.row-buy {
+	display: flex;
+	justify-content: space-between;
+}
+
+.arrow-buy {
+	width: 100%;
+	line-height: 75px;
+	text-align: center;
+}
+
+#package-mnz {
+	margin-left: auto;
+	width: 300px;
+	height: 40px;
+	border: 1px solid rgba(0,0,0, 0.1);
+	border-radius: 4px;
+	line-height: 40px;
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
+
+#choose-mnz {
+	text-align: right;
+}
+
+.currency-balance-div {
+	width: 100px;
+}
+
+.col-center {
+	flex-grow: 1;
+	text-align: center;
+}
+
+.minus-plus {
+	color: black;
+}
+
+#package-value {
+	width: 100px;
+	font-size: 1.5em;
+	font-weight: 300;
+}
+
+.value {
+	font-size: 1.5em;
+	font-weight: 400;
+	color: #180d39;
+}
+
+#balance-value {
+	font-size: 1.5em;
+	font-weight: 200;
+	color: #687078;
+	margin-top: 10px;
+}
+
+#balance-coin {
+	font-weight: 300;
+	color: #687078;
+}
+
+.title-choose-coin {
+	font-weight: 500;
+}
+
+#choose-coin {
+	margin-top: 25px;
+}
+
+#detail-order-title {
+	color: #180d39;
+	font-weight: 400;
+	max-width: 150px;
+}
+
+.center-text {
+	text-align: center;
+}
+
+#btn-buy {
+	border: 1px solid #7c398a;
+	border-radius: 4px !important;
+	font-size: 1.4em;
+	width: 100px;
+	height: 50px;
+	text-align: center;
+	line-height: 50px;
+	outline: none;
+	box-shadow: none;
+	color: #7c398a;
+	max-width: 100px;
+}
+
+#btn-buy:hover {
+	background-color: #7c398a;
+	color: white;
+}
+
+.center-horizontal {
+	margin: auto;
+}
+
+.title-value {
+	font-weight: 400;
+	color: #7c398a;
+	font-size: 0.8em;
+}
+
+.content-swapview {
+	box-shadow: 0px 15px 40px -20px rgba(33,33,33,0.2) inset;
+	background-color: rgba(0,0,0,0.01);
+}
+
+#add-coin {
+	color: #7c398a !important;
+}
+
+
 .title-amount {
 	margin-bottom: 20px;
 }
