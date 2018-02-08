@@ -1,7 +1,7 @@
 <template>
   <div class="row-main-item">
     <div class="row-title">
-      <h2 id="balance-item">{{balance}}</h2>
+      <h2 id="balance-item">{{wallet.balance}}</h2>
       <h2 id="coin-item">{{wallet.ticker}}</h2>
     </div>
     <div class="row-content">
@@ -12,7 +12,7 @@
       <p class="col-header">Your deposit {{wallet.coin.name}} address :</p>
       <div class="card">
         <button type="button" class="btn btn-copy-link btn-smartaddress" :data-clipboard-text="wallet.address">
-          <div :id="smartaddress-wallet.ticker" class="btn-inside-qrcode">
+          <div :id="wallet.ticker" class="btn-inside-qrcode">
             {{wallet.address}}
           </div>
         </button>
@@ -24,6 +24,7 @@
 
 <script>
 var sb = require('satoshi-bitcoin')
+var electrum = require('../../lib/electrum')
 
 export default {
   name: 'balance-item',
@@ -33,29 +34,6 @@ export default {
       default: () => ({})
     }
   },
-  data () {
-    return {
-      balance: 0,
-    }
-  },
-  mounted () {  
-    let url = `http://localhost:8000/`
-    let payload = {
-      "ticker": this.wallet.ticker,
-      "method":"blockchain.address.get_balance",
-      "params": [
-        this.wallet.address
-      ]
-    }
-    this.$http.post(url,payload).then(response => {
-      this.balance = sb.toBitcoin(response.data.confirmed)
-    })
-  },
-  computed: {
-    walletData()  {
-      return this.$props.wallet ? this.$props.wallet : null
-    }
-  }
 }
 </script>
 
