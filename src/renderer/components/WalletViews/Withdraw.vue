@@ -109,13 +109,6 @@
 	color: #180d39;
 ***REMOVED***
 
-.card {
-	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
-	border-radius: 4px;
-	border: none;
-	height: 75px;
-***REMOVED***
-
 .title-amount {
 	margin-bottom: 20px;
 ***REMOVED***
@@ -223,6 +216,7 @@
 ***REMOVED***
 
 .current-balance {
+	height: 75px;
 	text-align: center;
 	padding-top: 20px;
 	padding-bottom: 20px;
