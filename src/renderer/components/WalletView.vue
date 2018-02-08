@@ -27,7 +27,5 @@
 </script>
 
 <style>
-li {
-  display: inline;
-***REMOVED***
+
 </style>
