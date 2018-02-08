@@ -12,7 +12,7 @@ export default new Router({
     },
     {
       path: '/wallet',
-      name: 'wallet-view',
+      name: 'wallet',
       component: require('@/components/WalletView').default,
       children: [
         {
