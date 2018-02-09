@@ -54,7 +54,7 @@
 						YOUR CURRENCY BALANCES
 					</div>
 					<div id="balance-value">
-						balance<span id="balance-coin"> {{getBalance}}</span>
+						{{getBalance}}<span id="balance-coin"> {{select}}</span>
 					</div>
 				</div>
 			</div>
@@ -64,13 +64,13 @@
 						CHOOSE HOW MANY MNZ YOU WANT TO BUY
 					</div>
 					<div id="package-mnz" class="row">
-						<a id="less-mnz" href="#" class="col-center">
+						<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
 							<img src="@/assets/icon-less.svg"/>
 						</a>
 						<div id="package-value" class="col-center">
-							packageValue
+							{{package}}
 						</div>
-						<a id="more-mnz" href="#" class="col-center">
+						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
 							<img src="@/assets/icon-more.svg"/>
 						</a>
 					</div>
@@ -87,10 +87,10 @@
 			<div class="col-custom center-horizontal">
 				<div class="row-main center-text">
 					<div class="title-value">
-						Total currentcoin
+						Total {{getStringTicket}}
 					</div>
 					<div class="value">
-						totalPrice
+						{{getTotalPrice}}
 					</div>
 				</div>
 			</div>
@@ -100,7 +100,7 @@
 						MNZ
 					</div>
 					<div class="value">
-						packageValue
+						{{package}}
 					</div>
 				</div>
 			</div>
@@ -130,26 +130,48 @@ export default {
 		return {
 			listData: [
 			'BTC',
-			'KMD',
-			'LTC',
-			'DASH',
-			'BCC'
+			'KMD'
 			],
 			select: 'BTC',
+			package: 500,
+			packageIncrement: 500,
+			packageMAX: 100000
 		}
 	},
 	methods: {
 		valueChange(value) {
 			this.select = value
+		},
+		incrementPackage() {
+			if (this.package < this.packageMAX) {
+				this.package += this.packageIncrement;
+			}
+		},
+		decrementPackage() {
+			if (this.package > this.packageIncrement) {
+				this.package -= this.packageIncrement;
+			}
 		}
 	},
 	computed: {
 		getBalance() {
-			return this.$store.getters.getWalletByTicker(this.select).balance
+			return this.$store.getters.getWalletByTicker(this.select).balance;
 		},
 		getMnzBalance() {
-			return this.$store.getters.getWalletByTicker('MNZ').balance
-		}
+			return this.$store.getters.getWalletByTicker('MNZ').balance;
+		},
+		getStringTicket() {
+			return this.$store.getters.getWalletByTicker(this.select).coin.name;
+		},
+		getTotalPrice() {
+			let price = 0;
+			if (this.select === 'BTC') {
+				price = 0.00006666;
+			} else if (this.select === 'KMD') {
+				price = 0.03333333;
+			}
+			return this.package * price;
+		},
 	}
 }
 </script>
