@@ -104,20 +104,15 @@
 					</div>
 				</div>
 			</div>
-<!-- 			{{#if isBuying***REMOVED******REMOVED***
-			<div class="col">
-				{{> loader***REMOVED******REMOVED***
-			</div>
-			{{else***REMOVED******REMOVED*** -->
-			<div id="btn-buy" v-on:click="buyMnz" class="btn col-custom center-horizontal">
+
+			<div :disabled="canBuy" v-b-modal="'confirmBuy'" id="btn-buy" v-on:click="buyMnz" class="btn col-custom center-horizontal">
 				BUY
 			</div>
-			<!-- {{/if***REMOVED******REMOVED*** -->
+		    <b-modal id="confirmBuy" centered title="Buy confirmation">
+		      <p class="my-4">Are you sure you want to buy <b>{{package***REMOVED******REMOVED*** MNZ</b> for <b>{{getTotalPrice***REMOVED******REMOVED*** {{select***REMOVED******REMOVED***</b></p>
+		    </b-modal>
 		</div>
 	</div>
-<!-- 	<div class="content-swapview">
-		{{> swapstatusview***REMOVED******REMOVED***
-	</div> -->
 </template>
 
 <script>
@@ -168,12 +163,12 @@ import swal from 'sweetalert2';
 			let coin = this.select;
 			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
 
-			if (this.totalPrice() < balance) {
+/*			if (this.totalPrice() < balance) {
 				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
 				// HERE MAXIME MAKE THE TRANSFER !
 			***REMOVED*** else {
 				swal('Oops...', "No enought money in your " + this.select + " balance !", 'error')
-			***REMOVED***
+			***REMOVED****/
 		***REMOVED***
 	***REMOVED***,
 	computed: {
@@ -189,6 +184,9 @@ import swal from 'sweetalert2';
 		getTotalPrice() {
 			return this.totalPrice();
 		***REMOVED***,
+		canBuy() {
+     		return false;
+    	***REMOVED***,
 	***REMOVED***
 ***REMOVED***
 </script>
