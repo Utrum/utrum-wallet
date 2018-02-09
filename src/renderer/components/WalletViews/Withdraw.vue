@@ -15,7 +15,7 @@
 						<p id="add-coin">+</p>
 					</div>
 					<div class="col-custom">
-						<select2 :options="listData" :value="select"></select2>
+						<select2 :options="listData" :value="select" @input="updateCoin"></select2>
 					</div>
 				</div>
 			</div>
@@ -25,7 +25,7 @@
 			</div>
 			<div id="card-current-balance" class="col-custom">
 				<div class="row current-balance card">
-					<span id="value-current-balance">1231.00000001</span><span> BTC</span>
+					<span id="value-current-balance">{{getBalance***REMOVED******REMOVED***</span><span>{{select***REMOVED******REMOVED***</span>
 				</div>
 			</div>
 		</div>
@@ -36,7 +36,7 @@
 			</div>
 			<div class="row">
 				<input onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="input-field" placeholder="0.0">
-				<span id="current-coin"> BTC</span>
+				<span id="current-coin"> {{select***REMOVED******REMOVED***</span>
 			</div>
 		</div>
 		<div class="col-custom horizontal-line">
@@ -45,7 +45,7 @@
 
 		<div class="row">
 			<div class="col-custom">
-				<span class="title-content">ADDRESS BITCOIN</span>
+				<span class="title-content">{{select***REMOVED******REMOVED*** ADDRESS</span>
 			</div>
 			<input type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
 		</div>
@@ -68,15 +68,26 @@
 	data() {
 		return {
 			listData: [
-			'BTC',
-			'KMD',
-			'LTC',
-			'DASH',
-			'BCC'
+        'BTC',
+        'KMD',
+        'MNZ',
+        // 'LTC',
+        // 'DASH',
+        // 'BCC'
 			],
 			select: 'BTC',
 		***REMOVED***
-	***REMOVED***
+  ***REMOVED***,
+  methods: {
+		updateCoin(value) {
+			this.select = value
+		***REMOVED***
+	***REMOVED***,
+	computed: {
+		getBalance() {
+			return this.$store.getters.getWalletByTicker(this.select).balance
+    ***REMOVED***,
+  ***REMOVED***
 ***REMOVED***
 </script>
 
