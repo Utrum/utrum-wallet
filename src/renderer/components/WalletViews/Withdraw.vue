@@ -35,7 +35,7 @@
 				<span>AMOUNT</span>
 			</div>
 			<div class="row">
-				<input onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="input-field" placeholder="0.0">
+				<input v-model="withdraw.amount" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="input-field" placeholder="0.0">
 				<span id="current-coin"> {{select***REMOVED******REMOVED***</span>
 			</div>
 		</div>
@@ -47,19 +47,24 @@
 			<div class="col-custom">
 				<span class="title-content">{{select***REMOVED******REMOVED*** ADDRESS</span>
 			</div>
-			<input type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
+			<input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
 		</div>
 		<div class="col-custom horizontal-line">
 			<hr/>
 		</div>
 
 		<div class="btn-center">
-			<button id="sendcoins" class="btn sendcoins" type="button">SEND</button>
+			<button :disabled="canWithdraw" v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
 		</div>
+    <b-modal id="confirmWithdraw" centered title="Withdraw confirmation">
+      <p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount***REMOVED******REMOVED*** {{withdraw.coin***REMOVED******REMOVED***</b> to <b>{{withdraw.address***REMOVED******REMOVED***</b></p>
+    </b-modal>
 	</div>
 </template>
 
 <script>
+import bitcoinjs from 'bitcoinjs-lib'
+
 ***REMOVED***
 	name: 'withdraw',
 	components: {
@@ -75,18 +80,31 @@
         // 'DASH',
         // 'BCC'
 			],
-			select: 'BTC',
+      select: 'BTC',
+      withdraw: {
+        amount: 0,
+        address: '',
+        coin: 'BTC'
+      ***REMOVED***
 		***REMOVED***
   ***REMOVED***,
   methods: {
 		updateCoin(value) {
-			this.select = value
-		***REMOVED***
+      this.select = value
+      this.withdraw.coin = value
+    ***REMOVED***,
+    
 	***REMOVED***,
 	computed: {
 		getBalance() {
 			return this.$store.getters.getWalletByTicker(this.select).balance
     ***REMOVED***,
+    canWithdraw() {
+      return !(this.withdraw.amount <= this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
+    ***REMOVED***,
+    addressIsValid() {
+      return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
+    ***REMOVED***
   ***REMOVED***
 ***REMOVED***
 </script>
