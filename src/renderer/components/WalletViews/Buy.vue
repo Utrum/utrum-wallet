@@ -104,20 +104,15 @@
 					</div>
 				</div>
 			</div>
-<!-- 			{{#if isBuying}}
-			<div class="col">
-				{{> loader}}
-			</div>
-			{{else}} -->
-			<div id="btn-buy" v-on:click="buyMnz" class="btn col-custom center-horizontal">
+
+			<div :disabled="canBuy" v-b-modal="'confirmBuy'" id="btn-buy" v-on:click="buyMnz" class="btn col-custom center-horizontal">
 				BUY
 			</div>
-			<!-- {{/if}} -->
+		    <b-modal id="confirmBuy" centered title="Buy confirmation">
+		      <p class="my-4">Are you sure you want to buy <b>{{package}} MNZ</b> for <b>{{getTotalPrice}} {{select}}</b></p>
+		    </b-modal>
 		</div>
 	</div>
-<!-- 	<div class="content-swapview">
-		{{> swapstatusview}}
-	</div> -->
 </template>
 
 <script>
@@ -168,12 +163,12 @@ export default {
 			let coin = this.select;
 			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
 
-			if (this.totalPrice() < balance) {
+/*			if (this.totalPrice() < balance) {
 				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
 				// HERE MAXIME MAKE THE TRANSFER !
 			} else {
 				swal('Oops...', "No enought money in your " + this.select + " balance !", 'error')
-			}
+			}*/
 		}
 	},
 	computed: {
@@ -189,6 +184,9 @@ export default {
 		getTotalPrice() {
 			return this.totalPrice();
 		},
+		canBuy() {
+     		return false;
+    	},
 	}
 }
 </script>
