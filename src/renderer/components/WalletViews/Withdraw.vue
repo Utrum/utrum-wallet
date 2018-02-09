@@ -35,7 +35,7 @@
 				<span>AMOUNT</span>
 			</div>
 			<div class="row">
-				<input onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="input-field" placeholder="0.0">
+				<input v-model="withdraw.amount" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="input-field" placeholder="0.0">
 				<span id="current-coin"> {{select}}</span>
 			</div>
 		</div>
@@ -47,19 +47,24 @@
 			<div class="col-custom">
 				<span class="title-content">{{select}} ADDRESS</span>
 			</div>
-			<input type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
+			<input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
 		</div>
 		<div class="col-custom horizontal-line">
 			<hr/>
 		</div>
 
 		<div class="btn-center">
-			<button id="sendcoins" class="btn sendcoins" type="button">SEND</button>
+			<button :disabled="canWithdraw" v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
 		</div>
+    <b-modal id="confirmWithdraw" centered title="Withdraw confirmation">
+      <p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
+    </b-modal>
 	</div>
 </template>
 
 <script>
+import bitcoinjs from 'bitcoinjs-lib'
+
 export default {
 	name: 'withdraw',
 	components: {
@@ -75,18 +80,31 @@ export default {
         // 'DASH',
         // 'BCC'
 			],
-			select: 'BTC',
+      select: 'BTC',
+      withdraw: {
+        amount: 0,
+        address: '',
+        coin: 'BTC'
+      }
 		}
   },
   methods: {
 		updateCoin(value) {
-			this.select = value
-		}
+      this.select = value
+      this.withdraw.coin = value
+    },
+    
 	},
 	computed: {
 		getBalance() {
 			return this.$store.getters.getWalletByTicker(this.select).balance
     },
+    canWithdraw() {
+      return !(this.withdraw.amount <= this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
+    },
+    addressIsValid() {
+      return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
+    }
   }
 }
 </script>
