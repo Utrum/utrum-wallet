@@ -11,10 +11,20 @@ const state = {
 
 const getters = {
   getWalletByTicker: (state) => (ticker) => {
-    return state.wallets.find(wallet => wallet.ticker === ticker)
+    return state.wallets[ticker]
   },
   getWallets: (state) => {
     return state.wallets
+  },
+  getTotalBalance: (state) => {
+    let walletKeys = Object.keys(state.wallets);
+    let totalBalanceUsd = 0;
+
+    walletKeys.forEach(function(key) {
+        totalBalanceUsd += state.wallets[key].balance_usd;
+    });
+
+    return totalBalanceUsd;
   }
 }
 
@@ -24,6 +34,7 @@ const mutations = {
     let wallet = new Wallet(payload.passphrase, payload.coin, 0)
     wallet.ticker = payload.coin.ticker
     wallet.balance = 0
+    wallet.balance_usd = 0
     state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet)
   },
   SET_CALCULATING (state, calculating) {
@@ -38,6 +49,8 @@ const mutations = {
 }
 
 import {getBalance} from '../../lib/electrum'
+import {getCmcData} from '../../lib/coinmarketcap'
+
 
 const actions = {
   initWallets ({commit, dispatch}, passphrase) {
@@ -57,12 +70,23 @@ const actions = {
   destroyWallets ({commit}) {
     commit('DESTROY_WALLETS')
   },
-  updateBalance({commit}, wallet) {
+  updateBalance({commit, getters}, wallet) {
     getBalance(wallet).then(response => {
+      // wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance = sb.toBitcoin(response.data.confirmed);
-      commit('UPDATE_BALANCE', wallet)
+      if (wallet.coin.name !== "monaize") {
+        getCmcData(wallet.coin.name).then(response => {
+          response.data.forEach(function(cmcCoin) {
+            wallet.balance_usd = wallet.balance * cmcCoin.price_usd;
+          })
+        })
+      } else {
+        let price_btc = 0.00006666;
+        wallet.balance_usd = wallet.balance * Number(getters.getWalletByTicker('BTC').balance_usd); 
+      }
     })
-  }
+    commit('UPDATE_BALANCE', wallet)
+  } 
 }
 
 export default {
