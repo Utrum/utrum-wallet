@@ -109,7 +109,7 @@
 				{{> loader}}
 			</div>
 			{{else}} -->
-			<div id="btn-buy" class="btn col-custom center-horizontal">
+			<div id="btn-buy" v-on:click="buyMnz" class="btn col-custom center-horizontal">
 				BUY
 			</div>
 			<!-- {{/if}} -->
@@ -121,6 +121,8 @@
 </template>
 
 <script>
+import swal from 'sweetalert2';
+
 export default {
 	name: 'buy',
 	components: {
@@ -135,10 +137,19 @@ export default {
 			select: 'BTC',
 			package: 500,
 			packageIncrement: 500,
-			packageMAX: 100000
+			packageMAX: 100000,
 		}
 	},
 	methods: {
+		totalPrice() {
+			let price = 0;
+			if (this.select === 'BTC') {
+				price = 0.00006666;
+			} else if (this.select === 'KMD') {
+				price = 0.03333333;
+			}
+			return (this.package * price).toFixed(8);
+		},
 		valueChange(value) {
 			this.select = value
 		},
@@ -150,6 +161,18 @@ export default {
 		decrementPackage() {
 			if (this.package > this.packageIncrement) {
 				this.package -= this.packageIncrement;
+			}
+		},
+		buyMnz() {
+			let mnzToBuy = this.package;
+			let coin = this.select;
+			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
+
+			if (this.totalPrice() < balance) {
+				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
+				// HERE MAXIME MAKE THE TRANSFER !
+			} else {
+				swal('Oops...', "No enought money in your " + this.select + " balance !", 'error')
 			}
 		}
 	},
@@ -164,19 +187,26 @@ export default {
 			return this.$store.getters.getWalletByTicker(this.select).coin.name;
 		},
 		getTotalPrice() {
-			let price = 0;
-			if (this.select === 'BTC') {
-				price = 0.00006666;
-			} else if (this.select === 'KMD') {
-				price = 0.03333333;
-			}
-			return this.package * price;
+			return this.totalPrice();
 		},
 	}
 }
 </script>
 
 <style>
+
+.swal2-popup button {
+	outine: none;
+	border: none;
+}
+
+.swal2-popup .swal2-styled.swal2-confirm {
+	background-color: #7c398a;
+}
+
+.swal2-confirm .swal2-styled {
+	outline: none;
+}
 
 .row-custom {
 	display: flex;
@@ -192,11 +222,6 @@ export default {
 
 .select-coin {
 	text-align: center;
-
-}
-
-.select-header {
-	flex-grow: 1;
 }
 
 .card {
@@ -476,6 +501,7 @@ height: 75px;*/
 }
 
 .select-header{
+	flex-grow: 1;
 	margin: 50px;
 	border: 1px solid #7c398a;
 	background: transparent;
@@ -494,47 +520,6 @@ height: 75px;*/
 .select-header:hover{
 	background-color: black;
 	color: white;
-}
-
-.select2-selection__rendered {
-	line-height: 75px !important;
-	text-align: center;
-	color: #7c398a !important;
-	font-weight: 200;
-}
-
-.select2-results__options {
-	overflow:hidden; 
-	overflow-y:scroll;
-
-}
-
-.select2-selection {
-	height: 75px !important;
-	width: 126px;
-		outline: none;
-	border-color: #7c398a !important;
-	font-size: 1.8em;
-	font-weight: 300;
-	border-top-left-radius: 0px 0px !important;
-	border-bottom-left-radius: 0px 0px !important;
-}
-
-.select2-selection__arrow {
-	display: none;
-}
-
-.select2-selection__rendered {
-	padding: 0px !important;
-}
-
-.select2-container--open .select2-dropdown--below {
-	width: 151px !important;
-	margin-left: -25px !important;
-}
-
-.select2-search__field {
-	outline: none;
 }
 
 .select-all {
