@@ -54,7 +54,7 @@
 						YOUR CURRENCY BALANCES
 					</div>
 					<div id="balance-value">
-						balance<span id="balance-coin"> {{getBalance***REMOVED******REMOVED***</span>
+						{{getBalance***REMOVED******REMOVED***<span id="balance-coin"> {{select***REMOVED******REMOVED***</span>
 					</div>
 				</div>
 			</div>
@@ -64,13 +64,13 @@
 						CHOOSE HOW MANY MNZ YOU WANT TO BUY
 					</div>
 					<div id="package-mnz" class="row">
-						<a id="less-mnz" href="#" class="col-center">
+						<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
 							<img src="@/assets/icon-less.svg"/>
 						</a>
 						<div id="package-value" class="col-center">
-							packageValue
+							{{package***REMOVED******REMOVED***
 						</div>
-						<a id="more-mnz" href="#" class="col-center">
+						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
 							<img src="@/assets/icon-more.svg"/>
 						</a>
 					</div>
@@ -87,10 +87,10 @@
 			<div class="col-custom center-horizontal">
 				<div class="row-main center-text">
 					<div class="title-value">
-						Total currentcoin
+						Total {{getStringTicket***REMOVED******REMOVED***
 					</div>
 					<div class="value">
-						totalPrice
+						{{getTotalPrice***REMOVED******REMOVED***
 					</div>
 				</div>
 			</div>
@@ -100,7 +100,7 @@
 						MNZ
 					</div>
 					<div class="value">
-						packageValue
+						{{package***REMOVED******REMOVED***
 					</div>
 				</div>
 			</div>
@@ -130,26 +130,48 @@
 		return {
 			listData: [
 			'BTC',
-			'KMD',
-			'LTC',
-			'DASH',
-			'BCC'
+			'KMD'
 			],
 			select: 'BTC',
+			package: 500,
+			packageIncrement: 500,
+			packageMAX: 100000
 		***REMOVED***
 	***REMOVED***,
 	methods: {
 		valueChange(value) {
 			this.select = value
+		***REMOVED***,
+		incrementPackage() {
+			if (this.package < this.packageMAX) {
+				this.package += this.packageIncrement;
+			***REMOVED***
+		***REMOVED***,
+		decrementPackage() {
+			if (this.package > this.packageIncrement) {
+				this.package -= this.packageIncrement;
+			***REMOVED***
 		***REMOVED***
 	***REMOVED***,
 	computed: {
 		getBalance() {
-			return this.$store.getters.getWalletByTicker(this.select).balance
+			return this.$store.getters.getWalletByTicker(this.select).balance;
 		***REMOVED***,
 		getMnzBalance() {
-			return this.$store.getters.getWalletByTicker('MNZ').balance
-		***REMOVED***
+			return this.$store.getters.getWalletByTicker('MNZ').balance;
+		***REMOVED***,
+		getStringTicket() {
+			return this.$store.getters.getWalletByTicker(this.select).coin.name;
+		***REMOVED***,
+		getTotalPrice() {
+			let price = 0;
+			if (this.select === 'BTC') {
+				price = 0.00006666;
+			***REMOVED*** else if (this.select === 'KMD') {
+				price = 0.03333333;
+			***REMOVED***
+			return this.package * price;
+		***REMOVED***,
 	***REMOVED***
 ***REMOVED***
 </script>
