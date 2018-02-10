@@ -54,9 +54,13 @@
 		</div>
 
 		<div class="btn-center">
-			<button :disabled="canWithdraw" v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
+			<button :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
 		</div>
-    <b-modal id="confirmWithdraw" centered title="Withdraw confirmation">
+
+		<h3 id="title">TX HISTORY</h3>
+
+		<b-table id="txTable" striped hover :items="history"></b-table>
+    <b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
       <p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount***REMOVED******REMOVED*** {{withdraw.coin***REMOVED******REMOVED***</b> to <b>{{withdraw.address***REMOVED******REMOVED***</b></p>
     </b-modal>
 	</div>
@@ -64,6 +68,8 @@
 
 <script>
 import bitcoinjs from 'bitcoinjs-lib'
+import { Wallet ***REMOVED*** from 'libwallet-mnz'
+var sb = require('satoshi-bitcoin')
 
 ***REMOVED***
 	name: 'withdraw',
@@ -80,30 +86,78 @@ import bitcoinjs from 'bitcoinjs-lib'
         // 'DASH',
         // 'BCC'
 			],
-      select: 'BTC',
+      select: 'MNZ',
       withdraw: {
-        amount: 0,
-        address: '',
-        coin: 'BTC'
-      ***REMOVED***
+        amount: 0.1,
+        address: 'RPRLh5bddEmZCGDwa7q92sTKAfEbBHtKUd',
+        coin: 'MNZ'
+			***REMOVED***,
+			history: []
 		***REMOVED***
   ***REMOVED***,
+	mounted() {
+		this.getTxHistory()
+	***REMOVED***,
   methods: {
 		updateCoin(value) {
       this.select = value
-      this.withdraw.coin = value
-    ***REMOVED***,
-    
+			this.withdraw.coin = value
+			this.getTxHistory()
+		***REMOVED***,
+		getRawTx(tx) {
+			this.$http.post('http://localhost:8000', {
+				ticker: this.wallet.ticker,
+				method: 'blockchain.transaction.get',
+				params: [ item.tx_hash ]
+			***REMOVED***).then(response => {
+				var tx = bitcoinjs.Transaction.fromHex(response.data);
+				item.amount  = tx.outs[0].value;
+			***REMOVED***)
+		***REMOVED***,
+		getTxHistory() {
+			var self = this;
+			this.$http.post('http://localhost:8000', {
+				ticker: this.wallet.ticker,
+				method: 'blockchain.address.get_history',
+				params: [ this.wallet.address ]
+			***REMOVED***).then(response => {
+				if (response.data.length > 0) {
+					let history = response.data
+					self.history = history
+					this.$root.$emit('bv::table::refresh', 'txTable');
+				***REMOVED*** else return []
+			***REMOVED***)
+		***REMOVED***,
+    withdrawFunds() {
+			if(this.canWithdraw && this.addressIsValid) {
+				var self = this
+				this.$http.post('http://localhost:8000', {
+					ticker: this.wallet.ticker,
+					method: 'blockchain.address.listunspent',
+					params: [ this.wallet.address ]
+				***REMOVED***).then(response => {
+					console.log(response)
+					let wallet = new Wallet(this.$store.getters.passphrase, this.wallet.coin, 0)
+					let tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount))
+					console.log(wallet, tx)
+				***REMOVED***)
+			***REMOVED***
+		***REMOVED***
 	***REMOVED***,
 	computed: {
+		wallet() {
+			return this.$store.getters.getWalletByTicker(this.select)
+    ***REMOVED***,
 		getBalance() {
 			return this.$store.getters.getWalletByTicker(this.select).balance
     ***REMOVED***,
     canWithdraw() {
-      return !(this.withdraw.amount <= this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
+      return (this.withdraw.amount < this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
     ***REMOVED***,
     addressIsValid() {
-      return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
+			if (this.withdraw.address)
+				return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
+			else return false
     ***REMOVED***
   ***REMOVED***
 ***REMOVED***
@@ -344,7 +398,7 @@ hr {
 ***REMOVED***
 
 .disableSendCoins {
-	opacity: 0.65; 
+	opacity: 0.65;
 	cursor: not-allowed;
 ***REMOVED***
 
