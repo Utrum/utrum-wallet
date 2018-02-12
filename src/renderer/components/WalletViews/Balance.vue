@@ -25,6 +25,11 @@ export default {
   components: {
     'balance-item': require('@/components/WalletViews/BalanceItem').default
   },
+  mounted() {
+    Object.keys(this.wallets).forEach(function(ticker) {
+      this.$store.dispatch('updateBalance', this.wallets[ticker])
+    }, this);
+  },
   computed: {
     wallets() {
       return this.$store.getters.getWallets
