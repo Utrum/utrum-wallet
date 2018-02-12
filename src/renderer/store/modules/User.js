@@ -29,7 +29,7 @@ const mutations = {
 
 const actions = {
   login ({ commit }, passphrase) {
-    commit('SET_PASSPHRASE', passphrase.value)
+    commit('SET_PASSPHRASE', passphrase)
     commit('USER_LOGIN')
   },
   logout({commit, dispatch}) {

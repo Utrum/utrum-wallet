@@ -268,12 +268,6 @@ export default {
 	text-align: right;
 }
 
-.row {
-	margin: 0px;
-	display: flex;
-	justify-content: space-between;
-}
-
 .row-header {
 	display: flex;
 	justify-content: flex-start;

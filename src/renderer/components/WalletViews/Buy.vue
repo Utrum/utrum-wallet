@@ -261,7 +261,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 .col {
 	flex-grow: 0;
-
 }
 .row {
 	margin: 0px;

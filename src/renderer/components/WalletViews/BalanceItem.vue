@@ -92,13 +92,6 @@ export default {
   margin: 0px;
 }
 
-.row-main-item {
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
 #balance-item {
   margin: 0;
   margin-right: 5px;
