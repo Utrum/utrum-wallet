@@ -23,7 +23,7 @@
 ***REMOVED***
   name: 'balance',
   components: {
-    'balance-item': require('@/components/WalletViews/BalanceItem').default
+    'balance-item': require('@/components/WalletViews/BalanceItem').default,
   ***REMOVED***,
   mounted() {
     Object.keys(this.wallets).forEach(function(ticker) {

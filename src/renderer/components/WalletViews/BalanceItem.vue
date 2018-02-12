@@ -11,11 +11,11 @@
     <div class="row-footer">
       <p class="col-header">Your deposit {{wallet.coin.name***REMOVED******REMOVED*** address :</p>
       <div class="card">
-        <button type="button" class="btn btn-copy-link btn-smartaddress" :data-clipboard-text="wallet.address">
+        <explorer class="btn btn-copy-link btn-smartaddress" type="address" :ticker="wallet.ticker" :value="wallet.address">
           <div :id="wallet.ticker" class="btn-inside-qrcode">
             {{wallet.address***REMOVED******REMOVED***
           </div>
-        </button>
+        </explorer>
       </div>
     </div>
     <hr/>
@@ -28,6 +28,9 @@ var electrum = require('../../lib/electrum')
 
 ***REMOVED***
   name: 'balance-item',
+  components: {
+    'explorer': require('@/components/Utils/ExplorerLink').default
+  ***REMOVED***,
   props: {
     wallet: {
       type: Object,
