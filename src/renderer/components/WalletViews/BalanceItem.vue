@@ -92,13 +92,6 @@ var electrum = require('../../lib/electrum')
   margin: 0px;
 ***REMOVED***
 
-.row-main-item {
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-  margin-bottom: 20px;
-***REMOVED***
-
 #balance-item {
   margin: 0;
   margin-right: 5px;
