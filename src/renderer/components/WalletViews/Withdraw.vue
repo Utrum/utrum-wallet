@@ -10,11 +10,11 @@
 
 		<div class="row">
 			<div id="selector-coin-buy" class="col-custom">
-				<div class="row-header">
+				<div class="row-header" v-b-tooltip.html.right title="Click to select currency">
 					<div class="btn select-all">
 						<p @click="$root.$emit('select2:open')" id="add-coin">+</p>
 					</div>
-					<div class="col-custom">
+					<div  class="col-custom">
 						<select2 ref='select2' :options="listData" :value="select" @input="updateCoin"></select2>
 					</div>
 				</div>
@@ -23,8 +23,8 @@
 				<div class="vl">
 				</div>
 			</div>
-			<div id="card-current-balance" class="col-custom">
-				<div class="row current-balance card">
+			<div @click="withdraw.amount = getBalance" id="card-current-balance" class="col-custom">
+				<div v-b-tooltip.html.left title="Click to withdraw all funds" class="row current-balance card">
 					<span id="value-current-balance">{{getBalance***REMOVED******REMOVED***</span><span>{{select***REMOVED******REMOVED***</span>
 				</div>
 			</div>
@@ -59,7 +59,9 @@
 
 		<h3 id="title">TX HISTORY</h3>
 
-		<b-table id="txTable" striped hover :items="history"></b-table>
+		<b-table id="txTable" striped hover :fields="fields" :items="history">
+			<template slot="amount" slot-scope="row">{{getRawTxAmount(row)***REMOVED******REMOVED***</template>
+		</b-table>
     <b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
       <p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount***REMOVED******REMOVED*** {{withdraw.coin***REMOVED******REMOVED***</b> to <b>{{withdraw.address***REMOVED******REMOVED***</b></p>
     </b-modal>
@@ -92,7 +94,17 @@ var sb = require('satoshi-bitcoin')
         address: 'RPRLh5bddEmZCGDwa7q92sTKAfEbBHtKUd',
         coin: 'MNZ'
 			***REMOVED***,
-			history: []
+			history: [],
+			fields: [
+				{
+					key:'tx_hash',
+					label: 'Tx Hash'
+				***REMOVED***,
+				{
+					key: 'amount',
+					label: 'Amount'
+				***REMOVED***
+			]
 		***REMOVED***
   ***REMOVED***,
 	mounted() {
@@ -105,14 +117,21 @@ var sb = require('satoshi-bitcoin')
 			this.getTxHistory()
 		***REMOVED***,
 		getRawTx(tx) {
-			this.$http.post('http://localhost:8000', {
+			return this.$http.post('http://localhost:8000', {
 				ticker: this.wallet.ticker,
 				method: 'blockchain.transaction.get',
-				params: [ item.tx_hash ]
-			***REMOVED***).then(response => {
-				var tx = bitcoinjs.Transaction.fromHex(response.data);
-				item.amount  = tx.outs[0].value;
+				params: [ tx.tx_hash ]
 			***REMOVED***)
+		***REMOVED***,
+		getRawTxAmount(tx) {
+			// var rawTx
+			// this.getRawTx(tx).then(response => {
+			// 	rawTx = bitcoinjs.Transaction.fromHex(response.data);
+			// 	tx.amount = rawTx.outs[0].value
+			// 	console.log(tx)
+			// ***REMOVED***)
+			
+			// // console.log(rawTx)
 		***REMOVED***,
 		getTxHistory() {
 			var self = this;
@@ -137,9 +156,17 @@ var sb = require('satoshi-bitcoin')
 					params: [ this.wallet.address ]
 				***REMOVED***).then(response => {
 					console.log(response)
-					let wallet = new Wallet(this.$store.getters.passphrase, this.wallet.coin, 0)
+					let wallet = new Wallet(self.$store.getters.passphrase, self.wallet.coin, 0)
+					wallet.ticker = self.wallet.ticker
 					let tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount))
 					console.log(wallet, tx)
+					self.$http.post('http://localhost:8000', {
+						ticker: self.wallet.ticker,
+						method: 'blockchain.transaction.broadcast',
+						params: [ tx ]
+					***REMOVED***).then((response) => {
+						self.$swal(`Transaction sent`, response.data, 'success')
+					***REMOVED***)
 				***REMOVED***)
 			***REMOVED***
 		***REMOVED***

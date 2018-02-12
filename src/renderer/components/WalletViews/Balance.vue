@@ -25,6 +25,11 @@
   components: {
     'balance-item': require('@/components/WalletViews/BalanceItem').default
   ***REMOVED***,
+  mounted() {
+    Object.keys(this.wallets).forEach(function(ticker) {
+      this.$store.dispatch('updateBalance', this.wallets[ticker])
+    ***REMOVED***, this);
+  ***REMOVED***,
   computed: {
     wallets() {
       return this.$store.getters.getWallets
