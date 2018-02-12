@@ -1,5 +1,5 @@
 <template>
-  <a class="btn btn-copy-link btn-smartaddress" target="_blank" @click.prevent="openLink" :href="href">{{value}}</a class="btn btn-copy-link btn-smartaddress">
+  <a v-b-tooltip.html.top :title="tooltipTitle" class="btn btn-copy-link btn-smartaddress" target="_blank" @click.prevent="openLink" :href="href">{{value}}</a class="btn btn-copy-link btn-smartaddress">
 </template>
 
 <script>
@@ -26,6 +26,9 @@ export default {
   computed: {
     href() {
       return `${this.explorers[this.ticker]}/${this.type}/${this.value}`
+    },
+    tooltipTitle() {
+      return `Click to see ${this.type} in explorer`
     }
   }
 }

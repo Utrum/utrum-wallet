@@ -60,7 +60,7 @@
 		<h3 id="title">TX HISTORY</h3>
 
 		<b-table id="txTable" striped hover :fields="fields" :items="history">
-			<template slot="amount" slot-scope="row">{{getRawTxAmount(row)}}</template>
+			<template slot="tx_hash" slot-scope="row"><explorer type="tx" :ticker="wallet.ticker" :value="row.value"></explorer></template>
 		</b-table>
     <b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
       <p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
@@ -76,7 +76,8 @@ var sb = require('satoshi-bitcoin')
 export default {
 	name: 'withdraw',
 	components: {
-		'select2': require('../Utils/Select2.vue').default
+		'select2': require('../Utils/Select2.vue').default,
+    'explorer': require('@/components/Utils/ExplorerLink').default
 	},
 	data() {
 		return {
