@@ -104,20 +104,15 @@
 					</div>
 				</div>
 			</div>
-<!-- 			{{#if isBuying}}
-			<div class="col">
-				{{> loader}}
-			</div>
-			{{else}} -->
-			<div id="btn-buy" v-on:click="buyMnz" class="btn col-custom center-horizontal">
+
+			<button :disabled="canBuy"  v-b-modal="'confirmBuy'" id="buycoins" class="btn sendcoins" type="button">
 				BUY
-			</div>
-			<!-- {{/if}} -->
+			</button>
 		</div>
+		<b-modal @ok="buyMnz()" id="confirmBuy" centered title="Buy confirmation">
+			<p class="my-4">Are you sure you want to buy <b>{{package}}MNZ</b> for <b>{{getTotalPrice}}{{select}} ?</b></p>
+		</b-modal>
 	</div>
-<!-- 	<div class="content-swapview">
-		{{> swapstatusview}}
-	</div> -->
 </template>
 
 <script>
@@ -164,16 +159,13 @@ export default {
 			}
 		},
 		buyMnz() {
-			let mnzToBuy = this.package;
-			let coin = this.select;
-			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
-
-			if (this.totalPrice() < balance) {
+			swal('Success', "here buy " + this.package + "mnz", 'success');
+/*			if (this.totalPrice() < balance) {
 				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
 				// HERE MAXIME MAKE THE TRANSFER !
 			} else {
 				swal('Oops...', "No enought money in your " + this.select + " balance !", 'error')
-			}
+			}*/
 		}
 	},
 	computed: {
@@ -189,29 +181,24 @@ export default {
 		getTotalPrice() {
 			return this.totalPrice();
 		},
+		canBuy() {
+			let mnzToBuy = this.package;
+			let coin = this.select;
+			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
+
+			return this.totalPrice() < balance;
+		},
 	}
 }
 </script>
 
 <style>
 
-.swal2-popup button {
-	outine: none;
-	border: none;
-}
-
-.swal2-popup .swal2-styled.swal2-confirm {
-	background-color: #7c398a;
-}
-
-.swal2-confirm .swal2-styled {
-	outline: none;
-}
-
 .row-custom {
 	display: flex;
 	flex-direction: row;
 }
+
 #selector-plus {
 	flex-direction: row;
 }
@@ -337,16 +324,9 @@ input[type=number]::-webkit-outer-spin-button {
 	height: 100%;
 }
 
-.select-coin-buy .form-control {
-/*	width: 150px;
-height: 75px;*/
-}
-
 .select-coin-buy .dropdown-toggle {
 	height: 100%;
 	width: 150px;
-/*	width: 150px;
-height: 75px;*/
 }
 
 .dropdown-toggle button {
@@ -642,7 +622,7 @@ hr {
 	background-color: transparent !important;
 }
 
-#sendcoins {
+#buycoins {
 	border: 1px solid #7c398a;
 	border-radius: 4px !important;
 	background-color: transparent;
@@ -655,7 +635,7 @@ hr {
 	color: #7c398a;
 }
 
-#sendcoins:hover {
+#buycoins:hover {
 	background-color: #7c398a;
 	color: white;
 }
