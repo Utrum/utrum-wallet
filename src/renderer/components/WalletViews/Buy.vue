@@ -104,20 +104,15 @@
 					</div>
 				</div>
 			</div>
-<!-- 			{{#if isBuying***REMOVED******REMOVED***
-			<div class="col">
-				{{> loader***REMOVED******REMOVED***
-			</div>
-			{{else***REMOVED******REMOVED*** -->
-			<div id="btn-buy" v-on:click="buyMnz" class="btn col-custom center-horizontal">
+
+			<button :disabled="canBuy"  v-b-modal="'confirmBuy'" id="buycoins" class="btn sendcoins" type="button">
 				BUY
-			</div>
-			<!-- {{/if***REMOVED******REMOVED*** -->
+			</button>
 		</div>
+		<b-modal @ok="buyMnz()" id="confirmBuy" centered title="Buy confirmation">
+			<p class="my-4">Are you sure you want to buy <b>{{package***REMOVED******REMOVED***MNZ</b> for <b>{{getTotalPrice***REMOVED******REMOVED***{{select***REMOVED******REMOVED*** ?</b></p>
+		</b-modal>
 	</div>
-<!-- 	<div class="content-swapview">
-		{{> swapstatusview***REMOVED******REMOVED***
-	</div> -->
 </template>
 
 <script>
@@ -164,16 +159,13 @@ import swal from 'sweetalert2';
 			***REMOVED***
 		***REMOVED***,
 		buyMnz() {
-			let mnzToBuy = this.package;
-			let coin = this.select;
-			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
-
-			if (this.totalPrice() < balance) {
+			swal('Success', "here buy " + this.package + "mnz", 'success');
+/*			if (this.totalPrice() < balance) {
 				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
 				// HERE MAXIME MAKE THE TRANSFER !
 			***REMOVED*** else {
 				swal('Oops...', "No enought money in your " + this.select + " balance !", 'error')
-			***REMOVED***
+			***REMOVED****/
 		***REMOVED***
 	***REMOVED***,
 	computed: {
@@ -189,29 +181,24 @@ import swal from 'sweetalert2';
 		getTotalPrice() {
 			return this.totalPrice();
 		***REMOVED***,
+		canBuy() {
+			let mnzToBuy = this.package;
+			let coin = this.select;
+			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
+
+			return this.totalPrice() < balance;
+		***REMOVED***,
 	***REMOVED***
 ***REMOVED***
 </script>
 
 <style>
 
-.swal2-popup button {
-	outine: none;
-	border: none;
-***REMOVED***
-
-.swal2-popup .swal2-styled.swal2-confirm {
-	background-color: #7c398a;
-***REMOVED***
-
-.swal2-confirm .swal2-styled {
-	outline: none;
-***REMOVED***
-
 .row-custom {
 	display: flex;
 	flex-direction: row;
 ***REMOVED***
+
 #selector-plus {
 	flex-direction: row;
 ***REMOVED***
@@ -337,16 +324,9 @@ input[type=number]::-webkit-outer-spin-button {
 	height: 100%;
 ***REMOVED***
 
-.select-coin-buy .form-control {
-/*	width: 150px;
-height: 75px;*/
-***REMOVED***
-
 .select-coin-buy .dropdown-toggle {
 	height: 100%;
 	width: 150px;
-/*	width: 150px;
-height: 75px;*/
 ***REMOVED***
 
 .dropdown-toggle button {
@@ -642,7 +622,7 @@ hr {
 	background-color: transparent !important;
 ***REMOVED***
 
-#sendcoins {
+#buycoins {
 	border: 1px solid #7c398a;
 	border-radius: 4px !important;
 	background-color: transparent;
@@ -655,7 +635,7 @@ hr {
 	color: #7c398a;
 ***REMOVED***
 
-#sendcoins:hover {
+#buycoins:hover {
 	background-color: #7c398a;
 	color: white;
 ***REMOVED***
