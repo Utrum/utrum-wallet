@@ -28,7 +28,7 @@ function createWindow () {
     nodeIntegration: "iframe", // and this line
     webPreferences: {
       webSecurity: false
-    }
+    },
     // titleBarStyle: 'hidden',
     center: true,
     width: 1100, 

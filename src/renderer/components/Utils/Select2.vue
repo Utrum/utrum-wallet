@@ -22,7 +22,11 @@ export default {
 		  // emit event on change.
 		  .on('change', function () {
 		  	vm.$emit('input', this.value)
-		  })
+			})
+			this.$root.$on('select2:open', () => {
+				console.log('opening select2 dropdown...')
+				$(this.$el).select2('open');
+			})
 		},
 		watch: {
 			value: function (value) {

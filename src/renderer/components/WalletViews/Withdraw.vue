@@ -12,10 +12,10 @@
 			<div id="selector-coin-buy" class="col-custom">
 				<div class="row-header">
 					<div class="btn select-all">
-						<p id="add-coin">+</p>
+						<p @click="$root.$emit('select2:open')" id="add-coin">+</p>
 					</div>
 					<div class="col-custom">
-						<select2 :options="listData" :value="select" @input="updateCoin"></select2>
+						<select2 ref='select2' :options="listData" :value="select" @input="updateCoin"></select2>
 					</div>
 				</div>
 			</div>
