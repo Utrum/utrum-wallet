@@ -1,5 +1,5 @@
 <template>
-  <a class="btn btn-copy-link btn-smartaddress" target="_blank" @click.prevent="openLink" :href="href">{{value***REMOVED******REMOVED***</a class="btn btn-copy-link btn-smartaddress">
+  <a v-b-tooltip.html.top :title="tooltipTitle" class="btn btn-copy-link btn-smartaddress" target="_blank" @click.prevent="openLink" :href="href">{{value***REMOVED******REMOVED***</a class="btn btn-copy-link btn-smartaddress">
 </template>
 
 <script>
@@ -26,6 +26,9 @@
   computed: {
     href() {
       return `${this.explorers[this.ticker]***REMOVED***/${this.type***REMOVED***/${this.value***REMOVED***`
+    ***REMOVED***,
+    tooltipTitle() {
+      return `Click to see ${this.type***REMOVED*** in explorer`
     ***REMOVED***
   ***REMOVED***
 ***REMOVED***
