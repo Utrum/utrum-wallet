@@ -223,4 +223,18 @@ ul ul a {
   color: white;
   font-weight: 500;
 }
+
+.btn-primary {
+  border: 1px solid #7c398a;
+  border-radius: 4px !important;
+  background-color: transparent;
+  color: #7c398a;
+  outline: none;
+}
+
+.btn-primary:hover {
+  background-color: #7c398a;
+  border: 1px solid #7c398a;
+}
+
 </style>
