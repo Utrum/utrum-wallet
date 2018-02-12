@@ -4,21 +4,24 @@
 			<img src="../assets/icon-logo-monaize.svg" />
 		</div>
 		<ul class="list-unstyled">
-			<li>
-				<router-link active-class="active" tag="a" to="balance">
-					<img id="icon-balances" src="../assets/icon-balances.svg" class="number-view" />
+			<li v-on:click="balanceClicked">
+				<router-link  active-class="active" tag="a" to="balance">
+					<img v-if="balanceState" id="icon-balances" src="../assets/icon-balances.svg" class="number-view" />
+					<img v-else id="icon-balances" src="../assets/icon-balances-grey.svg" class="number-view" />
 					BALANCES
 				</router-link>
 			</li>
-			<li>
+			<li v-on:click="buyMnzClicked">
 				<router-link active-class="active" tag="a" to="buy">
-					<img id="icon-buy-mnz" src="../assets/icon-buy-mnz-grey.svg" class="number-view" />
+					<img v-if="buyMnzState" id="icon-buy-mnz" src="../assets/icon-buy-mnz.svg" class="number-view" />
+					<img v-else id="icon-buy-mnz" src="../assets/icon-buy-mnz-grey.svg" class="number-view" />
 					BUY MNZ
 				</router-link>
 			</li>
-			<li>
-				<router-link active-class="active" tag="a" to="withdraw">
-					<img id="icon-withdrawal" src="../assets/icon-withdrawal-grey.svg" class="number-view" />
+			<li v-on:click="withdrawalClicked">
+				<router-link  active-class="active" tag="a" to="withdraw">
+					<img v-if="withdrawalState" id="icon-withdrawal" src="../assets/icon-withdrawal.svg" class="number-view" />
+					<img v-else id="icon-withdrawal" src="../assets/icon-withdrawal-grey.svg" class="number-view" />
 					WITHDRAWAL
 				</router-link>
 			</li>
@@ -31,7 +34,32 @@
 
 <script>
 export default {
-
+	name: 'sidebar',
+	data() {
+		return {
+			balanceState: true,
+			buyMnzState: false,
+			withdrawalState: false,
+		}
+	},
+	methods: {
+		balanceClicked() {
+			console.log("test");
+			this.balanceState = true;
+			this.buyMnzState = false;
+			this.withdrawalState = false;
+		},
+		buyMnzClicked() {
+			this.balanceState = false;
+			this.buyMnzState = true;
+			this.withdrawalState = false;
+		},
+		withdrawalClicked() {
+			this.balanceState = false;
+			this.buyMnzState = false;
+			this.withdrawalState = true;
+		}
+	}
 }
 </script>
 

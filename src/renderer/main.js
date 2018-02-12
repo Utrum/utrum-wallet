@@ -8,6 +8,12 @@ import BootstrapVue from 'bootstrap-vue'
 
 Vue.use(BootstrapVue);
 
+import BootstrapVue from 'bootstrap-vue'
+Vue.use(BootstrapVue);
+
+import VueSweetAlert from 'vue-sweetalert'
+Vue.use(VueSweetAlert)
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
 axios.config =  axios.create({

@@ -57,6 +57,7 @@
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-lib-zcash": "^3.3.2",
+    "bootstrap-vue": "^2.0.0-rc.1",
     "crypto-js": "^3.1.9-1",
     "electron-spawn": "^5.0.0",
     "electrum-client": "^0.0.5",
@@ -68,6 +69,7 @@
     "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
+    "vue-sweetalert": "^0.1.18",
     "vuex": "^2.3.1",
     "wif": "^2.0.6"
   },
