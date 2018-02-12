@@ -29,7 +29,7 @@
 			<div v-if="step3" class="row-main-item">
 				<p class="col-custom">Please enter your 24-word Backup Phrase to ensure you have written it down correctly. 
 				</p>
-				<textarea v-on:keyup="checkPassphrase" v-model="passphraseValue" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="create-passphrase-input" class="col-custom" type="text" name="input-login" onCopy="return false" onDrag="return false" onDrop="return false" autocomplete=off
+				<textarea v-on:keyup="checkPassphrase" v-model="passphraseValue" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="create-passphrase-input" class="col-custom" type="text" onPaste="return false" name="input-login" onCopy="return false" onDrag="return false" onDrop="return false" autocomplete=off
 				></textarea>
 			</div>
 		</div>
