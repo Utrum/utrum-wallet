@@ -28,6 +28,11 @@
 /* CSS declarations go here */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700');
 
+.modal-header {
+  text-align: center;
+  border-bottom: none !important;
+}
+
 .select2-container--open .select2-dropdown--below {
   width: 151px !important;
   margin-left: -24px !important;
@@ -235,6 +240,12 @@ ul ul a {
 .btn-primary:hover {
   background-color: #7c398a;
   border: 1px solid #7c398a;
+}
+
+.card {
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+  border-radius: 4px;
+  border: none;
 }
 
 </style>

@@ -191,7 +191,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .content {
 	padding: 50px;
 	color: rgb(151,151,151);

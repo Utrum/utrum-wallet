@@ -43,7 +43,6 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700');
-
 .content {
   padding: 50px;
   color: rgb(151,151,151);
