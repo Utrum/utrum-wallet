@@ -10,12 +10,12 @@
 
 		<div class="row">
 			<div id="selector-coin-buy" class="col-custom">
-				<div class="row-header">
+				<div class="row-header" v-b-tooltip.html.right title="Click to select currency">
 					<div class="btn select-all">
-						<p id="add-coin">+</p>
+						<p @click="$root.$emit('select2:open')" id="add-coin">+</p>
 					</div>
-					<div class="col-custom">
-						<select2 :options="listData" :value="select"></select2>
+					<div  class="col-custom">
+						<select2 ref='select2' :options="listData" :value="select" @input="updateCoin"></select2>
 					</div>
 				</div>
 			</div>
@@ -23,9 +23,9 @@
 				<div class="vl">
 				</div>
 			</div>
-			<div id="card-current-balance" class="col-custom">
-				<div class="row current-balance card">
-					<span id="value-current-balance">1231.00000001</span><span> BTC</span>
+			<div @click="withdraw.amount = getBalance" id="card-current-balance" class="col-custom">
+				<div v-b-tooltip.html.left title="Click to withdraw all funds" class="row current-balance card">
+					<span id="value-current-balance">{{getBalance***REMOVED******REMOVED***</span><span>{{select***REMOVED******REMOVED***</span>
 				</div>
 			</div>
 		</div>
@@ -35,8 +35,8 @@
 				<span>AMOUNT</span>
 			</div>
 			<div class="row">
-				<input onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="input-field" placeholder="0.0">
-				<span id="current-coin"> BTC</span>
+				<input v-model="withdraw.amount" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="input-field" placeholder="0.0">
+				<span id="current-coin"> {{select***REMOVED******REMOVED***</span>
 			</div>
 		</div>
 		<div class="col-custom horizontal-line">
@@ -45,21 +45,34 @@
 
 		<div class="row">
 			<div class="col-custom">
-				<span class="title-content">ADDRESS BITCOIN</span>
+				<span class="title-content">{{select***REMOVED******REMOVED*** ADDRESS</span>
 			</div>
-			<input type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
+			<input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
 		</div>
 		<div class="col-custom horizontal-line">
 			<hr/>
 		</div>
 
 		<div class="btn-center">
-			<button id="sendcoins" class="btn sendcoins" type="button">SEND</button>
+			<button :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
 		</div>
+
+		<h3 id="title">TX HISTORY</h3>
+
+		<b-table id="txTable" striped hover :fields="fields" :items="history">
+			<template slot="amount" slot-scope="row">{{getRawTxAmount(row)***REMOVED******REMOVED***</template>
+		</b-table>
+    <b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
+      <p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount***REMOVED******REMOVED*** {{withdraw.coin***REMOVED******REMOVED***</b> to <b>{{withdraw.address***REMOVED******REMOVED***</b></p>
+    </b-modal>
 	</div>
 </template>
 
 <script>
+import bitcoinjs from 'bitcoinjs-lib'
+import { Wallet ***REMOVED*** from 'libwallet-mnz'
+var sb = require('satoshi-bitcoin')
+
 ***REMOVED***
 	name: 'withdraw',
 	components: {
@@ -68,15 +81,112 @@
 	data() {
 		return {
 			listData: [
-			'BTC',
-			'KMD',
-			'LTC',
-			'DASH',
-			'BCC'
+        'BTC',
+        'KMD',
+        'MNZ',
+        // 'LTC',
+        // 'DASH',
+        // 'BCC'
 			],
-			select: 'BTC',
+      select: 'MNZ',
+      withdraw: {
+        amount: 0.1,
+        address: 'RPRLh5bddEmZCGDwa7q92sTKAfEbBHtKUd',
+        coin: 'MNZ'
+			***REMOVED***,
+			history: [],
+			fields: [
+				{
+					key:'tx_hash',
+					label: 'Tx Hash'
+				***REMOVED***,
+				{
+					key: 'amount',
+					label: 'Amount'
+				***REMOVED***
+			]
 		***REMOVED***
-	***REMOVED***
+  ***REMOVED***,
+	mounted() {
+		this.getTxHistory()
+	***REMOVED***,
+  methods: {
+		updateCoin(value) {
+      this.select = value
+			this.withdraw.coin = value
+			this.getTxHistory()
+		***REMOVED***,
+		getRawTx(tx) {
+			return this.$http.post('http://localhost:8000', {
+				ticker: this.wallet.ticker,
+				method: 'blockchain.transaction.get',
+				params: [ tx.tx_hash ]
+			***REMOVED***)
+		***REMOVED***,
+		getRawTxAmount(tx) {
+			// var rawTx
+			// this.getRawTx(tx).then(response => {
+			// 	rawTx = bitcoinjs.Transaction.fromHex(response.data);
+			// 	tx.amount = rawTx.outs[0].value
+			// 	console.log(tx)
+			// ***REMOVED***)
+			
+			// // console.log(rawTx)
+		***REMOVED***,
+		getTxHistory() {
+			var self = this;
+			this.$http.post('http://localhost:8000', {
+				ticker: this.wallet.ticker,
+				method: 'blockchain.address.get_history',
+				params: [ this.wallet.address ]
+			***REMOVED***).then(response => {
+				if (response.data.length > 0) {
+					let history = response.data
+					self.history = history
+					this.$root.$emit('bv::table::refresh', 'txTable');
+				***REMOVED*** else return []
+			***REMOVED***)
+		***REMOVED***,
+    withdrawFunds() {
+			if(this.canWithdraw && this.addressIsValid) {
+				var self = this
+				this.$http.post('http://localhost:8000', {
+					ticker: this.wallet.ticker,
+					method: 'blockchain.address.listunspent',
+					params: [ this.wallet.address ]
+				***REMOVED***).then(response => {
+					console.log(response)
+					let wallet = new Wallet(self.$store.getters.passphrase, self.wallet.coin, 0)
+					wallet.ticker = self.wallet.ticker
+					let tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount))
+					console.log(wallet, tx)
+					self.$http.post('http://localhost:8000', {
+						ticker: self.wallet.ticker,
+						method: 'blockchain.transaction.broadcast',
+						params: [ tx ]
+					***REMOVED***).then((response) => {
+						self.$swal(`Transaction sent`, response.data, 'success')
+					***REMOVED***)
+				***REMOVED***)
+			***REMOVED***
+		***REMOVED***
+	***REMOVED***,
+	computed: {
+		wallet() {
+			return this.$store.getters.getWalletByTicker(this.select)
+    ***REMOVED***,
+		getBalance() {
+			return this.$store.getters.getWalletByTicker(this.select).balance
+    ***REMOVED***,
+    canWithdraw() {
+      return (this.withdraw.amount < this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
+    ***REMOVED***,
+    addressIsValid() {
+			if (this.withdraw.address)
+				return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
+			else return false
+    ***REMOVED***
+  ***REMOVED***
 ***REMOVED***
 </script>
 
@@ -286,7 +396,7 @@ hr {
 ***REMOVED***
 
 .disableSendCoins {
-	opacity: 0.65; 
+	opacity: 0.65;
 	cursor: not-allowed;
 ***REMOVED***
 

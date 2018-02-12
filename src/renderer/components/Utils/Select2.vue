@@ -22,7 +22,11 @@ import 'select2'
 		  // emit event on change.
 		  .on('change', function () {
 		  	vm.$emit('input', this.value)
-		  ***REMOVED***)
+			***REMOVED***)
+			this.$root.$on('select2:open', () => {
+				console.log('opening select2 dropdown...')
+				$(this.$el).select2('open');
+			***REMOVED***)
 		***REMOVED***,
 		watch: {
 			value: function (value) {
