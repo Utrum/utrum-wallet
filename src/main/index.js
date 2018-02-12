@@ -64,7 +64,7 @@ function createWindow () {
           const data = Buffer.concat(chunks);
           var payload = JSON.parse(data)
           electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
-            if (err) throw new Error("ERROR: An electrum error has been detected. Please try again or relaunch the app.\n" + err)
+            if (err) throw JSON.stringify({error: err***REMOVED***)
             return res.end(JSON.stringify(response))
           ***REMOVED***)
         ***REMOVED***)
