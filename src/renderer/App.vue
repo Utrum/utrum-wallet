@@ -28,6 +28,44 @@
 /* CSS declarations go here */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700');
 
+.select2-container--open .select2-dropdown--below {
+  width: 151px !important;
+  margin-left: -24px !important;
+***REMOVED***
+
+.select2-selection__rendered {
+  line-height: 75px !important;
+  text-align: center;
+  color: #7c398a !important;
+  font-weight: 200;
+***REMOVED***
+
+.select2-selection {
+  height: 75px !important;
+  width: 126px;
+  border-color: #7c398a !important;
+  font-size: 1.8em;
+  font-weight: 300;
+  border-top-left-radius: 0px 0px !important;
+  border-bottom-left-radius: 0px 0px !important;
+***REMOVED***
+
+.select2-selection__rendered {
+  padding: 0px !important;
+***REMOVED***
+
+.select2-selection__arrow {
+  display: none;
+***REMOVED***
+
+.select2-search__field {
+  outline: none;
+***REMOVED***
+
+.select2-selection {
+  outline: none;
+***REMOVED***
+
 .cal{
   max-width: 100%;
 
