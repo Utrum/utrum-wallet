@@ -6,20 +6,27 @@
     </div>
     <div class="row-content">
       <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/>{{wallet.balance_usd***REMOVED******REMOVED*** (USD)</p>
-      <button :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></img></button>
+      <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></img></button>
     </div>
     <div class="row-footer">
       <p class="col-header">Your deposit {{wallet.coin.name***REMOVED******REMOVED*** address :</p>
       <div class="card">
-        <explorer class="btn btn-copy-link btn-smartaddress" type="address" :ticker="wallet.ticker" :value="wallet.address">
-          <div :id="wallet.ticker" class="btn-inside-qrcode">
-            {{wallet.address***REMOVED******REMOVED***
-          </div>
-        </explorer>
-      </div>
+        <button
+        v-clipboard:copy="wallet.address"
+        v-clipboard:success="onCopy"
+        type="button" 
+        class="btn btn-copy-link btn-smartaddress" 
+        :data-clipboard-text="wallet.address">
+        <div id="wallet-address-string" :id="wallet.ticker" class="btn-inside-qrcode">
+          <span v-if="isClipboard" >Copied to the clipboard</span>
+          <span v-else>{{wallet.address***REMOVED******REMOVED***</span>
+        </div>
+      </button>
     </div>
-    <hr/>
   </div>
+  <hr/>
+  <qrcode-modal :wallet="wallet"></qrcode-modal>
+</div>
 </template>
 
 <script>
@@ -29,7 +36,7 @@ var electrum = require('../../lib/electrum')
 ***REMOVED***
   name: 'balance-item',
   components: {
-    'explorer': require('@/components/Utils/ExplorerLink').default
+    'qrcode-modal' : require('@/components/Utils/QrcodeModal').default
   ***REMOVED***,
   props: {
     wallet: {
@@ -37,10 +44,30 @@ var electrum = require('../../lib/electrum')
       default: () => ({***REMOVED***)
     ***REMOVED***
   ***REMOVED***,
+  data() {
+    return {
+      isClipboard: false,
+    ***REMOVED***
+  ***REMOVED***,
+  methods: {
+    onCopy() {
+      var self = this
+      this.isClipboard = true;
+      setTimeout(function(){
+        self.isClipboard = false;
+      ***REMOVED***, 1000);
+    ***REMOVED***
+  ***REMOVED***,
 ***REMOVED***
 </script>
 
-<style>
+<style scoped>
+
+.modal-header {
+  text-align: center;
+  border-bottom: none !important;
+***REMOVED***
+
 .content .btn:focus {
   outline: none;
   box-shadow: none;
@@ -119,12 +146,6 @@ var electrum = require('../../lib/electrum')
 
 .row-footer button:active{
   background-color: #7c398a;
-***REMOVED***
-
-.card {
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
-  border-radius: 4px;
-  border: none;
 ***REMOVED***
 
 .btn-inside-qrcode {
