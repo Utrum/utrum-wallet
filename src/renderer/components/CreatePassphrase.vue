@@ -80,6 +80,9 @@ import bip39 from 'bip39'
 	***REMOVED***,
 	mounted() {
 		this.passphraseGenerated = bip39.generateMnemonic(256);
+
+		const {clipboard***REMOVED*** = require('electron');
+		clipboard.clear();
 	***REMOVED***,
 	methods: {
 		getRandomPassphrase() {
@@ -217,6 +220,10 @@ import bip39 from 'bip39'
 	margin-left: auto;
 	margin-right: auto;
 	width: 80%;
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	user-select: none;          /* Likely future */   
 ***REMOVED***
 
 #btn-continue {
