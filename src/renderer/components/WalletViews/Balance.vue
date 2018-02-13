@@ -35,7 +35,7 @@ export default {
       return this.$store.getters.getWallets
     },
     totalBalance() {
-      return this.$store.getters.getTotalBalance
+      return this.$store.getters.getTotalBalance.toFixed(2)
     }
   }
 }
