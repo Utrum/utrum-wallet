@@ -5,36 +5,47 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+  {
+    path: '/',
+    component: require('@/components/Home').default,
+    children: [
     {
-      path: '/',
+      path: '/login',
       name: 'login-form',
-      component: require('@/components/LoginForm').default
+      component: require('@/components/LoginForm').default,
     },
     {
-      path: '/wallet',
-      name: 'wallet',
-      component: require('@/components/WalletView').default,
-      children: [
-        {
-          path: '/balance', 
-          name: 'balance',
-          component: require('@/components/WalletViews/Balance').default
-        },
-        {
-          path: '/buy',
-          name: 'buy',
-          component: require('@/components/WalletViews/Buy').default
-        },
-        {
-          path: '/withdraw',
-          name: 'withdraw',
-          component: require('@/components/WalletViews/Withdraw').default
-        }
-      ]
+      path: '/createpassphrase', 
+      name: 'createpassphrase',
+      component: require('@/components/CreatePassphrase').default
+    },
+    ]
+  },
+  {
+    path: '/wallet',
+    name: 'wallet',
+    component: require('@/components/WalletView').default,
+    children: [
+    {
+      path: '/balance', 
+      name: 'balance',
+      component: require('@/components/WalletViews/Balance').default
     },
     {
-      path: '*',
-      redirect: '/'
+      path: '/buy',
+      name: 'buy',
+      component: require('@/components/WalletViews/Buy').default
+    },
+    {
+      path: '/withdraw',
+      name: 'withdraw',
+      component: require('@/components/WalletViews/Withdraw').default
     }
+    ]
+  },
+  {
+    path: '*',
+    redirect: '/login'
+  }
   ]
 })

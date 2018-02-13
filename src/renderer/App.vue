@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <login-form v-if="!userLoggedIn"></login-form>
-    <router-view v-else></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -248,4 +247,35 @@ ul ul a {
   border: none;
 }
 
+.row-main-item {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.row {
+  margin: 0px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-round-light {
+  min-height: 50px;
+  font-weight: 500;
+  border: 3px solid rgba(24,13,57,0.1);
+  background-color: rgb(250,250,250);
+  border-radius: 50px;
+  padding: 10px;
+  padding-right: 15px;
+  padding-left: 15px;
+  color: rgb(51, 51, 51);
+  font-size: 0.9em;
+  cursor: pointer;
+  outline: none;
+}
+
+textarea {
+    resize: none;
+}
 </style>

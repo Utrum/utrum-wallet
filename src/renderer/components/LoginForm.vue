@@ -10,7 +10,7 @@
 				</form>
 			</div>
 		</div>
-		<button id="create-passphrase" class="btn-round-light">Don't have a passphrase?</button>
+		<button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Don't have a passphrase?</button>
 		<img class="col" id="login-background" src="~@/assets/img-login.svg">
 	</div>
 </template>
@@ -18,6 +18,7 @@
 <script>
 export default {
 	name: 'login-form',
+	
 	data() {
 		return {
 			passphrase: '',
@@ -28,10 +29,14 @@ export default {
 		validatePassPhrase() {
 			console.log(this.passphrase)
 			if(this.passphrase) {
-				this.$store.dispatch("login", passphrase)
+				this.$store.dispatch("login", this.passphrase)
 				this.$router.push('/wallet')
 			}
+		},
+		createPassphrase() {
+			this.$router.push('/createpassphrase');
 		}
+
 	}
 }
 </script>
@@ -173,18 +178,6 @@ textarea {
 	resize: none;
 }
 
-.btn-round-light {
-	min-height: 50px;
-	font-weight: 500;
-	outline: none;
-	border: 3px solid rgba(24,13,57,0.1);
-	background-color: rgb(250,250,250);
-	border-radius: 50px;
-	padding: 10px;
-	padding-right: 15px;
-	padding-left: 15px;
-}
-
 .row-main-item {
 	display: flex;
 	flex-direction: column;
@@ -200,6 +193,10 @@ textarea {
 	margin: 0px;
 	display: flex;
 	justify-content: space-between;
+}
+
+.btn-round-light  {
+	outline: none;
 }
 
 </style>
