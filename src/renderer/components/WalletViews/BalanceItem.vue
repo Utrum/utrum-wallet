@@ -6,20 +6,27 @@
     </div>
     <div class="row-content">
       <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/>{{wallet.balance_usd}} (USD)</p>
-      <button :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></img></button>
+      <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></img></button>
     </div>
     <div class="row-footer">
       <p class="col-header">Your deposit {{wallet.coin.name}} address :</p>
       <div class="card">
-        <explorer class="btn btn-copy-link btn-smartaddress" type="address" :ticker="wallet.ticker" :value="wallet.address">
-          <div :id="wallet.ticker" class="btn-inside-qrcode">
-            {{wallet.address}}
-          </div>
-        </explorer>
-      </div>
+        <button
+        v-clipboard:copy="wallet.address"
+        v-clipboard:success="onCopy"
+        type="button" 
+        class="btn btn-copy-link btn-smartaddress" 
+        :data-clipboard-text="wallet.address">
+        <div id="wallet-address-string" :id="wallet.ticker" class="btn-inside-qrcode">
+          <span v-if="isClipboard" >Copied to the clipboard</span>
+          <span v-else>{{wallet.address}}</span>
+        </div>
+      </button>
     </div>
-    <hr/>
   </div>
+  <hr/>
+  <qrcode-modal :wallet="wallet"></qrcode-modal>
+</div>
 </template>
 
 <script>
@@ -29,7 +36,7 @@ var electrum = require('../../lib/electrum')
 export default {
   name: 'balance-item',
   components: {
-    'explorer': require('@/components/Utils/ExplorerLink').default
+    'qrcode-modal' : require('@/components/Utils/QrcodeModal').default
   },
   props: {
     wallet: {
@@ -37,10 +44,30 @@ export default {
       default: () => ({})
     }
   },
+  data() {
+    return {
+      isClipboard: false,
+    }
+  },
+  methods: {
+    onCopy() {
+      var self = this
+      this.isClipboard = true;
+      setTimeout(function(){
+        self.isClipboard = false;
+      }, 1000);
+    }
+  },
 }
 </script>
 
-<style>
+<style scoped>
+
+.modal-header {
+  text-align: center;
+  border-bottom: none !important;
+}
+
 .content .btn:focus {
   outline: none;
   box-shadow: none;
@@ -119,12 +146,6 @@ export default {
 
 .row-footer button:active{
   background-color: #7c398a;
-}
-
-.card {
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
-  border-radius: 4px;
-  border: none;
 }
 
 .btn-inside-qrcode {

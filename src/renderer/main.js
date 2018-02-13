@@ -11,6 +11,12 @@ Vue.use(BootstrapVue);
 import VueSweetAlert from 'vue-sweetalert'
 Vue.use(VueSweetAlert)
 
+import VueQriously from 'vue-qriously'
+Vue.use(VueQriously)
+
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
 axios.config =  axios.create({
