@@ -192,7 +192,7 @@ import swal from 'sweetalert2';
 ***REMOVED***
 </script>
 
-<style>
+<style scoped>
 
 .row-custom {
 	display: flex;
@@ -209,12 +209,6 @@ import swal from 'sweetalert2';
 
 .select-coin {
 	text-align: center;
-***REMOVED***
-
-.card {
-	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
-	border-radius: 4px;
-	border: none;
 ***REMOVED***
 
 .center{

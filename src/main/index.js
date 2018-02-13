@@ -29,10 +29,6 @@ function createWindow () {
     webPreferences: {
       webSecurity: false
     ***REMOVED***,
-    // titleBarStyle: 'hidden',
-    center: true,
-    width: 1100, 
-    height: 650
   ***REMOVED***)
 
   var ipc = require('electron').ipcMain

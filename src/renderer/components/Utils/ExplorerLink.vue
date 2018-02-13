@@ -34,6 +34,9 @@
 ***REMOVED***
 </script>
 
-<style>
-
+<style scoped>
+.btn-smartaddress {
+  font-size: 0.7em;
+  color: #687078;
+***REMOVED***
 </style>
