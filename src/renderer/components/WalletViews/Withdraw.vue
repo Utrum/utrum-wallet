@@ -268,12 +268,6 @@ var sb = require('satoshi-bitcoin')
 	text-align: right;
 ***REMOVED***
 
-.row {
-	margin: 0px;
-	display: flex;
-	justify-content: space-between;
-***REMOVED***
-
 .row-header {
 	display: flex;
 	justify-content: flex-start;
