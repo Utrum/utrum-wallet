@@ -35,7 +35,7 @@
       return this.$store.getters.getWallets
     ***REMOVED***,
     totalBalance() {
-      return this.$store.getters.getTotalBalance
+      return this.$store.getters.getTotalBalance.toFixed(2)
     ***REMOVED***
   ***REMOVED***
 ***REMOVED***
