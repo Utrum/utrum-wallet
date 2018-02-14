@@ -1,10 +1,17 @@
 import { Wallet, coins }  from 'libwallet-mnz'
 import sb from 'satoshi-bitcoin'
+import bitcoinjs from 'bitcoinjs-lib'
+import axios from 'axios'
 import Vue from 'vue'
 
 
 const state = {
-  wallets: {},
+  wallets: {
+    balance: 0,
+    balance_usd: 0,
+    ticker: null,
+    txs: {}
+  },
   coins: [],
   calculating: false
 }
@@ -12,6 +19,9 @@ const state = {
 const getters = {
   getWalletByTicker: (state) => (ticker) => {
     return state.wallets[ticker]
+  },
+  getWalletTxs: (state) => (ticker) => {
+    return state.wallets[ticker].txs
   },
   getWallets: (state) => {
     return state.wallets
@@ -35,6 +45,7 @@ const mutations = {
     wallet.ticker = payload.coin.ticker
     wallet.balance = 0
     wallet.balance_usd = 0
+    wallet.txs = []
     state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet)
   },
   SET_CALCULATING (state, calculating) {
@@ -42,6 +53,12 @@ const mutations = {
   },
   DESTROY_WALLETS (state) {
     state.wallets = {}
+  },
+  ADD_TX (state, {wallet, rawtx, tx_hash}) {
+    state.wallets[wallet.ticker].txs.push({
+      tx_hash: tx_hash,
+      amount: rawtx.outs[0].value
+    })
   },
   UPDATE_BALANCE (state, wallet) {
     Vue.set(state.wallets, wallet.ticker, wallet)
@@ -86,7 +103,45 @@ const actions = {
       }
     })
     commit('UPDATE_BALANCE', wallet)
-  } 
+  },
+  getRawTx({commit}, {ticker, tx}) {
+    let payload = {
+      ticker: ticker,
+      method: 'blockchain.transaction.get',
+      params: [ tx.tx_hash ]
+    }
+    console.log(payload)
+    return axios.post('http://localhost:8000', payload)
+  },  
+  addTx({commit, dispatch, getters}, {wallet, tx}) {
+    console.log(wallet,tx)
+    dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
+      console.log(response)
+      let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
+      console.log(decodedTx)
+
+      commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash}) 
+    }).catch(error => {
+      throw new Error(error)
+    })
+  },
+  buildTxHistory({commit, dispatch, getters}, wallet) {
+    axios.post('http://localhost:8000', {
+      ticker: wallet.ticker,
+      method: 'blockchain.address.get_history',
+      params: [ wallet.address ]
+    }).then(response => {
+      if (response.data.length > 0) {
+        let txs = response.data
+        console.log(txs)
+
+        txs.forEach(tx => {
+          console.log(`Adding ${tx.tx_hash}`)
+          dispatch('addTx', {wallet:wallet, tx:tx})
+        })
+      }
+    })
+  }
 }
 
 export default {

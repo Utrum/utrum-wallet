@@ -53,7 +53,6 @@
 			</button>
 			
 		</div>
-		<h1 v-if="isLoading">LOADING</h1>
 		<div class="col-custom horizontal-line">
 			<hr/>
 		</div>
@@ -64,14 +63,17 @@
 
 		<h3 id="title">TX HISTORY</h3>
 
-		<b-table id="txTable" striped hover :fields="fields" :items="history">
+		<b-table id="txTable" striped hover :fields="fields" :items="txHistory">
 			<template slot="tx_hash" slot-scope="row"><explorer type="tx" :ticker="wallet.ticker" :value="row.value"></explorer></template>
+			<template slot="amount" slot-scope="row">
+				{{satoshiToBitcoin(row.value)}}
+			</template>
 		</b-table>
 		<b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
 			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
 		</b-modal>
 
-		<b-modal size="sm" hide-header="false" hide-footer="false" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
+		<b-modal size="sm" :hide-header="false" :hide-footer="false" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
 			<qrcode-reader :video-constraints="videoConstraints" @decode="onDecode" :paused="paused" v-if="readingQRCode" @init="onInit"></qrcode-reader>
 		</b-modal>
 	</div>
@@ -132,9 +134,12 @@ export default {
 		}
 	},
 	mounted() {
-		this.getTxHistory()
+		this.$store.dispatch('buildTxHistory', this.wallet)
 	},
 	methods: {
+		satoshiToBitcoin(amount) {
+			return sb.toBitcoin(amount)
+		},
 		onDecode (content) {
 			if (this.checkAddress(content)) {
 				this.withdraw.address = content
@@ -185,39 +190,17 @@ export default {
 		updateCoin(value) {
 			this.select = value
 			this.withdraw.coin = value
-			this.getTxHistory()
 		},
-		getRawTx(tx) {
-			return this.$http.post('http://localhost:8000', {
-				ticker: this.wallet.ticker,
-				method: 'blockchain.transaction.get',
-				params: [ tx.tx_hash ]
-			})
-		},
-		getRawTxAmount(tx) {
-			// var rawTx
-			// this.getRawTx(tx).then(response => {
-			// 	rawTx = bitcoinjs.Transaction.fromHex(response.data);
-			// 	tx.amount = rawTx.outs[0].value
-			// 	console.log(tx)
-			// })
-			
-			// // console.log(rawTx)
-		},
-		getTxHistory() {
-			var self = this;
-			this.$http.post('http://localhost:8000', {
-				ticker: this.wallet.ticker,
-				method: 'blockchain.address.get_history',
-				params: [ this.wallet.address ]
-			}).then(response => {
-				if (response.data.length > 0) {
-					let history = response.data
-					self.history = history
-					this.$root.$emit('bv::table::refresh', 'txTable');
-				} else return []
-			})
-		},
+		
+		// getRawTxAmount(tx) {
+		// 	var rawTx
+		// 	this.getRawTx(tx).then(response => {
+		// 		rawTx = bitcoinjs.Transaction.fromHex(response.data);
+		// 		tx.amount = rawTx.outs[0].value
+		// 		console.log(tx)
+		// 	})
+		// },
+
 		withdrawFunds() {
 			if(this.canWithdraw && this.addressIsValid) {
 				var self = this
@@ -245,6 +228,9 @@ export default {
 	computed: {
 		wallet() {
 			return this.$store.getters.getWalletByTicker(this.select)
+		},
+		txHistory() {
+			return this.$store.getters.getWalletTxs(this.select)
 		},
 		getBalance() {
 			return this.$store.getters.getWalletByTicker(this.select).balance
