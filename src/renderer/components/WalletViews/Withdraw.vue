@@ -48,7 +48,12 @@
 				<span class="title-content">{{select}} ADDRESS</span>
 			</div>
 			<input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
+			<button id="readerQrcode" v-b-modal="'readerQrcodeModal'" @click="readingQRCode = !readingQRCode">
+				<img src="@/assets/icon-scan-qrcode.svg">
+			</button>
+			
 		</div>
+		<h1 v-if="isLoading">LOADING</h1>
 		<div class="col-custom horizontal-line">
 			<hr/>
 		</div>
@@ -62,58 +67,106 @@
 		<b-table id="txTable" striped hover :fields="fields" :items="history">
 			<template slot="tx_hash" slot-scope="row"><explorer type="tx" :ticker="wallet.ticker" :value="row.value"></explorer></template>
 		</b-table>
-    <b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
-      <p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
-    </b-modal>
+		<b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
+			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
+		</b-modal>
+
+		<b-modal size="sm" hide-header="false" hide-footer="false" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
+			<qrcode-reader :video-constraints="videoConstraints" @decode="onDecode" :paused="paused" v-if="readingQRCode" @init="onInit"></qrcode-reader>
+		</b-modal>
 	</div>
 </template>
 
 <script>
 import bitcoinjs from 'bitcoinjs-lib'
 import { Wallet } from 'libwallet-mnz'
+import { QrcodeReader } from 'vue-qrcode-reader'
+
 var sb = require('satoshi-bitcoin')
 
 export default {
 	name: 'withdraw',
 	components: {
 		'select2': require('../Utils/Select2.vue').default,
-    'explorer': require('@/components/Utils/ExplorerLink').default
+		'explorer': require('@/components/Utils/ExplorerLink').default,
+		QrcodeReader
 	},
 	data() {
 		return {
+			videoConstraints: { 
+				width: { 
+					min: 400, 
+					ideal: 400, 
+					max: 400 
+				},
+				height: { 
+					min: 400, 
+					ideal: 400, 
+					max: 400 
+				}
+			},
+			paused: false,
+			readingQRCode: false,
 			listData: [
-        'BTC',
-        'KMD',
-        'MNZ',
-        // 'LTC',
-        // 'DASH',
-        // 'BCC'
+			'BTC',
+			'KMD',
+			'MNZ',
 			],
-      select: 'MNZ',
-      withdraw: {
-        amount: 0.1,
-        address: 'RPRLh5bddEmZCGDwa7q92sTKAfEbBHtKUd',
-        coin: 'MNZ'
+			select: 'MNZ',
+			withdraw: {
+				amount: null,
+				address: '',
+				coin: 'MNZ'
 			},
 			history: [],
 			fields: [
-				{
-					key:'tx_hash',
-					label: 'Tx Hash'
-				},
-				{
-					key: 'amount',
-					label: 'Amount'
-				}
+			{
+				key:'tx_hash',
+				label: 'Tx Hash'
+			},
+			{
+				key: 'amount',
+				label: 'Amount'
+			}
 			]
 		}
-  },
+	},
 	mounted() {
 		this.getTxHistory()
 	},
-  methods: {
+	methods: {
+		onDecode (content) {
+			this.withdraw.address = content
+			this.$root.$emit('bv::hide::modal', 'readerQrcodeModal')
+			this.readingQRCode = false
+		},
+		async onInit (promise) {
+			this.loading = true
+
+			try {
+				await promise
+
+				  // successfully initialized
+				} catch (error) {
+					if (error.name === 'NotAllowedError') {
+				    // user denied camera access permisson
+				} else if (error.name === 'NotFoundError') {
+				    // no suitable camera device installed
+				} else if (error.name === 'NotSupportedError') {
+				    // page is not served over HTTPS (or localhost)
+				} else if (error.name === 'NotReadableError') {
+				    // maybe camera is already in use
+				} else if (error.name === 'OverconstrainedError') {
+				    // passed constraints don't match any camera. Did you requested the front camera although there is none?
+				} else {
+				    // browser is probably lacking features (WebRTC, Canvas)
+				}
+			} finally {
+				this.loading = false
+			}
+		},
 		updateCoin(value) {
-      this.select = value
+			this.select = value
 			this.withdraw.coin = value
 			this.getTxHistory()
 		},
@@ -148,7 +201,7 @@ export default {
 				} else return []
 			})
 		},
-    withdrawFunds() {
+		withdrawFunds() {
 			if(this.canWithdraw && this.addressIsValid) {
 				var self = this
 				this.$http.post('http://localhost:8000', {
@@ -175,23 +228,41 @@ export default {
 	computed: {
 		wallet() {
 			return this.$store.getters.getWalletByTicker(this.select)
-    },
+		},
 		getBalance() {
 			return this.$store.getters.getWalletByTicker(this.select).balance
-    },
-    canWithdraw() {
-      return (this.withdraw.amount < this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
-    },
-    addressIsValid() {
+		},
+		canWithdraw() {
+			return (this.withdraw.amount < this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
+		},
+		addressIsValid() {
 			if (this.withdraw.address)
 				return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
 			else return false
-    }
-  }
+		}
+}
 }
 </script>
 
 <style scoped>
+#readerQrcode {
+	height: 100%;
+	margin-left: 10px;
+	border: 1px solid #7D3A8B;
+	background-color: transparent;
+	border-radius: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	cursor: pointer;
+	outline: none;
+}
+
+#readerQrcodeModal {
+	text-align: center;
+}
+
 .content {
 	padding: 50px;
 	color: rgb(151,151,151);

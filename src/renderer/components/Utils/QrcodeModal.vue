@@ -1,7 +1,7 @@
 <template>
 	<b-modal size="sm" ref="qrcodemodal" :id="wallet.ticker" centered class="modal-qrcode">
 		<div slot="modal-header" class="w-100">
-			<a @click="hideModal" class="row" data-dismiss="modal">Close<span class="glyphicon glyphicon-remove"></span></a>
+			<a @click="hideModal" class="row" data-dismiss="modal">Close<img src="@/assets/icon-close.svg"></a>
 		</div>
 
 		<b-container fluid>
@@ -52,7 +52,11 @@ export default {
 </script>
 
 <style scoped>
-
+.modal-header a:hover {
+	opacity: 0.5;
+	-webkit-transition: all 1s ease;
+	cursor: pointer;
+}
 .modal-qrcode {
 	text-align: center;
 }
