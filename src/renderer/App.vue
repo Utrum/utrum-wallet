@@ -143,6 +143,7 @@ a[aria-expanded="true"]::before {
 body {
   font-family: 'Montserrat', sans-serif;
   background: #fafafa;
+  padding: 0px !important;
 }
 
 p {
