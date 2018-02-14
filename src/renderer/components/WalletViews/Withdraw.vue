@@ -136,9 +136,26 @@ var sb = require('satoshi-bitcoin')
 	***REMOVED***,
 	methods: {
 		onDecode (content) {
-			this.withdraw.address = content
-			this.$root.$emit('bv::hide::modal', 'readerQrcodeModal')
+			if (this.checkAddress(content)) {
+				this.withdraw.address = content
+			***REMOVED*** else {
+				this.$swal(`This address is not valid !`, content, 'error')
+			***REMOVED***
+
 			this.readingQRCode = false
+			this.$root.$emit('bv::hide::modal', 'readerQrcodeModal')
+			
+		***REMOVED***,
+		checkAddress(addr) {
+			if (addr) {
+				let checkResult = bitcoinjs.address.fromBase58Check(addr);
+				if (this.wallet.ticker === 'BTC') {
+					return checkResult.version == 0;
+				***REMOVED*** else if (this.wallet.ticker === 'KMD' 
+					|| this.wallet.ticker === 'MNZ')
+					return checkResult.version == 60;
+			***REMOVED*** else
+				return false
 		***REMOVED***,
 		async onInit (promise) {
 			this.loading = true
@@ -239,7 +256,7 @@ var sb = require('satoshi-bitcoin')
 			if (this.withdraw.address)
 				return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
 			else return false
-		***REMOVED***
+		***REMOVED***,
 ***REMOVED***
 ***REMOVED***
 </script>
