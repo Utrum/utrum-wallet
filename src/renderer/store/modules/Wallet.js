@@ -54,11 +54,25 @@ import Vue from 'vue'
   DESTROY_WALLETS (state) {
     state.wallets = {***REMOVED***
   ***REMOVED***,
-  ADD_TX (state, {wallet, rawtx, tx_hash***REMOVED***) {
-    state.wallets[wallet.ticker].txs.push({
+  ADD_TX (state, {wallet, rawtx, tx_hash, height***REMOVED***) {
+    const address = bitcoinjs.TransactionBuilder.fromTransaction(rawtx, coins.get(wallet.ticker).network) 
+    let pubkey = bitcoinjs.ECPair.fromPublicKeyBuffer(address.inputs[0].pubKeys[0],wallet.coin.network)
+    let amount = rawtx.outs[0].value;
+    if (pubkey.getAddress() === wallet.address) {
+      amount = -amount;
+    ***REMOVED***
+    let tx =  {
+      height: height,
       tx_hash: tx_hash,
-      amount: rawtx.outs[0].value
-    ***REMOVED***)
+      amount: amount
+    ***REMOVED***
+    let txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash ***REMOVED***).indexOf(tx.tx_hash)
+
+    if( txExists >= 0) {
+      console.log('tx already exists')
+    ***REMOVED*** else {
+      state.wallets[wallet.ticker].txs.unshift(tx)
+    ***REMOVED***
   ***REMOVED***,
   UPDATE_BALANCE (state, wallet) {
     Vue.set(state.wallets, wallet.ticker, wallet)
@@ -110,17 +124,13 @@ import {getCmcData***REMOVED*** from '../../lib/coinmarketcap'
       method: 'blockchain.transaction.get',
       params: [ tx.tx_hash ]
     ***REMOVED***
-    console.log(payload)
     return axios.post('http://localhost:8000', payload)
   ***REMOVED***,  
   addTx({commit, dispatch, getters***REMOVED***, {wallet, tx***REMOVED***) {
-    console.log(wallet,tx)
     dispatch('getRawTx', {ticker:wallet.ticker, tx:tx***REMOVED***).then(response => {
-      console.log(response)
       let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
-      console.log(decodedTx)
 
-      commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash***REMOVED***) 
+      commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height***REMOVED***) 
     ***REMOVED***).catch(error => {
       throw new Error(error)
     ***REMOVED***)
@@ -133,10 +143,8 @@ import {getCmcData***REMOVED*** from '../../lib/coinmarketcap'
     ***REMOVED***).then(response => {
       if (response.data.length > 0) {
         let txs = response.data
-        console.log(txs)
 
         txs.forEach(tx => {
-          console.log(`Adding ${tx.tx_hash***REMOVED***`)
           dispatch('addTx', {wallet:wallet, tx:tx***REMOVED***)
         ***REMOVED***)
       ***REMOVED***

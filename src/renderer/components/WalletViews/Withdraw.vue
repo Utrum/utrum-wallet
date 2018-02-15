@@ -63,10 +63,14 @@
 
 		<h3 id="title">TX HISTORY</h3>
 
-		<b-table id="txTable" striped hover :fields="fields" :items="txHistory">
+		<b-table id="txTable" striped hover :sortDesc="true" :sortBy="'height'" :fields="fields" :items="txHistory">
 			<template slot="tx_hash" slot-scope="row"><explorer type="tx" :ticker="wallet.ticker" :value="row.value"></explorer></template>
 			<template slot="amount" slot-scope="row">
-				{{satoshiToBitcoin(row.value)***REMOVED******REMOVED***
+				<div :class="getColorAmount(row.value)">
+					<span v-if="satoshiToBitcoin(row.value) > 0">+</span>
+					<span v-else>-</span>
+					{{satoshiToBitcoin(Math.abs(row.value))***REMOVED******REMOVED***
+				</div>
 			</template>
 		</b-table>
 		<b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
@@ -121,22 +125,20 @@ var sb = require('satoshi-bitcoin')
 				coin: 'MNZ'
 			***REMOVED***,
 			history: [],
-			fields: [
-			{
-				key:'tx_hash',
-				label: 'Tx Hash'
-			***REMOVED***,
-			{
-				key: 'amount',
-				label: 'Amount'
-			***REMOVED***
-			]
+			
 		***REMOVED***
 	***REMOVED***,
 	mounted() {
 		this.$store.dispatch('buildTxHistory', this.wallet)
 	***REMOVED***,
 	methods: {
+		getColorAmount(amount) {
+			if (amount > 0) {
+				return "positiveColor"
+			***REMOVED*** else {
+				return "negativeColor"
+			***REMOVED***
+		***REMOVED***,
 		satoshiToBitcoin(amount) {
 			return sb.toBitcoin(amount)
 		***REMOVED***,
@@ -190,6 +192,10 @@ var sb = require('satoshi-bitcoin')
 		updateCoin(value) {
 			this.select = value
 			this.withdraw.coin = value
+
+			if (this.txHistory.length == 0) {
+				this.$store.dispatch('buildTxHistory', this.wallet)
+			***REMOVED***
 		***REMOVED***,
 		
 		// getRawTxAmount(tx) {
@@ -243,11 +249,35 @@ var sb = require('satoshi-bitcoin')
 				return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
 			else return false
 		***REMOVED***,
+		fields()  {
+			return [
+				{
+					key: 'height',
+					label: 'Block Height',
+				***REMOVED***,
+				{
+					key: 'tx_hash',
+					label: 'Tx Hash'
+				***REMOVED***,
+				{
+					key: 'amount',
+					label: `Amount (${this.select***REMOVED***)`
+				***REMOVED***
+			]
+		***REMOVED***
 ***REMOVED***
 ***REMOVED***
 </script>
 
 <style scoped>
+.positiveColor {
+	color: green;
+***REMOVED***
+
+.negativeColor {
+	color: red;
+***REMOVED***
+
 #readerQrcode {
 	height: 100%;
 	margin-left: 10px;
