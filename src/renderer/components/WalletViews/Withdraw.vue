@@ -73,7 +73,7 @@
 			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount***REMOVED******REMOVED*** {{withdraw.coin***REMOVED******REMOVED***</b> to <b>{{withdraw.address***REMOVED******REMOVED***</b></p>
 		</b-modal>
 
-		<b-modal size="sm" :hide-header="false" :hide-footer="false" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
+		<b-modal size="sm" :hide-header="'false'" :hide-footer="'false'" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
 			<qrcode-reader :video-constraints="videoConstraints" @decode="onDecode" :paused="paused" v-if="readingQRCode" @init="onInit"></qrcode-reader>
 		</b-modal>
 	</div>
