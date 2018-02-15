@@ -63,10 +63,14 @@
 
 		<h3 id="title">TX HISTORY</h3>
 
-		<b-table id="txTable" striped hover :fields="fields" :items="txHistory">
+		<b-table id="txTable" striped hover :sortDesc="true" :sortBy="'height'" :fields="fields" :items="txHistory">
 			<template slot="tx_hash" slot-scope="row"><explorer type="tx" :ticker="wallet.ticker" :value="row.value"></explorer></template>
 			<template slot="amount" slot-scope="row">
-				{{satoshiToBitcoin(row.value)}}
+				<div :class="getColorAmount(row.value)">
+					<span v-if="satoshiToBitcoin(row.value) > 0">+</span>
+					<span v-else>-</span>
+					{{satoshiToBitcoin(Math.abs(row.value))}}
+				</div>
 			</template>
 		</b-table>
 		<b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
@@ -121,22 +125,20 @@ export default {
 				coin: 'MNZ'
 			},
 			history: [],
-			fields: [
-			{
-				key:'tx_hash',
-				label: 'Tx Hash'
-			},
-			{
-				key: 'amount',
-				label: 'Amount'
-			}
-			]
+			
 		}
 	},
 	mounted() {
 		this.$store.dispatch('buildTxHistory', this.wallet)
 	},
 	methods: {
+		getColorAmount(amount) {
+			if (amount > 0) {
+				return "positiveColor"
+			} else {
+				return "negativeColor"
+			}
+		},
 		satoshiToBitcoin(amount) {
 			return sb.toBitcoin(amount)
 		},
@@ -190,6 +192,10 @@ export default {
 		updateCoin(value) {
 			this.select = value
 			this.withdraw.coin = value
+
+			if (this.txHistory.length == 0) {
+				this.$store.dispatch('buildTxHistory', this.wallet)
+			}
 		},
 		
 		// getRawTxAmount(tx) {
@@ -243,11 +249,35 @@ export default {
 				return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
 			else return false
 		},
+		fields()  {
+			return [
+				{
+					key: 'height',
+					label: 'Block Height',
+				},
+				{
+					key: 'tx_hash',
+					label: 'Tx Hash'
+				},
+				{
+					key: 'amount',
+					label: `Amount (${this.select})`
+				}
+			]
+		}
 }
 }
 </script>
 
 <style scoped>
+.positiveColor {
+	color: green;
+}
+
+.negativeColor {
+	color: red;
+}
+
 #readerQrcode {
 	height: 100%;
 	margin-left: 10px;
