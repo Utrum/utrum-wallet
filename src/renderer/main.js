@@ -17,6 +17,9 @@ Vue.use(VueQriously)
 import VueClipboard from 'vue-clipboard2'
 Vue.use(VueClipboard)
 
+import VueQrcodeReader from 'vue-qrcode-reader'
+Vue.use(VueQrcodeReader)
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
 axios.config =  axios.create({
