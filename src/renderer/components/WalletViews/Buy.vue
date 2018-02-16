@@ -78,7 +78,9 @@
 			</div>
 		</div>
 
-		<hr/>
+		<div class="col-custom">
+			<hr/>
+		</div>
 
 		<div class="row">
 			<div class="col-custom center-horizontal">
