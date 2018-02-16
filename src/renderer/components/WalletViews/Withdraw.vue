@@ -25,7 +25,7 @@
 			</div>
 			<div @click="withdraw.amount = getBalance" id="card-current-balance" class="col-custom">
 				<div v-b-tooltip.html.left title="Click to withdraw all funds" class="row current-balance card">
-					<span id="value-current-balance">{{getBalance***REMOVED******REMOVED***</span><span>{{select***REMOVED******REMOVED***</span>
+					<span id="value-current-balance">{{getBalance***REMOVED******REMOVED***&nbsp;</span><span>{{select***REMOVED******REMOVED***</span>
 				</div>
 			</div>
 		</div>
@@ -61,18 +61,8 @@
 			<button :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
 		</div>
 
-		<h3 id="title">TX HISTORY</h3>
+		<transaction-history id="transactionHistory" :value="wallet" :select="select"></transaction-history>
 
-		<b-table id="txTable" striped hover :sortDesc="true" :sortBy="'height'" :fields="fields" :items="txHistory">
-			<template slot="tx_hash" slot-scope="row"><explorer type="tx" :ticker="wallet.ticker" :value="row.value"></explorer></template>
-			<template slot="amount" slot-scope="row">
-				<div :class="getColorAmount(row.value)">
-					<span v-if="satoshiToBitcoin(row.value) > 0">+</span>
-					<span v-else>-</span>
-					{{satoshiToBitcoin(Math.abs(row.value))***REMOVED******REMOVED***
-				</div>
-			</template>
-		</b-table>
 		<b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
 			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount***REMOVED******REMOVED*** {{withdraw.coin***REMOVED******REMOVED***</b> to <b>{{withdraw.address***REMOVED******REMOVED***</b></p>
 		</b-modal>
@@ -94,7 +84,7 @@ var sb = require('satoshi-bitcoin')
 	name: 'withdraw',
 	components: {
 		'select2': require('../Utils/Select2.vue').default,
-		'explorer': require('@/components/Utils/ExplorerLink').default,
+		'transaction-history': require('@/components/TransactionHistory').default,
 		QrcodeReader
 	***REMOVED***,
 	data() {
@@ -128,20 +118,7 @@ var sb = require('satoshi-bitcoin')
 			
 		***REMOVED***
 	***REMOVED***,
-	mounted() {
-		this.$store.dispatch('buildTxHistory', this.wallet)
-	***REMOVED***,
 	methods: {
-		getColorAmount(amount) {
-			if (amount > 0) {
-				return "positiveColor"
-			***REMOVED*** else {
-				return "negativeColor"
-			***REMOVED***
-		***REMOVED***,
-		satoshiToBitcoin(amount) {
-			return sb.toBitcoin(amount)
-		***REMOVED***,
 		onDecode (content) {
 			if (this.checkAddress(content)) {
 				this.withdraw.address = content
@@ -232,11 +209,11 @@ var sb = require('satoshi-bitcoin')
 		***REMOVED***
 	***REMOVED***,
 	computed: {
-		wallet() {
-			return this.$store.getters.getWalletByTicker(this.select)
-		***REMOVED***,
 		txHistory() {
 			return this.$store.getters.getWalletTxs(this.select)
+		***REMOVED***,
+		wallet() {
+			return this.$store.getters.getWalletByTicker(this.select)
 		***REMOVED***,
 		getBalance() {
 			return this.$store.getters.getWalletByTicker(this.select).balance
@@ -249,33 +226,13 @@ var sb = require('satoshi-bitcoin')
 				return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
 			else return false
 		***REMOVED***,
-		fields()  {
-			return [
-				{
-					key: 'height',
-					label: 'Block Height',
-				***REMOVED***,
-				{
-					key: 'tx_hash',
-					label: 'Tx Hash'
-				***REMOVED***,
-				{
-					key: 'amount',
-					label: `Amount (${this.select***REMOVED***)`
-				***REMOVED***
-			]
-		***REMOVED***
 ***REMOVED***
 ***REMOVED***
 </script>
 
 <style scoped>
-.positiveColor {
-	color: green;
-***REMOVED***
-
-.negativeColor {
-	color: red;
+#transactionHistory {
+	margin-top: 50px;
 ***REMOVED***
 
 #readerQrcode {
@@ -546,4 +503,9 @@ hr {
 	color: #687078;
 ***REMOVED***
 
+.cardTable {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+    border-radius: 4px;
+    border: none;
+***REMOVED***
 </style>
