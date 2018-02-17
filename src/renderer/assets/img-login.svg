@@ -3,19 +3,19 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1000px"
 	 height="282px" viewBox="0 0 1000 282" style="enable-background:new 0 0 1000 282;" xml:space="preserve">
 <style type="text/css">
-	.st0{opacity:0.2;fill:#DFE2EC;***REMOVED***
-	.st1{fill:none;stroke:#DFE2EC;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
-	.st2{fill:none;stroke:#DFE2EC;stroke-width:2.733;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
-	.st3{fill:#FFFFFF;stroke:#DFE2EC;stroke-width:2.733;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
-	.st4{fill:#FFFFFF;stroke:#DFE2EC;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
-	.st5{fill:none;stroke:#DFE2EC;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
-	.st6{fill:#FFFFFF;stroke:#7C308C;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
-	.st7{fill:none;stroke:#7C308C;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
-	.st8{fill:#7C308C;***REMOVED***
-	.st9{fill:none;stroke:#7C308C;stroke-width:3.4029;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
-	.st10{fill:none;stroke:#7C308C;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
+	.st0{opacity:0.2;fill:#DFE2EC;}
+	.st1{fill:none;stroke:#DFE2EC;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st2{fill:none;stroke:#DFE2EC;stroke-width:2.733;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st3{fill:#FFFFFF;stroke:#DFE2EC;stroke-width:2.733;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st4{fill:#FFFFFF;stroke:#DFE2EC;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st5{fill:none;stroke:#DFE2EC;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st6{fill:#FFFFFF;stroke:#7C308C;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st7{fill:none;stroke:#7C308C;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st8{fill:#7C308C;}
+	.st9{fill:none;stroke:#7C308C;stroke-width:3.4029;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st10{fill:none;stroke:#7C308C;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 	
-		.st11{opacity:0.6;fill:none;stroke:#DFE2EC;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;***REMOVED***
+		.st11{opacity:0.6;fill:none;stroke:#DFE2EC;stroke-width:2.7326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 </style>
 <g id="Calque_8">
 	<path class="st0" d="M-1,161.5c0,0,84-70.9,168-52.7s-35,62.1-11,85.1s573.7,30,338.8,88H-1V161.5z"/>

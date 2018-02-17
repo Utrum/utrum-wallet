@@ -1,11 +1,11 @@
 {
   "env": {
     "mocha": true
-  ***REMOVED***,
+  },
   "globals": {
     "assert": true,
     "expect": true,
     "should": true,
     "__static": true
-  ***REMOVED***
-***REMOVED***
+  }
+}

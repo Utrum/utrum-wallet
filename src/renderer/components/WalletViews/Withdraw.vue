@@ -25,7 +25,7 @@
 			</div>
 			<div @click="withdraw.amount = getBalance" id="card-current-balance" class="col-custom">
 				<div v-b-tooltip.html.left title="Click to withdraw all funds" class="row current-balance card">
-					<span id="value-current-balance">{{getBalance***REMOVED******REMOVED***&nbsp;</span><span>{{select***REMOVED******REMOVED***</span>
+					<span id="value-current-balance">{{getBalance}}&nbsp;</span><span>{{select}}</span>
 				</div>
 			</div>
 		</div>
@@ -36,7 +36,7 @@
 			</div>
 			<div class="row">
 				<input v-model="withdraw.amount" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="input-field" placeholder="0.0">
-				<span id="current-coin"> {{select***REMOVED******REMOVED***</span>
+				<span id="current-coin"> {{select}}</span>
 			</div>
 		</div>
 		<div class="col-custom horizontal-line">
@@ -45,7 +45,7 @@
 
 		<div class="row">
 			<div class="col-custom">
-				<span class="title-content">{{select***REMOVED******REMOVED*** ADDRESS</span>
+				<span class="title-content">{{select}} ADDRESS</span>
 			</div>
 			<input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
 			<button id="readerQrcode" v-b-modal="'readerQrcodeModal'" @click="readingQRCode = !readingQRCode">
@@ -64,7 +64,7 @@
 		<transaction-history id="transactionHistory" :value="wallet" :select="select"></transaction-history>
 
 		<b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
-			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount***REMOVED******REMOVED*** {{withdraw.coin***REMOVED******REMOVED***</b> to <b>{{withdraw.address***REMOVED******REMOVED***</b></p>
+			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
 		</b-modal>
 
 		<b-modal size="sm" :hide-header="true" :hide-footer="true" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
@@ -75,18 +75,18 @@
 
 <script>
 import bitcoinjs from 'bitcoinjs-lib'
-import { Wallet ***REMOVED*** from 'libwallet-mnz'
-import { QrcodeReader ***REMOVED*** from 'vue-qrcode-reader'
+import { Wallet } from 'libwallet-mnz'
+import { QrcodeReader } from 'vue-qrcode-reader'
 
 var sb = require('satoshi-bitcoin')
 
-***REMOVED***
+export default {
 	name: 'withdraw',
 	components: {
 		'select2': require('../Utils/Select2.vue').default,
 		'transaction-history': require('@/components/TransactionHistory').default,
 		QrcodeReader
-	***REMOVED***,
+	},
 	data() {
 		return {
 			videoConstraints: { 
@@ -94,13 +94,13 @@ var sb = require('satoshi-bitcoin')
 					min: 400, 
 					ideal: 400, 
 					max: 400 
-				***REMOVED***,
+				},
 				height: { 
 					min: 400, 
 					ideal: 400, 
 					max: 400 
-				***REMOVED***
-			***REMOVED***,
+				}
+			},
 			paused: false,
 			readingQRCode: false,
 			listData: [
@@ -113,34 +113,34 @@ var sb = require('satoshi-bitcoin')
 				amount: null,
 				address: '',
 				coin: 'MNZ'
-			***REMOVED***,
+			},
 			history: [],
 			
-		***REMOVED***
-	***REMOVED***,
+		}
+	},
 	methods: {
 		onDecode (content) {
 			if (this.checkAddress(content)) {
 				this.withdraw.address = content
-			***REMOVED*** else {
+			} else {
 				this.$swal(`This address is not valid !`, content, 'error')
-			***REMOVED***
+			}
 
 			this.readingQRCode = false
 			this.$root.$emit('bv::hide::modal', 'readerQrcodeModal')
 			
-		***REMOVED***,
+		},
 		checkAddress(addr) {
 			if (addr) {
 				let checkResult = bitcoinjs.address.fromBase58Check(addr);
 				if (this.wallet.ticker === 'BTC') {
 					return checkResult.version == 0;
-				***REMOVED*** else if (this.wallet.ticker === 'KMD' 
+				} else if (this.wallet.ticker === 'KMD' 
 					|| this.wallet.ticker === 'MNZ')
 					return checkResult.version == 60;
-			***REMOVED*** else
+			} else
 				return false
-		***REMOVED***,
+		},
 		async onInit (promise) {
 			this.loading = true
 
@@ -148,32 +148,32 @@ var sb = require('satoshi-bitcoin')
 				await promise
 
 				  // successfully initialized
-				***REMOVED*** catch (error) {
+				} catch (error) {
 					if (error.name === 'NotAllowedError') {
 				    // user denied camera access permisson
-				***REMOVED*** else if (error.name === 'NotFoundError') {
+				} else if (error.name === 'NotFoundError') {
 				    // no suitable camera device installed
-				***REMOVED*** else if (error.name === 'NotSupportedError') {
+				} else if (error.name === 'NotSupportedError') {
 				    // page is not served over HTTPS (or localhost)
-				***REMOVED*** else if (error.name === 'NotReadableError') {
+				} else if (error.name === 'NotReadableError') {
 				    // maybe camera is already in use
-				***REMOVED*** else if (error.name === 'OverconstrainedError') {
+				} else if (error.name === 'OverconstrainedError') {
 				    // passed constraints don't match any camera. Did you requested the front camera although there is none?
-				***REMOVED*** else {
+				} else {
 				    // browser is probably lacking features (WebRTC, Canvas)
-				***REMOVED***
-			***REMOVED*** finally {
+				}
+			} finally {
 				this.loading = false
-			***REMOVED***
-		***REMOVED***,
+			}
+		},
 		updateCoin(value) {
 			this.select = value
 			this.withdraw.coin = value
 
 			if (this.txHistory.length == 0) {
 				this.$store.dispatch('buildTxHistory', this.wallet)
-			***REMOVED***
-		***REMOVED***,
+			}
+		},
 		
 		// getRawTxAmount(tx) {
 		// 	var rawTx
@@ -181,8 +181,8 @@ var sb = require('satoshi-bitcoin')
 		// 		rawTx = bitcoinjs.Transaction.fromHex(response.data);
 		// 		tx.amount = rawTx.outs[0].value
 		// 		console.log(tx)
-		// 	***REMOVED***)
-		// ***REMOVED***,
+		// 	})
+		// },
 
 		withdrawFunds() {
 			if(this.canWithdraw && this.addressIsValid) {
@@ -191,7 +191,7 @@ var sb = require('satoshi-bitcoin')
 					ticker: this.wallet.ticker,
 					method: 'blockchain.address.listunspent',
 					params: [ this.wallet.address ]
-				***REMOVED***).then(response => {
+				}).then(response => {
 					console.log(response)
 					let wallet = new Wallet(self.$store.getters.passphrase, self.wallet.coin, 0)
 					wallet.ticker = self.wallet.ticker
@@ -201,39 +201,39 @@ var sb = require('satoshi-bitcoin')
 						ticker: self.wallet.ticker,
 						method: 'blockchain.transaction.broadcast',
 						params: [ tx ]
-					***REMOVED***).then((response) => {
+					}).then((response) => {
 						self.$swal(`Transaction sent`, response.data, 'success')
-					***REMOVED***)
-				***REMOVED***)
-			***REMOVED***
-		***REMOVED***
-	***REMOVED***,
+					})
+				})
+			}
+		}
+	},
 	computed: {
 		txHistory() {
 			return this.$store.getters.getWalletTxs(this.select)
-		***REMOVED***,
+		},
 		wallet() {
 			return this.$store.getters.getWalletByTicker(this.select)
-		***REMOVED***,
+		},
 		getBalance() {
 			return this.$store.getters.getWalletByTicker(this.select).balance
-		***REMOVED***,
+		},
 		canWithdraw() {
 			return (this.withdraw.amount < this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
-		***REMOVED***,
+		},
 		addressIsValid() {
 			if (this.withdraw.address)
 				return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
 			else return false
-		***REMOVED***,
-***REMOVED***
-***REMOVED***
+		},
+}
+}
 </script>
 
 <style scoped>
 #transactionHistory {
 	margin-top: 50px;
-***REMOVED***
+}
 
 #readerQrcode {
 	height: 100%;
@@ -247,48 +247,48 @@ var sb = require('satoshi-bitcoin')
 	padding-bottom: 3px;
 	cursor: pointer;
 	outline: none;
-***REMOVED***
+}
 
 #readerQrcodeModal {
 	text-align: center;
-***REMOVED***
+}
 
 .content {
 	padding: 50px;
 	color: rgb(151,151,151);
-***REMOVED***
+}
 
 .row-custom {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-***REMOVED***
+}
 
 #select-amount {
 	margin-top: 30px;
-***REMOVED***
+}
 
 #separator {
 	max-width: 1px;
-***REMOVED***
+}
 
 #selector-coin-buy {
 	max-width: 150px;
-***REMOVED***
+}
 
 .content h3 {
 	font-weight: 300;
 	color: #180d39;
-***REMOVED***
+}
 
 .title-amount {
 	margin-bottom: 20px;
-***REMOVED***
+}
 
 .sub-title {
 	font-weight: 300;
 	color: #180d39 !important;
-***REMOVED***
+}
 
 .select-header{
 	margin: 50px;
@@ -304,12 +304,12 @@ var sb = require('satoshi-bitcoin')
 	font-size: 1.9em;
 	font-weight: 300;
 	text-align-last:center;
-***REMOVED***
+}
 
 .select-header:hover{
 	background-color: black;
 	color: white;
-***REMOVED***
+}
 
 
 .select-all {
@@ -323,34 +323,34 @@ var sb = require('satoshi-bitcoin')
 	border-width: 1px 0px 1px 1px;
 	text-align: center;
 	color: red;
-***REMOVED***
+}
 
 #str-current-balances {
 	text-align: right;
-***REMOVED***
+}
 
 .row-header {
 	display: flex;
 	justify-content: flex-start;
-***REMOVED***
+}
 
 .row .btn{
 	padding: 0px;
 	margin: 0px;
 	border-top-right-radius: 0px 0px !important;
 	border-bottom-right-radius: 0px 0px !important;
-***REMOVED***
+}
 
 .row .btn:focus {
 	outline: none;
 	box-shadow: none;
-***REMOVED***
+}
 
 .vl {
 	border-left: 1px solid rgba(0,0,0,0.1);
 	height: 45px;
 	margin-top: 15px;
-***REMOVED***
+}
 
 .current-balance {
 	height: 75px;
@@ -361,13 +361,13 @@ var sb = require('satoshi-bitcoin')
 	justify-content: center;
 	align-items: center;
 	align-content: center;
-***REMOVED***
+}
 
 #card-current-balance {
 	text-align: right;
 	font-size: 1.8em;
 	max-width: 300px;
-***REMOVED***
+}
 
 #add-coin {
 	color: black;
@@ -379,30 +379,30 @@ var sb = require('satoshi-bitcoin')
 	text-align: center;
 	background-color: white;
 	border-radius: 4px;
-***REMOVED***
+}
 
 .col {
 	flex-grow: 1;
-***REMOVED***
+}
 
 .content .select2-selection:focus {
 	outline: none;
 	box-shadow: none;
-***REMOVED***
+}
 
 #title {
 	margin-bottom: 40px;
-***REMOVED***
+}
 
 .input-field {
 	outline: none;
 	box-shadow: none;
 	text-align: right;
-***REMOVED***
+}
 
 .col-custom {
 	flex-grow: 1;
-***REMOVED***
+}
 
 hr {
 	display: block;
@@ -410,28 +410,28 @@ hr {
 	border: 0;
 	border-top: 1px solid rgba(0,0,0, 0.1);;
 	padding: 0;
-***REMOVED***
+}
 
 #first-line {
 	margin-top: 10px;
-***REMOVED***
+}
 
 .btn-center {
 	text-align: center;
-***REMOVED***
+}
 
 .disableSendCoins {
 	border: 1px solid rgba(0,0,0,0.1) !important;
 	color: rgba(0,0,0,0.1) !important;
 	cursor: not-allowed;
-***REMOVED***
+}
 
 .disableSendCoins:hover {
 	border: 1px solid rgba(0,0,0,0.1) !important;
 	color: rgba(0,0,0,0.1) !important;
 	cursor: not-allowed;
 	background-color: transparent !important;
-***REMOVED***
+}
 
 #sendcoins {
 	border: 1px solid #7c398a;
@@ -444,17 +444,17 @@ hr {
 	outline: none;
 	box-shadow: none;
 	color: #7c398a;
-***REMOVED***
+}
 
 #sendcoins:hover {
 	background-color: #7c398a;
 	color: white;
-***REMOVED***
+}
 
 .disableSendCoins {
 	opacity: 0.65;
 	cursor: not-allowed;
-***REMOVED***
+}
 
 #addr {
 	background-color: transparent;
@@ -462,7 +462,7 @@ hr {
 	font-size: 1.1em;
 	font-weight: 300;
 	color: #687078;
-***REMOVED***
+}
 
 #amount {
 	background-color: transparent;
@@ -470,42 +470,42 @@ hr {
 	font-size: 1.8em;
 	font-weight: 300;
 	color: rgb(151,151,151);
-***REMOVED***
+}
 
 ::-webkit-input-placeholder {
 	color: rgba(104,112,120,0.4);
 	font-weight: 200;
-***REMOVED***
+}
 
 #current-coin {
 	font-size: 1.8em;
 	color: #687078;
 	font-weight: 200;
-***REMOVED***
+}
 
 .card span {
 	color: #687078;
 	font-weight: 200;
-***REMOVED***
+}
 
 .title-content {
 	font-weight: 400;
 	color: #180d39;
 	margin: auto;
-***REMOVED***
+}
 
 .horizontal-line {
 	margin-bottom: 50px;
-***REMOVED***
+}
 
 #value-current-balance {
 	font-weight: 400;
 	color: #687078;
-***REMOVED***
+}
 
 .cardTable {
     box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
     border-radius: 4px;
     border: none;
-***REMOVED***
+}
 </style>

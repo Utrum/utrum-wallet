@@ -33,13 +33,13 @@ npm manifest:
       "test": "npm run unit",
       "unit": "karma start test/unit/karma.conf.js",
       "postinstall": ""
-    ***REMOVED***,
+    },
     "build": {
       "productName": "vue-dico",
       "appId": "org.simulatedgreg.electron-vue",
       "directories": {
         "output": "build"
-      ***REMOVED***,
+      },
       "files": [
         "dist/electron/**/*"
       ],
@@ -50,24 +50,24 @@ npm manifest:
             "y": 150,
             "type": "link",
             "path": "/Applications"
-          ***REMOVED***,
+          },
           {
             "x": 130,
             "y": 150,
             "type": "file"
-          ***REMOVED***
+          }
         ]
-      ***REMOVED***,
+      },
       "mac": {
         "icon": "build/icons/icon.icns"
-      ***REMOVED***,
+      },
       "win": {
         "icon": "build/icons/icon.ico"
-      ***REMOVED***,
+      },
       "linux": {
         "icon": "build/icons"
-      ***REMOVED***
-    ***REMOVED***,
+      }
+    },
     "dependencies": {
       "axios": "^0.16.1",
       "bip39": "^2.5.0",
@@ -86,7 +86,7 @@ npm manifest:
       "vue-router": "^2.5.3",
       "vuex": "^2.3.1",
       "wif": "^2.0.6"
-    ***REMOVED***,
+    },
     "devDependencies": {
       "babel-core": "^6.25.0",
       "babel-loader": "^7.1.1",
@@ -139,8 +139,8 @@ npm manifest:
       "webpack-dev-server": "^2.7.1",
       "webpack-hot-middleware": "^2.18.2",
       "webpack-merge": "^4.1.0"
-    ***REMOVED***
-  ***REMOVED***
+    }
+  }
 
 yarn manifest: 
   No manifest

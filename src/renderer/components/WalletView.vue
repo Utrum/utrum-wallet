@@ -9,16 +9,16 @@
 
 <script>
 
-***REMOVED***
+export default {
   name: 'wallet',
   components: {
     'sidebar': require('@/components/SideBar').default
-  ***REMOVED***,
+  },
   created() {
     this.$store.dispatch('initWallets', this.$store.getters.passphrase)
     this.$router.push('balance')
-  ***REMOVED***
-***REMOVED***
+  }
+}
 </script>
 
 <style>

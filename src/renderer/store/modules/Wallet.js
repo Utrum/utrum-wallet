@@ -1,107 +1,107 @@
-import { Wallet, coins ***REMOVED***  from 'libwallet-mnz'
+import { Wallet, coins }  from 'libwallet-mnz'
 import sb from 'satoshi-bitcoin'
 import bitcoinjs from 'bitcoinjs-lib'
 import axios from 'axios'
 import Vue from 'vue'
 
 
-***REMOVED***
+const state = {
   wallets: {
     balance: 0,
     balance_usd: 0,
     ticker: null,
-    txs: {***REMOVED***
-  ***REMOVED***,
+    txs: {}
+  },
   coins: [],
   calculating: false
-***REMOVED***
+}
 
-***REMOVED***
+const getters = {
   getWalletByTicker: (state) => (ticker) => {
     return state.wallets[ticker]
-  ***REMOVED***,
+  },
   getWalletTxs: (state) => (ticker) => {
     return state.wallets[ticker].txs
-  ***REMOVED***,
+  },
   getWallets: (state) => {
     return state.wallets
-  ***REMOVED***,
+  },
   getTotalBalance: (state) => {
     let walletKeys = Object.keys(state.wallets);
     let totalBalanceUsd = 0;
 
     walletKeys.forEach(function(key) {
         totalBalanceUsd += state.wallets[key].balance_usd;
-    ***REMOVED***);
+    });
 
     return totalBalanceUsd;
-  ***REMOVED***
-***REMOVED***
+  }
+}
 
-***REMOVED***
+const mutations = {
   INIT_WALLET (state, payload) {
-    let coin = Vue.util.extend({***REMOVED***, coins.get(payload.coin))
+    let coin = Vue.util.extend({}, coins.get(payload.coin))
     let wallet = new Wallet(payload.passphrase, payload.coin, 0)
     wallet.ticker = payload.coin.ticker
     wallet.balance = 0
     wallet.balance_usd = 0
     wallet.txs = []
     state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet)
-  ***REMOVED***,
+  },
   SET_CALCULATING (state, calculating) {
     state.calculating = calculating
-  ***REMOVED***,
+  },
   DESTROY_WALLETS (state) {
-    state.wallets = {***REMOVED***
-  ***REMOVED***,
-  ADD_TX (state, {wallet, rawtx, tx_hash, height***REMOVED***) {
+    state.wallets = {}
+  },
+  ADD_TX (state, {wallet, rawtx, tx_hash, height}) {
     const address = bitcoinjs.TransactionBuilder.fromTransaction(rawtx, coins.get(wallet.ticker).network) 
     let pubkey = bitcoinjs.ECPair.fromPublicKeyBuffer(address.inputs[0].pubKeys[0],wallet.coin.network)
     let amount = rawtx.outs[0].value;
     if (pubkey.getAddress() === wallet.address) {
       amount = -amount;
-    ***REMOVED***
+    }
     let tx =  {
       height: height,
       tx_hash: tx_hash,
       amount: amount
-    ***REMOVED***
-    let txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash ***REMOVED***).indexOf(tx.tx_hash)
+    }
+    let txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash }).indexOf(tx.tx_hash)
 
     if( txExists >= 0) {
       console.log('tx already exists')
-    ***REMOVED*** else {
+    } else {
       state.wallets[wallet.ticker].txs.unshift(tx)
-    ***REMOVED***
-  ***REMOVED***,
+    }
+  },
   UPDATE_BALANCE (state, wallet) {
     Vue.set(state.wallets, wallet.ticker, wallet)
-  ***REMOVED***
-***REMOVED***
+  }
+}
 
-import {getBalance***REMOVED*** from '../../lib/electrum'
-import {getCmcData***REMOVED*** from '../../lib/coinmarketcap'
+import {getBalance} from '../../lib/electrum'
+import {getCmcData} from '../../lib/coinmarketcap'
 
 
-***REMOVED***
-  initWallets ({commit, dispatch***REMOVED***, passphrase) {
+const actions = {
+  initWallets ({commit, dispatch}, passphrase) {
     if(Object.keys(state.wallets).length > 0) 
       dispatch('destroyWallets')
     commit('SET_CALCULATING', true)
     coins.all.forEach(coin => {
       let payload = {
-        coin: Object.assign({***REMOVED***, coin),
+        coin: Object.assign({}, coin),
         passphrase: passphrase
-      ***REMOVED***
+      }
       commit('INIT_WALLET', payload)
       dispatch('updateBalance', state.wallets[payload.coin.ticker])
-    ***REMOVED***)
+    })
     commit('SET_CALCULATING', false)
-  ***REMOVED***,
-  destroyWallets ({commit***REMOVED***) {
+  },
+  destroyWallets ({commit}) {
     commit('DESTROY_WALLETS')
-  ***REMOVED***,
-  updateBalance({commit, getters***REMOVED***, wallet) {
+  },
+  updateBalance({commit, getters}, wallet) {
     getBalance(wallet).then(response => {
       // wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance = sb.toBitcoin(response.data.confirmed);
@@ -109,52 +109,52 @@ import {getCmcData***REMOVED*** from '../../lib/coinmarketcap'
         getCmcData(wallet.coin.name).then(response => {
           response.data.forEach(function(cmcCoin) {
             wallet.balance_usd = wallet.balance * cmcCoin.price_usd;
-          ***REMOVED***)
-        ***REMOVED***)
-      ***REMOVED*** else {
+          })
+        })
+      } else {
         let price_btc = 0.00006666;
         wallet.balance_usd = wallet.balance * Number(getters.getWalletByTicker('BTC').balance_usd); 
-      ***REMOVED***
-    ***REMOVED***)
+      }
+    })
     commit('UPDATE_BALANCE', wallet)
-  ***REMOVED***,
-  getRawTx({commit***REMOVED***, {ticker, tx***REMOVED***) {
+  },
+  getRawTx({commit}, {ticker, tx}) {
     let payload = {
       ticker: ticker,
       method: 'blockchain.transaction.get',
       params: [ tx.tx_hash ]
-    ***REMOVED***
+    }
     return axios.post('http://localhost:8000', payload)
-  ***REMOVED***,  
-  addTx({commit, dispatch, getters***REMOVED***, {wallet, tx***REMOVED***) {
-    dispatch('getRawTx', {ticker:wallet.ticker, tx:tx***REMOVED***).then(response => {
+  },  
+  addTx({commit, dispatch, getters}, {wallet, tx}) {
+    dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
       let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
 
-      commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height***REMOVED***) 
-    ***REMOVED***).catch(error => {
+      commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height}) 
+    }).catch(error => {
       throw new Error(error)
-    ***REMOVED***)
-  ***REMOVED***,
-  buildTxHistory({commit, dispatch, getters***REMOVED***, wallet) {
+    })
+  },
+  buildTxHistory({commit, dispatch, getters}, wallet) {
     axios.post('http://localhost:8000', {
       ticker: wallet.ticker,
       method: 'blockchain.address.get_history',
       params: [ wallet.address ]
-    ***REMOVED***).then(response => {
+    }).then(response => {
       if (response.data.length > 0) {
         let txs = response.data
 
         txs.forEach(tx => {
-          dispatch('addTx', {wallet:wallet, tx:tx***REMOVED***)
-        ***REMOVED***)
-      ***REMOVED***
-    ***REMOVED***)
-  ***REMOVED***
-***REMOVED***
+          dispatch('addTx', {wallet:wallet, tx:tx})
+        })
+      }
+    })
+  }
+}
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+export default {
+  state,
+  getters,
+  mutations,
+  actions
+}

@@ -23,7 +23,7 @@
 					Please write down the set of words below in the exact sequence. You will be asked to re-enter your Backup Phrase on the next screen in order to ensure accuracy.
 				</p>
 				<div class="passphrase-generated">
-					{{getRandomPassphrase()***REMOVED******REMOVED***
+					{{getRandomPassphrase()}}
 				</div>
 			</div>
 			<div v-if="step3" class="row-main-item">
@@ -61,7 +61,7 @@
 <script>
 import bip39 from 'bip39'
 
-***REMOVED***
+export default {
 	name: "create-passphrase",
 	data() {
 		return {
@@ -71,63 +71,63 @@ import bip39 from 'bip39'
 			passphraseGenerated: "",
 			isConfirmed: false,
 			passphraseValue: ''
-		***REMOVED***
-	***REMOVED***,
+		}
+	},
 	computed: {
 		disabledBtn() {
 			return this.isConfirmed ? '' : 'disabledBtn';
-		***REMOVED***
-	***REMOVED***,
+		}
+	},
 	mounted() {
 		this.passphraseGenerated = bip39.generateMnemonic(256);
 
-		const {clipboard***REMOVED*** = require('electron');
+		const {clipboard} = require('electron');
 		clipboard.clear();
-	***REMOVED***,
+	},
 	methods: {
 		getRandomPassphrase() {
 			return this.passphraseGenerated;
-		***REMOVED***,
+		},
 
 		cancelCreate() {
 			this.$router.push("/login-form");
-		***REMOVED***,
+		},
 		generatePassphrase() {
 			this.passphraseGenerated = bip39.generateMnemonic(256);
 			this.step1 = false;
 			this.step2 = true;
 			this.step3 = false;
-		***REMOVED***,
+		},
 		continueCreate() {
 			this.step1 = false;
 			this.step2 = false;
 			this.step3 = true;			
-		***REMOVED***,
+		},
 		backArrow() {
 			if (this.step1) {
 				this.$router.push("/login-form");
-			***REMOVED*** else if (this.step2) {
+			} else if (this.step2) {
 				this.step1 = true;
 				this.step2 = false;
 				this.step3 = false;	
-			***REMOVED*** else if (this.step3) {
+			} else if (this.step3) {
 				this.step1 = false;
 				this.step2 = true;
 				this.step3 = false;
-			***REMOVED***
-		***REMOVED***,
+			}
+		},
 		checkPassphrase() {
 			this.isConfirmed = (this.passphraseGenerated === this.passphraseValue);
-		***REMOVED***,
+		},
 		validatePassPhrase() {
 			console.log(this.passphraseValue);
 			if(this.passphraseValue) {
 				this.$store.dispatch("login", this.passphraseValue)
 				this.$router.push('/wallet')
-			***REMOVED***
-		***REMOVED***,
-	***REMOVED***
-***REMOVED***
+			}
+		},
+	}
+}
 </script>
 
 <style scoped>
@@ -136,23 +136,23 @@ import bip39 from 'bip39'
 	align-items: center;
 	padding-left: 50px;
 	padding-right: 50px;
-***REMOVED***
+}
 
 .input-createpassphrase .row-main-item {
 	margin: none;
-***REMOVED***
+}
 
 .content-createpassphrase span {
 	margin-top: 35px;
 	color: #180d39;
 	font-size: 1.5em;
-***REMOVED***
+}
 
 .content-createpassphrase h3 {
 	text-align: center;
 	margin-bottom: 40px;
 	margin-top: 40px;
-***REMOVED***
+}
 
 .content-createpassphrase p {
 	text-align: center;
@@ -162,13 +162,13 @@ import bip39 from 'bip39'
 	-ms-text-align-last: center;
 	-moz-text-align-last: center;
 	text-align-last: center;
-***REMOVED***
+}
 
 .content-createpassphrase p:last-child {
 	-ms-text-align-last: center;
 	-moz-text-align-last: center;
 	text-align-last: center;
-***REMOVED***
+}
 
 .footer {
 	position: fixed;
@@ -179,19 +179,19 @@ import bip39 from 'bip39'
 	bottom: 0;
 	left: 0;
 	right: 0;
-***REMOVED***
+}
 
 .footer .row {
 	justify-content: center;
-***REMOVED***
+}
 
 #btn-not-now {
 	margin-right: 20px;
-***REMOVED***
+}
 
 #generate-passphrase {
 	margin-left: 20px;
-***REMOVED***
+}
 
 .btn-round-purple {
 	min-height: 50px;
@@ -207,7 +207,7 @@ import bip39 from 'bip39'
 	padding-right: 15px;
 	padding-left: 15px;
 	cursor: pointer;
-***REMOVED***
+}
 
 .passphrase-generated {
 	border: 2px solid rgba(24,13,57,0.1);
@@ -224,13 +224,13 @@ import bip39 from 'bip39'
 	-moz-user-select: none;     /* Firefox all */
 	-ms-user-select: none;      /* IE 10+ */
 	user-select: none;          /* Likely future */   
-***REMOVED***
+}
 
 #btn-continue {
 	min-height: 50px;
 	max-height: 50px;
 	padding: 0px;
-***REMOVED***
+}
 
 #btn-continue p {
 	font-weight: 400;
@@ -238,7 +238,7 @@ import bip39 from 'bip39'
 	margin-top: auto;
 	margin-bottom: auto;
 	padding-left: 45px;
-***REMOVED***
+}
 
 #create-passphrase-input {
 	border: 2px solid rgba(24,13,57,0.1);
@@ -252,20 +252,20 @@ import bip39 from 'bip39'
 	margin-left: auto;
 	margin-right: auto;
 	width: 80%;
-***REMOVED***
+}
 
 .disabledBtn {
 	cursor: not-allowed;
 	color: rgba(0,0,0,0.1);
 	border: 2px solid rgba(24,13,57,0.1);
-***REMOVED***
+}
 
 #back-arrow {
 	position: fixed;
 	top: 40px;
 	left: 140px;
 	cursor: pointer;
-***REMOVED***
+}
 
 #back-arrow p {
 	color: #7c398a;
@@ -274,32 +274,32 @@ import bip39 from 'bip39'
 	margin-bottom: auto;
 	padding-left: 15px;
 	padding-bottom: 5px;
-***REMOVED***
+}
 
 #back-arrow img {
 	align-self: flex-start;
-***REMOVED***
+}
 
 .row-main-item {
 	flex-direction: column;
 	justify-content: center;
-***REMOVED***
+}
 
 .row-custom { 
 	margin: 0px;
 	display: flex;
 	justify-content: center;
-***REMOVED***
+}
 
 .col-custom {
 	flex-grow: 1;
-***REMOVED***
+}
 
 .btn-round-light {
 	min-width: 210px;
 	max-width: 210px;
 	width: 210px;
 	outline: none;
-***REMOVED***
+}
 
 </style>

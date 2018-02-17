@@ -33,34 +33,34 @@
 </template>
 
 <script>
-***REMOVED***
+export default {
 	name: 'sidebar',
 	data() {
 		return {
 			balanceState: true,
 			buyMnzState: false,
 			withdrawalState: false,
-		***REMOVED***
-	***REMOVED***,
+		}
+	},
 	methods: {
 		balanceClicked() {
 			console.log("test");
 			this.balanceState = true;
 			this.buyMnzState = false;
 			this.withdrawalState = false;
-		***REMOVED***,
+		},
 		buyMnzClicked() {
 			this.balanceState = false;
 			this.buyMnzState = true;
 			this.withdrawalState = false;
-		***REMOVED***,
+		},
 		withdrawalClicked() {
 			this.balanceState = false;
 			this.buyMnzState = false;
 			this.withdrawalState = true;
-		***REMOVED***
-	***REMOVED***
-***REMOVED***
+		}
+	}
+}
 </script>
 
 <style scoped>
@@ -68,7 +68,7 @@
 .active {
 	transition: all 0.3s;
 	color: #ffffff !important;
-***REMOVED***
+}
 
 .logo {
   display: block;
@@ -77,7 +77,7 @@
   margin-bottom: 80px;
   width: 50%;
       width: 92px;
-***REMOVED***
+}
 
 #sidebar {
   font-weight: 600;
@@ -91,6 +91,6 @@
   transition: all 0.3s;
   position: fixed;
   background-color: #180d39;
-***REMOVED***
+}
 
 </style>

@@ -15,9 +15,9 @@ let webpackConfig = merge(baseConfig, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"testing"'
-    ***REMOVED***)
+    })
   ]
-***REMOVED***)
+})
 
 // don't treat dependencies as externals
 delete webpackConfig.entry
@@ -33,30 +33,30 @@ module.exports = config => {
     browsers: ['visibleElectron'],
     client: {
       useIframe: false
-    ***REMOVED***,
+    },
     coverageReporter: {
       dir: './coverage',
       reporters: [
-        { type: 'lcov', subdir: '.' ***REMOVED***,
-        { type: 'text-summary' ***REMOVED***
+        { type: 'lcov', subdir: '.' },
+        { type: 'text-summary' }
       ]
-    ***REMOVED***,
+    },
     customLaunchers: {
       'visibleElectron': {
         base: 'Electron',
         flags: ['--show']
-      ***REMOVED***
-    ***REMOVED***,
+      }
+    },
     frameworks: ['mocha', 'chai'],
     files: ['./index.js'],
     preprocessors: {
       './index.js': ['webpack', 'sourcemap']
-    ***REMOVED***,
+    },
     reporters: ['spec', 'coverage'],
     singleRun: true,
     webpack: webpackConfig,
     webpackMiddleware: {
       noInfo: true
-    ***REMOVED***
-  ***REMOVED***)
-***REMOVED***
+    }
+  })
+}

@@ -10,7 +10,7 @@ hotClient.subscribe(event => {
    */
   // if (event.action === 'reload') {
   //   window.location.reload()
-  // ***REMOVED***
+  // }
 
   /**
    * Notify `mainWindow` when `main` process is compiling,
@@ -29,12 +29,12 @@ hotClient.subscribe(event => {
           left: 20px;
           padding: 8px 12px;
           position: absolute;
-        ***REMOVED***
+        }
       </style>
 
       <div id="dev-client">
         Compiling Main Process...
       </div>
     `
-  ***REMOVED***
-***REMOVED***)
+  }
+})

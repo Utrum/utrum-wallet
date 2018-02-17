@@ -4,36 +4,36 @@
     "test": {
       "presets": [
         ["env", {
-          "targets": { "node": 7 ***REMOVED***
-        ***REMOVED***],
+          "targets": { "node": 7 }
+        }],
         "stage-0"
       ],
       "plugins": ["istanbul"]
-    ***REMOVED***,
+    },
     "main": {
       "presets": [
         ["env", {
-          "targets": { "node": 7 ***REMOVED***
-        ***REMOVED***],
+          "targets": { "node": 7 }
+        }],
         "stage-0"
       ]
-    ***REMOVED***,
+    },
     "renderer": {
       "presets": [
         ["env", {
           "modules": false
-        ***REMOVED***],
+        }],
         "stage-0"
       ]
-    ***REMOVED***,
+    },
     "web": {
       "presets": [
         ["env", {
           "modules": false
-        ***REMOVED***],
+        }],
         "stage-0"
       ]
-    ***REMOVED***
-  ***REMOVED***,
+    }
+  },
   "plugins": ["transform-runtime"]
-***REMOVED***
+}

@@ -6,8 +6,8 @@ describe('LandingPage.vue', () => {
     const vm = new Vue({
       el: document.createElement('div'),
       render: h => h(LandingPage)
-    ***REMOVED***).$mount()
+    }).$mount()
 
     expect(vm.$el.querySelector('.title').textContent).to.contain('Welcome to your new project!')
-  ***REMOVED***)
-***REMOVED***)
+  })
+})

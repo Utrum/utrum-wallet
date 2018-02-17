@@ -28,16 +28,16 @@ axios.config =  axios.create({
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-  ***REMOVED***
-***REMOVED***);
+  }
+});
 
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  components: { App ***REMOVED***,
+  components: { App },
   router,
   store,
   template: '<App/>'
-***REMOVED***).$mount('#app')
+}).$mount('#app')

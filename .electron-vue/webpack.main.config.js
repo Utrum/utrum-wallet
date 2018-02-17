@@ -3,7 +3,7 @@
 process.env.BABEL_ENV = 'main'
 
 const path = require('path')
-const { dependencies ***REMOVED*** = require('../package.json')
+const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
@@ -11,9 +11,9 @@ const BabiliWebpackPlugin = require('babili-webpack-plugin')
 let mainConfig = {
   entry: {
     main: path.join(__dirname, '../src/main/index.js')
-  ***REMOVED***,
+  },
   externals: [
-    ...Object.keys(dependencies || {***REMOVED***)
+    ...Object.keys(dependencies || {})
   ],
   module: {
     rules: [
@@ -21,30 +21,30 @@ let mainConfig = {
         test: /\.js$/,
         use: 'babel-loader',
         exclude: /node_modules/
-      ***REMOVED***,
+      },
       {
         test: /\.node$/,
         use: 'node-loader'
-      ***REMOVED***
+      }
     ]
-  ***REMOVED***,
+  },
   node: {
     __dirname: process.env.NODE_ENV !== 'production',
     __filename: process.env.NODE_ENV !== 'production'
-  ***REMOVED***,
+  },
   output: {
     filename: '[name].js',
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, '../dist/electron')
-  ***REMOVED***,
+  },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
     extensions: ['.js', '.json', '.node']
-  ***REMOVED***,
+  },
   target: 'electron-main'
-***REMOVED***
+}
 
 /**
  * Adjust mainConfig for development settings
@@ -52,10 +52,10 @@ let mainConfig = {
 if (process.env.NODE_ENV !== 'production') {
   mainConfig.plugins.push(
     new webpack.DefinePlugin({
-      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')***REMOVED***"`
-    ***REMOVED***)
+      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
+    })
   )
-***REMOVED***
+}
 
 /**
  * Adjust mainConfig for production settings
@@ -65,8 +65,8 @@ if (process.env.NODE_ENV === 'production') {
     new BabiliWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
-    ***REMOVED***)
+    })
   )
-***REMOVED***
+}
 
 module.exports = mainConfig

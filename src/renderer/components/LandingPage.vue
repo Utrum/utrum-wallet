@@ -32,15 +32,15 @@
 <script>
   import SystemInformation from './LandingPage/SystemInformation'
 
-  ***REMOVED***
+  export default {
     name: 'landing-page',
-    components: { SystemInformation ***REMOVED***,
+    components: { SystemInformation },
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
+      }
+    }
+  }
 </script>
 
 <style>
@@ -50,9 +50,9 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-  ***REMOVED***
+  }
 
-  body { font-family: 'Source Sans Pro', sans-serif; ***REMOVED***
+  body { font-family: 'Source Sans Pro', sans-serif; }
 
   #wrapper {
     background:
@@ -64,48 +64,48 @@
     height: 100vh;
     padding: 60px 80px;
     width: 100vw;
-  ***REMOVED***
+  }
 
   #logo {
     height: auto;
     margin-bottom: 20px;
     width: 420px;
-  ***REMOVED***
+  }
 
   main {
     display: flex;
     justify-content: space-between;
-  ***REMOVED***
+  }
 
-  main > div { flex-basis: 50%; ***REMOVED***
+  main > div { flex-basis: 50%; }
 
   .left-side {
     display: flex;
     flex-direction: column;
-  ***REMOVED***
+  }
 
   .welcome {
     color: #555;
     font-size: 23px;
     margin-bottom: 10px;
-  ***REMOVED***
+  }
 
   .title {
     color: #2c3e50;
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 6px;
-  ***REMOVED***
+  }
 
   .title.alt {
     font-size: 18px;
     margin-bottom: 10px;
-  ***REMOVED***
+  }
 
   .doc p {
     color: black;
     margin-bottom: 10px;
-  ***REMOVED***
+  }
 
   .doc button {
     font-size: .8em;
@@ -119,10 +119,10 @@
     transition: all 0.15s ease;
     box-sizing: border-box;
     border: 1px solid #4fc08d;
-  ***REMOVED***
+  }
 
   .doc button.alt {
     color: #42b983;
     background-color: transparent;
-  ***REMOVED***
+  }
 </style>

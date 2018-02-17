@@ -16,29 +16,29 @@
 </template>
 
 <script>
-***REMOVED***
+export default {
 	name: 'login-form',
 	
 	data() {
 		return {
 			passphrase: '',
 			btnSendStatus: 'btn-send-enabled',
-		***REMOVED***
-	***REMOVED***,
+		}
+	},
 	methods: {
 		validatePassPhrase() {
 			console.log(this.passphrase)
 			if(this.passphrase) {
 				this.$store.dispatch("login", this.passphrase)
 				this.$router.push('/wallet')
-			***REMOVED***
-		***REMOVED***,
+			}
+		},
 		createPassphrase() {
 			this.$router.push('/createpassphrase');
-		***REMOVED***
+		}
 
-	***REMOVED***
-***REMOVED***
+	}
+}
 </script>
 
 <style scoped>
@@ -47,20 +47,20 @@
 body {
   font-family: 'Montserrat', sans-serif;
   background: #fafafa;
-***REMOVED***
+}
 
 #login-background {
 	width: 100%;
 	position: absolute;
 	bottom:0px;
 	z-index: -1;
-***REMOVED***
+}
 
 .input-login .row {
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-***REMOVED***
+}
 
 .btn-send-enabled {
 	padding: 10px;
@@ -74,35 +74,35 @@ body {
 	margin-top: auto;
 	margin-bottom: auto;
 
-***REMOVED***
+}
 
 .btn-send-enabled img {
 	vertical-align: top;
 	opacity: 1;
 	transition: opacity 0.5s;
-***REMOVED***
+}
 
 #icon-login {
 	margin-top: 10px;
 	max-height: 70px;
 	text-align: center;
-***REMOVED***
+}
 
 .content-login {
 	align-items: center;
 	text-align: center;
 	height: 60vh;
-***REMOVED***
+}
 
 .input-login .row-main-item {
 	margin: none;
-***REMOVED***
+}
 
 .content-login span {
 	margin-top: 35px;
 	color: #180d39;
 	font-size: 1.5em;
-***REMOVED***
+}
 
 .input-login {
 	border: 1px solid rgba(24,13,57,0.1);
@@ -112,11 +112,11 @@ body {
 	background-color: rgb(250,250,250);
 	margin-bottom: 35px;
 	padding: 15px;
-***REMOVED***
+}
 
 .middle {
 	vertical-align: middle;
-***REMOVED***
+}
 
 .btn-send-enabled {
 	padding: 10px;
@@ -130,13 +130,13 @@ body {
 	margin-top: auto;
 	margin-bottom: auto;
 
-***REMOVED***
+}
 
 .btn-send-enabled img {
 	vertical-align: top;
 	opacity: 1;
 	transition: opacity 0.5s;
-***REMOVED***
+}
 
 .btn-send-disabled {
 	padding: 10px;
@@ -151,13 +151,13 @@ body {
 	margin-bottom: auto;
 	cursor: not-allowed;
 	pointer-events: none;
-***REMOVED***
+}
 
 .btn-send-disabled img {
 	vertical-align: top;
 	opacity: 0.1;
 	transition: opacity 0.5s;
-***REMOVED***
+}
 
 #passphrase {
 	width: 100%;
@@ -165,38 +165,38 @@ body {
 	border: none !important;
 	outline: none;
 	background-color: transparent;
-***REMOVED***
+}
 
 #passphrase::-webkit-input-placeholder {
 	text-align: center;
 	font-weight: 400;
 	font-size: 1.3em;
 	color: rgba(0,0,0,0.5);
-***REMOVED***
+}
 
 textarea {
 	resize: none;
-***REMOVED***
+}
 
 .row-main-item {
 	display: flex;
 	flex-direction: column;
 	margin-top: 20px;
 	margin-bottom: 20px;
-***REMOVED***
+}
 
 .col {
 	flex-grow: 1;
-***REMOVED***
+}
 
 .row {
 	margin: 0px;
 	display: flex;
 	justify-content: space-between;
-***REMOVED***
+}
 
 .btn-round-light  {
 	outline: none;
-***REMOVED***
+}
 
 </style>

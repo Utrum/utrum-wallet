@@ -14,7 +14,7 @@ let webConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
     web: path.join(__dirname, '../src/renderer/main.js')
-  ***REMOVED***,
+  },
   module: {
     rules: [
       {
@@ -22,18 +22,18 @@ let webConfig = {
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: 'css-loader'
-        ***REMOVED***)
-      ***REMOVED***,
+        })
+      },
       {
         test: /\.html$/,
         use: 'vue-html-loader'
-      ***REMOVED***,
+      },
       {
         test: /\.js$/,
         use: 'babel-loader',
         include: [ path.resolve(__dirname, '../src/renderer') ],
         exclude: /node_modules/
-      ***REMOVED***,
+      },
       {
         test: /\.vue$/,
         use: {
@@ -43,10 +43,10 @@ let webConfig = {
             loaders: {
               sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
               scss: 'vue-style-loader!css-loader!sass-loader'
-            ***REMOVED***
-          ***REMOVED***
-        ***REMOVED***
-      ***REMOVED***,
+            }
+          }
+        }
+      },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         use: {
@@ -54,9 +54,9 @@ let webConfig = {
           query: {
             limit: 10000,
             name: 'imgs/[name].[ext]'
-          ***REMOVED***
-        ***REMOVED***
-      ***REMOVED***,
+          }
+        }
+      },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         use: {
@@ -64,11 +64,11 @@ let webConfig = {
           query: {
             limit: 10000,
             name: 'fonts/[name].[ext]'
-          ***REMOVED***
-        ***REMOVED***
-      ***REMOVED***
+          }
+        }
+      }
     ]
-  ***REMOVED***,
+  },
   plugins: [
     new ExtractTextPlugin('styles.css'),
     new HtmlWebpackPlugin({
@@ -78,28 +78,28 @@ let webConfig = {
         collapseWhitespace: true,
         removeAttributeQuotes: true,
         removeComments: true
-      ***REMOVED***,
+      },
       nodeModules: false
-    ***REMOVED***),
+    }),
     new webpack.DefinePlugin({
       'process.env.IS_WEB': 'true'
-    ***REMOVED***),
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   output: {
     filename: '[name].js',
     path: path.join(__dirname, '../dist/web')
-  ***REMOVED***,
+  },
   resolve: {
     alias: {
       '@': path.join(__dirname, '../src/renderer'),
       'vue$': 'vue/dist/vue.esm.js'
-    ***REMOVED***,
+    },
     extensions: ['.js', '.vue', '.json', '.css']
-  ***REMOVED***,
+  },
   target: 'web'
-***REMOVED***
+}
 
 /**
  * Adjust webConfig for production settings
@@ -114,15 +114,15 @@ if (process.env.NODE_ENV === 'production') {
         from: path.join(__dirname, '../static'),
         to: path.join(__dirname, '../dist/web/static'),
         ignore: ['.*']
-      ***REMOVED***
+      }
     ]),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
-    ***REMOVED***),
+    }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
-    ***REMOVED***)
+    })
   )
-***REMOVED***
+}
 
 module.exports = webConfig

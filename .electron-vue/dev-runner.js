@@ -3,8 +3,8 @@
 const chalk = require('chalk')
 const electron = require('electron')
 const path = require('path')
-const { say ***REMOVED*** = require('cfonts')
-const { spawn ***REMOVED*** = require('child_process')
+const { say } = require('cfonts')
+const { spawn } = require('child_process')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const webpackHotMiddleware = require('webpack-hot-middleware')
@@ -19,24 +19,24 @@ let hotMiddleware
 function logStats (proc, data) {
   let log = ''
 
-  log += chalk.yellow.bold(`┏ ${proc***REMOVED*** Process ${new Array((19 - proc.length) + 1).join('-')***REMOVED***`)
+  log += chalk.yellow.bold(`┏ ${proc} Process ${new Array((19 - proc.length) + 1).join('-')}`)
   log += '\n\n'
 
   if (typeof data === 'object') {
     data.toString({
       colors: true,
       chunks: false
-    ***REMOVED***).split(/\r?\n/).forEach(line => {
+    }).split(/\r?\n/).forEach(line => {
       log += '  ' + line + '\n'
-    ***REMOVED***)
-  ***REMOVED*** else {
-    log += `  ${data***REMOVED***\n`
-  ***REMOVED***
+    })
+  } else {
+    log += `  ${data}\n`
+  }
 
-  log += '\n' + chalk.yellow.bold(`┗ ${new Array(28 + 1).join('-')***REMOVED***`) + '\n'
+  log += '\n' + chalk.yellow.bold(`┗ ${new Array(28 + 1).join('-')}`) + '\n'
 
   console.log(log)
-***REMOVED***
+}
 
 function startRenderer () {
   return new Promise((resolve, reject) => {
@@ -46,18 +46,18 @@ function startRenderer () {
     hotMiddleware = webpackHotMiddleware(compiler, { 
       log: false, 
       heartbeat: 2500 
-    ***REMOVED***)
+    })
 
     compiler.plugin('compilation', compilation => {
       compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
-        hotMiddleware.publish({ action: 'reload' ***REMOVED***)
+        hotMiddleware.publish({ action: 'reload' })
         cb()
-      ***REMOVED***)
-    ***REMOVED***)
+      })
+    })
 
     compiler.plugin('done', stats => {
       logStats('Renderer', stats)
-    ***REMOVED***)
+    })
 
     const server = new WebpackDevServer(
       compiler,
@@ -68,14 +68,14 @@ function startRenderer () {
           app.use(hotMiddleware)
           ctx.middleware.waitUntilValid(() => {
             resolve()
-          ***REMOVED***)
-        ***REMOVED***
-      ***REMOVED***
+          })
+        }
+      }
     )
 
     server.listen(9080)
-  ***REMOVED***)
-***REMOVED***
+  })
+}
 
 function startMain () {
   return new Promise((resolve, reject) => {
@@ -85,15 +85,15 @@ function startMain () {
 
     compiler.plugin('watch-run', (compilation, done) => {
       logStats('Main', chalk.white.bold('compiling...'))
-      hotMiddleware.publish({ action: 'compiling' ***REMOVED***)
+      hotMiddleware.publish({ action: 'compiling' })
       done()
-    ***REMOVED***)
+    })
 
-    compiler.watch({***REMOVED***, (err, stats) => {
+    compiler.watch({}, (err, stats) => {
       if (err) {
         console.log(err)
         return
-      ***REMOVED***
+      }
 
       logStats('Main', stats)
 
@@ -105,35 +105,35 @@ function startMain () {
 
         setTimeout(() => {
           manualRestart = false
-        ***REMOVED***, 5000)
-      ***REMOVED***
+        }, 5000)
+      }
 
       resolve()
-    ***REMOVED***)
-  ***REMOVED***)
-***REMOVED***
+    })
+  })
+}
 
 function startElectron () {
   electronProcess = spawn(electron, ['--inspect=5858', path.join(__dirname, '../dist/electron/main.js')])
 
   electronProcess.stdout.on('data', data => {
     electronLog(data, 'blue')
-  ***REMOVED***)
+  })
   electronProcess.stderr.on('data', data => {
     electronLog(data, 'red')
-  ***REMOVED***)
+  })
 
   electronProcess.on('close', () => {
     if (!manualRestart) process.exit()
-  ***REMOVED***)
-***REMOVED***
+  })
+}
 
 function electronLog (data, color) {
   let log = ''
   data = data.toString().split(/\r?\n/)
   data.forEach(line => {
-    log += `  ${line***REMOVED***\n`
-  ***REMOVED***)
+    log += `  ${line}\n`
+  })
   if (/[0-9A-z]+/.test(log)) {
     console.log(
       chalk[color].bold('┏ Electron -------------------') +
@@ -142,8 +142,8 @@ function electronLog (data, color) {
       chalk[color].bold('┗ ----------------------------') +
       '\n'
     )
-  ***REMOVED***
-***REMOVED***
+  }
+}
 
 function greeting () {
   const cols = process.stdout.columns
@@ -158,10 +158,10 @@ function greeting () {
       colors: ['yellow'],
       font: 'simple3d',
       space: false
-    ***REMOVED***)
-  ***REMOVED*** else console.log(chalk.yellow.bold('\n  electron-vue'))
+    })
+  } else console.log(chalk.yellow.bold('\n  electron-vue'))
   console.log(chalk.blue('  getting ready...') + '\n')
-***REMOVED***
+}
 
 function init () {
   greeting()
@@ -169,10 +169,10 @@ function init () {
   Promise.all([startRenderer(), startMain()])
     .then(() => {
       startElectron()
-    ***REMOVED***)
+    })
     .catch(err => {
       console.error(err)
-    ***REMOVED***)
-***REMOVED***
+    })
+}
 
 init()

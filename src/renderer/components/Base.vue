@@ -3,9 +3,9 @@
 </template>
 
 <script>
-***REMOVED***
+export default {
 
-***REMOVED***
+}
 </script>
 
 <style>

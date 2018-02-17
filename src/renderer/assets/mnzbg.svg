@@ -2,67 +2,67 @@
 	 width="1920px" height="1152.1px" viewBox="0 0 1920 1152.1" style="enable-background:new 0 0 1920 1152.1;" xml:space="preserve"
 	>
 <style type="text/css">
-	.st0{fill:#180D39;***REMOVED***
-	.st1{fill:#170D38;***REMOVED***
-	.st2{fill:#391D54;***REMOVED***
-	.st3{opacity:0.5;***REMOVED***
-	.st4{fill:#694E7C;***REMOVED***
-	.st5{opacity:0.5;fill:#391D54;enable-background:new    ;***REMOVED***
-	.st6{opacity:0.4;***REMOVED***
-	.st7{fill:none;***REMOVED***
-	.st8{opacity:0.7;***REMOVED***
-	.st9{opacity:0.15;fill:#A38DC4;enable-background:new    ;***REMOVED***
-	.st10{fill:#DDE3E8;***REMOVED***
-	.st11{fill:#FFFFFF;***REMOVED***
-	.st12{fill:#222E3A;***REMOVED***
-	.st13{opacity:0.9;***REMOVED***
-	.st14{fill:#F4F4F4;***REMOVED***
-	.st15{fill:#7C308C;***REMOVED***
-	.st16{opacity:0.9;fill:#F4F4F4;enable-background:new    ;***REMOVED***
-	.st17{fill:#95989C;***REMOVED***
-	.st18{fill:#2E0E4F;***REMOVED***
-	.st19{opacity:0.4;fill:#391D54;enable-background:new    ;***REMOVED***
-	.st20{fill:#241542;***REMOVED***
-	.st21{opacity:0.4;fill:#B1B6CD;enable-background:new    ;***REMOVED***
-	.st22{fill:#B1B6CD;***REMOVED***
-	.st23{opacity:0.3;***REMOVED***
-	.st24{opacity:0.85;***REMOVED***
-	.st25{fill:#7C348A;***REMOVED***
-	.st26{opacity:0.2;***REMOVED***
-	.st27{fill:#A5AAB0;***REMOVED***
-	.st28{fill:#1A0C3C;***REMOVED***
-	.st29{fill:url(#SVGID_1_);***REMOVED***
-	.st30{fill:url(#SVGID_2_);***REMOVED***
-	.st31{fill:url(#SVGID_3_);***REMOVED***
-	.st32{opacity:0.5;fill:#FFFFFF;enable-background:new    ;***REMOVED***
-	.st33{opacity:0.5;fill:#180D39;enable-background:new    ;***REMOVED***
-	.st34{fill:#BD9DC4;***REMOVED***
-	.st35{opacity:0.6;fill:#BD9DC4;enable-background:new    ;***REMOVED***
-	.st36{opacity:0.2;fill:#241542;enable-background:new    ;***REMOVED***
-	.st37{fill:#5B2D6D;***REMOVED***
-	.st38{fill:#2E1B47;***REMOVED***
-	.st39{fill:#5A2866;***REMOVED***
-	.st40{opacity:0.1;***REMOVED***
-	.st41{fill:#AC54D1;***REMOVED***
-	.st42{fill:#FFFFFF;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;***REMOVED***
-	.st43{fill:#9A778A;***REMOVED***
-	.st44{opacity:0.3;fill:#FCFCFC;enable-background:new    ;***REMOVED***
-	.st45{opacity:0.2;fill:#FFFFFF;enable-background:new    ;***REMOVED***
-	.st46{fill:#321A4E;***REMOVED***
-	.st47{fill:#33185B;***REMOVED***
-	.st48{opacity:0.3;fill:#6F2BAA;enable-background:new    ;***REMOVED***
-	.st49{fill:#473463;***REMOVED***
-	.st50{opacity:0.5;fill:#7C348A;enable-background:new    ;***REMOVED***
-	.st51{fill:#1F1438;***REMOVED***
-	.st52{fill:#553E77;***REMOVED***
-	.st53{opacity:0.3;fill:#553E77;enable-background:new    ;***REMOVED***
-	.st54{fill:#301B4B;stroke:#301B4B;stroke-width:2;stroke-miterlimit:10;***REMOVED***
-	.st55{fill:#775E8C;***REMOVED***
-	.st56{opacity:0.5;fill:#BD9DC4;enable-background:new    ;***REMOVED***
-	.st57{opacity:0.4;fill:#FFFFFF;enable-background:new    ;***REMOVED***
-	.st58{opacity:0.3;fill:#FFFFFF;enable-background:new    ;***REMOVED***
-	.st59{fill:#7C398A;***REMOVED***
-	.st60{opacity:0.4;fill:#180D39;enable-background:new    ;***REMOVED***
+	.st0{fill:#180D39;}
+	.st1{fill:#170D38;}
+	.st2{fill:#391D54;}
+	.st3{opacity:0.5;}
+	.st4{fill:#694E7C;}
+	.st5{opacity:0.5;fill:#391D54;enable-background:new    ;}
+	.st6{opacity:0.4;}
+	.st7{fill:none;}
+	.st8{opacity:0.7;}
+	.st9{opacity:0.15;fill:#A38DC4;enable-background:new    ;}
+	.st10{fill:#DDE3E8;}
+	.st11{fill:#FFFFFF;}
+	.st12{fill:#222E3A;}
+	.st13{opacity:0.9;}
+	.st14{fill:#F4F4F4;}
+	.st15{fill:#7C308C;}
+	.st16{opacity:0.9;fill:#F4F4F4;enable-background:new    ;}
+	.st17{fill:#95989C;}
+	.st18{fill:#2E0E4F;}
+	.st19{opacity:0.4;fill:#391D54;enable-background:new    ;}
+	.st20{fill:#241542;}
+	.st21{opacity:0.4;fill:#B1B6CD;enable-background:new    ;}
+	.st22{fill:#B1B6CD;}
+	.st23{opacity:0.3;}
+	.st24{opacity:0.85;}
+	.st25{fill:#7C348A;}
+	.st26{opacity:0.2;}
+	.st27{fill:#A5AAB0;}
+	.st28{fill:#1A0C3C;}
+	.st29{fill:url(#SVGID_1_);}
+	.st30{fill:url(#SVGID_2_);}
+	.st31{fill:url(#SVGID_3_);}
+	.st32{opacity:0.5;fill:#FFFFFF;enable-background:new    ;}
+	.st33{opacity:0.5;fill:#180D39;enable-background:new    ;}
+	.st34{fill:#BD9DC4;}
+	.st35{opacity:0.6;fill:#BD9DC4;enable-background:new    ;}
+	.st36{opacity:0.2;fill:#241542;enable-background:new    ;}
+	.st37{fill:#5B2D6D;}
+	.st38{fill:#2E1B47;}
+	.st39{fill:#5A2866;}
+	.st40{opacity:0.1;}
+	.st41{fill:#AC54D1;}
+	.st42{fill:#FFFFFF;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;}
+	.st43{fill:#9A778A;}
+	.st44{opacity:0.3;fill:#FCFCFC;enable-background:new    ;}
+	.st45{opacity:0.2;fill:#FFFFFF;enable-background:new    ;}
+	.st46{fill:#321A4E;}
+	.st47{fill:#33185B;}
+	.st48{opacity:0.3;fill:#6F2BAA;enable-background:new    ;}
+	.st49{fill:#473463;}
+	.st50{opacity:0.5;fill:#7C348A;enable-background:new    ;}
+	.st51{fill:#1F1438;}
+	.st52{fill:#553E77;}
+	.st53{opacity:0.3;fill:#553E77;enable-background:new    ;}
+	.st54{fill:#301B4B;stroke:#301B4B;stroke-width:2;stroke-miterlimit:10;}
+	.st55{fill:#775E8C;}
+	.st56{opacity:0.5;fill:#BD9DC4;enable-background:new    ;}
+	.st57{opacity:0.4;fill:#FFFFFF;enable-background:new    ;}
+	.st58{opacity:0.3;fill:#FFFFFF;enable-background:new    ;}
+	.st59{fill:#7C398A;}
+	.st60{opacity:0.4;fill:#180D39;enable-background:new    ;}
 </style>
 <g id="Calque_2">
 	<rect class="st0" width="1920" height="1152.1"/>

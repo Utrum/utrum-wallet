@@ -11,7 +11,7 @@ export const getBalance = function(wallet) {
     "params": [
       wallet.address
     ]
-  ***REMOVED***
+  }
   return axios.post(url, payload)
-***REMOVED***
+}
 

@@ -6,12 +6,12 @@
 
 <script>
 
-***REMOVED***
+export default {
   name: 'home',
   mounted() {
     this.$router.push('/login')
-  ***REMOVED***
-***REMOVED***
+  }
+}
 </script>
 
 <style>
