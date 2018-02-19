@@ -25,7 +25,7 @@
 			</div>
 			<div @click="withdraw.amount = getBalance" id="card-current-balance" class="col-custom">
 				<div v-b-tooltip.html.left title="Click to withdraw all funds" class="row current-balance card">
-					<span id="value-current-balance">{{getBalance}}</span><span>{{select}}</span>
+					<span id="value-current-balance">{{getBalance}}&nbsp;</span><span>{{select}}</span>
 				</div>
 			</div>
 		</div>
@@ -60,19 +60,7 @@
 		<div class="btn-center">
 			<button :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
 		</div>
-
-		<h3 id="title">TX HISTORY</h3>
-
-		<b-table id="txTable" striped hover :sortDesc="true" :sortBy="'height'" :fields="fields" :items="txHistory">
-			<template slot="tx_hash" slot-scope="row"><explorer type="tx" :ticker="wallet.ticker" :value="row.value"></explorer></template>
-			<template slot="amount" slot-scope="row">
-				<div :class="getColorAmount(row.value)">
-					<span v-if="satoshiToBitcoin(row.value) > 0">+</span>
-					<span v-else>-</span>
-					{{satoshiToBitcoin(Math.abs(row.value))}}
-				</div>
-			</template>
-		</b-table>
+		<transaction-history id="transactionHistory" :value="wallet" :select="select"></transaction-history>
 		<b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
 			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
 		</b-modal>
@@ -94,7 +82,7 @@ export default {
 	name: 'withdraw',
 	components: {
 		'select2': require('../Utils/Select2.vue').default,
-		'explorer': require('@/components/Utils/ExplorerLink').default,
+		'transaction-history': require('@/components/TransactionHistory').default,
 		QrcodeReader
 	},
 	data() {
@@ -128,20 +116,7 @@ export default {
 			
 		}
 	},
-	mounted() {
-		this.$store.dispatch('buildTxHistory', this.wallet)
-	},
 	methods: {
-		getColorAmount(amount) {
-			if (amount > 0) {
-				return "positiveColor"
-			} else {
-				return "negativeColor"
-			}
-		},
-		satoshiToBitcoin(amount) {
-			return sb.toBitcoin(amount)
-		},
 		onDecode (content) {
 			if (this.checkAddress(content)) {
 				this.withdraw.address = content
@@ -232,11 +207,11 @@ export default {
 		}
 	},
 	computed: {
-		wallet() {
-			return this.$store.getters.getWalletByTicker(this.select)
-		},
 		txHistory() {
 			return this.$store.getters.getWalletTxs(this.select)
+		},
+		wallet() {
+			return this.$store.getters.getWalletByTicker(this.select)
 		},
 		getBalance() {
 			return this.$store.getters.getWalletByTicker(this.select).balance
@@ -249,33 +224,14 @@ export default {
 				return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0
 			else return false
 		},
-		fields()  {
-			return [
-				{
-					key: 'height',
-					label: 'Block Height',
-				},
-				{
-					key: 'tx_hash',
-					label: 'Tx Hash'
-				},
-				{
-					key: 'amount',
-					label: `Amount (${this.select})`
-				}
-			]
-		}
 }
 }
 </script>
 
 <style scoped>
-.positiveColor {
-	color: green;
-}
 
-.negativeColor {
-	color: red;
+#transactionHistory {
+	margin-top: 50px;
 }
 
 #readerQrcode {
@@ -544,6 +500,12 @@ hr {
 #value-current-balance {
 	font-weight: 400;
 	color: #687078;
+}
+
+.cardTable {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+    border-radius: 4px;
+    border: none;
 }
 
 </style>
