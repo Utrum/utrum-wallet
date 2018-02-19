@@ -121,7 +121,8 @@ export default {
 		},
 		validatePassPhrase() {
 			console.log(this.passphraseValue);
-			if(this.passphraseValue) {
+			console.log(this.isConfirmed);
+			if(this.passphraseValue && this.isConfirmed) {
 				this.$store.dispatch("login", this.passphraseValue)
 				this.$router.push('/wallet')
 			}
