@@ -68,7 +68,7 @@
 							<img src="@/assets/icon-less.svg"/>
 						</a>
 						<div id="package-value" class="col-center">
-							{{package}}
+							{{packageMNZ}}
 						</div>
 						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
 							<img src="@/assets/icon-more.svg"/>
@@ -100,7 +100,7 @@
 						MNZ
 					</div>
 					<div class="value">
-						{{package}}
+						{{packageMNZ}}
 					</div>
 				</div>
 			</div>
@@ -110,7 +110,7 @@
 			</button>
 		</div>
 		<b-modal @ok="buyMnz()" id="confirmBuy" centered title="Buy confirmation">
-			<p class="my-4">Are you sure you want to buy <b>{{package}}MNZ</b> for <b>{{getTotalPrice}}{{select}} ?</b></p>
+			<p class="my-4">Are you sure you want to buy <b>{{packageMNZ}}MNZ</b> for <b>{{getTotalPrice}}{{select}} ?</b></p>
 		</b-modal>
 	</div>
 </template>
@@ -130,7 +130,7 @@ export default {
 			'KMD'
 			],
 			select: 'BTC',
-			package: 500,
+			packageMNZ: 500,
 			packageIncrement: 500,
 			packageMAX: 100000,
 		}
@@ -143,23 +143,23 @@ export default {
 			} else if (this.select === 'KMD') {
 				price = 0.03333333;
 			}
-			return (this.package * price).toFixed(8);
+			return (this.packageMNZ * price).toFixed(8);
 		},
 		valueChange(value) {
 			this.select = value
 		},
 		incrementPackage() {
-			if (this.package < this.packageMAX) {
-				this.package += this.packageIncrement;
+			if (this.packageMNZ < this.packageMAX) {
+				this.packageMNZ += this.packageIncrement;
 			}
 		},
 		decrementPackage() {
-			if (this.package > this.packageIncrement) {
-				this.package -= this.packageIncrement;
+			if (this.packageMNZ > this.packageIncrement) {
+				this.packageMNZ -= this.packageIncrement;
 			}
 		},
 		buyMnz() {
-			swal('Success', "here buy " + this.package + "mnz", 'success');
+			swal('Success', "here buy " + this.packageMNZ + "mnz", 'success');
 /*			if (this.totalPrice() < balance) {
 				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
 				// HERE MAXIME MAKE THE TRANSFER !
@@ -182,7 +182,7 @@ export default {
 			return this.totalPrice();
 		},
 		canBuy() {
-			let mnzToBuy = this.package;
+			let mnzToBuy = this.packageMNZ;
 			let coin = this.select;
 			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
 
