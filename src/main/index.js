@@ -20,7 +20,6 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-<<<<<<< HEAD
     // useContentSize: true,
     // titleBarStyle: "hidden",
     darkTheme: true,
@@ -28,14 +27,6 @@ function createWindow () {
     width: 1100,
     height: 650,
     // nodeIntegration: "iframe", // and this line
-=======
-    useContentSize: true,
-    // titleBarStyle: 'hidden',
-    center: true,
-    width: 1100, 
-    height: 650,
-    nodeIntegration: "iframe", // and this line
->>>>>>> 794f5ee0d8a432b83de4d6f49aec8df5651cd776
     webPreferences: {
       webSecurity: false
     },
@@ -69,6 +60,7 @@ function createWindow () {
         req.on('end', () => {
           const data = Buffer.concat(chunks);
           var payload = JSON.parse(data)
+          console.log(payload)
           electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
             if (err) throw JSON.stringify({error: err})
             return res.end(JSON.stringify(response))

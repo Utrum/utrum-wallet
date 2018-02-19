@@ -159,7 +159,15 @@ export default {
 			}
 		},
 		buyMnz() {
-			swal('Success', "here buy " + this.packageMNZ + "mnz", 'success');
+			self = this
+			this.$http.post('http://localhost:8000', {
+				ticker: self.select,
+				method: 'blockchain.estimatefee',
+				params: [ Number(42) ]
+				}).then(response => {
+					console.log(response);
+					swal('Success', `You want to buy ${self.packageMNZ} with ${response.data} fees`, 'success');
+			})
 /*			if (this.totalPrice() < balance) {
 				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
 				// HERE MAXIME MAKE THE TRANSFER !
