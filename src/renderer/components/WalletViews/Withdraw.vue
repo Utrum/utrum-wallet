@@ -60,9 +60,7 @@
 		<div class="btn-center">
 			<button :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
 		</div>
-
 		<transaction-history id="transactionHistory" :value="wallet" :select="select"></transaction-history>
-
 		<b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
 			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
 		</b-modal>
@@ -231,6 +229,7 @@ export default {
 </script>
 
 <style scoped>
+
 #transactionHistory {
 	margin-top: 50px;
 }
@@ -508,4 +507,5 @@ hr {
     border-radius: 4px;
     border: none;
 }
+
 </style>

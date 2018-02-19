@@ -77,11 +77,9 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="col-custom">
 			<hr/>
 		</div>
-
 		<div class="row">
 			<div class="col-custom center-horizontal">
 				<h5 id="detail-order-title">YOUR ORDER<br/>DETAILS</h5>
