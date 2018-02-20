@@ -60,11 +60,21 @@ function createWindow () {
         req.on('end', () => {
           const data = Buffer.concat(chunks);
           var payload = JSON.parse(data)
-          console.log(payload)
-          electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
+          console.log(payload);
+          if (payload.method === 'generateaddress') {
+            const { spawn } = require('child_process');
+            const marketmaker = spawn('./src/main/marketmaker', ['calcaddress', payload.params[0]]);
+
+            marketmaker.stdout.on('data', (data) => {
+              console.log(data);
+              return res.end(data)
+            });
+          } else {
+            electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
             if (err) throw JSON.stringify({error: err})
-            return res.end(JSON.stringify(response))
-          })
+              return res.end(JSON.stringify(response))
+            })
+          }
         })
       }
     });
