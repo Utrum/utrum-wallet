@@ -4796,6 +4796,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+jsqr@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/jsqr/-/jsqr-0.2.2.tgz#8c1f0279fb7c94542aaa9e8aeb7c722d523ea092"
+
 karma-chai@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/karma-chai/-/karma-chai-0.1.0.tgz#bee5ad40400517811ae34bb945f762909108b79a"
@@ -4965,15 +4969,15 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libwallet-mnz@^1.2.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/libwallet-mnz/-/libwallet-mnz-1.4.0.tgz#b3bfea4f60ab2e7b794da8256d27eebdfee6c2b8"
+libwallet-mnz@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/libwallet-mnz/-/libwallet-mnz-2.1.0.tgz#13a864479f66d690bb824df4565290b198c94d1e"
   dependencies:
-    bip39 "^2.5.0"
     bitcoinjs-lib "^3.3.2"
     coinselect "^3.1.11"
     electrum-client "^0.0.5"
     satoshi-bitcoin "^1.0.4"
+    wif "^2.0.6"
 
 load-json-file@^1.0.0:
   version "1.1.0"
@@ -7043,6 +7047,12 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^2.0.0"
     inherits "^2.0.1"
 
+rtcpeerconnection-shim@^1.1.13:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/rtcpeerconnection-shim/-/rtcpeerconnection-shim-1.2.8.tgz#1d579d0f1d7aa8281c78d4ec9251017b04646e3a"
+  dependencies:
+    sdp "^2.6.0"
+
 run-async@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.3.0.tgz#0371ab4ae0bdd720d4166d7dfda64ff7a445a6c0"
@@ -7110,6 +7120,10 @@ scss-tokenizer@^0.2.3:
   dependencies:
     js-base64 "^2.1.8"
     source-map "^0.4.2"
+
+sdp@^2.3.0, sdp@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/sdp/-/sdp-2.6.0.tgz#b5260be98fa55289e925a7badcb46655d868215b"
 
 select-hose@^2.0.0:
   version "2.0.0"
@@ -8270,6 +8284,19 @@ vue-loader@^13.0.5:
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-material@^1.0.0-beta-7:
+  version "1.0.0-beta-8"
+  resolved "https://registry.yarnpkg.com/vue-material/-/vue-material-1.0.0-beta-8.tgz#88b44095a59d46df5beed722dd5e2fb962f74138"
+
+vue-qrcode-reader@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/vue-qrcode-reader/-/vue-qrcode-reader-0.7.1.tgz#17f49834fc07abc33a78a74d78efe546e65823ce"
+  dependencies:
+    babel-runtime "^6.26.0"
+    jsqr "^0.2.2"
+    lodash "^4.17.4"
+    webrtc-adapter "^6.0.2"
+
 vue-qriously@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/vue-qriously/-/vue-qriously-1.1.1.tgz#b3a84b05280cb1edfd153bbc003f031995ea7ce7"
@@ -8416,6 +8443,13 @@ webpack@^3.5.2:
     watchpack "^1.4.0"
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
+
+webrtc-adapter@^6.0.2:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-6.1.1.tgz#83ab2a7e2a364a9a9fd7cd3cad807e2eeb5edec6"
+  dependencies:
+    rtcpeerconnection-shim "^1.1.13"
+    sdp "^2.3.0"
 
 websocket-driver@>=0.5.1:
   version "0.7.0"
