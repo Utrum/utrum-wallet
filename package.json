@@ -27,6 +27,18 @@
     "files": [
       "dist/electron/**/*"
     ],
+    "asarUnpack": [
+      "node_modules/marketmaker/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "resources/${os}",
+        "to": "Resources/bin",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "dmg": {
       "contents": [
         {
@@ -53,6 +65,7 @@
     }
   },
   "dependencies": {
+    "app-root-dir": "^1.0.2",
     "axios": "^0.16.1",
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",

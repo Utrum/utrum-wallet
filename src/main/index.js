@@ -1,3 +1,5 @@
+require('electron-debug')({ showDevTools: true })
+
 import { app, BrowserWindow } from 'electron'
 
 /**
@@ -13,8 +15,23 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+import { join as joinPath, dirname } from 'path';
+import { execFile } from 'child_process';
 
-app.commandLine.appendSwitch('disable-web-security'); // try add this line
+import appRootDir from 'app-root-dir';
+
+import getPlatform from './get-platform';
+
+
+
+let execPath = ''
+if(process.env.NODE_ENV === 'development'){
+    execPath = joinPath(__dirname, "../../resources/", getPlatform());
+} else {
+    execPath = joinPath(process.resourcesPath, '../Resources/bin');
+}
+const cmd = `${joinPath(execPath, 'marketmaker')}`;
+
 function createWindow () {
   /**
    * Initial window options
@@ -22,14 +39,13 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     // useContentSize: true,
     // titleBarStyle: "hidden",
-    darkTheme: true,
     center: true,
     width: 1100,
     height: 650,
-    // nodeIntegration: "iframe", // and this line
     webPreferences: {
+      nodeIntegration: true,
       webSecurity: false
-    },
+    }
   })
 
   var ipc = require('electron').ipcMain
@@ -56,18 +72,17 @@ function createWindow () {
     var server = http.createServer(function (req, res) {
       if (req.method == 'POST') {
         const chunks = [];
-        req.on('data', chunk => chunks.push(chunk));
+        req.on('data', chunk => {
+          chunks.push(chunk);
+        })
         req.on('end', () => {
           const data = Buffer.concat(chunks);
           var payload = JSON.parse(data)
-          console.log(payload);
           if (payload.method === 'generateaddress') {
-            const { spawn } = require('child_process');
-            const marketmaker = spawn('./src/main/marketmaker', ['calcaddress', payload.params[0]]);
-
-            marketmaker.stdout.on('data', (data) => {
-              console.log(data);
-              return res.end(data)
+           
+            execFile(cmd, ['calcaddress', payload.params[0]], (err, stdout, stderr) => {
+              if (err) console.log(err)
+              return res.end(stdout)
             });
           } else {
             electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
