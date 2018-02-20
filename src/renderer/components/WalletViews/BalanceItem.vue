@@ -154,7 +154,8 @@ export default {
   border-left-radius: 0px;
   border-top-left-radius: 0px 0px;
   border-bottom-left-radius: 0px 0px;
-  width: 380px;
+  width: 425px;
+  min-width: 425px;
   text-align: center;
 }
 

@@ -45,5 +45,51 @@ export default {
 </script>
 
 <style type="text/css" >
-@import "~select2/dist/css/select2.min.css"
+@import "~select2/dist/css/select2.min.css";
+.content .select2-selection:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.select2-selection {
+	width: 126px !important;
+}
+
+.select2-container--open .select2-dropdown--below {
+  width: 151px !important;
+  margin-left: -24px !important;
+}
+
+.select2-selection__rendered {
+  line-height: 75px !important;
+  text-align: center;
+  color: #7c398a !important;
+  font-weight: 200;
+}
+
+.select2-selection {
+  height: 75px !important;
+  width: 126px;
+  border-color: #7c398a !important;
+  font-size: 1.8em;
+  font-weight: 300;
+  border-top-left-radius: 0px 0px !important;
+  border-bottom-left-radius: 0px 0px !important;
+}
+
+.select2-selection__rendered {
+  padding: 0px !important;
+}
+
+.select2-selection__arrow {
+  display: none;
+}
+
+.select2-search__field {
+  outline: none;
+}
+
+.select2-selection {
+  outline: none;
+}
 </style>

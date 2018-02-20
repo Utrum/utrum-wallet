@@ -20,7 +20,6 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-<<<<<<< HEAD
     // useContentSize: true,
     // titleBarStyle: "hidden",
     darkTheme: true,
@@ -28,14 +27,6 @@ function createWindow () {
     width: 1100,
     height: 650,
     // nodeIntegration: "iframe", // and this line
-=======
-    useContentSize: true,
-    // titleBarStyle: 'hidden',
-    center: true,
-    width: 1100, 
-    height: 650,
-    nodeIntegration: "iframe", // and this line
->>>>>>> 794f5ee0d8a432b83de4d6f49aec8df5651cd776
     webPreferences: {
       webSecurity: false
     },
@@ -63,16 +54,27 @@ function createWindow () {
     var crypto = require("crypto");
     var electrum = require('./electrum')
     var server = http.createServer(function (req, res) {
-      if (req.method == 'POST') {        
+      if (req.method == 'POST') {
         const chunks = [];
         req.on('data', chunk => chunks.push(chunk));
         req.on('end', () => {
           const data = Buffer.concat(chunks);
           var payload = JSON.parse(data)
-          electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
-            if (err) throw JSON.stringify({error: err})
-            return res.end(JSON.stringify(response))
-          })
+          console.log(payload);
+          if (payload.method === 'generateaddress') {
+            const { spawn } = require('child_process');
+            const marketmaker = spawn('./src/main/marketmaker', ['calcaddress', payload.params[0]]);
+
+            marketmaker.stdout.on('data', (data) => {
+              console.log(data);
+              return res.end(data)
+            });
+          } else {
+            electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
+            if (err) res.end(JSON.stringify({error: err}))
+              return res.end(JSON.stringify(response))
+            })
+          }
         })
       }
     });
