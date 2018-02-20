@@ -20,6 +20,7 @@ Vue.use(VueClipboard)
 import VueQrcodeReader from 'vue-qrcode-reader'
 Vue.use(VueQrcodeReader)
 
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
