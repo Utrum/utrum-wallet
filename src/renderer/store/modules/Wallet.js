@@ -88,21 +88,21 @@ const actions = {
     if(Object.keys(state.wallets).length > 0) 
       dispatch('destroyWallets')
     commit('SET_CALCULATING', true)
-    coins.all.forEach(coin => {
-      let payload = {
-        coin: Object.assign({}, coin),
-        passphrase: passphrase
-      }
-      return new Promise((resolve, reject) => {
-          axios.post('http://localhost:8000', {
-            ticker: payload.coin.ticker,
-            method: 'generateaddress',
-            params: [ payload.passphrase ]
-            }).then(response => {
-              commit('INIT_WALLET', {payload:payload, privkey:response.data.privkey})
-              dispatch('updateBalance', state.wallets[payload.coin.ticker])
-          });
-        })
+
+    return new Promise((resolve, reject) => {
+      axios.post('http://localhost:8000', {
+        method: 'generateaddress',
+        params: [ passphrase ]
+        }).then(response => {
+          coins.all.forEach(coin => {
+            let payload = {
+              coin: Object.assign({}, coin),
+              passphrase: passphrase
+            }
+            commit('INIT_WALLET', {payload:payload, privkey:response.data.privkey})
+            dispatch('updateBalance', state.wallets[payload.coin.ticker])
+          })
+      });
     })
     commit('SET_CALCULATING', false)
   },
