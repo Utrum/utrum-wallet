@@ -369,7 +369,7 @@ export default {
 }
 
 #add-coin {
-	color: black;
+	color: #7c398a !important;
 	font-size: 1.8em;
 	height: 100%;
 	padding: 0px;

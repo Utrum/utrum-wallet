@@ -105,11 +105,19 @@
 				</div>
 			</div>
 
-			<button :disabled="canBuy"  v-b-modal="'confirmBuy'" id="buycoins" class="btn sendcoins" type="button">
+			<button @click="buyMnzModal" :disabled="canBuy"  v-b-modal="'confirmBuy'" id="buycoins" class="btn sendcoins" type="button">
 				BUY
 			</button>
 		</div>
+
 		<b-modal @ok="buyMnz()" id="confirmBuy" centered title="Buy confirmation">
+			<b-form-select
+					@change="onChange"
+					:options="fees"
+					required
+					v-model="feeSpeed">
+			</b-form-select>
+			<span>{{fee}}</span>
 			<p class="my-4">Are you sure you want to buy <b>{{packageMNZ}}MNZ</b> for <b>{{getTotalPrice}}{{select}} ?</b></p>
 		</b-modal>
 	</div>
@@ -117,17 +125,26 @@
 
 <script>
 import swal from 'sweetalert2';
+import index from 'vue';
 
 export default {
 	name: 'buy',
 	components: {
-		'select2': require('../Utils/Select2.vue').default
+		'select2': require('../Utils/Select2.vue').default,
 	},
 	data() {
 		return {
+			blocks: 1,
+			fee: 0,
+			feeSpeed: 'veryFast',
+			fees: [
+				{ text: 'very fast ~ 10 mins', blocks: 1, value: 'veryFast' },
+				{ text: 'fast ~ 1 hour', blocks: 6, value: 'fast' },
+				{ text: 'low ~ 6 hour', blocks: 36, value: 'low' },
+      		],
 			listData: [
-			'BTC',
-			'KMD'
+				'BTC',
+				'KMD'
 			],
 			select: 'BTC',
 			packageMNZ: 500,
@@ -136,6 +153,32 @@ export default {
 		}
 	},
 	methods: {
+		callEstimateFee(blocks) {
+			self = this;
+			this.$http.post('http://localhost:8000', {
+				ticker: self.select,
+				method: 'blockchain.estimatefee',
+				params: [ Number(blocks) ]
+				}).then(response => {
+					self.fee = response.data;
+			});	
+		},
+		buyMnzModal () {
+			this.callEstimateFee(this.blocks);
+		},
+		onChange (value) {
+			for (let index = 0; index < this.fees.length; index++) {
+				const element = this.fees[index];
+				if (value === element.value) {
+					this.blocks = element.blocks;
+				}
+			}
+
+			this.callEstimateFee(this.blocks);
+    	},
+		methodToRunOnSelect(payload) {
+		this.object = payload;
+		},
 		totalPrice() {
 			let price = 0;
 			if (this.select === 'BTC') {
@@ -159,15 +202,7 @@ export default {
 			}
 		},
 		buyMnz() {
-			self = this
-			this.$http.post('http://localhost:8000', {
-				ticker: self.select,
-				method: 'blockchain.estimatefee',
-				params: [ Number(42) ]
-				}).then(response => {
-					console.log(response);
-					swal('Success', `You want to buy ${self.packageMNZ} with ${response.data} fees`, 'success');
-			})
+			swal('Success', `You want to buy ${self.packageMNZ} with ${this.fee} fees`, 'success');
 /*			if (this.totalPrice() < balance) {
 				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
 				// HERE MAXIME MAKE THE TRANSFER !
@@ -349,10 +384,6 @@ input[type=number]::-webkit-outer-spin-button {
 	background-color: white;
 }
 
-.select2-selection {
-	width: 126px !important;
-}
-
 .row-buy {
 	display: flex;
 	justify-content: space-between;
@@ -468,10 +499,6 @@ input[type=number]::-webkit-outer-spin-button {
 	background-color: rgba(0,0,0,0.01);
 }
 
-#add-coin {
-	color: #7c398a !important;
-}
-
 .title-amount {
 	margin-bottom: 20px;
 }
@@ -564,7 +591,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #add-coin {
-	color: black;
+	color: #7c398a;
 	font-size: 1.8em;
 	height: 100%;
 	padding: 0px;
@@ -577,11 +604,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 .col {
 	flex-grow: 1;
-}
-
-.content .select2-selection:focus {
-	outline: none;
-	box-shadow: none;
 }
 
 #title {
