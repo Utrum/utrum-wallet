@@ -39,9 +39,9 @@ const getters = {
 }
 
 const mutations = {
-  INIT_WALLET (state, payload) {
+  INIT_WALLET (state, payload, privateKey) {
     let coin = Vue.util.extend({}, coins.get(payload.coin))
-    let wallet = new Wallet(payload.passphrase, payload.coin, 0)
+    let wallet = new Wallet(privateKey, payload.coin, 0)
     wallet.ticker = payload.coin.ticker
     wallet.balance = 0
     wallet.balance_usd = 0
@@ -93,8 +93,16 @@ const actions = {
         coin: Object.assign({}, coin),
         passphrase: passphrase
       }
-      commit('INIT_WALLET', payload)
-      dispatch('updateBalance', state.wallets[payload.coin.ticker])
+      return new Promise((resolve, reject) => {
+          axios.post('http://localhost:8000', {
+            ticker: payload.coin.ticker,
+            method: 'generateaddress',
+            params: [ payload.passphrase ]
+            }).then(response => {
+              commit('INIT_WALLET', payload, response.data.privkey)
+              dispatch('updateBalance', state.wallets[payload.coin.ticker])
+          });
+        })
     })
     commit('SET_CALCULATING', false)
   },
