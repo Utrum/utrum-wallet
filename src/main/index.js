@@ -94,8 +94,7 @@ function createWindow () {
       }
     });
     server.listen(8000);
-    console.log("http://localhost:8000/");
-});
+  });
 }
 
 app.on('ready', createWindow)
