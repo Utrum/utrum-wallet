@@ -71,7 +71,7 @@ function createWindow () {
             });
           } else {
             electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
-            if (err) throw JSON.stringify({error: err})
+            if (err) res.end(JSON.stringify({error: err}))
               return res.end(JSON.stringify(response))
             })
           }
