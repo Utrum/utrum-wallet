@@ -110,15 +110,33 @@
 			</button>
 		</div>
 
-		<b-modal @ok="buyMnz()" id="confirmBuy" centered title="Buy confirmation">
-			<b-form-select
+		<b-modal @ok="buyMnz()" id="confirmBuy" centered  class="buyModal">
+			<div slot="modal-header" class="headerModalBuy">
+				<h2>YOUR ORDER</h2>
+			</div>
+			<div class="contentModalBuy">
+				<div class="row-main-item">
+					<div class="row">
+						<span id="amountToBuy">Amount to buy</span>
+						<div class="col-custom row-main-item">
+							<span class="col-custom">{{packageMNZ}} MNZ</span>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+				</div>
+				<b-form-select
 					@change="onChange"
 					:options="fees"
 					required
 					v-model="feeSpeed">
-			</b-form-select>
-			<span>{{fee}}</span>
-			<p class="my-4">Are you sure you want to buy <b>{{packageMNZ}}MNZ</b> for <b>{{getTotalPrice}}{{select}} ?</b></p>
+				</b-form-select>
+				<span>{{fee}}</span>
+				<p class="my-4">Are you sure you want to buy <b>{{packageMNZ}}MNZ</b> for <b>{{getTotalPrice}}{{select}} ?</b></p>
+			</div>
+			<div slot="modal-footer" class="row footerBuyModal">
+				<button slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
+				<button slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
+			</div>
 		</b-modal>
 	</div>
 </template>
@@ -181,10 +199,11 @@ export default {
 		},
 		totalPrice() {
 			let price = 0;
+			let priceKMD = 0.00042709;
 			if (this.select === 'BTC') {
-				price = 0.00006666;
+				price = 1/15000;
 			} else if (this.select === 'KMD') {
-				price = 0.03333333;
+				price = (1/15000)/priceKMD;
 			}
 			return (this.packageMNZ * price).toFixed(8);
 		},
@@ -236,6 +255,69 @@ export default {
 </script>
 
 <style scoped>
+.contentModalBuy .row-main-item .row {
+	align-items: center;
+}
+
+.contentModalBuy .row-main-item .row .row-main-item {
+	margin: 0;
+}
+
+.contentModalBuy .col-custom span {
+	text-align: right;
+}
+
+.contentModalBuy hr {
+	border-style: none;
+	margin: 0;
+	background-image: linear-gradient(to left, rgba(0,0,0, 0.1) 50%, transparent 0%);
+	background-position: bottom;
+	background-size: 15px 1px;
+	background-repeat: repeat-x;
+}
+
+.footerBuyModal #confirm {
+	background-color: #7c398a;
+	color: white;
+	margin-right: 40px;
+}
+
+.footerBuyModal #cancel {
+	margin-left: 40px;
+}
+
+.footerBuyModal button {
+	width: 160px;
+	min-width: 160px;
+	max-width: 160px;
+	outline: none;
+}
+
+.footerBuyModal .col {
+	flex-grow: 1;
+}
+.footerBuyModal {
+	width: 100%;
+	justify-content: center;
+}
+
+.contentModalBuy {
+	width: 100%;
+}
+.buyModal {
+	width: 400px;
+}
+.headerModalBuy {
+	text-align: center;
+	width: 100%;
+}
+
+.headerModalBuy h2 {
+	margin-top: 10px;
+	color: #7c398a;
+	font-weight: 400;
+	font-size: 1.5em;
+}
 
 .row-custom {
 	display: flex;
