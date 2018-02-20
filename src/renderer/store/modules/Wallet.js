@@ -39,9 +39,9 @@ const getters = {
 }
 
 const mutations = {
-  INIT_WALLET (state, payload, privateKey) {
+  INIT_WALLET (state, {payload, privkey}) {
     let coin = Vue.util.extend({}, coins.get(payload.coin))
-    let wallet = new Wallet(privateKey, payload.coin, 0)
+    let wallet = new Wallet(privkey, payload.coin, 0)
     wallet.ticker = payload.coin.ticker
     wallet.balance = 0
     wallet.balance_usd = 0
@@ -99,7 +99,7 @@ const actions = {
             method: 'generateaddress',
             params: [ payload.passphrase ]
             }).then(response => {
-              commit('INIT_WALLET', payload, response.data.privkey)
+              commit('INIT_WALLET', {payload:payload, privkey:response.data.privkey})
               dispatch('updateBalance', state.wallets[payload.coin.ticker])
           });
         })

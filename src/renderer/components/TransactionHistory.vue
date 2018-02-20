@@ -73,7 +73,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .content h3 {
 	font-weight: 300;
     opacity: 0.5;

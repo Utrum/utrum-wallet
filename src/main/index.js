@@ -54,7 +54,7 @@ function createWindow () {
     var crypto = require("crypto");
     var electrum = require('./electrum')
     var server = http.createServer(function (req, res) {
-      if (req.method == 'POST') {        
+      if (req.method == 'POST') {
         const chunks = [];
         req.on('data', chunk => chunks.push(chunk));
         req.on('end', () => {
