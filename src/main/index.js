@@ -14,7 +14,6 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 
-app.commandLine.appendSwitch('disable-web-security'); // try add this line
 function createWindow () {
   /**
    * Initial window options
@@ -22,14 +21,9 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     // useContentSize: true,
     // titleBarStyle: "hidden",
-    darkTheme: true,
     center: true,
     width: 1100,
     height: 650,
-    // nodeIntegration: "iframe", // and this line
-    webPreferences: {
-      webSecurity: false
-    },
   })
 
   var ipc = require('electron').ipcMain

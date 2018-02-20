@@ -27,6 +27,13 @@
     "files": [
       "dist/electron/**/*"
     ],
+    "extraFiles": [
+      {
+        "from": "resources/${os}",
+        "to": "Resources/bin",
+        "filter": ["**/*"]
+      }
+    ],
     "dmg": {
       "contents": [
         {
