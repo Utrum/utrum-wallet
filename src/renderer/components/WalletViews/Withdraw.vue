@@ -191,7 +191,7 @@ export default {
 					params: [ this.wallet.address ]
 				}).then(response => {
 					console.log(response)
-					let wallet = new Wallet(self.$store.getters.passphrase, self.wallet.coin, 0)
+					let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, true)
 					wallet.ticker = self.wallet.ticker
 					let tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount))
 					console.log(wallet, tx)

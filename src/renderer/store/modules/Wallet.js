@@ -46,6 +46,7 @@ const mutations = {
     wallet.balance = 0
     wallet.balance_usd = 0
     wallet.txs = []
+    wallet.privkey = privkey
     state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet)
   },
   SET_CALCULATING (state, calculating) {
@@ -139,9 +140,10 @@ const actions = {
       let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
 
       commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height}) 
-    }).catch(error => {
-      throw new Error(error)
     })
+    // .catch(error => {
+    //   throw new Error(error)
+    // })
   },
   buildTxHistory({commit, dispatch, getters}, wallet) {
     axios.post('http://localhost:8000', {
