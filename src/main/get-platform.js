@@ -10,7 +10,7 @@ export default () => {
       return 'linux';
     case 'darwin':
     case 'sunos':
-      return 'ios';
+      return 'osx';
     case 'win32':
       return 'win';
   }
