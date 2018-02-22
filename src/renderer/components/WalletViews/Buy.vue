@@ -110,7 +110,7 @@
 			</button>
 		</div>
 
-		<b-modal @ok="buyMnz()" id="confirmBuy" centered  class="buyModal">
+		<b-modal ref="confirmBuy" id="confirmBuy" centered>
 			<div slot="modal-header" class="headerModalBuy">
 				<h2>YOUR ORDER</h2>
 			</div>
@@ -119,23 +119,54 @@
 					<div class="row">
 						<span id="amountToBuy">Amount to buy</span>
 						<div class="col-custom row-main-item">
-							<span class="col-custom">{{packageMNZ}} MNZ</span>
+							<span class="col-custom"><span class="selectAmount">{{packageMNZ}} </span>MNZ</span>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+					<div class="row">
+						<span id="amountToBuy">Plus (20%) bonus</span>
+						<div class="col-custom row-main-item">
+							<span class="col-custom"><span class="selectAmount">{{packageMNZ+(packageMNZ * currentBonus)}} </span>MNZ</span>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+					<div class="row">
+						<span id="amountToBuy">Price</span>
+						<div class="col-custom row-main-item">
+							<span class="col-custom"><span class="selectAmount">{{getTotalPrice}} </span>{{select}}</span>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+					<div class="row">
+						<span id="amountToBuy">Transaction fees</span>
+						<div class="col-custom row-main-item">
+							<select-awesome @change="onChangeFee()" :fees="fees" id="selectAwesome" class="col-custom"></select-awesome>
 							<div class="col-custom"><hr></div>
 						</div>
 					</div>
 				</div>
-				<b-form-select
-					@change="onChange"
-					:options="fees"
-					required
-					v-model="feeSpeed">
-				</b-form-select>
-				<span>{{fee}}</span>
-				<p class="my-4">Are you sure you want to buy <b>{{packageMNZ}}MNZ</b> for <b>{{getTotalPrice}}{{select}} ?</b></p>
+				
+				<hr id="horizontalLine">
+				<div class="row-total-amount">
+					<div class="col-custom row">
+						<img src="@/assets/icon-shop.svg" alt="icon-shop">
+						<h2>TOTAL AMOUNT</h2>
+					</div>
+					<div id="amountTotal" class="col-custom row">
+						<div class="row">
+							<span id="totalAmount">{{(getTotalPrice + fee).toFixed(8)}}</span>
+							<span id="totalAmountCoin">{{select}}</span>
+						</div>
+					</div>
+					<div class="col-custom row">
+						<img id="warningIcon" src="@/assets/icon-warning.svg" alt="icon-warning">
+						<p id="warningInfo" class="col">Please be aware that once a coin swap has been initiated it cannot be cancelled.</p>
+					</div>
+				</div>
 			</div>
 			<div slot="modal-footer" class="row footerBuyModal">
-				<button slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
-				<button slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
+				<button @click="hideModal" slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
+				<button @click="buyMnz()" slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
 			</div>
 		</b-modal>
 	</div>
@@ -144,33 +175,48 @@
 <script>
 import swal from 'sweetalert2';
 import index from 'vue';
+import dropdown from 'vue-dropdowns';
 
 export default {
 	name: 'buy',
 	components: {
+		'dropdown': dropdown,
 		'select2': require('../Utils/Select2.vue').default,
+		'select-awesome': require('../Utils/SelectAwesome.vue').default,
 	},
 	data() {
 		return {
+			searchable: false,
+			currentBonus: 0.2,
 			blocks: 1,
 			fee: 0,
 			feeSpeed: 'veryFast',
 			fees: [
-				{ text: 'very fast ~ 10 mins', blocks: 1, value: 'veryFast' },
-				{ text: 'fast ~ 1 hour', blocks: 6, value: 'fast' },
-				{ text: 'low ~ 6 hour', blocks: 36, value: 'low' },
-      		],
+				{ id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
+				{ id: 1, label: 'Fast', blocks: 6, value: 'fast' },
+				{ id: 2, label: 'Low', blocks: 36, value: 'low' },
+			],
+			selected: {id: 0, label: 'very fast ~ 10 mins'},
 			listData: [
 				'BTC',
 				'KMD'
 			],
 			select: 'BTC',
-			packageMNZ: 500,
-			packageIncrement: 500,
+			packageMNZ: 200,
+			packageIncrement: 200,
 			packageMAX: 100000,
 		}
 	},
+	mounted() {
+		this.selectFee = this.fees[0].label;
+	},
 	methods: {
+		onChangeFee() {
+			console.log("toto");
+		},
+		hideModal() {
+			this.$refs.confirmBuy.hide()
+		},
 		callEstimateFee(blocks) {
 			self = this;
 			this.$http.post('http://localhost:8000', {
@@ -205,7 +251,7 @@ export default {
 			} else if (this.select === 'KMD') {
 				price = (1/15000)/priceKMD;
 			}
-			return (this.packageMNZ * price).toFixed(8);
+			return Number((this.packageMNZ * price).toFixed(8));
 		},
 		valueChange(value) {
 			this.select = value
@@ -221,6 +267,7 @@ export default {
 			}
 		},
 		buyMnz() {
+			this.hideModal();
 			swal('Success', `You want to buy ${self.packageMNZ} with ${this.fee} fees`, 'success');
 /*			if (this.totalPrice() < balance) {
 				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
@@ -255,12 +302,83 @@ export default {
 </script>
 
 <style scoped>
+.selectAwesome {
+	text-align: center;
+	align-self: flex-end;
+}
+
+.selectFees button {
+	display: none !important;
+}
+.selectFees {
+	/* width: 250px; */
+}
+
+.selectAmount {
+	color: #180d39;
+	font-weight: 500;
+}
+
+#amountTotal {
+	padding-left: 47px;
+}
+#totalAmountCoin {
+	font-weight: 500;
+	font-size: 0.8em;
+	padding-top: 7px;
+	padding-left: 10px;
+}
+
+#totalAmount {
+	font-size: 2em;
+	font-weight: 200;
+	color: rgb(188,0,142);
+}
+
+.row-total-amount h2 {
+	margin: 0px;
+	font-size: 1em;
+	font-weight: 500;
+	color: #180d39;
+	align-self: flex-end;
+	padding-left: 20px;
+	margin: 0px !important;
+}
+
+#warningIcon {
+	width: 25px;
+	margin-right: 7px;
+	margin-left: 3px;
+}
+
+#warningInfo {
+	margin: 0px;
+	font-weight: 600;
+	font-size: 0.9em;
+}
+.row-total-amount {
+	display: flex;
+	flex-direction: column;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.row-total-amount .row {
+	justify-content: flex-start;
+}
+
+.selectFee {
+	text-align: right;
+}
+
 .contentModalBuy .row-main-item .row {
 	align-items: center;
 }
 
-.contentModalBuy .row-main-item .row .row-main-item {
-	margin: 0;
+.contentModalBuy .row-main-item {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 .contentModalBuy .col-custom span {
@@ -276,14 +394,34 @@ export default {
 	background-repeat: repeat-x;
 }
 
+#horizontalLine {
+	background-image: none;
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 2px solid #f3f4fc;
+	margin: 1em 0;
+	padding: 0;
+}
+
 .footerBuyModal #confirm {
+	border: none;
 	background-color: #7c398a;
 	color: white;
-	margin-right: 40px;
+	margin-right: 20px;
+	min-height: 40px;
+	max-height: 40px;
+	height: 40px;
 }
 
 .footerBuyModal #cancel {
-	margin-left: 40px;
+	margin-left: 20px;
+	background-color: transparent;
+	border: 2px solid rgba(24,13,57,0.1);
+	min-height: 40px;
+	max-height: 40px;
+	height: 40px;
+	padding: 0px;
 }
 
 .footerBuyModal button {
@@ -304,9 +442,7 @@ export default {
 .contentModalBuy {
 	width: 100%;
 }
-.buyModal {
-	width: 400px;
-}
+
 .headerModalBuy {
 	text-align: center;
 	width: 100%;

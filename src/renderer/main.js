@@ -20,6 +20,8 @@ Vue.use(VueClipboard)
 import VueQrcodeReader from 'vue-qrcode-reader'
 Vue.use(VueQrcodeReader)
 
+import vSelect from 'vue-select'
+Vue.component('v-select', vSelect)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
