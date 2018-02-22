@@ -140,7 +140,7 @@
 					<div class="row">
 						<span id="amountToBuy">Transaction fees</span>
 						<div class="col-custom row-main-item">
-							<select-awesome @change="onChangeFee()" :fees="fees" id="selectAwesome" class="col-custom"></select-awesome>
+							<select-awesome @change="onChange" :value="fees[0].label" :fees="fees" id="selectAwesome" class="col-custom"></select-awesome>
 							<div class="col-custom"><hr></div>
 						</div>
 					</div>
@@ -194,7 +194,7 @@ export default {
 				{ id: 1, label: 'Fast', blocks: 6, value: 'fast' },
 				{ id: 2, label: 'Low', blocks: 36, value: 'low' },
 			],
-			selected: {id: 0, label: 'very fast ~ 10 mins'},
+			selectedFee: null,
 			listData: [
 				'BTC',
 				'KMD'
@@ -210,7 +210,7 @@ export default {
 	},
 	methods: {
 		onChangeFee() {
-			console.log("toto");
+			console.log(this.selectedFee.blocks);
 		},
 		hideModal() {
 			this.$refs.confirmBuy.hide()
@@ -229,14 +229,7 @@ export default {
 			this.callEstimateFee(this.blocks);
 		},
 		onChange (value) {
-			for (let index = 0; index < this.fees.length; index++) {
-				const element = this.fees[index];
-				if (value === element.value) {
-					this.blocks = element.blocks;
-				}
-			}
-
-			this.callEstimateFee(this.blocks);
+			this.callEstimateFee(value.blocks);
     	},
 		methodToRunOnSelect(payload) {
 		this.object = payload;

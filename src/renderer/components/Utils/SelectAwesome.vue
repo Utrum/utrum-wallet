@@ -1,17 +1,17 @@
 <template>
-  <select name="sources" id="sources" class="custom-select sources">
-    <option v-for="fee in fees" v-bind:key="fee.id" :value="fee.value">{{fee.label}}</option>
-  </select>
+    <select name="sources" id="sources" class="custom-select sources">
+        <option v-for="fee in fees" v-bind:key="fee.id" :value="fee.value">{{fee.label}}</option>
+    </select>
 </template>
 
 <script>
 export default {
     name: 'select-awesome',
     props: {
-      fees: {
-          type: Array,
-          default: () => ({})
-      }
+        fees: {
+            type: Array,
+            default: () => ({})
+        }
     },
     data() {
       return {
@@ -25,6 +25,8 @@ export default {
     },
     mounted() {
       var self = this;
+      this.value = "test";
+
       $(".custom-select").each(function() {
         var classes = $(this).attr("class"),
             id      = $(this).attr("id"),
