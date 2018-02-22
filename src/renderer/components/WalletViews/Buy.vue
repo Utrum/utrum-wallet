@@ -226,10 +226,16 @@ export default {
 			});	
 		},
 		buyMnzModal () {
-			this.callEstimateFee(this.blocks);
+			if (this.select !== 'KMD')
+				this.callEstimateFee(this.fees[0].blocks);
+			else
+				this.fee = 0.0001;
 		},
 		onChange (value) {
-			this.callEstimateFee(value.blocks);
+			if (this.select !== 'KMD')
+				this.callEstimateFee(value.blocks);
+			else
+				this.fee = 0.0001;
     	},
 		methodToRunOnSelect(payload) {
 		this.object = payload;
