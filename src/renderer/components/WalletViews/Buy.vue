@@ -175,12 +175,10 @@
 <script>
 import swal from 'sweetalert2';
 import index from 'vue';
-import dropdown from 'vue-dropdowns';
 
 export default {
 	name: 'buy',
 	components: {
-		'dropdown': dropdown,
 		'select2': require('../Utils/Select2.vue').default,
 		'select-awesome': require('../Utils/SelectAwesome.vue').default,
 	},
