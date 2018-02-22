@@ -1,7 +1,6 @@
 require('electron-debug')({ showDevTools: true })
 
-import { app, BrowserWindow } from 'electron'
-
+import { app, BrowserWindow, Menu } from 'electron'
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -15,15 +14,11 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+// Detect OS and marketmaker path
 import { join as joinPath, dirname } from 'path';
 import { execFile } from 'child_process';
-
 import appRootDir from 'app-root-dir';
-
 import getPlatform from './get-platform';
-
-
-
 let execPath = ''
 if(process.env.NODE_ENV === 'development'){
     execPath = joinPath(__dirname, "../../resources/", getPlatform());
@@ -31,6 +26,7 @@ if(process.env.NODE_ENV === 'development'){
     execPath = joinPath(process.resourcesPath, '../Resources/bin');
 }
 const cmd = `${joinPath(execPath, 'marketmaker')}`;
+
 
 function createWindow () {
   /**
@@ -47,6 +43,27 @@ function createWindow () {
       webSecurity: false
     }
   })
+  mainWindow.webContents.openDevTools()
+  var template = [{
+    label: "Monaize ICO App",
+    submenu: [
+        { label: "About Monaize ICO App", selector: "orderFrontStandardAboutPanel:" },
+        { type: "separator" },
+        { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
+    ]}, {
+    label: "Edit",
+    submenu: [
+        { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+        { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+        { type: "separator" },
+        { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+    ]}
+  ];
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
   var ipc = require('electron').ipcMain
   ipc.on("console", function (ev) {
