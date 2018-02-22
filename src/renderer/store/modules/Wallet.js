@@ -41,7 +41,7 @@ const getters = {
 const mutations = {
   INIT_WALLET (state, {payload, privkey}) {
     let coin = Vue.util.extend({}, coins.get(payload.coin))
-    let wallet = new Wallet(privkey, payload.coin, 0)
+    let wallet = new Wallet(privkey, payload.coin, true)
     wallet.ticker = payload.coin.ticker
     wallet.balance = 0
     wallet.balance_usd = 0
