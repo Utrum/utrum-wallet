@@ -49,6 +49,10 @@ let rendererConfig = {
       {
         test: /\.node$/,
         use: 'node-loader'
+      }, 
+      {
+        test: /\.s[a|c]ss$/,
+        loader: 'style-loader!css-loader!sass-loader'
       },
       {
         test: /\.vue$/,
@@ -98,6 +102,10 @@ let rendererConfig = {
     __filename: process.env.NODE_ENV !== 'production'
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    }),
     new ExtractTextPlugin('styles.css'),
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -112,11 +120,7 @@ let rendererConfig = {
         : false
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery'
-    })
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   output: {
     filename: '[name].js',
