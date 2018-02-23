@@ -39,9 +39,9 @@ const getters = {
 }
 
 const mutations = {
-  INIT_WALLET (state, {payload, privkey}) {
+  INIT_WALLET (state, {payload, privkey, testMode}) {
     let coin = Vue.util.extend({}, coins.get(payload.coin))
-    let wallet = new Wallet(privkey, payload.coin, true)
+    let wallet = new Wallet(privkey, payload.coin, testMode)
     wallet.ticker = payload.coin.ticker
     wallet.balance = 0
     wallet.balance_usd = 0
@@ -85,7 +85,7 @@ import {getCmcData} from '../../lib/coinmarketcap'
 
 
 const actions = {
-  initWallets ({commit, dispatch}, passphrase) {
+  initWallets ({commit, dispatch, rootGetters}, passphrase) {
     if(Object.keys(state.wallets).length > 0) 
       dispatch('destroyWallets')
     commit('SET_CALCULATING', true)
@@ -100,7 +100,7 @@ const actions = {
               coin: Object.assign({}, coin),
               passphrase: passphrase
             }
-            commit('INIT_WALLET', {payload:payload, privkey:response.data.privkey})
+            commit('INIT_WALLET', {payload:payload, privkey:response.data.privkey, testMode: rootGetters.isTestMode})
             dispatch('updateBalance', state.wallets[payload.coin.ticker])
           })
       });
@@ -110,8 +110,8 @@ const actions = {
   destroyWallets ({commit}) {
     commit('DESTROY_WALLETS')
   },
-  updateBalance({commit, getters}, wallet) {
-    getBalance(wallet).then(response => {
+  updateBalance({commit, getters, rootGetters}, wallet) {
+    getBalance(wallet, rootGetters.isTestMode).then(response => {
       // wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance = sb.toBitcoin(response.data.confirmed);
       if (wallet.coin.name !== "monaize") {
@@ -127,9 +127,10 @@ const actions = {
     })
     commit('UPDATE_BALANCE', wallet)
   },
-  getRawTx({commit}, {ticker, tx}) {
+  getRawTx({commit, rootGetters}, {ticker, tx}) {
     let payload = {
       ticker: ticker,
+      test: rootGetters.isTestMode,
       method: 'blockchain.transaction.get',
       params: [ tx.tx_hash ]
     }
@@ -145,9 +146,10 @@ const actions = {
     //   throw new Error(error)
     // })
   },
-  buildTxHistory({commit, dispatch, getters}, wallet) {
+  buildTxHistory({commit, dispatch, getters, rootGetters}, wallet) {
     axios.post('http://localhost:8000', {
       ticker: wallet.ticker,
+      test: rootGetters.isTestMode,
       method: 'blockchain.address.get_history',
       params: [ wallet.address ]
     }).then(response => {

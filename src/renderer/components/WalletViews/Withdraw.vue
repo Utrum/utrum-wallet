@@ -187,11 +187,12 @@ export default {
 				var self = this
 				this.$http.post('http://localhost:8000', {
 					ticker: this.wallet.ticker,
+					test: self.$store.getters.isTestMode,
 					method: 'blockchain.address.listunspent',
 					params: [ this.wallet.address ]
 				}).then(response => {
 					console.log(response)
-					let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, true)
+					let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
 					wallet.ticker = self.wallet.ticker
 					let tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount))
 					console.log(wallet, tx)

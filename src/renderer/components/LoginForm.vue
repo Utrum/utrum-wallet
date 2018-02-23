@@ -10,6 +10,12 @@
 				</form>
 			</div>
 		</div>
+		<b-form-checkbox id="checkbox1"
+                     v-model="testMode"
+                     value="true"
+                     unchecked-value="false">
+      Test Mode
+    </b-form-checkbox>
 		<button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Don't have a passphrase?</button>
 		<img class="col" id="login-background" src="~@/assets/img-login.svg">
 	</div>
@@ -23,13 +29,17 @@ export default {
 		return {
 			passphrase: '',
 			btnSendStatus: 'btn-send-enabled',
+			testMode: false,
 		}
+	},
+	created () {
+		this.testMode = this.$store.getters.isTestMode
 	},
 	methods: {
 		validatePassPhrase() {
-			console.log(this.passphrase)
 			if(this.passphrase) {
-				this.$store.dispatch("login", this.passphrase)
+				this.testMode = this.testMode == true ? true : false
+				this.$store.dispatch("login", {passphrase:this.passphrase, testMode:this.testMode})
 				this.$router.push('/wallet')
 			}
 		},

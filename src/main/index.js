@@ -102,7 +102,7 @@ function createWindow () {
               return res.end(stdout)
             });
           } else {
-            electrum.call(payload.ticker, payload.method, payload.params, function(err, response){
+            electrum.call(payload.ticker, payload.test, payload.method, payload.params, function(err, response){
             if (err) res.end(JSON.stringify({error: err}))
               return res.end(JSON.stringify(response))
             })
