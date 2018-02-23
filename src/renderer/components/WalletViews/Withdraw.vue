@@ -198,6 +198,7 @@ export default {
 					console.log(wallet, tx)
 					self.$http.post('http://localhost:8000', {
 						ticker: self.wallet.ticker,
+						test: self.$store.getters.isTestMode,
 						method: 'blockchain.transaction.broadcast',
 						params: [ tx ]
 					}).then((response) => {
