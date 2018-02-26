@@ -28,9 +28,185 @@ export default {
 <style lang="css" rel='stylesheet/css'>
 @import '~typeface-montserrat';
 
+.contentModalBuy .row-main-item .row {
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 70px;
+}
+
+.contentModalBuy .row-main-item .row .row-main-item {
+  padding-left: 10px;
+  padding-right: 20px;
+}
+
+.contentModalBuy .row-main-item .subTitle{
+  align-self: flex-end;
+  margin-bottom: 17px;
+}
+
+.contentModalBuy .row-main-item {
+	/* margin-top: 20px;
+	margin-bottom: 20px; */
+}
+
+.contentModalBuy .col-custom span {
+	text-align: right;
+}
+
+.contentModalBuy hr {
+  border-style: none;
+  height: 1px;
+  margin: 0;
+	background-image: linear-gradient(to left, rgba(0,0,0, 0.1) 50%, transparent 0%);
+	background-position: bottom;
+	background-size: 15px 1px;
+	background-repeat: repeat-x;
+}
+
+hr {
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 1px solid rgba(0,0,0, 0.1);;
+	padding: 0;
+}
+.row-total-amount h2 {
+	margin: 0px;
+	font-size: 1em;
+	font-weight: 500;
+	color: #180d39;
+  align-self: flex-end;
+	padding-left: 20px;
+	margin: 0px !important;
+}
+
+.headerModalBuy {
+	text-align: center;
+	width: 100%;
+}
+
+.headerModalBuy h2 {
+	margin-top: 10px;
+	color: #7c398a;
+	font-weight: 400;
+	font-size: 1.5em;
+}
+
+.selectAmount {
+	color: #180d39;
+	font-weight: 500;
+}
+
+.footerBuyModal #confirm {
+	border: none;
+	background-color: #7c398a;
+	color: white;
+	margin-right: 20px;
+	min-height: 40px;
+	max-height: 40px;
+	height: 40px;
+}
+
+.footerBuyModal #cancel {
+	margin-left: 20px;
+	background-color: transparent;
+	border: 2px solid rgba(24,13,57,0.1);
+	min-height: 40px;
+	max-height: 40px;
+	height: 40px;
+	padding: 0px;
+}
+
+.footerBuyModal button {
+	width: 160px;
+	min-width: 160px;
+	max-width: 160px;
+	outline: none;
+}
+
+.footerBuyModal .col {
+	flex-grow: 1;
+}
+.footerBuyModal {
+	width: 100%;
+	justify-content: center;
+}
+
+.selectFees button {
+	display: none !important;
+}
+.selectFees {
+	/* width: 250px; */
+}
+
+#amountTotal {
+	padding-left: 47px;
+}
+#totalAmountCoin {
+	font-weight: 500;
+	font-size: 0.8em;
+	padding-top: 7px;
+	padding-left: 10px;
+}
+
+#totalAmount {
+	font-size: 2em;
+	font-weight: 200;
+	color: rgb(188,0,142);
+}
+
+#warningIcon {
+	width: 25px;
+	margin-right: 7px;
+	margin-left: 3px;
+}
+
+#warningInfo {
+	margin: 0px;
+	font-weight: 600;
+	font-size: 0.9em;
+}
+.row-total-amount {
+	display: flex;
+	flex-direction: column;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.row-total-amount .row {
+	justify-content: flex-start;
+}
+
+.selectFee {
+	text-align: right;
+}
+
+#horizontalLine {
+	background-image: none;
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 2px solid #f3f4fc;
+	margin: 1em 0;
+	padding: 0;
+}
+
+.contentModalBuy {
+	width: 100%;
+}
+
+
+
+.swal2-modal .swal2-styled {
+  background-color:#7c398a !important;
+  outline: none;
+}
+
+
+
 .modal-content {
   border: none;
-  width: 450px;
+  /* width: 450px; */
 }
 
 .modal-body {
