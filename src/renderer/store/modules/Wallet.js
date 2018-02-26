@@ -121,8 +121,10 @@ const actions = {
           })
         })
       } else {
-        let price_btc = 0.00006666;
-        wallet.balance_usd = wallet.balance * Number(getters.getWalletByTicker('BTC').balance_usd); 
+        getCmcData('bitcoin').then(response => {
+          console.log(response.data[0].price_usd)
+          wallet.balance_usd = wallet.balance * (response.data[0].price_usd / 15000)
+        })
       }
     })
     commit('UPDATE_BALANCE', wallet)

@@ -29,7 +29,7 @@
 				<div class="col-custom">
 					<div class="row-custom">
 						<div class="col-custom select-all">
-							<p id="add-coin">+</p>
+							<p @click="$root.$emit('select2:open')" id="add-coin">+</p>
 						</div>
 						<div class="col-custom">
 							<select2 :options="listData" :value="select" @input="valueChange"></select2>
@@ -110,15 +110,64 @@
 			</button>
 		</div>
 
-		<b-modal @ok="buyMnz()" id="confirmBuy" centered title="Buy confirmation">
-			<b-form-select
-					@change="onChange"
-					:options="fees"
-					required
-					v-model="feeSpeed">
-			</b-form-select>
-			<span>{{fee}}</span>
-			<p class="my-4">Are you sure you want to buy <b>{{packageMNZ}}MNZ</b> for <b>{{getTotalPrice}}{{select}} ?</b></p>
+		<b-modal ref="confirmBuy" id="confirmBuy" centered>
+			<div slot="modal-header" class="headerModalBuy">
+				<h2>YOUR ORDER</h2>
+			</div>
+			<div class="contentModalBuy">
+				<div class="row-main-item">
+					<div class="row">
+						<span id="amountToBuy">Amount to buy</span>
+						<div class="col-custom row-main-item">
+							<span class="col-custom"><span class="selectAmount">{{packageMNZ}} </span>MNZ</span>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+					<div class="row">
+						<span id="amountToBuy">Plus (20%) bonus</span>
+						<div class="col-custom row-main-item">
+							<span class="col-custom"><span class="selectAmount">{{packageMNZ+(packageMNZ * currentBonus)}} </span>MNZ</span>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+					<div class="row">
+						<span id="amountToBuy">Price</span>
+						<div class="col-custom row-main-item">
+							<span class="col-custom"><span class="selectAmount">{{getTotalPrice}} </span>{{select}}</span>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+					<div class="row">
+						<span id="amountToBuy">Transaction fees</span>
+						<div class="col-custom row-main-item">
+							<select-awesome @change="onChange" :value="fees[0].label" :fees="fees" id="selectAwesome" class="col-custom"></select-awesome>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+				</div>
+				
+				<hr id="horizontalLine">
+				<div class="row-total-amount">
+					<div class="col-custom row">
+						<img src="@/assets/icon-shop.svg" alt="icon-shop">
+						<h2>TOTAL AMOUNT</h2>
+					</div>
+					<div id="amountTotal" class="col-custom row">
+						<div class="row">
+							<span id="totalAmount">{{getTotalPriceWithFee}}</span>
+							<span id="totalAmountCoin">{{select}}</span>
+						</div>
+					</div>
+					<div class="col-custom row">
+						<img id="warningIcon" src="@/assets/icon-warning.svg" alt="icon-warning">
+						<p id="warningInfo" class="col">Please be aware that once a coin swap has been initiated it cannot be cancelled.</p>
+					</div>
+				</div>
+			</div>
+			<div slot="modal-footer" class="row footerBuyModal">
+				<button @click="hideModal" slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
+				<button @click="buyMnz()" slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
+			</div>
 		</b-modal>
 	</div>
 </template>
@@ -126,33 +175,53 @@
 <script>
 import swal from 'sweetalert2';
 import index from 'vue';
+import { Wallet } from 'libwallet-mnz'
+var sb = require('satoshi-bitcoin')
 
 export default {
 	name: 'buy',
 	components: {
 		'select2': require('../Utils/Select2.vue').default,
+		'select-awesome': require('../Utils/SelectAwesome.vue').default,
 	},
 	data() {
 		return {
+			searchable: false,
+			currentBonus: 0.2,
 			blocks: 1,
 			fee: 0,
 			feeSpeed: 'veryFast',
 			fees: [
-				{ text: 'very fast ~ 10 mins', blocks: 1, value: 'veryFast' },
-				{ text: 'fast ~ 1 hour', blocks: 6, value: 'fast' },
-				{ text: 'low ~ 6 hour', blocks: 36, value: 'low' },
-      		],
+				{ id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
+				{ id: 1, label: 'Fast', blocks: 6, value: 'fast' },
+				{ id: 2, label: 'Low', blocks: 36, value: 'low' },
+			],
+			selectedFee: null,
 			listData: [
 				'BTC',
 				'KMD'
 			],
-			select: 'BTC',
-			packageMNZ: 500,
-			packageIncrement: 500,
+			select : 'BTC',
+			packageMNZ: 200,
+			packageIncrement: 200,
 			packageMAX: 100000,
 		}
 	},
+	mounted() {
+		this.selectFee = this.fees[0].label;
+	},
 	methods: {
+		numberWithSpaces(x) {
+      var parts = x.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      return parts.join(".");
+    },
+		onChangeFee() {
+			console.log(this.selectedFee.blocks);
+		},
+		hideModal() {
+			this.$refs.confirmBuy.hide()
+		},
 		callEstimateFee(blocks) {
 			self = this;
 			this.$http.post('http://localhost:8000', {
@@ -164,29 +233,29 @@ export default {
 			});	
 		},
 		buyMnzModal () {
-			this.callEstimateFee(this.blocks);
+			if (this.select !== 'KMD')
+				this.callEstimateFee(this.fees[0].blocks);
+			else
+				this.fee = 0.0001;
 		},
 		onChange (value) {
-			for (let index = 0; index < this.fees.length; index++) {
-				const element = this.fees[index];
-				if (value === element.value) {
-					this.blocks = element.blocks;
-				}
-			}
-
-			this.callEstimateFee(this.blocks);
+			if (this.select !== 'KMD')
+				this.callEstimateFee(value.blocks);
+			else
+				this.fee = 0.0001;
     	},
 		methodToRunOnSelect(payload) {
-		this.object = payload;
+			this.object = payload;
 		},
 		totalPrice() {
 			let price = 0;
+			let priceKMD = 0.00042709;
 			if (this.select === 'BTC') {
-				price = 0.00006666;
+				price = 1/15000;
 			} else if (this.select === 'KMD') {
-				price = 0.03333333;
+				price = (1/15000)/priceKMD;
 			}
-			return (this.packageMNZ * price).toFixed(8);
+			return Number((this.packageMNZ * price).toFixed(8));
 		},
 		valueChange(value) {
 			this.select = value
@@ -202,21 +271,39 @@ export default {
 			}
 		},
 		buyMnz() {
-			swal('Success', `You want to buy ${self.packageMNZ} with ${this.fee} fees`, 'success');
-/*			if (this.totalPrice() < balance) {
-				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
-				// HERE MAXIME MAKE THE TRANSFER !
-			} else {
-				swal('Oops...', "No enought money in your " + this.select + " balance !", 'error')
-			}*/
+			this.hideModal();
+			var self = this
+			this.$http.post('http://localhost:8000', {
+				ticker: this.select,
+				test: self.$store.getters.isTestMode,
+				method: 'blockchain.address.listunspent',
+				params: [ this.wallet.address ]
+			}).then(response => {
+				console.log(response)
+				let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
+				wallet.ticker = this.select;
+				let tx = wallet.prepareTx(response.data, 'RMruGZKcUzsW9uhL891eUhUFJ7ZVNNZjge', sb.toSatoshi(self.getTotalPrice, self.fee))
+				console.log(wallet, tx)
+				self.$http.post('http://localhost:8000', {
+					ticker: this.select,
+					test: self.$store.getters.isTestMode,
+					method: 'blockchain.transaction.broadcast',
+					params: [ tx ]
+				}).then((response) => {
+					self.$swal(`Transaction sent`, response.data, 'success')
+				})
+			})
 		}
 	},
 	computed: {
+		wallet() {
+			return this.$store.getters.getWalletByTicker(this.select)
+		},
 		getBalance() {
-			return this.$store.getters.getWalletByTicker(this.select).balance;
+			return this.numberWithSpaces(this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8));
 		},
 		getMnzBalance() {
-			return this.$store.getters.getWalletByTicker('MNZ').balance;
+			return this.numberWithSpaces(this.$store.getters.getWalletByTicker('MNZ').balance);
 		},
 		getStringTicket() {
 			return this.$store.getters.getWalletByTicker(this.select).coin.name;
@@ -224,18 +311,173 @@ export default {
 		getTotalPrice() {
 			return this.totalPrice();
 		},
+		getTotalPriceWithFee() {
+			return this.numberWithSpaces((this.getTotalPrice + this.fee).toFixed(8))
+		},
 		canBuy() {
 			let mnzToBuy = this.packageMNZ;
 			let coin = this.select;
 			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
 
-			return this.totalPrice() < balance;
+			return this.totalPrice() > balance;
 		},
 	}
 }
 </script>
 
 <style scoped>
+.selectAwesome {
+	text-align: center;
+	align-self: flex-end;
+}
+
+.selectFees button {
+	display: none !important;
+}
+.selectFees {
+	/* width: 250px; */
+}
+
+.selectAmount {
+	color: #180d39;
+	font-weight: 500;
+}
+
+#amountTotal {
+	padding-left: 47px;
+}
+#totalAmountCoin {
+	font-weight: 500;
+	font-size: 0.8em;
+	padding-top: 7px;
+	padding-left: 10px;
+}
+
+#totalAmount {
+	font-size: 2em;
+	font-weight: 200;
+	color: rgb(188,0,142);
+}
+
+.row-total-amount h2 {
+	margin: 0px;
+	font-size: 1em;
+	font-weight: 500;
+	color: #180d39;
+	align-self: flex-end;
+	padding-left: 20px;
+	margin: 0px !important;
+}
+
+#warningIcon {
+	width: 25px;
+	margin-right: 7px;
+	margin-left: 3px;
+}
+
+#warningInfo {
+	margin: 0px;
+	font-weight: 600;
+	font-size: 0.9em;
+}
+.row-total-amount {
+	display: flex;
+	flex-direction: column;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.row-total-amount .row {
+	justify-content: flex-start;
+}
+
+.selectFee {
+	text-align: right;
+}
+
+.contentModalBuy .row-main-item .row {
+	align-items: center;
+}
+
+.contentModalBuy .row-main-item {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.contentModalBuy .col-custom span {
+	text-align: right;
+}
+
+.contentModalBuy hr {
+	border-style: none;
+	margin: 0;
+	background-image: linear-gradient(to left, rgba(0,0,0, 0.1) 50%, transparent 0%);
+	background-position: bottom;
+	background-size: 15px 1px;
+	background-repeat: repeat-x;
+}
+
+#horizontalLine {
+	background-image: none;
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 2px solid #f3f4fc;
+	margin: 1em 0;
+	padding: 0;
+}
+
+.footerBuyModal #confirm {
+	border: none;
+	background-color: #7c398a;
+	color: white;
+	margin-right: 20px;
+	min-height: 40px;
+	max-height: 40px;
+	height: 40px;
+}
+
+.footerBuyModal #cancel {
+	margin-left: 20px;
+	background-color: transparent;
+	border: 2px solid rgba(24,13,57,0.1);
+	min-height: 40px;
+	max-height: 40px;
+	height: 40px;
+	padding: 0px;
+}
+
+.footerBuyModal button {
+	width: 160px;
+	min-width: 160px;
+	max-width: 160px;
+	outline: none;
+}
+
+.footerBuyModal .col {
+	flex-grow: 1;
+}
+.footerBuyModal {
+	width: 100%;
+	justify-content: center;
+}
+
+.contentModalBuy {
+	width: 100%;
+}
+
+.headerModalBuy {
+	text-align: center;
+	width: 100%;
+}
+
+.headerModalBuy h2 {
+	margin-top: 10px;
+	color: #7c398a;
+	font-weight: 400;
+	font-size: 1.5em;
+}
 
 .row-custom {
 	display: flex;

@@ -22,6 +22,7 @@ Vue.use(VueQrcodeReader)
 
 import jQuery from 'jquery'
 require('bootstrap/dist/css/bootstrap.min.css')
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
 axios.config =  axios.create({

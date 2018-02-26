@@ -28,9 +28,23 @@ export default {
 <style lang="css" rel='stylesheet/css'>
 @import '~typeface-montserrat';
 
+.modal-content {
+  border: none;
+  width: 450px;
+}
+
+.modal-body {
+	padding-top: 0px;
+}
+
 .modal-header {
   text-align: center;
   border-bottom: none !important;
+  padding-bottom: 0px;
+}
+
+.modal-footer {
+  border: none;
 }
 
 .cal{
