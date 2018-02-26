@@ -31,12 +31,10 @@
 		</div>
 
 		<div id="select-amount" class="row">
-			<div class="col-custom title-content">
-				<span>AMOUNT</span>
-			</div>
-			<div class="row">
-				<input v-model="withdraw.amount" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="input-field" placeholder="0.0">
-				<span id="current-coin"> {{select}}</span>
+			<span class="title-content">AMOUNT</span>
+				<div class="col-custom input-field row">
+					<input v-model="withdraw.amount" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="col-custom input-field" placeholder="0.0">
+					<span id="current-coin"> {{select}}</span>
 			</div>
 		</div>
 		<div class="col-custom horizontal-line">
@@ -44,9 +42,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col-custom">
-				<span class="title-content">{{select}} ADDRESS</span>
-			</div>
+			<span class="title-content">{{select}} ADDRESS</span>
 			<input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
 			<button id="readerQrcode" v-b-modal="'readerQrcodeModal'" @click="readingQRCode = !readingQRCode">
 				<img src="@/assets/icon-scan-qrcode.svg">
@@ -58,15 +54,63 @@
 		</div>
 
 		<div class="btn-center">
-			<button :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
+			<button @click="sendToken" :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
 		</div>
 		<transaction-history id="transactionHistory" :value="wallet" :select="select"></transaction-history>
-		<b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
+		<!-- <b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
 			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
-		</b-modal>
+		</b-modal> -->
 
 		<b-modal size="sm" :hide-header="true" :hide-footer="true" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
 			<qrcode-reader :video-constraints="videoConstraints" @decode="onDecode" :paused="paused" v-if="readingQRCode" @init="onInit"></qrcode-reader>
+		</b-modal>
+
+		<b-modal @ok="withdrawFunds()" ref="confirmWithdraw" id="confirmWithdraw" centered>
+			<div slot="modal-header" class="headerModalBuy">
+				<h2>WITHDRAWAL</h2>
+			</div>
+			<div class="contentModalBuy">
+				<div class="row-main-item">
+					<div class="row">
+						<span class="subTitle">Amount to send</span>
+						<div class="col-custom row-main-item">
+							<span class="col-custom"><span class="selectAmount">{{withdraw.amount}} </span>{{select}}</span>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+					<div class="row">
+						<span class="subTitle">Address {{select}}</span>
+						<div class="col-custom row-main-item">
+							<span id="address" class="col-custom selectAmount">{{withdraw.address}}</span>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+					<div class="row">
+						<span class="subTitle">Transaction fees</span>
+						<div class="col-custom row-main-item">
+							<select-awesome @change="onChange" :value="fees[0].label" :fees="fees" id="selectAwesome" class="col-custom"></select-awesome>
+							<div class="col-custom"><hr></div>
+						</div>
+					</div>
+				</div>
+				
+				<hr id="horizontalLine">
+				<div class="row-total-amount">
+					<div class="col-custom row">
+						<h2 class="col-custom">TOTAL AMOUNT</h2>
+					</div>
+					<div id="amountTotal" class="col-custom row">
+						<div class="row">
+							<span id="totalAmount">{{getTotalPriceWithFee}}</span>
+							<span id="totalAmountCoin">{{select}}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div slot="modal-footer" class="row footerBuyModal">
+				<button @click="hideModal" slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
+				<button @click="withdrawFunds()" slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
+			</div>
 		</b-modal>
 	</div>
 </template>
@@ -83,10 +127,19 @@ export default {
 	components: {
 		'select2': require('../Utils/Select2.vue').default,
 		'transaction-history': require('@/components/TransactionHistory').default,
+		'select-awesome': require('../Utils/SelectAwesome.vue').default,
 		QrcodeReader
 	},
 	data() {
 		return {
+			blocks: 1,
+			fee: 0,
+			feeSpeed: 'veryFast',
+			fees: [
+				{ id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
+				{ id: 1, label: 'Fast', blocks: 6, value: 'fast' },
+				{ id: 2, label: 'Low', blocks: 36, value: 'low' },
+			],
 			videoConstraints: { 
 				width: { 
 					min: 400, 
@@ -117,6 +170,39 @@ export default {
 		}
 	},
 	methods: {
+		calculateFees(value) {
+			if (this.select === 'BTC')
+				this.callEstimateFee(value.blocks);
+			else if (this.select === 'MNZ') {
+				this.fee = 0;
+			} else {
+				this.fee = 0.0001;
+			}
+		},
+		sendToken() {
+			this.calculateFees(this.fees[0]);
+		},
+		callEstimateFee(blocks) {
+			self = this;
+			this.$http.post('http://localhost:8000', {
+				ticker: self.select,
+				method: 'blockchain.estimatefee',
+				params: [ Number(blocks) ]
+				}).then(response => {
+					self.fee = response.data;
+			});	
+		},
+		onChange (value) {
+			this.calculateFees(value);
+    },
+		hideModal() {
+			this.$refs.confirmWithdraw.hide()
+		},
+		numberWithSpaces(x) {
+      var parts = x.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      return parts.join(".");
+    },
 		onDecode (content) {
 			if (this.checkAddress(content)) {
 				this.withdraw.address = content
@@ -183,6 +269,7 @@ export default {
 		// },
 
 		withdrawFunds() {
+			this.hideModal();
 			if(this.canWithdraw && this.addressIsValid) {
 				var self = this
 				this.$http.post('http://localhost:8000', {
@@ -194,7 +281,7 @@ export default {
 					console.log(response)
 					let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
 					wallet.ticker = self.wallet.ticker
-					let tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount))
+					let tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), sb.toSatoshi(self.fee))
 					console.log(wallet, tx)
 					self.$http.post('http://localhost:8000', {
 						ticker: self.wallet.ticker,
@@ -209,6 +296,9 @@ export default {
 		}
 	},
 	computed: {
+		getTotalPriceWithFee() {
+			return this.numberWithSpaces((Number(this.withdraw.amount) + this.fee).toFixed(8))
+		},
 		txHistory() {
 			return this.$store.getters.getWalletTxs(this.select)
 		},
@@ -216,7 +306,7 @@ export default {
 			return this.$store.getters.getWalletByTicker(this.select)
 		},
 		getBalance() {
-			return this.$store.getters.getWalletByTicker(this.select).balance
+			return this.numberWithSpaces(this.$store.getters.getWalletByTicker(this.select).balance)
 		},
 		canWithdraw() {
 			return (this.withdraw.amount < this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
@@ -231,6 +321,20 @@ export default {
 </script>
 
 <style scoped>
+#amountTotal {
+	align-self: center;
+  text-align: center;
+  padding-left: 47px;
+}
+
+.row-total-amount h2 {
+  text-align: center;
+}
+
+
+#address {
+	font-size: 0.75em;
+}
 
 #transactionHistory {
 	margin-top: 50px;
@@ -403,14 +507,6 @@ export default {
 
 .col-custom {
 	flex-grow: 1;
-}
-
-hr {
-	display: block;
-	height: 1px;
-	border: 0;
-	border-top: 1px solid rgba(0,0,0, 0.1);;
-	padding: 0;
 }
 
 #first-line {

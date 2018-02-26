@@ -73,7 +73,6 @@ export default {
 <style>
 
 .custom-select {
-    /* display: inline-block; */
     width: 100%;
     height: 0;
     padding: 0;
@@ -101,7 +100,7 @@ export default {
   }
     .custom-select-trigger {
       position: relative;
-      text-align: right;
+      text-align: left;
       display: block;
       width: 100%;
       height: 30px;
@@ -195,6 +194,7 @@ export default {
       line-height: 47px;
       cursor: pointer;
       transition: all .4s ease-in-out;
+      text-align: left !important; 
     }
     .custom-option:hover,
     .custom-option.selection {

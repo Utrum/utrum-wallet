@@ -117,30 +117,30 @@
 			<div class="contentModalBuy">
 				<div class="row-main-item">
 					<div class="row">
-						<span id="amountToBuy">Amount to buy</span>
+						<span class="subTitle">Amount to buy</span>
 						<div class="col-custom row-main-item">
 							<span class="col-custom"><span class="selectAmount">{{packageMNZ}} </span>MNZ</span>
 							<div class="col-custom"><hr></div>
 						</div>
 					</div>
 					<div class="row">
-						<span id="amountToBuy">Plus (20%) bonus</span>
+						<span class="subTitle">Plus (20%) bonus</span>
 						<div class="col-custom row-main-item">
 							<span class="col-custom"><span class="selectAmount">{{packageMNZ+(packageMNZ * currentBonus)}} </span>MNZ</span>
 							<div class="col-custom"><hr></div>
 						</div>
 					</div>
 					<div class="row">
-						<span id="amountToBuy">Price</span>
+						<span class="subTitle">Price</span>
 						<div class="col-custom row-main-item">
 							<span class="col-custom"><span class="selectAmount">{{getTotalPrice}} </span>{{select}}</span>
 							<div class="col-custom"><hr></div>
 						</div>
 					</div>
 					<div class="row">
-						<span id="amountToBuy">Transaction fees</span>
+						<span class="subTitle">Transaction fees</span>
 						<div class="col-custom row-main-item">
-							<select-awesome @change="onChange" :value="fees[0].label" :fees="fees" id="selectAwesome" class="col-custom"></select-awesome>
+							<select-awesome @change="onChange" :value="fees[0].label" :fees="fees" class="col-custom"></select-awesome>
 							<div class="col-custom"><hr></div>
 						</div>
 					</div>
@@ -150,7 +150,7 @@
 				<div class="row-total-amount">
 					<div class="col-custom row">
 						<img src="@/assets/icon-shop.svg" alt="icon-shop">
-						<h2>TOTAL AMOUNT</h2>
+						<h2 class="col-custom">TOTAL AMOUNT</h2>
 					</div>
 					<div id="amountTotal" class="col-custom row">
 						<div class="row">
@@ -243,7 +243,7 @@ export default {
 				this.callEstimateFee(value.blocks);
 			else
 				this.fee = 0.0001;
-    	},
+    },
 		methodToRunOnSelect(payload) {
 			this.object = payload;
 		},
@@ -326,159 +326,6 @@ export default {
 </script>
 
 <style scoped>
-.selectAwesome {
-	text-align: center;
-	align-self: flex-end;
-}
-
-.selectFees button {
-	display: none !important;
-}
-.selectFees {
-	/* width: 250px; */
-}
-
-.selectAmount {
-	color: #180d39;
-	font-weight: 500;
-}
-
-#amountTotal {
-	padding-left: 47px;
-}
-#totalAmountCoin {
-	font-weight: 500;
-	font-size: 0.8em;
-	padding-top: 7px;
-	padding-left: 10px;
-}
-
-#totalAmount {
-	font-size: 2em;
-	font-weight: 200;
-	color: rgb(188,0,142);
-}
-
-.row-total-amount h2 {
-	margin: 0px;
-	font-size: 1em;
-	font-weight: 500;
-	color: #180d39;
-	align-self: flex-end;
-	padding-left: 20px;
-	margin: 0px !important;
-}
-
-#warningIcon {
-	width: 25px;
-	margin-right: 7px;
-	margin-left: 3px;
-}
-
-#warningInfo {
-	margin: 0px;
-	font-weight: 600;
-	font-size: 0.9em;
-}
-.row-total-amount {
-	display: flex;
-	flex-direction: column;
-	padding-left: 20px;
-	padding-right: 20px;
-}
-.row-total-amount .row {
-	justify-content: flex-start;
-}
-
-.selectFee {
-	text-align: right;
-}
-
-.contentModalBuy .row-main-item .row {
-	align-items: center;
-}
-
-.contentModalBuy .row-main-item {
-	margin-top: 20px;
-	margin-bottom: 20px;
-	padding-left: 20px;
-	padding-right: 20px;
-}
-
-.contentModalBuy .col-custom span {
-	text-align: right;
-}
-
-.contentModalBuy hr {
-	border-style: none;
-	margin: 0;
-	background-image: linear-gradient(to left, rgba(0,0,0, 0.1) 50%, transparent 0%);
-	background-position: bottom;
-	background-size: 15px 1px;
-	background-repeat: repeat-x;
-}
-
-#horizontalLine {
-	background-image: none;
-	display: block;
-	height: 1px;
-	border: 0;
-	border-top: 2px solid #f3f4fc;
-	margin: 1em 0;
-	padding: 0;
-}
-
-.footerBuyModal #confirm {
-	border: none;
-	background-color: #7c398a;
-	color: white;
-	margin-right: 20px;
-	min-height: 40px;
-	max-height: 40px;
-	height: 40px;
-}
-
-.footerBuyModal #cancel {
-	margin-left: 20px;
-	background-color: transparent;
-	border: 2px solid rgba(24,13,57,0.1);
-	min-height: 40px;
-	max-height: 40px;
-	height: 40px;
-	padding: 0px;
-}
-
-.footerBuyModal button {
-	width: 160px;
-	min-width: 160px;
-	max-width: 160px;
-	outline: none;
-}
-
-.footerBuyModal .col {
-	flex-grow: 1;
-}
-.footerBuyModal {
-	width: 100%;
-	justify-content: center;
-}
-
-.contentModalBuy {
-	width: 100%;
-}
-
-.headerModalBuy {
-	text-align: center;
-	width: 100%;
-}
-
-.headerModalBuy h2 {
-	margin-top: 10px;
-	color: #7c398a;
-	font-weight: 400;
-	font-size: 1.5em;
-}
-
 .row-custom {
 	display: flex;
 	flex-direction: row;
@@ -856,14 +703,6 @@ input[type=number]::-webkit-outer-spin-button {
 	outline: none;
 	box-shadow: none;
 	text-align: right;
-}
-
-hr {
-	display: block;
-	height: 1px;
-	border: 0;
-	border-top: 1px solid rgba(0,0,0, 0.1);;
-	padding: 0;
 }
 
 #first-line {
