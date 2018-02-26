@@ -197,7 +197,10 @@ hr {
 
 
 
-
+.swal2-modal .swal2-styled {
+  background-color:#7c398a !important;
+  outline: none;
+}
 
 
 
