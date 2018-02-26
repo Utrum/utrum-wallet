@@ -1,11 +1,11 @@
 <template>
   <div class="row-main-item">
     <div class="row-title">
-      <h2 id="balance-item">{{wallet.balance}}</h2>
+      <h2 id="balance-item">{{numberWithSpaces(wallet.balance)}}</h2>
       <h2 id="coin-item">{{wallet.ticker}}</h2>
     </div>
     <div class="row-content">
-      <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/>{{wallet.balance_usd.toFixed(2)}} (USD)</p>
+      <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/>{{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
       <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></img></button>
     </div>
     <div class="row-footer">
@@ -17,7 +17,7 @@
         type="button" 
         class="btn btn-copy-link btn-smartaddress" 
         :data-clipboard-text="wallet.address">
-        <div id="wallet-address-string" :id="wallet.ticker" class="btn-inside-qrcode">
+        <div :id="wallet.ticker" class="btn-inside-qrcode">
           <span v-if="isClipboard" >Copied to the clipboard</span>
           <span v-else>{{wallet.address}}</span>
         </div>
@@ -50,6 +50,11 @@ export default {
     }
   },
   methods: {
+     numberWithSpaces(x) {
+      var parts = x.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      return parts.join(".");
+    },
     onCopy() {
       var self = this
       this.isClipboard = true;

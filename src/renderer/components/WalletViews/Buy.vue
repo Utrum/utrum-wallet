@@ -29,7 +29,7 @@
 				<div class="col-custom">
 					<div class="row-custom">
 						<div class="col-custom select-all">
-							<p id="add-coin">+</p>
+							<p @click="$root.$emit('select2:open')" id="add-coin">+</p>
 						</div>
 						<div class="col-custom">
 							<select2 :options="listData" :value="select" @input="valueChange"></select2>
@@ -154,7 +154,7 @@
 					</div>
 					<div id="amountTotal" class="col-custom row">
 						<div class="row">
-							<span id="totalAmount">{{(getTotalPrice + fee).toFixed(8)}}</span>
+							<span id="totalAmount">{{getTotalPriceWithFee}}</span>
 							<span id="totalAmountCoin">{{select}}</span>
 						</div>
 					</div>
@@ -175,6 +175,8 @@
 <script>
 import swal from 'sweetalert2';
 import index from 'vue';
+import { Wallet } from 'libwallet-mnz'
+var sb = require('satoshi-bitcoin')
 
 export default {
 	name: 'buy',
@@ -199,7 +201,7 @@ export default {
 				'BTC',
 				'KMD'
 			],
-			select: 'BTC',
+			select : 'BTC',
 			packageMNZ: 200,
 			packageIncrement: 200,
 			packageMAX: 100000,
@@ -209,6 +211,11 @@ export default {
 		this.selectFee = this.fees[0].label;
 	},
 	methods: {
+		numberWithSpaces(x) {
+      var parts = x.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      return parts.join(".");
+    },
 		onChangeFee() {
 			console.log(this.selectedFee.blocks);
 		},
@@ -238,7 +245,7 @@ export default {
 				this.fee = 0.0001;
     	},
 		methodToRunOnSelect(payload) {
-		this.object = payload;
+			this.object = payload;
 		},
 		totalPrice() {
 			let price = 0;
@@ -265,21 +272,38 @@ export default {
 		},
 		buyMnz() {
 			this.hideModal();
-			swal('Success', `You want to buy ${self.packageMNZ} with ${this.fee} fees`, 'success');
-/*			if (this.totalPrice() < balance) {
-				swal('Success', "here buy " + mnzToBuy + "mnz", 'success');
-				// HERE MAXIME MAKE THE TRANSFER !
-			} else {
-				swal('Oops...', "No enought money in your " + this.select + " balance !", 'error')
-			}*/
+			var self = this
+			this.$http.post('http://localhost:8000', {
+				ticker: this.select,
+				test: self.$store.getters.isTestMode,
+				method: 'blockchain.address.listunspent',
+				params: [ this.wallet.address ]
+			}).then(response => {
+				console.log(response)
+				let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
+				wallet.ticker = this.select;
+				let tx = wallet.prepareTx(response.data, 'RMruGZKcUzsW9uhL891eUhUFJ7ZVNNZjge', sb.toSatoshi(self.getTotalPrice, self.fee))
+				console.log(wallet, tx)
+				self.$http.post('http://localhost:8000', {
+					ticker: this.select,
+					test: self.$store.getters.isTestMode,
+					method: 'blockchain.transaction.broadcast',
+					params: [ tx ]
+				}).then((response) => {
+					self.$swal(`Transaction sent`, response.data, 'success')
+				})
+			})
 		}
 	},
 	computed: {
+		wallet() {
+			return this.$store.getters.getWalletByTicker(this.select)
+		},
 		getBalance() {
-			return this.$store.getters.getWalletByTicker(this.select).balance;
+			return this.numberWithSpaces(this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8));
 		},
 		getMnzBalance() {
-			return this.$store.getters.getWalletByTicker('MNZ').balance;
+			return this.numberWithSpaces(this.$store.getters.getWalletByTicker('MNZ').balance);
 		},
 		getStringTicket() {
 			return this.$store.getters.getWalletByTicker(this.select).coin.name;
@@ -287,12 +311,15 @@ export default {
 		getTotalPrice() {
 			return this.totalPrice();
 		},
+		getTotalPriceWithFee() {
+			return this.numberWithSpaces((this.getTotalPrice + this.fee).toFixed(8))
+		},
 		canBuy() {
 			let mnzToBuy = this.packageMNZ;
 			let coin = this.select;
 			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
 
-			return this.totalPrice() < balance;
+			return this.totalPrice() > balance;
 		},
 	}
 }

@@ -30,12 +30,17 @@ export default {
       this.$store.dispatch('updateBalance', this.wallets[ticker])
     }, this);
   },
+  methods: {
+    numberWithSpaces(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    }
+  },
   computed: {
     wallets() {
       return this.$store.getters.getWallets
     },
     totalBalance() {
-      return this.$store.getters.getTotalBalance.toFixed(2)
+      return this.numberWithSpaces(this.$store.getters.getTotalBalance.toFixed(2))
     }
   }
 }
