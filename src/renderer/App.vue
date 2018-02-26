@@ -5,27 +5,28 @@
 </template>
 
 <script>
-  export default {
-    components: {
-      'login-form': require('@/components/LoginForm').default
-    },
-    name: 'vue-dico',
-    data () {
-      return {
-        
-      }
-    },
-    computed: {
-      userLoggedIn() {
-        return this.$store.state.User.loggedIn
-      }
+// require('bootstrap')
+
+export default {
+  components: {
+    'login-form': require('@/components/LoginForm').default
+  },
+  name: 'vue-dico',
+  data () {
+    return {
+
+    }
+  },
+  computed: {
+    userLoggedIn() {
+      return this.$store.state.User.loggedIn
     }
   }
+}
 </script>
 
-<style>
-/* CSS declarations go here */
-@import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700');
+<style lang="css" rel='stylesheet/css'>
+@import '~typeface-montserrat';
 
 .modal-content {
   border: none;
