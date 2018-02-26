@@ -10,12 +10,8 @@
 				</form>
 			</div>
 		</div>
-		<b-form-checkbox id="checkbox1"
-                     v-model="testMode"
-                     value="true"
-                     unchecked-value="false">
-      Test Mode
-    </b-form-checkbox>
+		<input type="checkbox" id="checkbox" v-model="testMode">
+		<label for="checkbox">Test Mode</label>
 		<button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Don't have a passphrase?</button>
 		<img class="col" id="login-background" src="~@/assets/img-login.svg">
 	</div>
@@ -29,7 +25,6 @@ export default {
 		return {
 			passphrase: '',
 			btnSendStatus: 'btn-send-enabled',
-			testMode: false,
 		}
 	},
 	created () {
