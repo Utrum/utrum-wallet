@@ -122,7 +122,6 @@ const actions = {
         })
       } else {
         getCmcData('bitcoin').then(response => {
-          console.log(response.data[0].price_usd)
           wallet.balance_usd = wallet.balance * (response.data[0].price_usd / 15000)
         })
       }
@@ -141,7 +140,6 @@ const actions = {
   addTx({commit, dispatch, getters}, {wallet, tx}) {
     dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
       let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
-
       commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height}) 
     })
     // .catch(error => {
@@ -158,6 +156,7 @@ const actions = {
       if (response.data.length > 0) {
         let txs = response.data
 
+        console.log(txs)
         txs.forEach(tx => {
           dispatch('addTx', {wallet:wallet, tx:tx})
         })

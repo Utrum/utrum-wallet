@@ -38,7 +38,6 @@ const actions = {
   login ({ commit, dispatch }, {passphrase, testMode}) {
     commit('SET_PASSPHRASE', passphrase)
     commit('USER_LOGIN')
-    console.log(testMode)
     dispatch('setTestMode', testMode)
   },
   setTestMode({ commit }, testMode) {

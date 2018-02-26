@@ -367,7 +367,7 @@ export default {
 #card-current-balance {
 	text-align: right;
 	font-size: 1.8em;
-	max-width: 300px;
+	max-width: 400px;
 }
 
 #add-coin {
