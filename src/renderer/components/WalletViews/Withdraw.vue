@@ -251,6 +251,11 @@ export default {
 			}
 		},
 		updateCoin(value) {
+			this.withdraw = {
+				amount: null,
+				address: '',
+				coin: 'MNZ'
+			};
 			this.select = value
 			this.withdraw.coin = value
 
