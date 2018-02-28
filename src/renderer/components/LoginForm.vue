@@ -10,7 +10,7 @@
 				</form>
 			</div>
 		</div>
-		<input type="checkbox" id="checkbox" v-model="testMode">
+		<input @change="checkboxTextMode" type="checkbox" id="checkbox" v-model="testMode">
 		<label for="checkbox">Test Mode</label>
 		<button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Don't have a passphrase?</button>
 		<img class="col" id="login-background" src="~@/assets/img-login.svg">
@@ -20,7 +20,6 @@
 <script>
 export default {
 	name: 'login-form',
-	
 	data() {
 		return {
 			passphrase: '',
@@ -31,10 +30,13 @@ export default {
 		this.testMode = this.$store.getters.isTestMode
 	},
 	methods: {
+		checkboxTextMode() {
+			this.testMode = this.testMode == true ? true : false
+			this.$store.dispatch("setTestMode", this.testMode)
+		},
 		validatePassPhrase() {
 			if(this.passphrase) {
-				this.testMode = this.testMode == true ? true : false
-				this.$store.dispatch("login", {passphrase:this.passphrase, testMode:this.testMode})
+				this.$store.dispatch("login", this.passphrase)
 				this.$router.push('/wallet')
 			}
 		},

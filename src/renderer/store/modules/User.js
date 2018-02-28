@@ -35,10 +35,9 @@ const mutations = {
 }
 
 const actions = {
-  login ({ commit, dispatch }, {passphrase, testMode}) {
+  login ({ commit, dispatch }, passphrase) {
     commit('SET_PASSPHRASE', passphrase)
     commit('USER_LOGIN')
-    dispatch('setTestMode', testMode)
   },
   setTestMode({ commit }, testMode) {
     commit('SET_TESTMODE', testMode)
