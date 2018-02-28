@@ -1,12 +1,12 @@
 <template>
   <div class="row-main-item">
     <div class="row-title">
-      <h2 id="balance-item">{{numberWithSpaces(wallet.balance)}}</h2>
+      <h2 id="balance-item">{{numberWithSpaces(wallet.balance + wallet.balance_unconfirmed)}}</h2>
       <h2 id="coin-item">{{wallet.ticker}}</h2>
     </div>
     <div class="row-content">
-      <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/>{{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
-      <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></img></button>
+      <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/> {{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
+      <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></button>
     </div>
     <div class="row-footer">
       <p class="col-header">Your deposit {{wallet.coin.name}} address :</p>
