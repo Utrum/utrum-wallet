@@ -76,7 +76,7 @@ export default {
   margin-top: 100px;
   margin-bottom: 80px;
   width: 50%;
-      width: 92px;
+  width: 92px;
 }
 
 #sidebar {

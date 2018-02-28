@@ -73,15 +73,15 @@ export default {
 <style>
 
 .custom-select {
-    width: 100%;
-    height: 0;
-    padding: 0;
-    line-height: 0;
-    color: #fff;
-    vertical-align: inherit;
-    background: #fff;
-    background-size: 0;
-    border:0;
+    width: 100% !important;
+    height: 0!important;
+    padding: 0!important;
+    line-height: 0!important;
+    color: #fff!important;
+    vertical-align: inherit!important;
+    background: #fff!important;
+    background-size: 0!important;
+    border:0!important;
 }
 
 /** Custom Select **/

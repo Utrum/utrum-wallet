@@ -32,11 +32,8 @@
     ],
     "extraFiles": [
       {
-        "from": "resources/${os}",
-        "to": "Resources/bin",
-        "filter": [
-          "**/*"
-        ]
+        "from": "resources/${os}/marketmaker",
+        "to": "Resources/bin/marketmaker"
       }
     ],
     "dmg": {

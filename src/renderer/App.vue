@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style lang="css" rel='stylesheet/css'>
+<style>
 @import '~typeface-montserrat';
 
 .contentModalBuy .row-main-item .row {
@@ -220,7 +220,7 @@ hr {
 }
 
 .modal-footer {
-  border: none;
+  border: none !important;
 }
 
 .cal{
@@ -294,9 +294,10 @@ a[aria-expanded="true"]::before {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
-  background: #fafafa;
+  font-family: 'Montserrat', sans-serif !important;
+  background: #fafafa !important;
   padding: 0px !important;
+  margin: 0px !important;
 }
 
 p {
@@ -307,7 +308,7 @@ p {
 }
 
 a, a:hover, a:focus {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 #content {
@@ -398,7 +399,7 @@ ul ul a {
 .card {
   box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
   border-radius: 4px;
-  border: none;
+  border: none !important;
 }
 
 .row-main-item {

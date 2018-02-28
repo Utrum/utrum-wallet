@@ -98,7 +98,7 @@ export default {
 
 
 .modal-header a {
-	color: #7c398a;
+	color: #7c398a !important;
 }
 
 .modal-header .row {
