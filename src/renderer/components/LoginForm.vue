@@ -10,7 +10,7 @@
 				</form>
 			</div>
 		</div>
-		<input @change="checkboxTextMode" type="checkbox" id="checkbox" v-model="testMode">
+		<input @change="checkboxTestMode" type="checkbox" id="checkbox" v-model="testMode">
 		<label for="checkbox">Test Mode</label>
 		<button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Don't have a passphrase?</button>
 		<img class="col" id="login-background" src="~@/assets/img-login.svg">
@@ -30,7 +30,7 @@ export default {
 		this.testMode = this.$store.getters.isTestMode
 	},
 	methods: {
-		checkboxTextMode() {
+		checkboxTestMode() {
 			this.testMode = this.testMode == true ? true : false
 			this.$store.dispatch("setTestMode", this.testMode)
 		},
