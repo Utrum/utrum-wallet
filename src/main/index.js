@@ -23,7 +23,7 @@ let execPath = ''
 if(process.env.NODE_ENV === 'development'){
     execPath = joinPath(__dirname, "../../resources/", getPlatform());
 } else {
-    execPath = joinPath(process.resourcesPath, '../Resources/bin');
+    execPath = joinPath(process.resourcesPath, '../Resources/bin/');
 }
 const cmd = `${joinPath(execPath, 'marketmaker')}`;
 
