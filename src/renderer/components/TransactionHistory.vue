@@ -81,15 +81,6 @@ export default {
     text-align: center;
 }
 
-.positiveColor {
-	color: #7d2b8e;
-    
-}
-
-.negativeColor {
-	color: #95989c;
-}
-
 .table thead th {
     border: none;
     font-weight: 300;

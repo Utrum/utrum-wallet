@@ -295,7 +295,7 @@ export default {
 						params: [ tx ]
 					}).then((response) => {
 						self.$swal(`Transaction sent`, response.data, 'success')
-					})
+					}).catch((error) => { self.$swal(`Transaction not send`, error, 'error') })
 				})
 			}
 		}
