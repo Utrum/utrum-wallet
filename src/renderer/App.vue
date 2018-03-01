@@ -433,4 +433,12 @@ ul ul a {
 textarea {
     resize: none;
 }
+
+.positiveColor {
+	color: #7d2b8e;
+}
+
+.negativeColor {
+	color: #95989c;
+}
 </style>

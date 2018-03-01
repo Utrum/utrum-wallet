@@ -1,16 +1,12 @@
 <template>
   <div class="content">
-    <div class="row-header">
-      <div class="col-header">
+    <div class="row">
+      <div class="col-custom">
         <h3>BALANCES</h3>
       </div>
-      <div class="col-header text-right">
-        <div>
+      <div class="col-custom text-right row-main-item">
           <h5>TOTAL BALANCES</h5>
-        </div>
-        <div>
           <span id="totalBalanceUsd"><img src="@/assets/icon-usdollar.svg"/>{{totalBalance}}</span>
-        </div>
       </div>
     </div>
     <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
@@ -48,6 +44,14 @@ export default {
 
 <style scoped>
 @import '~typeface-montserrat';
+.content .text-right {
+  margin: 0;
+}
+
+.col-custom {
+  flex-grow: 1;
+}
+
 .content {
   padding: 50px;
   color: rgb(151,151,151);
@@ -217,6 +221,7 @@ footer {
   background-color: #6e2b90;
   border-color: #430961;
 }
+
 
 .right{
   float:right;

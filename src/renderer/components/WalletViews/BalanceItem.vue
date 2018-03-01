@@ -3,10 +3,15 @@
     <div class="row-title">
       <h2 id="balance-item">{{numberWithSpaces(wallet.balance)}}</h2>
       <h2 id="coin-item">{{wallet.ticker}}</h2>
+      <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/> {{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
     </div>
-    <div class="row-content">
-      <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/>{{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
-      <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></img></button>
+    <div class="row-content" :class="getQRCodeClass(wallet.balance_unconfirmed)">
+      <div v-if="wallet.balance_unconfirmed != 0">
+        <img v-if="wallet.balance_unconfirmed < 0" src="@/assets/icon-in.svg" alt="icon-unconfirmed-balance">
+        <img v-else src="@/assets/icon-out.svg" alt="icon-unconfirmed-balance">
+        <span :class="getUnconfirmedColor(wallet.balance_unconfirmed)"><span v-if="wallet.balance_unconfirmed > 0">+</span>{{numberWithSpaces(wallet.balance_unconfirmed)}}</span>
+      </div>
+      <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></button>
     </div>
     <div class="row-footer">
       <p class="col-header">Your deposit {{wallet.coin.name}} address :</p>
@@ -50,7 +55,19 @@ export default {
     }
   },
   methods: {
-     numberWithSpaces(x) {
+    getUnconfirmedColor(amount) {
+      if (amount > 0) {
+				return "positiveColor"
+			} else {
+				return "negativeColor"
+			}
+    },
+    getQRCodeClass(amount) {
+      if (amount == 0) {
+        return "row-custom"
+      }
+    },
+    numberWithSpaces(x) {
       var parts = x.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
       return parts.join(".");
@@ -67,6 +84,13 @@ export default {
 </script>
 
 <style scoped>
+.row-custom {
+  justify-content: flex-end !important;
+}
+
+#us-dollar {
+  text-align: right;
+}
 
 .modal-header {
   text-align: center;
@@ -185,6 +209,7 @@ export default {
   background-color: transparent;
   color: #7c398a;
   font-weight: 400;
+  text-align: right;
 }
 
 hr {

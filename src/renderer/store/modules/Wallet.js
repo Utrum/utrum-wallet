@@ -8,6 +8,7 @@ import Vue from 'vue'
 const state = {
   wallets: {
     balance: 0,
+    balance_unconfirmed: 0,
     balance_usd: 0,
     ticker: null,
     txs: {}
@@ -112,8 +113,10 @@ const actions = {
   },
   updateBalance({commit, getters, rootGetters}, wallet) {
     getBalance(wallet, rootGetters.isTestMode).then(response => {
+      console.log(response)
       // wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance = sb.toBitcoin(response.data.confirmed);
+      wallet.balance_unconfirmed = sb.toBitcoin(response.data.unconfirmed);
       if (wallet.coin.name !== "monaize") {
         getCmcData(wallet.coin.name).then(response => {
           response.data.forEach(function(cmcCoin) {
