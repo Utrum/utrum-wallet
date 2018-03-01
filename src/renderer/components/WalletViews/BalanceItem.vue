@@ -7,7 +7,7 @@
     </div>
     <div class="row-content" :class="getQRCodeClass(wallet.balance_unconfirmed)">
       <div v-if="wallet.balance_unconfirmed != 0">
-        <img v-if="wallet.balance_unconfirmed > 0" src="@/assets/icon-in.svg" alt="icon-unconfirmed-balance">
+        <img v-if="wallet.balance_unconfirmed < 0" src="@/assets/icon-in.svg" alt="icon-unconfirmed-balance">
         <img v-else src="@/assets/icon-out.svg" alt="icon-unconfirmed-balance">
         <span :class="getUnconfirmedColor(wallet.balance_unconfirmed)"><span v-if="wallet.balance_unconfirmed > 0">+</span>{{numberWithSpaces(wallet.balance_unconfirmed)}}</span>
       </div>
