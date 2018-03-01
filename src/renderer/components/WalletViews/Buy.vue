@@ -67,9 +67,7 @@
 						<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
 							<img src="@/assets/icon-less.svg"/>
 						</a>
-						<div id="package-value" class="col-center">
-							{{packageMNZ}}
-						</div>
+						<input id="package-value" class="col-center" v-model.number="packageMNZ" placeholder="0" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
 						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
 							<img src="@/assets/icon-more.svg"/>
 						</a>
@@ -202,7 +200,7 @@ export default {
 				'KMD'
 			],
 			select : 'BTC',
-			packageMNZ: 200,
+			packageMNZ: 1000,
 			packageIncrement: 200,
 			packageMAX: 100000,
 		}
@@ -261,12 +259,12 @@ export default {
 			this.select = value
 		},
 		incrementPackage() {
-			if (this.packageMNZ < this.packageMAX) {
+			if (this.packageMNZ <= this.packageMAX - this.packageIncrement) {
 				this.packageMNZ += this.packageIncrement;
 			}
 		},
 		decrementPackage() {
-			if (this.packageMNZ > this.packageIncrement) {
+			if (this.packageMNZ > 0) {
 				this.packageMNZ -= this.packageIncrement;
 			}
 		},
@@ -295,6 +293,20 @@ export default {
 			})
 		}
 	},
+	watch: {
+    packageMNZ: function (newValue, oldValue) {
+			let value = Number(newValue);
+
+			if (value <= this.packageMAX - this.packageIncrement) {
+				this.packageMNZ = value;
+			} else {
+				this.packageMNZ = this.packageMAX;
+			}
+			if (value <= 0) {
+				this.packageMNZ = 0;
+			}
+    }
+  },
 	computed: {
 		wallet() {
 			return this.$store.getters.getWalletByTicker(this.select)
@@ -319,7 +331,11 @@ export default {
 			let coin = this.select;
 			let balance = this.$store.getters.getWalletByTicker(this.select).balance;
 
-			return this.totalPrice() > balance;
+			if (mnzToBuy <= 0)
+				return true;
+			if (this.totalPrice() > balance)
+				return true;
+			return false;
 		},
 	}
 }
@@ -516,6 +532,9 @@ input[type=number]::-webkit-outer-spin-button {
 	width: 100px;
 	font-size: 1.5em;
 	font-weight: 300;
+	background-color: transparent;
+  border: none;
+  outline: none;
 }
 
 .value {
