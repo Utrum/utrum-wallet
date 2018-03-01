@@ -68,9 +68,13 @@ export default {
       }
     },
     numberWithSpaces(x) {
-      var parts = x.toString().split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-      return parts.join(".");
+      if (Number(x) > 0) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        return parts.join(".");
+      } else {
+        return x;
+      }
     },
     onCopy() {
       var self = this

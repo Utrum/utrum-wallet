@@ -113,7 +113,6 @@ const actions = {
   },
   updateBalance({commit, getters, rootGetters}, wallet) {
     getBalance(wallet, rootGetters.isTestMode).then(response => {
-      console.log(response)
       // wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance_unconfirmed = sb.toBitcoin(response.data.unconfirmed);
@@ -159,7 +158,6 @@ const actions = {
       if (response.data.length > 0) {
         let txs = response.data
 
-        console.log(txs)
         txs.forEach(tx => {
           dispatch('addTx', {wallet:wallet, tx:tx})
         })
