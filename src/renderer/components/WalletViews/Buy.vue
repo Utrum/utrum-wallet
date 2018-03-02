@@ -280,7 +280,7 @@ export default {
 				console.log(response)
 				let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
 				wallet.ticker = this.select;
-				let tx = wallet.prepareTx(response.data, 'RMruGZKcUzsW9uhL891eUhUFJ7ZVNNZjge', sb.toSatoshi(self.getTotalPrice, self.fee))
+				let tx = wallet.prepareTx(response.data, 'RCzjiCPntvpujtn4fmi9Uw4M6ZA1vrtgLJ', sb.toSatoshi(self.getTotalPrice, self.fee))
 				console.log(wallet, tx)
 				self.$http.post('http://localhost:8000', {
 					ticker: this.select,
