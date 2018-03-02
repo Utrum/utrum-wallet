@@ -5,7 +5,7 @@ export const getTxFromRawTx = function(wallet, rawtx, tx_hash, height) {
   const address = bitcoinjs.TransactionBuilder.fromTransaction(rawtx, coins.get(wallet.ticker).network)
   console.log(address);
   let pubkey = bitcoinjs.ECPair.fromPublicKeyBuffer(address.inputs[0].pubKeys[0],wallet.coin.network)
-  let amount = rawtx.outs[0].value;
+  let amount = rawtx.outs[1].value;
   let fromMNZ = false;
 
   if (pubkey.getAddress() === wallet.address) {
