@@ -1,10 +1,9 @@
 <template>
     <div>
-        <h3 id="title">TRANSACTIONS</h3>
         <b-table id="txTable" thead-tr-class="theadTrClass" tbody-tr-class="theadClass" tbody-class="cardTable" thead-class="theadClass" hover :sort-desc.sync="sortDesc" :sort-by.sync="sortBy" :fields="fields" :items="txHistory">
                 <template slot="tx_hash" slot-scope="row">
-                    <explorer type="tx" :ticker="value.ticker" :value="row.value"></explorer
-                ></template>
+                    <explorer type="tx" :ticker="coin.ticker" :value="row.value"></explorer>
+                </template>
                 <template slot="amount" slot-scope="row">
                     <div :class="getColorAmount(row.value)">
                         <span v-if="satoshiToBitcoin(row.value) > 0">+</span>
@@ -21,7 +20,7 @@ var sb = require('satoshi-bitcoin')
 
 export default {
     name: 'transaction-history',
-    props: ['value', 'select'],
+    props: ['fromTokenSale', 'coin'],
     data() {
         return {
             sortBy: "height",
@@ -44,11 +43,18 @@ export default {
 		},
     },
 	mounted() {
-		this.$store.dispatch('buildTxHistory', this.value)
+        this.$store.dispatch('buildTxHistory', this.wallet)
 	},
     computed: {
+        wallet() {
+			return this.$store.getters.getWalletByTicker(this.coin.ticker)
+		},
 		txHistory() {
-			return this.$store.getters.getWalletTxs(this.select)
+            if (this.fromTokenSale) {
+                return this.$store.getters.getWalletTxs('MNZ').filter(el => el.fromMNZ);;
+            } else {
+			    return this.$store.getters.getWalletTxs(this.coin.ticker)
+            }
 		},
         fields()  {
 			return [
@@ -64,7 +70,12 @@ export default {
 				},
 				{
                     key: 'amount',
-                    label: `Amount (${this.select})`,
+                    label: `Amount (${this.coin.ticker})`,
+                    sortable: true
+				},
+				{
+                    key: 'address',
+                    label: `address`,
                     sortable: true
 				}
 			]
@@ -73,19 +84,12 @@ export default {
 }
 </script>
 
-<style scoped>
-.content h3 {
-	font-weight: 300;
-    opacity: 0.5;
-	color: #180d39;
-    text-align: center;
-}
-
+<style>
 .table thead th {
     border: none;
     font-weight: 300;
     color: #180d39;
-    outline: none;
+    outline: none !important;
     cursor: pointer;
     -webkit-user-select: none;  /* Chrome all / Safari all */
 	-moz-user-select: none;     /* Firefox all */

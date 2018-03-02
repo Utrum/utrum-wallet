@@ -56,7 +56,8 @@
 		<div class="btn-center">
 			<button @click="sendToken" :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
 		</div>
-		<transaction-history id="transactionHistory" :value="wallet" :select="select"></transaction-history>
+		<h3 id="title">TRANSACTIONS</h3>
+		<transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
 		<!-- <b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
 			<p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
 		</b-modal> -->
@@ -259,9 +260,7 @@ export default {
 			this.select = value
 			this.withdraw.coin = value
 
-			if (this.txHistory.length == 0) {
-				this.$store.dispatch('buildTxHistory', this.wallet)
-			}
+			this.$store.dispatch('buildTxHistory', this.wallet)
 		},
 		
 		// getRawTxAmount(tx) {
@@ -303,9 +302,6 @@ export default {
 	computed: {
 		getTotalPriceWithFee() {
 			return this.numberWithSpaces((Number(this.withdraw.amount) + this.fee).toFixed(8))
-		},
-		txHistory() {
-			return this.$store.getters.getWalletTxs(this.select)
 		},
 		wallet() {
 			return this.$store.getters.getWalletByTicker(this.select)

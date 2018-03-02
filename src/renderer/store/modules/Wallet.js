@@ -4,6 +4,9 @@ import bitcoinjs from 'bitcoinjs-lib'
 import axios from 'axios'
 import Vue from 'vue'
 
+import {getBalance} from '../../lib/electrum'
+import {getCmcData} from '../../lib/coinmarketcap'
+import {getTxFromRawTx} from '../../lib/txtools'
 
 const state = {
   wallets: {
@@ -19,10 +22,11 @@ const state = {
 
 const getters = {
   getWalletByTicker: (state) => (ticker) => {
+    console.log(state.wallets[ticker]);
     return state.wallets[ticker]
   },
-  getWalletTxs: (state) => (ticker) => {
-    return state.wallets[ticker].txs
+  getWalletTxs: (state,getters) => (ticker) => {
+    return getters.getWalletByTicker(ticker).txs
   },
   getWallets: (state) => {
     return state.wallets
@@ -57,17 +61,8 @@ const mutations = {
     state.wallets = {}
   },
   ADD_TX (state, {wallet, rawtx, tx_hash, height}) {
-    const address = bitcoinjs.TransactionBuilder.fromTransaction(rawtx, coins.get(wallet.ticker).network) 
-    let pubkey = bitcoinjs.ECPair.fromPublicKeyBuffer(address.inputs[0].pubKeys[0],wallet.coin.network)
-    let amount = rawtx.outs[0].value;
-    if (pubkey.getAddress() === wallet.address) {
-      amount = -amount;
-    }
-    let tx =  {
-      height: height,
-      tx_hash: tx_hash,
-      amount: amount
-    }
+    let tx = getTxFromRawTx(wallet, rawtx, tx_hash, height);
+
     let txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash }).indexOf(tx.tx_hash)
 
     if( txExists >= 0) {
@@ -80,10 +75,6 @@ const mutations = {
     Vue.set(state.wallets, wallet.ticker, wallet)
   }
 }
-
-import {getBalance} from '../../lib/electrum'
-import {getCmcData} from '../../lib/coinmarketcap'
-
 
 const actions = {
   initWallets ({commit, dispatch, rootGetters}, passphrase) {
