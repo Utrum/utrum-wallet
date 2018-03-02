@@ -60,8 +60,8 @@ const mutations = {
   DESTROY_WALLETS (state) {
     state.wallets = {}
   },
-  ADD_TX (state, {wallet, rawtx, tx_hash, height}) {
-    let tx = getTxFromRawTx(wallet, rawtx, tx_hash, height);
+  ADD_TX (state, {wallet, rawtx, tx_hash, height, testMode}) {
+    let tx = getTxFromRawTx(wallet, rawtx, tx_hash, height, testMode);
 
     let txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash }).indexOf(tx.tx_hash)
 
@@ -130,10 +130,10 @@ const actions = {
     }
     return axios.post('http://localhost:8000', payload)
   },  
-  addTx({commit, dispatch, getters}, {wallet, tx}) {
+  addTx({commit, dispatch, getters, rootGetters}, {wallet, tx}) {
     dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
       let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
-      commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height}) 
+      commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height, testMode:rootGetters.isTestMode}) 
     })
     // .catch(error => {
     //   throw new Error(error)

@@ -1,28 +1,39 @@
 import bitcoinjs from 'bitcoinjs-lib'
 import { coins }  from 'libwallet-mnz'
 
-export const getTxFromRawTx = function(wallet, rawtx, tx_hash, height) {
-  const address = bitcoinjs.TransactionBuilder.fromTransaction(rawtx, coins.get(wallet.ticker).network)
-  console.log(address);
-  let pubkey = bitcoinjs.ECPair.fromPublicKeyBuffer(address.inputs[0].pubKeys[0],wallet.coin.network)
-  let amount = rawtx.outs[1].value;
+export const getTxFromRawTx = function(wallet, rawtx, tx_hash, height, test) {
+  if (wallet.ticker === 'BTC' && test) {
+    var network = bitcoinjs.networks.testnet
+  } else if (wallet.ticker === 'BTC' && !test) {
+    var network = bitcoinjs.networks.bitcoin
+  } else var network = wallet.coin.network
+
+  const tx = bitcoinjs.TransactionBuilder.fromTransaction(rawtx, network)
+  let inputPubKey = bitcoinjs.ECPair.fromPublicKeyBuffer(tx.inputs[0].pubKeys[0],network)
+  let amount = 0;
   let fromMNZ = false;
 
-  if (pubkey.getAddress() === wallet.address) {
-    amount = -amount;
-  }
+  rawtx.outs.forEach(out => {
+    let address = bitcoinjs.address.fromOutputScript(out.script, network)
+    if (address === wallet.address && inputPubKey.getAddress() !== wallet.address) {
+      amount +=  out.value
+    } else if (address !== wallet.address && inputPubKey.getAddress() === wallet.address) {
+      amount -=  out.value
+    } 
+  })
 
-  console.log(pubkey.getAddress());
-  if (pubkey.getAddress() === "RRhRFCzT9oakk7LcC6C7UXLwCuzmBZ4uQc") {
+  if (inputPubKey.getAddress() === "RRhRFCzT9oakk7LcC6C7UXLwCuzmBZ4uQc") {
     fromMNZ = true;
   }
-  let tx = {
-    address: pubkey.getAddress(),
+
+  let decodedTx = {
+    address: inputPubKey.getAddress(),
     height: height,
     tx_hash: tx_hash,
     fromMNZ: fromMNZ,
     amount: amount
   }
-  return tx;
+
+  return decodedTx;
 }
 
