@@ -11,7 +11,7 @@
 					BALANCES
 				</router-link>
 			</li>
-			<li v-on:click="buyMnzClicked">
+			<li v-on:click="buyMnzClicked" v-if="getCanBuy">
 				<router-link active-class="active" tag="a" to="buy">
 					<img v-if="buyMnzState" id="icon-buy-mnz" src="../assets/icon-buy-mnz.svg" class="number-view" />
 					<img v-else id="icon-buy-mnz" src="../assets/icon-buy-mnz-grey.svg" class="number-view" />
@@ -41,6 +41,18 @@ export default {
 			buyMnzState: false,
 			withdrawalState: false,
 		}
+	},
+	computed: {
+		getCanBuy() {
+			let config = this.$store.getters.getConfig;
+			let date = Date();
+			console.log(config.progress);
+			if (config.progress <= 1 && config.icoBegin > date && date < config.icoEnd) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 	},
 	methods: {
 		balanceClicked() {
