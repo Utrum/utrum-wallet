@@ -1,6 +1,3 @@
-import modules from './index'
-
-
 const state = {
   loggedIn: false,
   testMode: true,
@@ -36,6 +33,7 @@ const mutations = {
 
 const actions = {
   login ({ commit, dispatch }, passphrase) {
+    dispatch('updateConfig', {}, {root: true})
     commit('SET_PASSPHRASE', passphrase)
     commit('USER_LOGIN')
   },

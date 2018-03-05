@@ -300,7 +300,13 @@ export default {
 			}
 		}
 	},
+	mounted() {
+		console.log(this.getConfig);
+	},
 	computed: {
+		getConfig() {
+			return this.$store.getters.getConfig;
+		},
 		getTotalPriceWithFee() {
 			return this.numberWithSpaces((Number(this.withdraw.amount) + this.fee).toFixed(8))
 		},
