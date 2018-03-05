@@ -182,8 +182,6 @@ import { Wallet } from 'libwallet-mnz'
 import bitcoinjs from 'bitcoinjs-lib'
 
 var sb = require('satoshi-bitcoin')
-var pubKeyKmd = "867LMaq21Y7bUr4CUmPGTkjPsFPjYG1ccBoWDNy6cGBErrCd2o";
-var pubKeyBTC = "";
 
 export default {
 	name: 'buy',
@@ -293,12 +291,12 @@ export default {
 				// let pubkey = bitcoinjs.ECPair.fromPublicKeyBuffer(Buffer(pubKeyKmd))
 				// let address = pubkey.getAddress(wallet.coin.network)
 
-				// let address0FromXpub = bitcoinjs.HDNode.fromBase58('xpub6ALmwQwJkbCoTSCg1AnbRNW1opRMbzh6cfYBF3MCzBdQR7HfvXkEyHFt5quuPNkPehvgMgfp9s4Qm6MPT2zxVRdTwJoCc8WZvfyu2fwFfbM', wallet.coin.network)
+				let address0FromXpub = bitcoinjs.HDNode.fromBase58('xpub6ALmwQwJkbCoTSCg1AnbRNW1opRMbzh6cfYBF3MCzBdQR7HfvXkEyHFt5quuPNkPehvgMgfp9s4Qm6MPT2zxVRdTwJoCc8WZvfyu2fwFfbM', wallet.coin.network)
 
-				// let key0 = address0FromXpub.derivePath("0/0").keyPair
-				// let address = address0FromXpub.derivePath("0/0").keyPair.getAddress()
-				// console.log(address);
-				let tx = wallet.prepareTx(response.data, "RCzjiCPntvpujtn4fmi9Uw4M6ZA1vrtgLJ", sb.toSatoshi(self.getTotalPrice, self.fee))
+				let key0 = address0FromXpub.derivePath("0/0").keyPair;
+				let address = address0FromXpub.derivePath("0/0").keyPair.getAddress();
+
+				let tx = wallet.prepareTx(response.data, address, sb.toSatoshi(self.getTotalPrice, self.fee))
 				console.log(wallet, tx)
 				self.$http.post('http://localhost:8000', {
 					ticker: this.select,
