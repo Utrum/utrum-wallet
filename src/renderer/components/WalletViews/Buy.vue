@@ -246,7 +246,9 @@ export default {
 			this.object = payload;
 		},
 		totalPrice() {
+			let config = this.getConfig;
 			let price = 0;
+			console.log(config);
 			let priceKMD = 0.00042709;
 			if (this.select === 'BTC') {
 				price = 1/15000;
@@ -308,6 +310,9 @@ export default {
     }
   },
 	computed: {
+		getConfig() {
+			return this.$store.getters.getConfig;
+		},
 		wallet() {
 			return this.$store.getters.getWalletByTicker(this.select)
 		},
