@@ -18,7 +18,7 @@ const mutations = {
 
 const actions = {
   updateConfig ({ commit, dispatch }) {
-    axios.get('https://gist.githubusercontent.com/askz/90a7cd878374de4b088c002df05e526d/raw/35c9d6dd3fa5d7fe92f42aaef251a43c50d94fbc/conf.json', {
+    axios.get('https://gist.githubusercontent.com/Kiruel/216ee8a27116a3bcf2e343dad07dc85b/raw/60bc30746358b608c9e862195a034bc1e3c272dd/conf.json', {
       }).then(response => {
         commit('SET_CONFIG', response.data);
     });

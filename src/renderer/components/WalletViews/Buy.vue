@@ -121,8 +121,8 @@
 							<div class="col-custom"><hr></div>
 						</div>
 					</div>
-					<div class="row">
-						<span class="subTitle">Plus (20%) bonus</span>
+					<div class="row" v-if="isBonus">
+						<span class="subTitle">Plus ({{currentBonus*100}}%) bonus</span>
 						<div class="col-custom row-main-item">
 							<span class="col-custom"><span class="selectAmount">{{getPackage+(getPackage * currentBonus)}} </span>MNZ</span>
 							<div class="col-custom"><hr></div>
@@ -185,7 +185,7 @@ export default {
 	data() {
 		return {
 			searchable: false,
-			currentBonus: 0.2,
+			currentBonus: 0,
 			blocks: 1,
 			fee: 0,
 			feeSpeed: 'veryFast',
@@ -230,6 +230,7 @@ export default {
 			});	
 		},
 		buyMnzModal () {
+			let bonus = this.isBonus;
 			if (this.select !== 'KMD')
 				this.callEstimateFee(this.fees[0].blocks);
 			else
@@ -352,6 +353,35 @@ export default {
 		},
 		getTotalPriceWithFee() {
 			return this.numberWithSpaces((this.getTotalPrice + this.fee).toFixed(8))
+		},
+		isBonus() {
+			let date = new Date().getTime();
+			let bonuses = this.$store.getters.getConfig.bonuses;
+			
+			for (var k in bonuses) {
+        if (bonuses.hasOwnProperty(k)) {
+					 if (this.select === k) {
+						for (var j in bonuses[k]) {
+							if (bonuses[k].hasOwnProperty(j)) {
+								let dateBonusStart = bonuses[k][j][0];
+								let dateBonusEnd = bonuses[k][j][1];
+
+								if (dateBonusStart < date && date < dateBonusEnd) {
+									this.currentBonus = j / 100;
+								} else {
+									this.currentBonus = 0;
+								}
+							}
+						}
+					 }
+        }
+			}
+			
+			if (this.currentBonus == 0) {
+				return false;
+			} else {
+				return true;
+			}
 		},
 		canBuy() {
 			let mnzToBuy = this.packageMNZ;
