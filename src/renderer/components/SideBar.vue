@@ -46,7 +46,6 @@ export default {
 		getCanBuy() {
 			let config = this.$store.getters.getConfig;
 			let date = Date();
-			console.log(config.progress);
 			if (!(config.progress <= 1 && config.icoBegin > date && date < config.icoEnd)) {
 				return true;
 			} else {
