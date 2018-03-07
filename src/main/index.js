@@ -27,6 +27,7 @@ if(process.env.NODE_ENV === 'development'){
 }
 const cmd = `${joinPath(execPath, 'marketmaker')}`;
 
+import {electrumCall} from './electrum'
 
 function createWindow () {
   /**
@@ -88,7 +89,6 @@ function createWindow () {
   mainWindow.webContents.once("did-finish-load", function () {
     var http = require("http");
     var crypto = require("crypto");
-    var electrum = require('./electrum')
     var server = http.createServer(function (req, res) {
       if (req.method == 'POST') {
         const chunks = [];
@@ -105,7 +105,7 @@ function createWindow () {
               return res.end(stdout)
             });
           } else {
-            electrum.call(payload.ticker, payload.test, payload.method, payload.params, function(err, response){
+            electrumCall(payload.ticker, payload.test, payload.method, payload.params, (err, response) => {
             if (err) res.end(JSON.stringify({error: err}))
               return res.end(JSON.stringify(response))
             })

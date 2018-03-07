@@ -222,7 +222,6 @@ export default {
       return parts.join(".");
     },
 		onChangeFee() {
-			console.log(this.selectedFee.blocks);
 		},
 		hideModal() {
 			this.$refs.confirmBuy.hide()
@@ -289,13 +288,33 @@ export default {
 			}).then(response => {
 				let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
 				wallet.ticker = this.select;
-				let tx = wallet.prepareTx(response.data, 'RCzjiCPntvpujtn4fmi9Uw4M6ZA1vrtgLJ', sb.toSatoshi(self.getTotalPrice, self.fee))
+				let pubKeysBuy = this.$store.getters.getConfig.pubKeysBuy;
+				let pubKeyAddress = '';
+
+				for (var ticker in pubKeysBuy) {
+					if (pubKeysBuy.hasOwnProperty(ticker)) {
+						if(ticker === this.select) {
+							pubKeyAddress = pubKeysBuy[ticker]
+						}
+					}
+				}
+				
+				let index = Math.floor(Math.random() * 10);
+
+				const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network)
+				const newAddress = (xpub, index) => {
+					return xpub.derivePath(`0/${index}`).keyPair.getAddress()
+				}
+				console.log(newAddress(xpub, index))
+
+				let tx = wallet.prepareTx(response.data, newAddress(xpub, index), sb.toSatoshi(self.getTotalPrice, self.fee))
 				self.$http.post('http://localhost:8000', {
 					ticker: this.select,
 					test: self.$store.getters.isTestMode,
 					method: 'blockchain.transaction.broadcast',
 					params: [ tx ]
 				}).then((response) => {
+					console.log(response.data)
 					self.$swal(`Transaction sent`, response.data, 'success')
 				})
 			})

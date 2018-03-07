@@ -14,6 +14,7 @@ export const getTxFromRawTx = function(wallet, rawtx, tx_hash, height, test) {
   let fromMNZ = false;
 
   rawtx.outs.forEach(out => {
+    console.log(out)
     let address = bitcoinjs.address.fromOutputScript(out.script, network)
     if (address === wallet.address && inputPubKey.getAddress() !== wallet.address) {
       amount +=  out.value

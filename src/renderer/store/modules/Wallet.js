@@ -22,7 +22,6 @@ const state = {
 
 const getters = {
   getWalletByTicker: (state) => (ticker) => {
-    console.log(state.wallets[ticker]);
     return state.wallets[ticker]
   },
   getWalletTxs: (state,getters) => (ticker) => {
