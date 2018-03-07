@@ -17,6 +17,10 @@ export default {
 
     }
   },
+  created() {
+    this.$store.dispatch("startUpdateBalances")
+    this.$store.dispatch("startUpdateConfig")
+  },
   computed: {
     userLoggedIn() {
       return this.$store.state.User.loggedIn

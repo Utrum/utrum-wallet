@@ -36,6 +36,10 @@ const getters = {
     });
 
     return totalBalanceUsd;
+  },
+  getBalanceByTicker: (state) => (ticker) => {
+    console.log()
+    return state.wallets[ticker].balance
   }
 }
 
@@ -86,7 +90,7 @@ import {getCmcData} from '../../lib/coinmarketcap'
 
 
 const actions = {
-  initWallets ({commit, dispatch, rootGetters}, passphrase) {
+  initWallets ({commit, dispatch, rootGetters}) {
     if(Object.keys(state.wallets).length > 0) 
       dispatch('destroyWallets')
     commit('SET_CALCULATING', true)
@@ -94,22 +98,28 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.post('http://localhost:8000', {
         method: 'generateaddress',
-        params: [ passphrase ]
+        params: [ rootGetters.passphrase ]
         }).then(response => {
+          dispatch('setPrivKey', response.data.privkey);
           coins.all.forEach(coin => {
             let payload = {
               coin: Object.assign({}, coin),
-              passphrase: passphrase
+              passphrase: rootGetters.passphrase
             }
-            commit('INIT_WALLET', {payload:payload, privkey:response.data.privkey, testMode: rootGetters.isTestMode})
-            dispatch('updateBalance', state.wallets[payload.coin.ticker])
+            commit('INIT_WALLET', {payload:payload, privkey:rootGetters.privKey, testMode: rootGetters.isTestMode})
           })
+          dispatch('updateAllBalances');
       });
     })
     commit('SET_CALCULATING', false)
   },
   destroyWallets ({commit}) {
     commit('DESTROY_WALLETS')
+  },
+  updateAllBalances({commit, dispatch, getters, rootGetters}) {
+    Object.keys(getters.getWallets).forEach((ticker) => {
+        dispatch('updateBalance', getters.getWallets[ticker])
+    });
   },
   updateBalance({commit, getters, rootGetters}, wallet) {
     getBalance(wallet, rootGetters.isTestMode).then(response => {
@@ -130,6 +140,38 @@ const actions = {
     })
     commit('UPDATE_BALANCE', wallet)
   },
+  startUpdateBalances ({ dispatch, rootGetters }) {
+    let min = 20,
+    max = 50;
+    let rand = Math.floor(Math.random() * (max - min + 1) + min);
+    let interval = setInterval(() => {
+      if (rootGetters.passphrase !== '') {
+        dispatch('updateAllBalances');
+      }
+      dispatch('startUpdateBalances');
+      clearTimeout(interval);
+    }, rand * 1000)
+  },
+  startUpdateConfig ({ dispatch, rootGetters }) {
+    let min = 1800,
+    max = 3600;
+    let rand = Math.floor(Math.random() * (max - min + 1) + min);
+    let interval = setInterval(() => {
+      dispatch('updateConfig');
+      dispatch('startUpdateConfig');
+      clearTimeout(interval);
+    }, rand * 1000)
+  },
+  startUpdateHistory ({ dispatch, rootGetters }, wallet) {
+    let min = 10,
+    max = 30;
+    let rand = Math.floor(Math.random() * (max - min + 1) + min);
+    let interval = setInterval(() => {
+      dispatch('buildTxHistory', wallet);
+      dispatch('startUpdateHistory');
+      clearTimeout(interval);
+    }, rand * 1000)
+  },
   getRawTx({commit, rootGetters}, {ticker, tx}) {
     let payload = {
       ticker: ticker,
@@ -149,6 +191,7 @@ const actions = {
     // })
   },
   buildTxHistory({commit, dispatch, getters, rootGetters}, wallet) {
+    dispatch('startUpdateHistory', wallet)
     axios.post('http://localhost:8000', {
       ticker: wallet.ticker,
       test: rootGetters.isTestMode,
