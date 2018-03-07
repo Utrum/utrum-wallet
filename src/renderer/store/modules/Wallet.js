@@ -38,7 +38,6 @@ const getters = {
     return totalBalanceUsd;
   },
   getBalanceByTicker: (state) => (ticker) => {
-    console.log()
     return state.wallets[ticker].balance
   }
 }
@@ -162,12 +161,14 @@ const actions = {
       clearTimeout(interval);
     }, rand * 1000)
   },
-  startUpdateHistory ({ dispatch, rootGetters }, wallet) {
-    let min = 10,
-    max = 30;
+  startUpdateHistory ({ dispatch, getters, rootGetters }) {
+    let min = 60,
+    max = 120;
     let rand = Math.floor(Math.random() * (max - min + 1) + min);
     let interval = setInterval(() => {
-      dispatch('buildTxHistory', wallet);
+      Object.keys(getters.getWallets).forEach((ticker) => {
+        dispatch('buildTxHistory', getters.getWallets[ticker])
+      });
       dispatch('startUpdateHistory');
       clearTimeout(interval);
     }, rand * 1000)
@@ -182,16 +183,18 @@ const actions = {
     return axios.post('http://localhost:8000', payload)
   },  
   addTx({commit, dispatch, getters}, {wallet, tx}) {
-    dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
-      let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
-      commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height}) 
-    })
-    // .catch(error => {
-    //   throw new Error(error)
-    // })
+    let txExists = getters.getWallets[wallet.ticker].txs.map(t => { return t.tx_hash }).indexOf(tx.tx_hash)
+
+    if( txExists >= 0) {
+      console.log('tx already exists')
+    } else {
+      dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
+        let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
+        commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height}) 
+      })
+    }
   },
   buildTxHistory({commit, dispatch, getters, rootGetters}, wallet) {
-    dispatch('startUpdateHistory', wallet)
     axios.post('http://localhost:8000', {
       ticker: wallet.ticker,
       test: rootGetters.isTestMode,
