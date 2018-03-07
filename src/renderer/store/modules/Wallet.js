@@ -40,6 +40,9 @@ const getters = {
     });
 
     return totalBalanceUsd;
+  },
+  getBalanceByTicker: (state) => (ticker) => {
+    return state.wallets[ticker].balance
   }
 }
 
@@ -77,7 +80,7 @@ const mutations = {
 }
 
 const actions = {
-  initWallets ({commit, dispatch, rootGetters}, passphrase) {
+  initWallets ({commit, dispatch, rootGetters}) {
     if(Object.keys(state.wallets).length > 0) 
       dispatch('destroyWallets')
     commit('SET_CALCULATING', true)
@@ -85,22 +88,28 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.post('http://localhost:8000', {
         method: 'generateaddress',
-        params: [ passphrase ]
+        params: [ rootGetters.passphrase ]
         }).then(response => {
+          dispatch('setPrivKey', response.data.privkey);
           coins.all.forEach(coin => {
             let payload = {
               coin: Object.assign({}, coin),
-              passphrase: passphrase
+              passphrase: rootGetters.passphrase
             }
-            commit('INIT_WALLET', {payload:payload, privkey:response.data.privkey, testMode: rootGetters.isTestMode})
-            dispatch('updateBalance', state.wallets[payload.coin.ticker])
+            commit('INIT_WALLET', {payload:payload, privkey:rootGetters.privKey, testMode: rootGetters.isTestMode})
           })
+          dispatch('updateAllBalances');
       });
     })
     commit('SET_CALCULATING', false)
   },
   destroyWallets ({commit}) {
     commit('DESTROY_WALLETS')
+  },
+  updateAllBalances({commit, dispatch, getters, rootGetters}) {
+    Object.keys(getters.getWallets).forEach((ticker) => {
+        dispatch('updateBalance', getters.getWallets[ticker])
+    });
   },
   updateBalance({commit, getters, rootGetters}, wallet) {
     getBalance(wallet, rootGetters.isTestMode).then(response => {
@@ -121,6 +130,45 @@ const actions = {
     })
     commit('UPDATE_BALANCE', wallet)
   },
+  startUpdates ({dispatch}) {
+    dispatch("startUpdateBalances")
+    dispatch("startUpdateConfig")
+    dispatch('startUpdateHistory')
+  },
+  startUpdateBalances ({ dispatch, rootGetters }) {
+    let min = 20,
+    max = 50;
+    let rand = Math.floor(Math.random() * (max - min + 1) + min);
+    let interval = setInterval(() => {
+      if (rootGetters.passphrase !== '') {
+        dispatch('updateAllBalances');
+      }
+      dispatch('startUpdateBalances');
+      clearTimeout(interval);
+    }, rand * 1000)
+  },
+  startUpdateConfig ({ dispatch, rootGetters }) {
+    let min = 1800,
+    max = 3600;
+    let rand = Math.floor(Math.random() * (max - min + 1) + min);
+    let interval = setInterval(() => {
+      dispatch('updateConfig');
+      dispatch('startUpdateConfig');
+      clearTimeout(interval);
+    }, rand * 1000)
+  },
+  startUpdateHistory ({ dispatch, getters, rootGetters }) {
+    let min = 60,
+    max = 120;
+    let rand = Math.floor(Math.random() * (max - min + 1) + min);
+    let interval = setInterval(() => {
+      Object.keys(getters.getWallets).forEach((ticker) => {
+        dispatch('buildTxHistory', getters.getWallets[ticker])
+      });
+      dispatch('startUpdateHistory');
+      clearTimeout(interval);
+    }, rand * 1000)
+  },
   getRawTx({commit, rootGetters}, {ticker, tx}) {
     let payload = {
       ticker: ticker,
@@ -130,14 +178,17 @@ const actions = {
     }
     return axios.post('http://localhost:8000', payload)
   },  
-  addTx({commit, dispatch, getters, rootGetters}, {wallet, tx}) {
-    dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
-      let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
-      commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height, testMode:rootGetters.isTestMode}) 
-    })
-    // .catch(error => {
-    //   throw new Error(error)
-    // })
+  addTx({commit, dispatch, getters}, {wallet, tx}) {
+    let txExists = getters.getWallets[wallet.ticker].txs.map(t => { return t.tx_hash }).indexOf(tx.tx_hash)
+
+    if( txExists >= 0) {
+      console.log('tx already exists')
+    } else {
+      dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
+        let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
+        commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height}) 
+      })
+    }
   },
   buildTxHistory({commit, dispatch, getters, rootGetters}, wallet) {
     axios.post('http://localhost:8000', {

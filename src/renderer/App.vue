@@ -17,6 +17,9 @@ export default {
 
     }
   },
+  created() {
+    this.$store.dispatch("startUpdates")
+  },
   computed: {
     userLoggedIn() {
       return this.$store.state.User.loggedIn

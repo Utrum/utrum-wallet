@@ -67,7 +67,7 @@
 						<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
 							<img src="@/assets/icon-less.svg"/>
 						</a>
-						<input id="package-value" class="col-center" v-model.number="packageMNZ" placeholder="0" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
+						<input id="package-value" class="col-center" v-model.number="getPackage" placeholder="0" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
 						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
 							<img src="@/assets/icon-more.svg"/>
 						</a>
@@ -98,7 +98,7 @@
 						MNZ
 					</div>
 					<div class="value">
-						{{packageMNZ}}
+						{{getPackage}}
 					</div>
 				</div>
 			</div>
@@ -122,14 +122,14 @@
 					<div class="row">
 						<span class="subTitle">Amount to buy</span>
 						<div class="col-custom row-main-item">
-							<span class="col-custom"><span class="selectAmount">{{packageMNZ}} </span>MNZ</span>
+							<span class="col-custom"><span class="selectAmount">{{getPackage}} </span>MNZ</span>
 							<div class="col-custom"><hr></div>
 						</div>
 					</div>
-					<div class="row">
-						<span class="subTitle">Plus (20%) bonus</span>
+					<div class="row" v-if="isBonus">
+						<span class="subTitle">Plus ({{currentBonus*100}}%) bonus</span>
 						<div class="col-custom row-main-item">
-							<span class="col-custom"><span class="selectAmount">{{packageMNZ+(packageMNZ * currentBonus)}} </span>MNZ</span>
+							<span class="col-custom"><span class="selectAmount">{{getPackage+(getPackage * currentBonus)}} </span>MNZ</span>
 							<div class="col-custom"><hr></div>
 						</div>
 					</div>
@@ -193,7 +193,7 @@ export default {
 	data() {
 		return {
 			searchable: false,
-			currentBonus: 0.2,
+			currentBonus: 0,
 			blocks: 1,
 			fee: 0,
 			feeSpeed: 'veryFast',
@@ -208,9 +208,8 @@ export default {
 				'KMD'
 			],
 			select : 'BTC',
-			packageMNZ: 200,
-			packageIncrement: 200,
-			packageMAX: 100000,
+			packageMNZ: 100000000000,
+			packageIncrement: 50000000000,
 		}
 	},
 	mounted() {
@@ -239,6 +238,7 @@ export default {
 			});	
 		},
 		buyMnzModal () {
+			let bonus = this.isBonus;
 			if (this.select !== 'KMD')
 				this.callEstimateFee(this.fees[0].blocks);
 			else
@@ -254,25 +254,27 @@ export default {
 			this.object = payload;
 		},
 		totalPrice() {
+			let config = this.getConfig;
 			let price = 0;
-			let priceKMD = 0.00042709;
+			let priceMNZ = config.BTCPrices.MNZ;
+			let priceKMD = config.BTCPrices.KMD;
 			if (this.select === 'BTC') {
-				price = 1/15000;
+				price = priceMNZ;
 			} else if (this.select === 'KMD') {
-				price = (1/15000)/priceKMD;
+				price = sb.toSatoshi(priceMNZ/priceKMD);
 			}
-			return Number((this.packageMNZ * price).toFixed(8));
+			return sb.toBitcoin(sb.toBitcoin(Number(this.packageMNZ)) * price);
 		},
 		valueChange(value) {
 			this.select = value
 		},
 		incrementPackage() {
-			if (this.packageMNZ <= this.packageMAX - this.packageIncrement) {
+			if (this.packageMNZ <= this.getMaxBuy - this.packageIncrement) {
 				this.packageMNZ += this.packageIncrement;
 			}
 		},
 		decrementPackage() {
-			if (this.packageMNZ > 0) {
+			if (this.packageMNZ > this.getMinBuy) {
 				this.packageMNZ -= this.packageIncrement;
 			}
 		},
@@ -287,17 +289,7 @@ export default {
 			}).then(response => {
 				let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
 				wallet.ticker = this.select;
-
-				// let pubkey = bitcoinjs.ECPair.fromPublicKeyBuffer(Buffer(pubKeyKmd))
-				// let address = pubkey.getAddress(wallet.coin.network)
-
-				let address0FromXpub = bitcoinjs.HDNode.fromBase58('xpub6ALmwQwJkbCoTSCg1AnbRNW1opRMbzh6cfYBF3MCzBdQR7HfvXkEyHFt5quuPNkPehvgMgfp9s4Qm6MPT2zxVRdTwJoCc8WZvfyu2fwFfbM', wallet.coin.network)
-
-				let key0 = address0FromXpub.derivePath("0/0").keyPair;
-				let address = address0FromXpub.derivePath("0/0").keyPair.getAddress();
-
-				let tx = wallet.prepareTx(response.data, address, sb.toSatoshi(self.getTotalPrice, self.fee))
-				console.log(wallet, tx)
+				let tx = wallet.prepareTx(response.data, 'RCzjiCPntvpujtn4fmi9Uw4M6ZA1vrtgLJ', sb.toSatoshi(self.getTotalPrice, self.fee))
 				self.$http.post('http://localhost:8000', {
 					ticker: this.select,
 					test: self.$store.getters.isTestMode,
@@ -316,10 +308,10 @@ export default {
     packageMNZ: function (newValue, oldValue) {
 			let value = Number(newValue);
 
-			if (value <= this.packageMAX - this.packageIncrement) {
+			if (value <= this.getMaxBuy - this.packageIncrement) {
 				this.packageMNZ = value;
 			} else {
-				this.packageMNZ = this.packageMAX;
+				this.packageMNZ = this.getMaxBuy;
 			}
 			if (value <= 0) {
 				this.packageMNZ = 0;
@@ -327,6 +319,33 @@ export default {
     }
   },
 	computed: {
+		getPackage: {
+			// getter
+			get: function () {
+				return sb.toBitcoin(this.packageMNZ);
+			},
+			// setter
+			set: function (newValue) {
+				let value = sb.toSatoshi(newValue);
+
+				if (value >= this.getMaxBuy) {
+					this.packageMNZ = this.getMaxBuy;
+				} else if (value <= this.getMinBuy || value <= 0) {
+					this.packageMNZ = this.getMinBuy;
+				} else {
+					this.packageMNZ = value;
+				}
+			}
+		},
+		getMinBuy() {
+			return this.$store.getters.getConfig.minBuy
+		},
+		getMaxBuy() {
+			return this.$store.getters.getConfig.maxBuy
+		},
+		getConfig() {
+			return this.$store.getters.getConfig;	
+		},
 		wallet() {
 			return this.$store.getters.getWalletByTicker(this.select)
 		},
@@ -344,6 +363,35 @@ export default {
 		},
 		getTotalPriceWithFee() {
 			return this.numberWithSpaces((this.getTotalPrice + this.fee).toFixed(8))
+		},
+		isBonus() {
+			let date = new Date().getTime();
+			let bonuses = this.$store.getters.getConfig.bonuses;
+			
+			for (var k in bonuses) {
+        if (bonuses.hasOwnProperty(k)) {
+					 if (this.select === k) {
+						for (var j in bonuses[k]) {
+							if (bonuses[k].hasOwnProperty(j)) {
+								let dateBonusStart = bonuses[k][j][0];
+								let dateBonusEnd = bonuses[k][j][1];
+
+								if (dateBonusStart < date && date < dateBonusEnd) {
+									this.currentBonus = j / 100;
+								} else {
+									this.currentBonus = 0;
+								}
+							}
+						}
+					 }
+        }
+			}
+			
+			if (this.currentBonus == 0) {
+				return false;
+			} else {
+				return true;
+			}
 		},
 		canBuy() {
 			let mnzToBuy = this.packageMNZ;

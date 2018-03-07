@@ -1,10 +1,8 @@
-import modules from './index'
-
-
 const state = {
   loggedIn: false,
   testMode: true,
-  passphrase: ''
+  passphrase: '',
+  privKey: ''
 }
 
 const getters = {
@@ -16,6 +14,9 @@ const getters = {
   },
   isTestMode: (state) => {
     return state.testMode
+  },
+  privKey: (state) => {
+    return state.privKey
   }
 }
 
@@ -31,11 +32,18 @@ const mutations = {
   },
   SET_TESTMODE (state, testMode) {
     state.testMode = testMode
+  },
+  SET_PRIVKEY (state, privKey) {
+    state.privKey = privKey
   }
 }
 
 const actions = {
+  setPrivKey({ commit }, privKey) {
+    commit('SET_PRIVKEY', privKey)
+  },
   login ({ commit, dispatch }, passphrase) {
+    dispatch('updateConfig', {}, {root: true})
     commit('SET_PASSPHRASE', passphrase)
     commit('USER_LOGIN')
   },

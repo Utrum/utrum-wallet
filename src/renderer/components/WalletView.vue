@@ -15,7 +15,7 @@ export default {
     'sidebar': require('@/components/SideBar').default
   },
   created() {
-    this.$store.dispatch('initWallets', this.$store.getters.passphrase)
+    this.$store.dispatch('initWallets')
     this.$router.push('balance')
   }
 }
