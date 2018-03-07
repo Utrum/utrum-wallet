@@ -18,9 +18,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("startUpdateBalances")
-    this.$store.dispatch("startUpdateConfig")
-    this.$store.dispatch('startUpdateHistory')
+    this.$store.dispatch("startUpdates")
   },
   computed: {
     userLoggedIn() {

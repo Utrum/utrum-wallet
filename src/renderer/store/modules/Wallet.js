@@ -139,6 +139,11 @@ const actions = {
     })
     commit('UPDATE_BALANCE', wallet)
   },
+  startUpdates ({dispatch}) {
+    dispatch("startUpdateBalances")
+    dispatch("startUpdateConfig")
+    dispatch('startUpdateHistory')
+  },
   startUpdateBalances ({ dispatch, rootGetters }) {
     let min = 20,
     max = 50;
