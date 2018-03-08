@@ -1,8 +1,8 @@
 <template>
     <div>
         <b-table id="txTable" thead-tr-class="theadTrClass" tbody-tr-class="theadClass" tbody-class="cardTable" thead-class="theadClass" hover :sort-desc.sync="sortDesc" :sort-by.sync="sortBy" :fields="fields" :items="txHistory">
-                <template slot="tx_hash" slot-scope="row">
-                    <explorer type="tx" :ticker="coin.ticker" :value="row.value"></explorer>
+                <template slot="origin" slot-scope="row">
+                    <span>{{row.value.ticker}}</span>
                 </template>
                 <template slot="amount" slot-scope="row">
                     <div :class="getColorAmount(row.value)">
@@ -51,34 +51,50 @@ export default {
 		},
 		txHistory() {
             if (this.fromTokenSale) {
-                return this.$store.getters.getWalletTxs('MNZ').filter(el => el.fromMNZ);;
+                return this.$store.getters.getWalletTxs('MNZ').filter(el => el.fromMNZ).filter(el => el.origin.ticker == this.coin.ticker);
             } else {
 			    return this.$store.getters.getWalletTxs(this.coin.ticker)
             }
 		},
         fields()  {
-			return [
-				{
+            if (this.fromTokenSale) {
+                return [
+                    {
+                        key: 'time',
+                        label: 'Date / Hours',
+                        sortable: true,
+                    },
+                    {
+                        key: 'height',
+                        label: 'Block Height',
+                        sortable: true,
+                    },
+                    {
+                        key: 'origin',
+                        label: `ticker`,
+                        sortable: true
+                    },
+                    {
+                        key: 'amount',
+                        label: `Amount (MNZ)`,
+                        sortable: true
+                    },
+                ]
+            } else {
+                return [
+                {
                     key: 'height',
                     label: 'Block Height',
                     sortable: true,
-				},
-				{
-                    key: 'tx_hash',
-                    label: 'Tx Hash',
-                    sortable: true
-				},
-				{
+                },
+                {
                     key: 'amount',
                     label: `Amount (${this.coin.ticker})`,
                     sortable: true
-				},
-				{
-                    key: 'address',
-                    label: `address`,
-                    sortable: true
-				}
-			]
+                },
+            ]
+            }
+			
 		},
     }
 }

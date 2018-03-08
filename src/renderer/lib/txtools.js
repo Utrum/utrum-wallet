@@ -1,7 +1,7 @@
 import bitcoinjs from 'bitcoinjs-lib'
 import { coins }  from 'libwallet-mnz'
 
-export const getTxFromRawTx = function(wallet, rawtx, tx_hash, height, test) {
+export const getTxFromRawTx = function(wallet, rawtx, transaction, tx_hash, height, test) {
   if (wallet.ticker === 'BTC' && test) {
     var network = bitcoinjs.networks.testnet
   } else if (wallet.ticker === 'BTC' && !test) {
@@ -9,32 +9,49 @@ export const getTxFromRawTx = function(wallet, rawtx, tx_hash, height, test) {
   } else var network = wallet.coin.network
 
   const tx = bitcoinjs.TransactionBuilder.fromTransaction(rawtx, network)
-  let inputPubKey = bitcoinjs.ECPair.fromPublicKeyBuffer(tx.inputs[0].pubKeys[0],network)
-  let amount = 0;
-  let fromMNZ = false;
+  console.log(tx);
 
-  rawtx.outs.forEach(out => {
-    console.log(out)
-    let address = bitcoinjs.address.fromOutputScript(out.script, network)
-    if (address === wallet.address && inputPubKey.getAddress() !== wallet.address) {
-      amount +=  out.value
-    } else if (address !== wallet.address && inputPubKey.getAddress() === wallet.address) {
-      amount -=  out.value
-    } 
-  })
+  if (tx.inputs[0].pubKeys[0] !== undefined) {
+    let inputPubKey = bitcoinjs.ECPair.fromPublicKeyBuffer(tx.inputs[0].pubKeys[0],network)
+    let amount = 0;
+    let fromMNZ = false;
+    let origin = '';
+    
+    rawtx.outs.forEach(out => {
+      if (out.value != 0) {
+        let address = bitcoinjs.address.fromOutputScript(out.script, network)
+        if (address === wallet.address && inputPubKey.getAddress() !== wallet.address) {
+          amount +=  out.value
+        } else if (address !== wallet.address && inputPubKey.getAddress() === wallet.address) {
+          amount -=  out.value
+        }      
+      } else {
+        if (bitcoinjs.script.nullData.output.decode(out.script).length != 0) {
+          let dataFromTx = bitcoinjs.script.nullData.output.decode(out.script).toString();
+          let decodedData = dataFromTx.split('/')
+          origin = {
+            ticker : decodedData[0],
+            txHash : decodedData[1]
+          }
+          fromMNZ = true;
+        }
+      }
+    })
 
-  if (inputPubKey.getAddress() === "RRhRFCzT9oakk7LcC6C7UXLwCuzmBZ4uQc") {
-    fromMNZ = true;
+    let decodedTx = {
+      address: inputPubKey.getAddress(),
+      height: height,
+      tx_hash: tx_hash,
+      fromMNZ: fromMNZ,
+      time: transaction.time,
+      origin,
+      amount: amount
+    }
+
+    return decodedTx;
+  } else {
+    return null;
   }
-
-  let decodedTx = {
-    address: inputPubKey.getAddress(),
-    height: height,
-    tx_hash: tx_hash,
-    fromMNZ: fromMNZ,
-    amount: amount
-  }
-
-  return decodedTx;
+  
 }
 

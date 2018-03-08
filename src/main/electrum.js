@@ -15,7 +15,11 @@ Object.keys(coins.all).forEach(coin => {
     clients[ticker] = new Client(parseInt(electrumServer.port), electrumServer.host);
   })
 })
-console.log(clients)
+
+
+Object.keys(clients).forEach((ticker) => {
+  clients[ticker].call('server.version', ["monaize", "1.2"])
+})
 
 export const  electrumCall = function(ticker, test, method, params, done) {
   if(!ticker || !method || !params) throw new Error('ERROR: Missing arguments')

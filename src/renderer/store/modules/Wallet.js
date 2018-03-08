@@ -62,15 +62,16 @@ const mutations = {
   DESTROY_WALLETS (state) {
     state.wallets = {}
   },
-  ADD_TX (state, {wallet, rawtx, tx_hash, height, testMode}) {
-    let tx = getTxFromRawTx(wallet, rawtx, tx_hash, height, testMode);
-
-    let txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash }).indexOf(tx.tx_hash)
-
-    if( txExists >= 0) {
-      console.log('tx already exists')
-    } else {
-      state.wallets[wallet.ticker].txs.unshift(tx)
+  ADD_TX (state, {wallet, rawtx, transaction, tx_hash, height, testMode}) {
+    let tx = getTxFromRawTx(wallet, rawtx, transaction, tx_hash, height, testMode);
+      if (tx != null) {
+        let txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash }).indexOf(tx.tx_hash)
+        
+        if( txExists >= 0) {
+          console.log('tx already exists')
+        } else {
+          state.wallets[wallet.ticker].txs.unshift(tx)
+        }
     }
   },
   UPDATE_BALANCE (state, wallet) {
@@ -112,7 +113,6 @@ const actions = {
   },
   updateBalance({commit, getters, rootGetters}, wallet) {
     getBalance(wallet, rootGetters.isTestMode).then(response => {
-      // wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance_unconfirmed = sb.toBitcoin(response.data.unconfirmed);
       if (wallet.coin.name !== "monaize") {
@@ -173,7 +173,7 @@ const actions = {
       ticker: ticker,
       test: rootGetters.isTestMode,
       method: 'blockchain.transaction.get',
-      params: [ tx.tx_hash ]
+      params: {"tx_hash":tx.tx_hash, "verbose":true}
     }
     return axios.post('http://localhost:8000', payload)
   },  
@@ -184,8 +184,9 @@ const actions = {
       console.log('tx already exists')
     } else {
       dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
-        let decodedTx = bitcoinjs.Transaction.fromHex(response.data)
-        commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, tx_hash:tx.tx_hash, height:tx.height}) 
+        console.log(response.data);
+        let decodedTx = bitcoinjs.Transaction.fromHex(response.data.hex)
+        commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, transaction:response.data, tx_hash:tx.tx_hash, height:tx.height}) 
       })
     }
   },
