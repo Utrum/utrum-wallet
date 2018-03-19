@@ -112,7 +112,7 @@
 
 		</div>
 
-		<div id="historyMnzBuy">
+		<div id="historyMnzBuy" v-if="isHistory()">
 			<h3>TRANSACTIONS</h3>
 			<transaction-history :fromTokenSale="true" :coin="wallet.coin"></transaction-history>
 		</div>
@@ -220,6 +220,14 @@ export default {
 		this.selectFee = this.fees[0].label;
 	},
 	methods: {
+		isHistory() {
+			let tx = this.$store.getters.getWalletTxs(this.select);
+			if (tx != null && tx.length > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 		numberWithSpaces(x) {
       var parts = x.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");

@@ -173,7 +173,7 @@ const actions = {
       ticker: ticker,
       test: rootGetters.isTestMode,
       method: 'blockchain.transaction.get',
-      params: {"tx_hash":tx.tx_hash, "verbose":true}
+      params: [tx.tx_hash, true]
     }
     return axios.post('http://localhost:8000', payload)
   },  
@@ -184,7 +184,6 @@ const actions = {
       console.log('tx already exists')
     } else {
       dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
-        console.log(response.data);
         let decodedTx = bitcoinjs.Transaction.fromHex(response.data.hex)
         commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, transaction:response.data, tx_hash:tx.tx_hash, height:tx.height}) 
       })

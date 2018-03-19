@@ -38,12 +38,16 @@ export const getTxFromRawTx = function(wallet, rawtx, transaction, tx_hash, heig
       }
     })
 
+    let time = transaction.time
+    if (time === undefined) {
+      time = Date.now() / 1000;
+    }
     let decodedTx = {
       address: inputPubKey.getAddress(),
       height: height,
       tx_hash: tx_hash,
       fromMNZ: fromMNZ,
-      time: transaction.time,
+      time: time,
       origin,
       amount: amount
     }
