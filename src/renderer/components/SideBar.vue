@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import swal from 'sweetalert2';
+
 export default {
 	name: 'sidebar',
 	data() {
@@ -49,6 +51,7 @@ export default {
 			if (!(config.progress <= 1 && config.icoBegin > date && date < config.icoEnd)) {
 				return true;
 			} else {
+				this.$swal(`Monaize ICO`, "The Monaize ICO is now over. We would like to thank our loyal MNZ token holders for their participation.", 'info')
 				return false;
 			}
 		},
