@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Buy from '@/components/WalletViews/Buy/Buy';
 
 Vue.use(Router)
 
@@ -34,7 +35,7 @@ export default new Router({
     {
       path: '/buy',
       name: 'buy',
-      component: require('@/components/WalletViews/Buy').default
+      component: Buy
     },
     {
       path: '/withdraw',

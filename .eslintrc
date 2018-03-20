@@ -1,0 +1,4 @@
+{
+  "extends": "@monaize/eslint-config-monaize"
+}
+

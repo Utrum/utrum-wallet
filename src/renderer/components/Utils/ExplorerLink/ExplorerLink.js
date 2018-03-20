@@ -1,8 +1,3 @@
-<template>
-  <a v-b-tooltip.html.top :title="tooltipTitle" class="btn btn-copy-link btn-smartaddress" target="_blank" @click.prevent="openLink" :href="href">{{value}}</a>
-</template>
-
-<script>
 export default {
   name: 'explorer',
   props: ['ticker', 'type', 'value'],
@@ -32,11 +27,3 @@ export default {
     }
   }
 }
-</script>
-
-<style scoped>
-.btn-smartaddress {
-  font-size: 0.7em;
-  color: #687078;
-}
-</style>

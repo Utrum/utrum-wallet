@@ -26,7 +26,7 @@
 export default {
 	name: 'qrcode-modal',
 	components: {
-		'explorer': require('@/components/Utils/ExplorerLink').default,
+		'explorer': require('@/components/Utils/ExplorerLink/ExplorerLink').default,
 		'qrcode-modal' : require('@/components/Utils/QrcodeModal').default
 	},
 	props: {

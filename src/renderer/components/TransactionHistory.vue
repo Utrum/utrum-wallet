@@ -29,7 +29,7 @@ export default {
         }
     },
     components: {
-        'explorer': require('@/components/Utils/ExplorerLink').default,
+        'explorer': require('@/components/Utils/ExplorerLink/ExplorerLink').default,
     },
     methods: {
 		satoshiToBitcoin(amount) {
