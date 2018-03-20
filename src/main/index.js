@@ -1,4 +1,5 @@
 require('electron-debug')({ showDevTools: true })
+const moment = require('moment');
 
 import { app, BrowserWindow, Menu } from 'electron'
 /**

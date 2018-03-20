@@ -83,8 +83,9 @@ export default {
 			}
         },
         dateFormat(value) {
-            let dateString = moment.unix(value).format("hh:mm A DD/MM/YYYY");
-            return dateString;
+            const blockchainDateUtc = moment.utc(value*1000);
+            let dateString = moment(blockchainDateUtc).local().format("hh:mm A DD/MM/YYYY");
+            return dateString;  
         },
         getIconFromTicker(value) {
             return require('@/assets/icon-' + value + '.svg');
