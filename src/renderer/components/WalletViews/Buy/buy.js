@@ -5,12 +5,15 @@ import sb from 'satoshi-bitcoin'
 import Vue from 'vue'
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
+import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
+import bitcoinjs from 'bitcoinjs-lib'
 
 export default {
 	name: 'buy',
 	components: {
 		'select2': Select2,
 		'select-awesome': SelectAwesome,
+		'transaction-history': TransactionHistory,
 	},
 	data() {
 		return {
@@ -38,13 +41,20 @@ export default {
 		this.selectFee = this.fees[0].label;
 	},
 	methods: {
+		isHistory() {
+			let tx = this.$store.getters.getWalletTxs(this.select);
+			if (tx != null && tx.length > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 		numberWithSpaces(x) {
       var parts = x.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
       return parts.join(".");
     },
 		onChangeFee() {
-			console.log(this.selectedFee.blocks);
 		},
 		hideModal() {
 			this.$refs.confirmBuy.hide()
@@ -109,22 +119,44 @@ export default {
 				method: 'blockchain.address.listunspent',
 				params: [ this.wallet.address ]
 			}).then(response => {
-				console.log(response)
 				let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
 				wallet.ticker = this.select;
-				let tx = wallet.prepareTx(response.data, 'RCzjiCPntvpujtn4fmi9Uw4M6ZA1vrtgLJ', sb.toSatoshi(self.getTotalPrice, self.fee))
+				let pubKeysBuy = this.$store.getters.getConfig.pubKeysBuy;
+				let pubKeyAddress = '';
+
+				for (var ticker in pubKeysBuy) {
+					if (pubKeysBuy.hasOwnProperty(ticker)) {
+						if(ticker === this.select) {
+							pubKeyAddress = pubKeysBuy[ticker]
+						}
+					}
+				}
+				
+				let index = Math.floor(Math.random() * 10);
+
+				const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network)
+				const newAddress = (xpub, index) => {
+					return xpub.derivePath(`0/${index}`).keyPair.getAddress()
+				}
+				console.log(newAddress(xpub, index))
+
+				let tx = wallet.prepareTx(response.data, newAddress(xpub, index), sb.toSatoshi(self.getTotalPrice, self.fee))
 				self.$http.post('http://localhost:8000', {
 					ticker: this.select,
 					test: self.$store.getters.isTestMode,
 					method: 'blockchain.transaction.broadcast',
 					params: [ tx ]
 				}).then((response) => {
+					console.log(response.data)
 					self.$swal(`Transaction sent`, response.data, 'success')
 				})
 			})
 		}
 	},
 	watch: {
+		select: function(newValue) {
+			this.$store.dispatch('buildTxHistory', this.wallet)
+		},
     packageMNZ: function (newValue, oldValue) {
 			let value = Number(newValue);
 

@@ -1,3 +1,20 @@
+.buy-monaize {
+	background-color: white;
+	padding: 50px;
+	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+}
+
+#historyMnzBuy {
+	padding: 50px;
+	padding-top: 0px;
+}
+
+#historyMnzBuy h3 {
+	margin-top: 25px;
+	text-align: center;
+	color: rgb(151,151,151);
+}
+
 .row-custom {
 	display: flex;
 	flex-direction: row;
@@ -35,7 +52,6 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .content-buyview {
-	padding: 50px;
 	padding-bottom: 15px;
 	color: rgb(151,151,151);
 }

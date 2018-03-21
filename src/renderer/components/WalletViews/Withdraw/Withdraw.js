@@ -61,7 +61,7 @@ export default {
 			else if (this.select === 'MNZ') {
 				this.fee = 0;
 			} else {
-				this.fee = 0.0001;
+				this.fee = 10000;
 			}
 		},
 		sendToken() {
@@ -144,9 +144,7 @@ export default {
 			this.select = value
 			this.withdraw.coin = value
 
-			if (this.txHistory.length == 0) {
-				this.$store.dispatch('buildTxHistory', this.wallet)
-			}
+			this.$store.dispatch('buildTxHistory', this.wallet)
 		},
 		
 		// getRawTxAmount(tx) {
@@ -171,6 +169,7 @@ export default {
 					console.log(response)
 					let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
 					wallet.ticker = self.wallet.ticker
+					console.log(response.data)
 					let tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), sb.toSatoshi(self.fee))
 					console.log(wallet, tx)
 					self.$http.post('http://localhost:8000', {
@@ -193,10 +192,7 @@ export default {
 			return this.$store.getters.getConfig;
 		},
 		getTotalPriceWithFee() {
-			return this.numberWithSpaces((Number(this.withdraw.amount) + this.fee).toFixed(8))
-		},
-		txHistory() {
-			return this.$store.getters.getWalletTxs(this.select)
+			return this.numberWithSpaces((Number(this.withdraw.amount) + sb.toBitcoin(this.fee)).toFixed(8))
 		},
 		wallet() {
 			return this.$store.getters.getWalletByTicker(this.select)
@@ -205,6 +201,7 @@ export default {
 			return this.numberWithSpaces(this.$store.getters.getWalletByTicker(this.select).balance)
 		},
 		canWithdraw() {
+			console.log(this.getBalance);
 			return (this.withdraw.amount < this.getBalance && this.withdraw.amount > 0 && this.addressIsValid)
 		},
 		addressIsValid() {

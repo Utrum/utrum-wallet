@@ -55,7 +55,8 @@
   <div class="btn-center">
     <button @click="sendToken" :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
   </div>
-  <transaction-history id="transactionHistory" :value="wallet" :select="select"></transaction-history>
+  <h3 id="title">TRANSACTIONS</h3>
+  <transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
   <!-- <b-modal @ok="withdrawFunds()" id="confirmWithdraw" centered title="Withdraw confirmation">
     <p class="my-4">Are you sure you want to withdraw <b>{{withdraw.amount}} {{withdraw.coin}}</b> to <b>{{withdraw.address}}</b></p>
   </b-modal> -->
