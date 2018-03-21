@@ -1,0 +1,16 @@
+<div class="content-login row-main-item">
+  <img id="icon-login" src="~@/assets/icon-login-monaize.svg" height="60" class="col">
+  <span class="col">DECENTRALIZED ICO PLATFORM</span>
+  <div class="col input-login">
+    <div class="row">
+      <form id="login" class="row login" method="POST" enctype="multipart/form-data">
+        <textarea v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="passphrase" class="col" type="text" name="input-login"></textarea>
+        <button @click.prevent="validatePassPhrase()" :class="btnSendStatus" class="btn-send-enabled"><img src="~@/assets/icon-send-login.svg"></button>
+      </form>
+    </div>
+  </div>
+  <input @change="checkboxTestMode" type="checkbox" id="checkbox" v-model="testMode">
+  <label for="checkbox">Test Mode</label>
+  <button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Don't have a passphrase?</button>
+  <img class="col" id="login-background" src="~@/assets/img-login.svg">
+</div>

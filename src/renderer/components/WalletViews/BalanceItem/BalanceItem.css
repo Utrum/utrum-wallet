@@ -1,0 +1,136 @@
+.row-custom {
+  justify-content: flex-end !important;
+}
+
+#us-dollar {
+  text-align: right;
+}
+
+.modal-header {
+  text-align: center;
+  border-bottom: none !important;
+}
+
+.content .btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.row-header {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.row-title {
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.col-header {
+  flex-grow: 1;
+  margin: 0px;
+}
+
+#balance-item {
+  margin: 0;
+  margin-right: 5px;
+  font-weight: 300;
+  color: #180d39;
+}
+
+#coin-item{
+  margin: 0;
+  font-weight: 200;
+  color: #180d39;
+}
+
+.row-content {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.row-content .btn:hover{
+  color: #7c398a;
+}
+
+.row-footer {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.row-footer button{
+  padding: 0px;
+  margin: 0px;
+  background-color: black;
+  border: white;
+  border-radius: 4px;
+}
+
+.row-footer button:hover{
+  background-color: #7c398a;
+} 
+
+.row-footer button:active{
+  background-color: #7c398a;
+}
+
+.btn-inside-qrcode {
+  color: #687078;
+  font-weight: 400;
+  margin-left: 5px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: white;
+  border-radius: 3px;
+  border-left-radius: 0px;
+  border-top-left-radius: 0px 0px;
+  border-bottom-left-radius: 0px 0px;
+  width: 425px;
+  min-width: 425px;
+  text-align: center;
+}
+
+.btn-inside-qrcode:hover {
+  color: #7c398a;
+}
+
+.balance {
+  font-size: 16pt;
+  font-weight: 300;
+  width: 150px;
+}
+
+.qrcode img {
+  padding-left: 10px;
+  padding-right: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.qrcode {
+  background-color: transparent;
+  color: #7c398a;
+  font-weight: 400;
+  text-align: right;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #f3f4fc;
+  margin: 1em 0;
+  padding: 0;
+}

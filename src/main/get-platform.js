@@ -13,5 +13,7 @@ export default () => {
       return 'mac';
     case 'win32':
       return 'win';
+    default:
+      return '';
   }
 };

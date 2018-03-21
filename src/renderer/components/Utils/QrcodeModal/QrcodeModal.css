@@ -1,0 +1,71 @@
+.modal-header a:hover {
+	opacity: 0.5;
+	-webkit-transition: all 1s ease;
+	cursor: pointer;
+}
+.modal-qrcode {
+	text-align: center;
+}
+
+.vertical-alignment-helper {
+	display:table;
+	margin: auto;
+	height: 100%;
+	width: 100%;
+	pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
+}
+.vertical-align-center {
+	/* To center vertically */
+	display: table-cell;
+	vertical-align: middle;
+	pointer-events:none;
+}
+.modal-content {
+	/* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+	width:inherit;
+	max-width:inherit; /* For Bootstrap 4 - to avoid the modal window stretching full width */
+	height:inherit;
+	/* To center horizontally */
+	margin: 0 auto;
+	pointer-events: all;
+}
+
+.row-modal {
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: center;
+	align-items: center;
+}
+
+.col-modal {
+	flex-grow: 1;
+}
+
+.modal-header a {
+	color: #7c398a !important;
+}
+
+.modal-header .row {
+	justify-content: center;
+}
+
+.modal-header .glyphicon-remove {
+	padding-top: 2px;
+	padding-left: 5px;
+}
+
+.modal-body {
+	text-align: center;
+	padding: 25px;
+	padding-top: 0px;
+}
+
+.modal-body .row-modal {
+	margin-bottom: 15px;
+}
+
+#qrcode-title {
+	margin-top: 30px;
+	color: #687078;
+	font-weight: 400;
+}

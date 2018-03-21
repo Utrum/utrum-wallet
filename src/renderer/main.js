@@ -1,46 +1,43 @@
-import Vue from 'vue'
-import axios from 'axios'
+import BootstrapVue from 'bootstrap-vue';
+import VueSweetAlert from 'vue-sweetalert';
+import VueQriously from 'vue-qriously';
+import VueClipboard from 'vue-clipboard2';
+import VueQrcodeReader from 'vue-qrcode-reader';
+import Vue from 'vue';
+import axios from 'axios';
 
-import App from './App'
-import router from './router'
-import store from './store'
+import App from './App.vue';
+import router from './router';
+import store from './store';
 
-import BootstrapVue from 'bootstrap-vue'
+require('bootstrap/dist/css/bootstrap.min.css');
+const vueElectron = require('vue-electron');
+
 Vue.use(BootstrapVue);
+Vue.use(VueSweetAlert);
+Vue.use(VueQriously);
+Vue.use(VueClipboard);
+Vue.use(VueQrcodeReader);
 
-import VueSweetAlert from 'vue-sweetalert'
-Vue.use(VueSweetAlert)
 
-import VueQriously from 'vue-qriously'
-Vue.use(VueQriously)
-
-import VueClipboard from 'vue-clipboard2'
-Vue.use(VueClipboard)
-
-import VueQrcodeReader from 'vue-qrcode-reader'
-Vue.use(VueQrcodeReader)
-
-import jQuery from 'jquery'
-require('bootstrap/dist/css/bootstrap.min.css')
-
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
+if (!process.env.IS_WEB) Vue.use(vueElectron);
 
 axios.config =  axios.create({
   timeout: 10000,
   transformRequest: [(data) => JSON.stringify(data.data)],
   headers: {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'Content-Type': 'application/json',
-  }
+  },
 });
 
-Vue.http = Vue.prototype.$http = axios
-Vue.config.productionTip = false
+Vue.http = Vue.prototype.$http = axios;
+Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
   components: { App },
   router,
   store,
-  template: '<App/>'
-}).$mount('#app')
+  template: '<App/>',
+}).$mount('#app');
