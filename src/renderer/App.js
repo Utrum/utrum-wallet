@@ -2,20 +2,20 @@ import LoginForm from '@/components/LoginForm/LoginForm.vue';
 
 export default {
   components: {
-    'login-form': LoginForm
+    'login-form': LoginForm,
   },
   name: 'vue-dico',
-  data () {
+  data() {
     return {
 
-    }
+    };
   },
   created() {
-    this.$store.dispatch("startUpdates")
+    this.$store.dispatch('startUpdates');
   },
   computed: {
     userLoggedIn() {
-      return this.$store.state.User.loggedIn
-    }
-  }
-}
+      return this.$store.state.User.loggedIn;
+    },
+  },
+};

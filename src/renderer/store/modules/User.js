@@ -2,65 +2,64 @@ const state = {
   loggedIn: false,
   testMode: true,
   passphrase: 'default',
-  privKey: ''
-}
+  privKey: '',
+};
 
 const getters = {
   isLogged: (state) => {
-    return state.loggedIn
+    return state.loggedIn;
   },
   passphrase: (state) => {
-    return state.passphrase
+    return state.passphrase;
   },
   isTestMode: (state) => {
-    return state.testMode
+    return state.testMode;
   },
   privKey: (state) => {
-    return state.privKey
-  }
-}
+    return state.privKey;
+  },
+};
 
 const mutations = {
-  USER_LOGIN (state) {
-    state.loggedIn = true
+  USER_LOGIN(state) {
+    state.loggedIn = true;
   },
-  USER_LOGOUT (state) {
-    state.loggedIn = false
+  USER_LOGOUT(state) {
+    state.loggedIn = false;
   },
-  SET_PASSPHRASE (state, passphrase) {
-    state.passphrase = passphrase
+  SET_PASSPHRASE(state, passphrase) {
+    state.passphrase = passphrase;
   },
-  SET_TESTMODE (state, testMode) {
-    state.testMode = testMode
+  SET_TESTMODE(state, testMode) {
+    state.testMode = testMode;
   },
-  SET_PRIVKEY (state, privKey) {
-    state.privKey = privKey
-  }
-}
+  SET_PRIVKEY(state, privKey) {
+    state.privKey = privKey;
+  },
+};
 
 const actions = {
   setPrivKey({ commit }, privKey) {
-    commit('SET_PRIVKEY', privKey)
+    commit('SET_PRIVKEY', privKey);
   },
-  login ({ commit, dispatch }, passphrase) {
-    dispatch('updateConfig', {}, {root: true})
-    commit('SET_PASSPHRASE', passphrase)
-    commit('USER_LOGIN')
+  login({ commit, dispatch }, passphrase) {
+    dispatch('updateConfig', {}, { root: true });
+    commit('SET_PASSPHRASE', passphrase);
+    commit('USER_LOGIN');
   },
   setTestMode({ commit }, testMode) {
-    commit('SET_TESTMODE', testMode)
+    commit('SET_TESTMODE', testMode);
   },
-  logout({commit, dispatch}) {
-    dispatch('destroyWallets', {}, {root: true})
-    commit('SET_PASSPHRASE', '')
-    commit('USER_LOGOUT')
-  }
-}
-
+  logout({ commit, dispatch }) {
+    dispatch('destroyWallets', {}, { root: true });
+    commit('SET_PASSPHRASE', '');
+    commit('USER_LOGOUT');
+  },
+};
 
 export default {
   state,
   getters,
   mutations,
-  actions
-}
+  actions,
+};

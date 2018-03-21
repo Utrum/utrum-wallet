@@ -1,5 +1,6 @@
-import axios from 'axios'
+import axios from 'axios';
 
-export const getCmcData =  function(currency) {
+export default (currency) => {
   return axios.get(`https://api.coinmarketcap.com/v1/ticker/${currency}/`);
-}
+};
+

@@ -1,4 +1,12 @@
 {
-  "extends": "@monaize/eslint-config-monaize"
+  "extends": "@monaize/eslint-config-monaize",
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
+  "rules": {
+    "import/no-unresolved": "off",
+    "no-shadow": "off",
+    "no-param-reassign": "off"
+  }
 }
-

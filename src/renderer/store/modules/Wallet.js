@@ -1,12 +1,12 @@
-import { Wallet, coins }  from 'libwallet-mnz'
-import sb from 'satoshi-bitcoin'
-import bitcoinjs from 'bitcoinjs-lib'
-import axios from 'axios'
-import Vue from 'vue'
+import { Wallet, coins }  from 'libwallet-mnz';
+import sb from 'satoshi-bitcoin';
+import bitcoinjs from 'bitcoinjs-lib';
+import axios from 'axios';
+import Vue from 'vue';
 
-import {getBalance} from '../../lib/electrum'
-import {getCmcData} from '../../lib/coinmarketcap'
-import {getTxFromRawTx} from '../../lib/txtools'
+import getBalance from '../../lib/electrum';
+import getCmcData from '../../lib/coinmarketcap';
+import getTxFromRawTx from '../../lib/txtools';
 
 const state = {
   wallets: {
@@ -14,202 +14,199 @@ const state = {
     balance_unconfirmed: 0,
     balance_usd: 0,
     ticker: null,
-    txs: {}
+    txs: {},
   },
   coins: [],
-  calculating: false
-}
+  calculating: false,
+};
 
 const getters = {
   getWalletByTicker: (state) => (ticker) => {
-    return state.wallets[ticker]
+    return state.wallets[ticker];
   },
-  getWalletTxs: (state,getters) => (ticker) => {
-    return getters.getWalletByTicker(ticker).txs
+  getWalletTxs: (state, getters) => (ticker) => {
+    return getters.getWalletByTicker(ticker).txs;
   },
   getWallets: (state) => {
-    return state.wallets
+    return state.wallets;
   },
   getTotalBalance: (state) => {
-    let walletKeys = Object.keys(state.wallets);
+    const walletKeys = Object.keys(state.wallets);
     let totalBalanceUsd = 0;
 
-    walletKeys.forEach(function(key) {
-        totalBalanceUsd += state.wallets[key].balance_usd;
+    walletKeys.forEach((key) => {
+      totalBalanceUsd += state.wallets[key].balance_usd;
     });
 
     return totalBalanceUsd;
   },
   getBalanceByTicker: (state) => (ticker) => {
-    return state.wallets[ticker].balance
-  }
-}
+    return state.wallets[ticker].balance;
+  },
+};
 
 const mutations = {
-  INIT_WALLET (state, {payload, privkey, testMode}) {
-    let coin = Vue.util.extend({}, coins.get(payload.coin))
-    let wallet = new Wallet(privkey, payload.coin, testMode)
-    wallet.ticker = payload.coin.ticker
-    wallet.balance = 0
-    wallet.balance_usd = 0
-    wallet.txs = []
-    wallet.privkey = privkey
-    state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet)
+  INIT_WALLET(state, { payload, privkey, testMode }) {
+    const wallet = new Wallet(privkey, payload.coin, testMode);
+    wallet.ticker = payload.coin.ticker;
+    wallet.balance = 0;
+    wallet.balance_usd = 0;
+    wallet.txs = [];
+    wallet.privkey = privkey;
+    state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet);
   },
-  SET_CALCULATING (state, calculating) {
-    state.calculating = calculating
+  DESTROY_WALLETS(state) {
+    state.wallets = {};
   },
-  DESTROY_WALLETS (state) {
-    state.wallets = {}
-  },
-  ADD_TX (state, {wallet, rawtx, transaction, tx_hash, height, testMode}) {
-    let tx = getTxFromRawTx(wallet, rawtx, transaction, tx_hash, height, testMode);
-      if (tx != null) {
-        let txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash }).indexOf(tx.tx_hash)
-        
-        if( txExists >= 0) {
-          console.log('tx already exists')
-        } else {
-          state.wallets[wallet.ticker].txs.unshift(tx)
-        }
+  ADD_TX(state, { wallet, rawtx, transaction, tx_hash, height, testMode }) {
+    const tx = getTxFromRawTx(wallet, rawtx, transaction, tx_hash, height, testMode);
+    if (tx != null) {
+      const txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash; }).indexOf(tx.tx_hash);
+
+      if (txExists < 0) {
+        state.wallets[wallet.ticker].txs.unshift(tx);
+      }
     }
   },
-  UPDATE_BALANCE (state, wallet) {
-    Vue.set(state.wallets, wallet.ticker, wallet)
-  }
-}
+  UPDATE_BALANCE(state, wallet) {
+    Vue.set(state.wallets, wallet.ticker, wallet);
+  },
+};
 
 const actions = {
-  initWallets ({commit, dispatch, rootGetters}) {
-    if(Object.keys(state.wallets).length > 0) 
-      dispatch('destroyWallets')
-    commit('SET_CALCULATING', true)
+  initWallets({ commit, dispatch, rootGetters }) {
+    if (Object.keys(state.wallets).length > 0) {
+      dispatch('destroyWallets');
+    }
 
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       axios.post('http://localhost:8000', {
         method: 'generateaddress',
-        params: [ rootGetters.passphrase ]
-        }).then(response => {
-          dispatch('setPrivKey', response.data.privkey);
-          coins.all.forEach(coin => {
-            let payload = {
-              coin: Object.assign({}, coin),
-              passphrase: rootGetters.passphrase
-            }
-            commit('INIT_WALLET', {payload:payload, privkey:rootGetters.privKey, testMode: rootGetters.isTestMode})
-          })
-          dispatch('updateAllBalances');
+        params: [rootGetters.passphrase],
+      }).then(response => {
+        dispatch('setPrivKey', response.data.privkey);
+        coins.all.forEach(coin => {
+          const payload = {
+            coin: Object.assign({}, coin),
+            passphrase: rootGetters.passphrase,
+          };
+          commit('INIT_WALLET', { payload: payload, privkey: rootGetters.privKey, testMode: rootGetters.isTestMode });
+        });
+        dispatch('updateAllBalances');
+        dispatch('updateAllHistory');
       });
-    })
-    commit('SET_CALCULATING', false)
-  },
-  destroyWallets ({commit}) {
-    commit('DESTROY_WALLETS')
-  },
-  updateAllBalances({commit, dispatch, getters, rootGetters}) {
-    Object.keys(getters.getWallets).forEach((ticker) => {
-        dispatch('updateBalance', getters.getWallets[ticker])
     });
   },
-  updateBalance({commit, getters, rootGetters}, wallet) {
+  destroyWallets({ commit }) {
+    commit('DESTROY_WALLETS');
+  },
+  updateAllHistory({ dispatch, getters }) {
+    dispatch('buildTxHistory', getters.getWalletByTicker('BTC'));
+    dispatch('buildTxHistory', getters.getWalletByTicker('KMD'));
+    dispatch('buildTxHistory', getters.getWalletByTicker('MNZ'));
+  },
+  updateAllBalances({ dispatch, getters }) {
+    Object.keys(getters.getWallets).forEach((ticker) => {
+      dispatch('updateBalance', getters.getWallets[ticker]);
+    });
+  },
+  updateBalance({ commit, getters, rootGetters }, wallet) {
     getBalance(wallet, rootGetters.isTestMode).then(response => {
       wallet.balance = sb.toBitcoin(response.data.confirmed);
       wallet.balance_unconfirmed = sb.toBitcoin(response.data.unconfirmed);
-      if (wallet.coin.name !== "monaize") {
+      if (wallet.coin.name !== 'monaize') {
         getCmcData(wallet.coin.name).then(response => {
-          response.data.forEach(function(cmcCoin) {
+          response.data.forEach((cmcCoin) => {
             wallet.balance_usd = wallet.balance * cmcCoin.price_usd;
-          })
-        })
+          });
+        });
       } else {
         getCmcData('bitcoin').then(response => {
-          wallet.balance_usd = wallet.balance * (response.data[0].price_usd / 15000)
-        })
+          wallet.balance_usd = wallet.balance * (response.data[0].price_usd / 15000);
+        });
       }
-    })
-    commit('UPDATE_BALANCE', wallet)
+    });
+    commit('UPDATE_BALANCE', wallet);
   },
-  startUpdates ({dispatch}) {
-    dispatch("startUpdateBalances")
-    dispatch("startUpdateConfig")
-    dispatch('startUpdateHistory')
+  startUpdates({ dispatch }) {
+    dispatch('startUpdateBalances');
+    dispatch('startUpdateConfig');
+    dispatch('startUpdateHistory');
   },
-  startUpdateBalances ({ dispatch, rootGetters }) {
-    let min = 20,
-    max = 50;
-    let rand = Math.floor(Math.random() * (max - min + 1) + min);
-    let interval = setInterval(() => {
+  startUpdateBalances({ dispatch, rootGetters }) {
+    const min = 20;
+    const max = 50;
+    const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
+    const interval = setInterval(() => {
       if (rootGetters.passphrase !== '') {
         dispatch('updateAllBalances');
       }
       dispatch('startUpdateBalances');
       clearTimeout(interval);
-    }, rand * 1000)
+    }, rand * 1000);
   },
-  startUpdateConfig ({ dispatch, rootGetters }) {
-    let min = 1800,
-    max = 3600;
-    let rand = Math.floor(Math.random() * (max - min + 1) + min);
-    let interval = setInterval(() => {
+  startUpdateConfig({ dispatch }) {
+    const min = 1800;
+    const max = 3600;
+    const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
+    const interval = setInterval(() => {
       dispatch('updateConfig');
       dispatch('startUpdateConfig');
       clearTimeout(interval);
-    }, rand * 1000)
+    }, rand * 1000);
   },
-  startUpdateHistory ({ dispatch, getters, rootGetters }) {
-    let min = 60,
-    max = 120;
-    let rand = Math.floor(Math.random() * (max - min + 1) + min);
-    let interval = setInterval(() => {
+  startUpdateHistory({ dispatch, getters }) {
+    const min = 60;
+    const max = 120;
+    const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
+    const interval = setInterval(() => {
       Object.keys(getters.getWallets).forEach((ticker) => {
-        dispatch('buildTxHistory', getters.getWallets[ticker])
+        dispatch('buildTxHistory', getters.getWallets[ticker]);
       });
       dispatch('startUpdateHistory');
       clearTimeout(interval);
-    }, rand * 1000)
+    }, rand * 1000);
   },
-  getRawTx({commit, rootGetters}, {ticker, tx}) {
-    let payload = {
+  getRawTx({ commit, rootGetters }, { ticker, tx }) {
+    const payload = {
       ticker: ticker,
       test: rootGetters.isTestMode,
       method: 'blockchain.transaction.get',
-      params: [tx.tx_hash, true]
-    }
-    return axios.post('http://localhost:8000', payload)
-  },  
-  addTx({commit, dispatch, getters}, {wallet, tx}) {
-    let txExists = getters.getWallets[wallet.ticker].txs.map(t => { return t.tx_hash }).indexOf(tx.tx_hash)
+      params: [tx.tx_hash, true],
+    };
+    return axios.post('http://localhost:8000', payload);
+  },
+  addTx({ commit, dispatch, getters }, { wallet, tx }) {
+    const txExists = getters.getWallets[wallet.ticker].txs.map(t => { return t.tx_hash; }).indexOf(tx.tx_hash);
 
-    if( txExists >= 0) {
-      console.log('tx already exists')
-    } else {
-      dispatch('getRawTx', {ticker:wallet.ticker, tx:tx}).then(response => {
-        let decodedTx = bitcoinjs.Transaction.fromHex(response.data.hex)
-        commit('ADD_TX', {wallet:wallet, rawtx:decodedTx, transaction:response.data, tx_hash:tx.tx_hash, height:tx.height}) 
-      })
+    if (txExists < 0) {
+      dispatch('getRawTx', { ticker: wallet.ticker, tx: tx }).then(response => {
+        const decodedTx = bitcoinjs.Transaction.fromHex(response.data.hex);
+        commit('ADD_TX', { wallet: wallet, rawtx: decodedTx, transaction: response.data, tx_hash: tx.tx_hash, height: tx.height });
+      });
     }
   },
-  buildTxHistory({commit, dispatch, getters, rootGetters}, wallet) {
+  buildTxHistory({ commit, dispatch, getters, rootGetters }, wallet) {
     axios.post('http://localhost:8000', {
       ticker: wallet.ticker,
       test: rootGetters.isTestMode,
       method: 'blockchain.address.get_history',
-      params: [ wallet.address ]
+      params: [wallet.address],
     }).then(response => {
       if (response.data.length > 0) {
-        let txs = response.data
+        const txs = response.data;
 
         txs.forEach(tx => {
-          dispatch('addTx', {wallet:wallet, tx:tx})
-        })
+          dispatch('addTx', { wallet: wallet, tx: tx });
+        });
       }
-    })
-  }
-}
+    });
+  },
+};
 
 export default {
   state,
   getters,
   mutations,
-  actions
-}
+  actions,
+};

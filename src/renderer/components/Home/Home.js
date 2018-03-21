@@ -1,6 +1,6 @@
 export default {
   name: 'home',
   mounted() {
-    this.$router.push('/login')
-  }
-}
+    this.$router.push('/login');
+  },
+};

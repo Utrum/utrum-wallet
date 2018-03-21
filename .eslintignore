@@ -1,1 +1,2 @@
 dist/electron/*.js
+src/main/index.js

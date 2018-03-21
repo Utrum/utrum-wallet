@@ -6,21 +6,21 @@ export default {
     'balance-item': BalanceItem,
   },
   mounted() {
-    Object.keys(this.wallets).forEach(function(ticker) {
-      this.$store.dispatch('updateBalance', this.wallets[ticker])
+    Object.keys(this.wallets).forEach((ticker) => {
+      this.$store.dispatch('updateBalance', this.wallets[ticker]);
     }, this);
   },
   methods: {
     numberWithSpaces(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    }
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
   },
   computed: {
     wallets() {
-      return this.$store.getters.getWallets
+      return this.$store.getters.getWallets;
     },
     totalBalance() {
-      return this.numberWithSpaces(this.$store.getters.getTotalBalance.toFixed(2))
-    }
-  }
-}
+      return this.numberWithSpaces(this.$store.getters.getTotalBalance.toFixed(2));
+    },
+  },
+};
