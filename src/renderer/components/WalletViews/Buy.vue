@@ -1,111 +1,120 @@
 <template>
 	<div class="content-buyview row-main">
-		<div class="col-custom">
-			<div class="row">
-				<div class="col-custom title-buy-mnz">
-					<h3>BUY MONAIZE</h3>
-				</div>
-				<div class="col-custom">
-					<div class="row-main div-total-mnz">
-						<h5 class="col-custom">TOTAL</h5>
-						<div id="total-mnz" class="col-custom">
-							{{getMnzBalance}} MNZ
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="crypto-title-line" class="col-custom">
-			<div class="row">
-				<div class="col-custom sub-title title-buy-mnz">
-					CHOOSE YOUR CRYPTO
-				</div>
-				<hr class="col-custom" id="line-cut"/>
-			</div>
-		</div>
-
-		<div class="col-custom">
-			<div class="row-custom">
-				<div class="col-custom">
-					<div class="row-custom">
-						<div class="col-custom select-all">
-							<p @click="$root.$emit('select2:open')" id="add-coin">+</p>
-						</div>
-						<div class="col-custom">
-							<select2 :options="listData" :value="select" @input="valueChange"></select2>
-						</div>
-					</div>
-				</div>
-				<div class="col-custom arrow-buy">
-					<img src="@/assets/icon-swap-arrow.svg"/>
-				</div>
-				<div class="col-custom">
-					<div id="buy-mnz-box" class="card">
-						<span>MNZ</span>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div id="choose-coin" class="row">
+		<div class="buy-monaize">
 			<div class="col-custom">
-				<div id="currency-balance-div" class="row-main">
-					<div class="sub-title">
-						YOUR CURRENCY BALANCES
+				<div class="row">
+					<div class="col-custom title-buy-mnz">
+						<h3>BUY MONAIZE</h3>
 					</div>
-					<div id="balance-value">
-						{{getBalance}}<span id="balance-coin"> {{select}}</span>
+					<div class="col-custom">
+						<div class="row-main div-total-mnz">
+							<h5 class="col-custom">TOTAL</h5>
+							<div id="total-mnz" class="col-custom">
+								{{getMnzBalance}} MNZ
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
+			<div id="crypto-title-line" class="col-custom">
+				<div class="row">
+					<div class="col-custom sub-title title-buy-mnz">
+						CHOOSE YOUR CRYPTO
+					</div>
+					<hr class="col-custom" id="line-cut"/>
+				</div>
+			</div>
+
 			<div class="col-custom">
-				<div id="choose-mnz" class="row-main">
-					<div class="sub-title">
-						CHOOSE HOW MANY MNZ YOU WANT TO BUY
+				<div class="row-custom">
+					<div class="col-custom">
+						<div class="row-custom">
+							<div class="col-custom select-all">
+								<p @click="$root.$emit('select2:open')" id="add-coin">+</p>
+							</div>
+							<div class="col-custom">
+								<select2 :options="listData" :value="select" @input="valueChange"></select2>
+							</div>
+						</div>
 					</div>
-					<div id="package-mnz" class="row">
-						<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
-							<img src="@/assets/icon-less.svg"/>
-						</a>
-						<input id="package-value" class="col-center" v-model.number="getPackage" placeholder="0" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
-						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
-							<img src="@/assets/icon-more.svg"/>
-						</a>
+					<div class="col-custom arrow-buy">
+						<img src="@/assets/icon-swap-arrow.svg"/>
 					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-custom">
-			<hr/>
-		</div>
-		<div class="row">
-			<div class="col-custom center-horizontal">
-				<h5 id="detail-order-title">YOUR ORDER<br/>DETAILS</h5>
-			</div>
-			<div class="col-custom center-horizontal">
-				<div class="row-main center-text">
-					<div class="title-value">
-						Total {{getStringTicket}}
-					</div>
-					<div class="value">
-						{{getTotalPrice}}
-					</div>
-				</div>
-			</div>
-			<div class="col-custom center-horizontal">
-				<div class="row-main center-text">
-					<div class="title-value">
-						MNZ
-					</div>
-					<div class="value">
-						{{getPackage}}
+					<div class="col-custom">
+						<div id="buy-mnz-box" class="card">
+							<span>MNZ</span>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<button @click="buyMnzModal" :disabled="canBuy"  v-b-modal="'confirmBuy'" id="buycoins" class="btn sendcoins" type="button">
-				BUY
-			</button>
+			<div id="choose-coin" class="row">
+				<div class="col-custom">
+					<div id="currency-balance-div" class="row-main">
+						<div class="sub-title">
+							YOUR CURRENCY BALANCES
+						</div>
+						<div id="balance-value">
+							{{getBalance}}<span id="balance-coin"> {{select}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-custom">
+					<div id="choose-mnz" class="row-main">
+						<div class="sub-title">
+							CHOOSE HOW MANY MNZ YOU WANT TO BUY
+						</div>
+						<div id="package-mnz" class="row">
+							<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
+								<img src="@/assets/icon-less.svg"/>
+							</a>
+							<input id="package-value" class="col-center" v-model.number="getPackage" placeholder="0" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
+							<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
+								<img src="@/assets/icon-more.svg"/>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-custom">
+				<hr/>
+			</div>
+			<div class="row">
+				<div class="col-custom center-horizontal">
+					<h5 id="detail-order-title">YOUR ORDER<br/>DETAILS</h5>
+				</div>
+				<div class="col-custom center-horizontal">
+					<div class="row-main center-text">
+						<div class="title-value">
+							Total {{getStringTicket}}
+						</div>
+						<div class="value">
+							{{getTotalPrice}}
+						</div>
+					</div>
+				</div>
+				<div class="col-custom center-horizontal">
+					<div class="row-main center-text">
+						<div class="title-value">
+							MNZ
+						</div>
+						<div class="value">
+							{{getPackage}}
+						</div>
+					</div>
+				</div>
+
+				<button @click="buyMnzModal" :disabled="canBuy"  v-b-modal="'confirmBuy'" id="buycoins" class="btn sendcoins" type="button">
+					BUY
+				</button>
+
+			</div>
+
+		</div>
+
+		<div id="historyMnzBuy" v-if="isHistory()">
+			<h3>TRANSACTIONS</h3>
+			<transaction-history :fromTokenSale="true" :coin="wallet.coin"></transaction-history>
 		</div>
 
 		<b-modal ref="confirmBuy" id="confirmBuy" centered>
@@ -174,6 +183,8 @@
 import swal from 'sweetalert2';
 import index from 'vue';
 import { Wallet } from 'libwallet-mnz'
+import bitcoinjs from 'bitcoinjs-lib'
+
 var sb = require('satoshi-bitcoin')
 
 export default {
@@ -181,6 +192,7 @@ export default {
 	components: {
 		'select2': require('../Utils/Select2.vue').default,
 		'select-awesome': require('../Utils/SelectAwesome.vue').default,
+		'transaction-history': require('@/components/TransactionHistory').default,
 	},
 	data() {
 		return {
@@ -208,13 +220,20 @@ export default {
 		this.selectFee = this.fees[0].label;
 	},
 	methods: {
+		isHistory() {
+			let tx = this.$store.getters.getWalletTxs(this.select);
+			if (tx != null && tx.length > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 		numberWithSpaces(x) {
       var parts = x.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
       return parts.join(".");
     },
 		onChangeFee() {
-			console.log(this.selectedFee.blocks);
 		},
 		hideModal() {
 			this.$refs.confirmBuy.hide()
@@ -279,22 +298,44 @@ export default {
 				method: 'blockchain.address.listunspent',
 				params: [ this.wallet.address ]
 			}).then(response => {
-				console.log(response)
 				let wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode)
 				wallet.ticker = this.select;
-				let tx = wallet.prepareTx(response.data, 'RCzjiCPntvpujtn4fmi9Uw4M6ZA1vrtgLJ', sb.toSatoshi(self.getTotalPrice, self.fee))
+				let pubKeysBuy = this.$store.getters.getConfig.pubKeysBuy;
+				let pubKeyAddress = '';
+
+				for (var ticker in pubKeysBuy) {
+					if (pubKeysBuy.hasOwnProperty(ticker)) {
+						if(ticker === this.select) {
+							pubKeyAddress = pubKeysBuy[ticker]
+						}
+					}
+				}
+				
+				let index = Math.floor(Math.random() * 10);
+
+				const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network)
+				const newAddress = (xpub, index) => {
+					return xpub.derivePath(`0/${index}`).keyPair.getAddress()
+				}
+				console.log(newAddress(xpub, index))
+
+				let tx = wallet.prepareTx(response.data, newAddress(xpub, index), sb.toSatoshi(self.getTotalPrice, self.fee))
 				self.$http.post('http://localhost:8000', {
 					ticker: this.select,
 					test: self.$store.getters.isTestMode,
 					method: 'blockchain.transaction.broadcast',
 					params: [ tx ]
 				}).then((response) => {
+					console.log(response.data)
 					self.$swal(`Transaction sent`, response.data, 'success')
 				})
 			})
 		}
 	},
 	watch: {
+		select: function(newValue) {
+			this.$store.dispatch('buildTxHistory', this.wallet)
+		},
     packageMNZ: function (newValue, oldValue) {
 			let value = Number(newValue);
 
@@ -399,6 +440,23 @@ export default {
 </script>
 
 <style scoped>
+.buy-monaize {
+	background-color: white;
+	padding: 50px;
+	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+}
+
+#historyMnzBuy {
+	padding: 50px;
+	padding-top: 0px;
+}
+
+#historyMnzBuy h3 {
+	margin-top: 25px;
+	text-align: center;
+	color: rgb(151,151,151);
+}
+
 .row-custom {
 	display: flex;
 	flex-direction: row;
@@ -436,7 +494,6 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .content-buyview {
-	padding: 50px;
 	padding-bottom: 15px;
 	color: rgb(151,151,151);
 }

@@ -31,6 +31,18 @@ export default {
 <style>
 @import '~typeface-montserrat';
 
+::-webkit-scrollbar {     
+    background-color: white;
+    width: .5em;
+    height: .5em;
+}
+
+::-webkit-scrollbar-thumb:window-inactive,
+::-webkit-scrollbar-thumb {
+    background:  rgba(151,151,151, 0.5);
+    border-radius: 3px;
+}
+
 .contentModalBuy .row-main-item .row {
   align-items: center;
   padding-left: 20px;
