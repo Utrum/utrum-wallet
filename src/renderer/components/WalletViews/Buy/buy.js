@@ -3,12 +3,14 @@ import index from 'vue';
 import Wallet from 'libwallet-mnz'
 import sb from 'satoshi-bitcoin'
 import Vue from 'vue'
+import Select2 from '@/components/Utils/Select2/Select2.vue';
+import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 
 export default {
 	name: 'buy',
 	components: {
-		'select2': require('@/components/Utils/Select2.vue').default,
-		'select-awesome': require('@/components/Utils/SelectAwesome.vue').default,
+		'select2': Select2,
+		'select-awesome': SelectAwesome,
 	},
 	data() {
 		return {

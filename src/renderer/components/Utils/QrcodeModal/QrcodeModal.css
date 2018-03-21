@@ -1,57 +1,3 @@
-<template>
-	<b-modal size="sm" ref="qrcodemodal" :id="wallet.ticker" centered class="modal-qrcode">
-		<div slot="modal-header" class="w-100">
-			<a @click="hideModal" class="row" data-dismiss="modal">Close<img src="@/assets/icon-close.svg"></a>
-		</div>
-
-		<b-container fluid>
-			<div class="row-modal">
-				<div class="col-modal">
-					<qriously :value="wallet.address" :size="200" />
-				</div>
-			</div>
-			<span id="qrcode-title">QR CODE {{wallet.ticker}}</span>
-		</b-container>
-		<div slot="modal-footer" class="w-100">
-			<explorer class="btn btn-copy-link btn-smartaddress" type="address" :ticker="wallet.ticker" :value="wallet.address">
-				<div :id="wallet.ticker" class="btn-inside-qrcode">
-					{{wallet.address}}
-				</div>
-			</explorer>
-		</div>
-	</b-modal>
-</template>
-
-<script>
-export default {
-	name: 'qrcode-modal',
-	components: {
-		'explorer': require('@/components/Utils/ExplorerLink/ExplorerLink').default,
-		'qrcode-modal' : require('@/components/Utils/QrcodeModal').default
-	},
-	props: {
-		wallet: {
-			type: Object,
-			default: () => ({})
-		},
-	},
-	data () {
-		return {
-			headerBgVariant: 'none',
-		}
-	},
-	methods: {
-		hideModal () {
-			this.$refs.qrcodemodal.hide()
-		}
-	},
-	computed: {
-
-	}
-}
-</script>
-
-<style scoped>
 .modal-header a:hover {
 	opacity: 0.5;
 	-webkit-transition: all 1s ease;
@@ -95,8 +41,6 @@ export default {
 	flex-grow: 1;
 }
 
-
-
 .modal-header a {
 	color: #7c398a !important;
 }
@@ -125,4 +69,3 @@ export default {
 	color: #687078;
 	font-weight: 400;
 }
-</style>

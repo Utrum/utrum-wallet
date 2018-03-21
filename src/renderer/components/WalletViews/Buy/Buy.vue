@@ -1,3 +1,3 @@
-<template src="./buy.html"></template>
-<script src="./buy.js"></script>
-<style scoped src="./buy.css"></style>
+<template src="./Buy.html"></template>
+<script src="./Buy.js"></script>
+<style scoped src="./Buy.css"></style>

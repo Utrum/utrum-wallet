@@ -1,12 +1,3 @@
-<template>	
-		<select>
-			<option v-for="o in options">{{o}}</option>
-		</select>
-</template>
-
-
-
-<script type="text/javascript">
 import 'select2'
 
 export default {
@@ -42,10 +33,3 @@ export default {
 		$(this.$el).off().select2('destroy')
 	}
 }
-</script>
-
-<style type="text/css">
-@import "~select2/dist/css/select2.min.css";
-
-
-</style>

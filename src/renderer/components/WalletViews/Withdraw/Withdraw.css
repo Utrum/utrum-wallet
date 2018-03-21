@@ -1,0 +1,284 @@
+#amountTotal {
+	align-self: center;
+  text-align: center;
+  padding-left: 47px;
+}
+
+.row-total-amount h2 {
+  text-align: center;
+}
+
+
+#address {
+	font-size: 0.75em;
+}
+
+#transactionHistory {
+	margin-top: 50px;
+}
+
+#readerQrcode {
+	height: 100%;
+	margin-left: 10px;
+	border: 1px solid #7D3A8B;
+	background-color: transparent;
+	border-radius: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	cursor: pointer;
+	outline: none;
+}
+
+#readerQrcodeModal {
+	text-align: center;
+}
+
+.content {
+	padding: 50px;
+	color: rgb(151,151,151);
+}
+
+.row-custom {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#select-amount {
+	margin-top: 30px;
+}
+
+#separator {
+	max-width: 1px;
+}
+
+#selector-coin-buy {
+	max-width: 150px;
+}
+
+.content h3 {
+	font-weight: 300;
+	color: #180d39;
+}
+
+.title-amount {
+	margin-bottom: 20px;
+}
+
+.sub-title {
+	font-weight: 300;
+	color: #180d39 !important;
+}
+
+.select-header{
+	margin: 50px;
+	border: 1px solid #7c398a;
+	background: transparent;
+	width: 150px;
+	padding: 5px 5px 5px 5px;
+	font-size: 16px;
+	text-align: center;
+	border-radius: 4px;
+	border-color: black !important;
+	height: 800px;
+	font-size: 1.9em;
+	font-weight: 300;
+	text-align-last:center;
+}
+
+.select-header:hover{
+	background-color: black;
+	color: white;
+}
+
+
+.select-all {
+	background-color: transparent;
+	padding-top: auto;
+	padding-bottom: auto;
+	width: 25px;
+	border-top-left-radius: 4px 4px;
+	border-bottom-left-radius: 4px 4px;
+	border: 1px solid #7c398a;
+	border-width: 1px 0px 1px 1px;
+	text-align: center;
+	color: red;
+}
+
+#str-current-balances {
+	text-align: right;
+}
+
+.row-header {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.row .btn{
+	padding: 0px;
+	margin: 0px;
+	border-top-right-radius: 0px 0px !important;
+	border-bottom-right-radius: 0px 0px !important;
+}
+
+.row .btn:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.vl {
+	border-left: 1px solid rgba(0,0,0,0.1);
+	height: 45px;
+	margin-top: 15px;
+}
+
+.current-balance {
+	height: 75px;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	cursor: pointer;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+}
+
+#card-current-balance {
+	text-align: right;
+	font-size: 1.8em;
+	max-width: 400px;
+}
+
+#add-coin {
+	color: #7c398a !important;
+	font-size: 1.8em;
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+	line-height: 73px;
+	text-align: center;
+	background-color: white;
+	border-radius: 4px;
+}
+
+.col {
+	flex-grow: 1;
+}
+
+.content .select2-selection:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+#title {
+	margin-bottom: 40px;
+}
+
+.input-field {
+	outline: none;
+	box-shadow: none;
+	text-align: right;
+}
+
+.col-custom {
+	flex-grow: 1;
+}
+
+#first-line {
+	margin-top: 10px;
+}
+
+.btn-center {
+	text-align: center;
+}
+
+.disableSendCoins {
+	border: 1px solid rgba(0,0,0,0.1) !important;
+	color: rgba(0,0,0,0.1) !important;
+	cursor: not-allowed;
+}
+
+.disableSendCoins:hover {
+	border: 1px solid rgba(0,0,0,0.1) !important;
+	color: rgba(0,0,0,0.1) !important;
+	cursor: not-allowed;
+	background-color: transparent !important;
+}
+
+#sendcoins {
+	border: 1px solid #7c398a;
+	border-radius: 4px !important;
+	background-color: transparent;
+	font-size: 1.4em;
+	width: 160px;
+	height: 45px;
+	text-align: center;
+	outline: none;
+	box-shadow: none;
+	color: #7c398a;
+}
+
+#sendcoins:hover {
+	background-color: #7c398a;
+	color: white;
+}
+
+.disableSendCoins {
+	opacity: 0.65;
+	cursor: not-allowed;
+}
+
+#addr {
+	background-color: transparent;
+	border: none;
+	font-size: 1.1em;
+	font-weight: 300;
+	color: #687078;
+}
+
+#amount {
+	background-color: transparent;
+	border: none;
+	font-size: 1.8em;
+	font-weight: 300;
+	color: rgb(151,151,151);
+}
+
+::-webkit-input-placeholder {
+	color: rgba(104,112,120,0.4);
+	font-weight: 200;
+}
+
+#current-coin {
+	font-size: 1.8em;
+	color: #687078;
+	font-weight: 200;
+}
+
+.card span {
+	color: #687078;
+	font-weight: 200;
+}
+
+.title-content {
+	font-weight: 400;
+	color: #180d39;
+	margin: auto;
+}
+
+.horizontal-line {
+	margin-bottom: 50px;
+}
+
+#value-current-balance {
+	font-weight: 400;
+	color: #687078;
+}
+
+.cardTable {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+    border-radius: 4px;
+    border: none;
+}

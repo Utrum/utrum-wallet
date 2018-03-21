@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Buy from '@/components/WalletViews/Buy/Buy';
+import Buy from '@/components/WalletViews/Buy/Buy.vue';
+import LoginForm from '@/components/LoginForm/LoginForm.vue';
+import Home from '@/components/Home/Home.vue';
+import CreatePassphrase from '@/components/CreatePassphrase/CreatePassphrase.vue';
+import WalletView from '@/components/WalletViews/WalletView.vue';
+import Balance from '@/components/WalletViews/Balance/Balance.vue';
+import Withdraw from '@/components/WalletViews/Withdraw/Withdraw.vue';
 
 Vue.use(Router)
 
@@ -8,29 +14,29 @@ export default new Router({
   routes: [
   {
     path: '/',
-    component: require('@/components/Home').default,
+    component: Home,
     children: [
     {
       path: '/login',
       name: 'login-form',
-      component: require('@/components/LoginForm').default,
+      component: LoginForm,
     },
     {
       path: '/createpassphrase', 
       name: 'createpassphrase',
-      component: require('@/components/CreatePassphrase').default
+      component: CreatePassphrase
     },
     ]
   },
   {
     path: '/wallet',
     name: 'wallet',
-    component: require('@/components/WalletView').default,
+    component: WalletView,
     children: [
     {
       path: '/balance', 
       name: 'balance',
-      component: require('@/components/WalletViews/Balance').default
+      component: Balance
     },
     {
       path: '/buy',
@@ -40,7 +46,7 @@ export default new Router({
     {
       path: '/withdraw',
       name: 'withdraw',
-      component: require('@/components/WalletViews/Withdraw').default
+      component: Withdraw
     }
     ]
   },
