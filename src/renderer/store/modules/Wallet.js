@@ -93,17 +93,11 @@ const actions = {
           commit('INIT_WALLET', { payload: payload, privkey: rootGetters.privKey, testMode: rootGetters.isTestMode });
         });
         dispatch('updateAllBalances');
-        dispatch('updateAllHistory');
       });
     });
   },
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');
-  },
-  updateAllHistory({ dispatch, getters }) {
-    dispatch('buildTxHistory', getters.getWalletByTicker('BTC'));
-    dispatch('buildTxHistory', getters.getWalletByTicker('KMD'));
-    dispatch('buildTxHistory', getters.getWalletByTicker('MNZ'));
   },
   updateAllBalances({ dispatch, getters }) {
     Object.keys(getters.getWallets).forEach((ticker) => {

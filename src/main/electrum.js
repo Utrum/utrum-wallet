@@ -20,10 +20,8 @@ Object.keys(clients).forEach((ticker) => {
 
 export default (ticker, test, method, params, done) => {
   if (!ticker || !method || !params) throw new Error('ERROR: Missing arguments');
-  let tickerClient;
   if (test) {
-    tickerClient = `TEST${ticker}`;
+    ticker = `TEST${ticker}`;
   }
-
-  clients[tickerClient].call(method, params, done);
+  clients[ticker].call(method, params, done);
 };

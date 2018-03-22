@@ -56,6 +56,7 @@ export default {
     callEstimateFee(blocks) {
       const self = this;
       this.$http.post('http://localhost:8000', {
+        test: self.$store.getters.isTestMode,
         ticker: self.select,
         method: 'blockchain.estimatefee',
         params: [Number(blocks)],
@@ -113,7 +114,7 @@ export default {
         const pubKeysBuy = this.$store.getters.getConfig.pubKeysBuy;
         let pubKeyAddress = '';
 
-        pubKeysBuy.forEach(ticker => {
+        Object.keys(pubKeysBuy).forEach(ticker => {
           if (ticker === this.select) {
             pubKeyAddress = pubKeysBuy[ticker];
           }
@@ -121,10 +122,16 @@ export default {
 
         const index = Math.floor(Math.random() * 10);
 
+        console.log(pubKeysBuy);
+
         const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
         const newAddress = (xpub, index) => {
           return xpub.derivePath(`0/${index}`).keyPair.getAddress();
         };
+
+        console.log(xpub);
+        console.log(newAddress(xpub, index));
+        console.log(this.select);
 
         const tx = wallet.prepareTx(response.data, newAddress(xpub, index), sb.toSatoshi(self.getTotalPrice, self.fee));
         self.$http.post('http://localhost:8000', {
