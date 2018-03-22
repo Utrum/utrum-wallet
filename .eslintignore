@@ -1,2 +1,3 @@
 dist/electron/*.js
 src/main/index.js
+src/renderer/components/Utils/SelectAwesome/SelectAwesome.js
