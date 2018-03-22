@@ -43,6 +43,7 @@ const actions = {
     commit('SET_PRIVKEY', privKey);
   },
   login({ commit, dispatch }, passphrase) {
+    dispatch('startUpdates');
     dispatch('updateConfig', {}, { root: true });
     commit('SET_PASSPHRASE', passphrase);
     commit('USER_LOGIN');
@@ -51,6 +52,7 @@ const actions = {
     commit('SET_TESTMODE', testMode);
   },
   logout({ commit, dispatch }) {
+    dispatch('setIsUpdate', false);
     dispatch('destroyWallets', {}, { root: true });
     commit('SET_PASSPHRASE', '');
     commit('USER_LOGOUT');

@@ -18,9 +18,13 @@ const state = {
   },
   coins: [],
   calculating: false,
+  isUpdate: false,
 };
 
 const getters = {
+  isUpdate: (state) => {
+    return state.isUpdate;
+  },
   getWalletByTicker: (state) => (ticker) => {
     return state.wallets[ticker];
   },
@@ -71,9 +75,15 @@ const mutations = {
   UPDATE_BALANCE(state, wallet) {
     Vue.set(state.wallets, wallet.ticker, wallet);
   },
+  UPDATE_IS_UPDATE(state, isUpdate) {
+    state.isUpdate = isUpdate;
+  },
 };
 
 const actions = {
+  setIsUpdate({ commit }, isUpdate) {
+    commit('UPDATE_IS_UPDATE', isUpdate);
+  },
   initWallets({ commit, dispatch, rootGetters }) {
     if (Object.keys(state.wallets).length > 0) {
       dispatch('destroyWallets');
@@ -123,11 +133,12 @@ const actions = {
     commit('UPDATE_BALANCE', wallet);
   },
   startUpdates({ dispatch }) {
+    dispatch('setIsUpdate', true);
     dispatch('startUpdateBalances');
     dispatch('startUpdateConfig');
     dispatch('startUpdateHistory');
   },
-  startUpdateBalances({ dispatch, rootGetters }) {
+  startUpdateBalances({ dispatch, getters, rootGetters }) {
     const min = 20;
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
@@ -135,7 +146,9 @@ const actions = {
       if (rootGetters.passphrase !== '') {
         dispatch('updateAllBalances');
       }
-      dispatch('startUpdateBalances');
+      if (getters.isUpdate) {
+        dispatch('startUpdateBalances');
+      }
       clearTimeout(interval);
     }, rand * 1000);
   },
@@ -145,7 +158,9 @@ const actions = {
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
       dispatch('updateConfig');
-      dispatch('startUpdateConfig');
+      if (getters.isUpdate) {
+        dispatch('startUpdateConfig');
+      }
       clearTimeout(interval);
     }, rand * 1000);
   },
@@ -157,7 +172,9 @@ const actions = {
       Object.keys(getters.getWallets).forEach((ticker) => {
         dispatch('buildTxHistory', getters.getWallets[ticker]);
       });
-      dispatch('startUpdateHistory');
+      if (getters.isUpdate) {
+        dispatch('startUpdateHistory');
+      }
       clearTimeout(interval);
     }, rand * 1000);
   },
