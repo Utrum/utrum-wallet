@@ -1,7 +1,5 @@
 import 'select2';
 
-const $ = require('jquery');
-
 export default {
   name: 'select2',
   props: ['options', 'value'],

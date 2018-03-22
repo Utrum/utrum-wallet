@@ -1,5 +1,3 @@
-const $ = require('jquery');
-
 export default {
   name: 'select-awesome',
   props: {
