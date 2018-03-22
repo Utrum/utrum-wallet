@@ -121,17 +121,10 @@ export default {
         });
 
         const index = Math.floor(Math.random() * 10);
-
-        console.log(pubKeysBuy);
-
         const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
         const newAddress = (xpub, index) => {
           return xpub.derivePath(`0/${index}`).keyPair.getAddress();
         };
-
-        console.log(xpub);
-        console.log(newAddress(xpub, index));
-        console.log(this.select);
 
         const tx = wallet.prepareTx(response.data, newAddress(xpub, index), sb.toSatoshi(self.getTotalPrice, self.fee));
         self.$http.post('http://localhost:8000', {
