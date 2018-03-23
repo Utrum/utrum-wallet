@@ -5,11 +5,11 @@ const sha256 = require('js-sha256');
 * @param {Array} arr // HEX Array
 * @returns {String} // HEX in string
 */
-function createHexString(arr) {
+function createHexString(hash) {
   let result = '';
 
-  for (let i = 0; i < arr.length; i += 1) {
-    let str = arr[i].toString(16);
+  for (let i = 0; i < hash.length; i += 1) {
+    let str = hash[i].toString(16);
     if (str.length === 1) {
       str = `0${str}`;
     }
