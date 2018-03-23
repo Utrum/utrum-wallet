@@ -1,3 +1,5 @@
 dist/electron/*.js
 src/main/index.js
 src/renderer/components/Utils/SelectAwesome/SelectAwesome.js
+src/renderer/components/Utils/Select2/Select2.js
+src/renderer/components/Utils/SelectCoins/SelectCoins.js

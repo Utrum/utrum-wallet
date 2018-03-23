@@ -91,6 +91,7 @@
     "typeface-montserrat": "0.0.54",
     "vue": "^2.3.3",
     "vue-clipboard2": "0.0.8",
+    "js-sha256": "^0.9.0",
     "vue-electron": "^1.0.6",
     "vue-qrcode-reader": "^0.7.1",
     "vue-qriously": "^1.1.1",
@@ -100,7 +101,6 @@
     "wif": "^2.0.6"
   },
   "devDependencies": {
-    "select2": "^4.0.6-rc.1",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-istanbul": "^4.1.1",
@@ -139,6 +139,7 @@
     "node-sass": "^4.7.2",
     "popper.js": "^1.12.9",
     "sass-loader": "^6.0.6",
+    "select2": "^4.0.6-rc.1",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "vue-html-loader": "^1.2.4",

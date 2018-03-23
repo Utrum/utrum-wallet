@@ -7,6 +7,7 @@ import Vue from 'vue';
 import getBalance from '../../lib/electrum';
 import getCmcData from '../../lib/coinmarketcap';
 import getTxFromRawTx from '../../lib/txtools';
+import createPrivKey from '../../lib/createPrivKey';
 
 const state = {
   wallets: {
@@ -89,22 +90,15 @@ const actions = {
       dispatch('destroyWallets');
     }
 
-    return new Promise(() => {
-      axios.post('http://localhost:8000', {
-        method: 'generateaddress',
-        params: [rootGetters.passphrase],
-      }).then(response => {
-        dispatch('setPrivKey', response.data.privkey);
-        coins.all.forEach(coin => {
-          const payload = {
-            coin: Object.assign({}, coin),
-            passphrase: rootGetters.passphrase,
-          };
-          commit('INIT_WALLET', { payload: payload, privkey: rootGetters.privKey, testMode: rootGetters.isTestMode });
-        });
-        dispatch('updateAllBalances');
-      });
+    dispatch('setPrivKey', createPrivKey(rootGetters.passphrase));
+    coins.all.forEach(coin => {
+      const payload = {
+        coin: Object.assign({}, coin),
+        passphrase: rootGetters.passphrase,
+      };
+      commit('INIT_WALLET', { payload: payload, privkey: rootGetters.privKey, testMode: rootGetters.isTestMode });
     });
+    dispatch('updateAllBalances');
   },
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');
