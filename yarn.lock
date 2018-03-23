@@ -5028,6 +5028,10 @@ js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.3.tgz#2e545ec2b0f2957f41356510205214e98fad6582"
 
+js-sha256@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
+
 js-string-escape@~1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/js-string-escape/-/js-string-escape-1.0.1.tgz#e2625badbc0d67c7533e9edc1068c587ae4137ef"
@@ -5330,9 +5334,9 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libwallet-mnz@^2.6.1:
-  version "2.6.1"
-  resolved "http://mon-1:4873/libwallet-mnz/-/libwallet-mnz-2.6.1.tgz#ce6308932a1cb968c3fbe8b19d3b53cc02f040be"
+libwallet-mnz@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/libwallet-mnz/-/libwallet-mnz-2.6.2.tgz#0bae98eb1d261a43186e2dff7654c007a179bca1"
   dependencies:
     bitcoinjs-lib "^3.3.2"
     coinselect "^3.1.11"
