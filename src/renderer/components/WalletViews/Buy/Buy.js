@@ -174,25 +174,25 @@ export default {
       return this.numberWithSpaces((this.getTotalPrice + this.fee).toFixed(8));
     },
     isBonus() {
-      const date = new Date().getTime();
+      const date = new Date().getTime() / 1000;
       const config = this.$store.getters.getConfig;
       const bonuses = config.bonuses;
+      let findDuration = true;
 
       Object.keys(bonuses).forEach(k => {
         if (this.select.toLowerCase() === k) {
           Object.keys(bonuses[k]).forEach(j => {
-            const duration = bonuses[k][j].duration * 1000 * 3600;
-            const value = bonuses[k][j].value;
-            const icoStart = config.icoStartDate * 1000;
+            if (findDuration) {
+              const duration = bonuses[k][j].duration * 3600;
+              const value = bonuses[k][j].value;
+              const icoStart = config.icoStartDate;
 
-            // console.log(`Duration: ${duration}`);
-            // console.log(`icoStart: ${icoStart}`);
-            // console.log(`date: ${date}\n\n`);
-
-            if (icoStart < date && date < icoStart + duration) {
-              this.currentBonus = value / 100;
-            } else {
-              this.currentBonus = 0;
+              if (icoStart < date && date < icoStart + duration) {
+                this.currentBonus = value / 100;
+                findDuration = false;
+              } else {
+                this.currentBonus = 0;
+              }
             }
           });
         }

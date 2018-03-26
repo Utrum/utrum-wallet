@@ -222,11 +222,11 @@ const actions = {
       }).then(response => {
 
         const wallet = new Wallet(walletBuy.privkey, walletBuy.coin, rootGetters.isTestMode);
-        const pubKeysBuy = rootGetters.getConfig.pubKeysBuy;
+        const pubKeysBuy = rootGetters.getPubKeysBuy;
         let pubKeyAddress = '';
 
         Object.keys(pubKeysBuy).forEach(ticker => {
-          if (ticker === walletBuy.ticker) {
+          if (ticker === walletBuy.ticker.toLowerCase()) {
             pubKeyAddress = pubKeysBuy[ticker];
           }
         });
