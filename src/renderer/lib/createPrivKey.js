@@ -2,7 +2,7 @@ const sha256 = require('js-sha256');
 
 /**
 * It returns a string from HEX array.
-* @param {Array} arr // HEX Array
+* @param {Array} hash // HEX Array
 * @returns {String} // HEX in string
 */
 function createHexString(hash) {

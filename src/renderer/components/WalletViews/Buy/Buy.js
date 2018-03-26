@@ -209,9 +209,9 @@ export default {
             const value = bonuses[k][j].value;
             const icoStart = config.icoStartDate * 1000;
 
-            console.log(`Duration: ${duration}`);
-            console.log(`icoStart: ${icoStart}`);
-            console.log(`date: ${date}\n\n`);
+            // console.log(`Duration: ${duration}`);
+            // console.log(`icoStart: ${icoStart}`);
+            // console.log(`date: ${date}\n\n`);
 
             if (icoStart < date && date < icoStart + duration) {
               this.currentBonus = value / 100;
