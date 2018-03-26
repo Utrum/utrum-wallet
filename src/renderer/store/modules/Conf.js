@@ -19,7 +19,7 @@ const mutations = {
 const actions = {
   updateConfig({ commit }) {
     const endPointConfig
-    = 'https://gist.githubusercontent.com/Kiruel/216ee8a27116a3bcf2e343dad07dc85b/raw/27b4ac35e6cf2d85d0468d81dbc8cb23e8b60d94/conf.json';
+    = 'https://gist.githubusercontent.com/Kiruel/216ee8a27116a3bcf2e343dad07dc85b/raw/1a491271f840c8fe713365be83ecf525b4243485/conf.json';
     axios.get(endPointConfig, {
     }).then(response => {
       commit('SET_CONFIG', response.data);

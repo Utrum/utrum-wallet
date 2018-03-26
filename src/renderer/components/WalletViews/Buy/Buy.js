@@ -77,9 +77,10 @@ export default {
     },
     totalPrice() {
       const config = this.getConfig;
+
       let price = 0;
-      const priceMNZ = config.BTCPrices.MNZ;
-      const priceKMD = config.BTCPrices.KMD;
+      const priceMNZ = config.coinPrices.mnz;
+      const priceKMD = config.coinPrices.kmd;
       if (this.select === 'BTC') {
         price = priceMNZ;
       } else if (this.select === 'KMD') {
@@ -198,15 +199,22 @@ export default {
     },
     isBonus() {
       const date = new Date().getTime();
-      const bonuses = this.$store.getters.getConfig.bonuses;
+      const config = this.$store.getters.getConfig;
+      const bonuses = config.bonuses;
 
       Object.keys(bonuses).forEach(k => {
-        if (this.select === k) {
+        if (this.select.toLowerCase() === k) {
           Object.keys(bonuses[k]).forEach(j => {
-            const dateBonusStart = bonuses[k][j][0];
-            const dateBonusEnd = bonuses[k][j][1];
-            if (dateBonusStart < date && date < dateBonusEnd) {
-              this.currentBonus = j / 100;
+            const duration = bonuses[k][j].duration * 1000 * 3600;
+            const value = bonuses[k][j].value;
+            const icoStart = config.icoStartDate * 1000;
+
+            console.log(`Duration: ${duration}`);
+            console.log(`icoStart: ${icoStart}`);
+            console.log(`date: ${date}\n\n`);
+
+            if (icoStart < date && date < icoStart + duration) {
+              this.currentBonus = value / 100;
             } else {
               this.currentBonus = 0;
             }
@@ -214,7 +222,7 @@ export default {
         }
       });
 
-      return this.currentBonus === 0;
+      return this.currentBonus !== 0;
     },
     canBuy() {
       const mnzToBuy = this.packageMNZ;
