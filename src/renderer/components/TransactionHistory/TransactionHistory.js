@@ -39,7 +39,7 @@ export default {
         .filter(el => value.item.origin.txHash === el.tx_hash.substring(0, 9));
       amountOrigin = txOrigin[0].amount;
 
-      return Math.abs(amountOrigin / amountMnz);
+      return Math.abs(amountOrigin / amountMnz).toFixed(8);
     },
     getTotalPrice(value) {
       let amountOrigin = 0;
