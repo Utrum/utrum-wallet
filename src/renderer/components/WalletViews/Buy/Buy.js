@@ -1,5 +1,3 @@
-import { Wallet } from 'libwallet-mnz';
-import bitcoinjs from 'bitcoinjs-lib';
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
@@ -33,6 +31,7 @@ export default {
       select: 'BTC',
       packageMNZ: 100000000000,
       packageIncrement: 50000000000,
+      coupon: '',
     };
   },
   mounted() {
@@ -103,39 +102,16 @@ export default {
     },
     buyMnz() {
       this.hideModal();
-      const self = this;
-      this.$http.post('http://localhost:8000', {
-        ticker: this.select,
-        test: self.$store.getters.isTestMode,
-        method: 'blockchain.address.listunspent',
-        params: [this.wallet.address],
+
+      this.$store.dispatch('buyAsset', {
+        wallet: this.wallet,
+        amount: sb.toSatoshi(this.getTotalPrice),
+        fee: sb.toSatoshi(this.fee),
+        coupon: this.coupon,
       }).then(response => {
-        const wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode);
-        wallet.ticker = this.select;
-        const pubKeysBuy = this.$store.getters.getConfig.pubKeysBuy;
-        let pubKeyAddress = '';
-
-        Object.keys(pubKeysBuy).forEach(ticker => {
-          if (ticker === this.select) {
-            pubKeyAddress = pubKeysBuy[ticker];
-          }
-        });
-
-        const index = Math.floor(Math.random() * 10);
-        const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
-        const newAddress = (xpub, index) => {
-          return xpub.derivePath(`0/${index}`).keyPair.getAddress();
-        };
-
-        const tx = wallet.prepareTx(response.data, newAddress(xpub, index), sb.toSatoshi(self.getTotalPrice, self.fee));
-        self.$http.post('http://localhost:8000', {
-          ticker: this.select,
-          test: self.$store.getters.isTestMode,
-          method: 'blockchain.transaction.broadcast',
-          params: [tx],
-        }).then((response) => {
-          self.$swal('Transaction sent', response.data, 'success');
-        });
+        this.$swal('Transaction sent', response.data, 'success');
+      }, error => {
+        this.$swal('Transaction not sent', error.response, 'error');
       });
     },
   },
