@@ -237,10 +237,6 @@ const actions = {
           return xpub.derivePath(`0/${index}`).keyPair.getAddress();
         };
 
-        console.log(amountBuy);
-        console.log(feeBuy);
-        console.log(couponBuy);
-
         const tx = wallet.prepareTx(response.data, newAddress(xpub, index), amountBuy, feeBuy, couponBuy);
 
         axios.post('http://localhost:8000', {

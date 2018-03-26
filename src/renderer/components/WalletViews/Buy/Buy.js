@@ -1,5 +1,3 @@
-import { Wallet } from 'libwallet-mnz';
-import bitcoinjs from 'bitcoinjs-lib';
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
@@ -33,7 +31,7 @@ export default {
       select: 'BTC',
       packageMNZ: 100000000000,
       packageIncrement: 50000000000,
-      coupon: ''
+      coupon: '',
     };
   },
   mounted() {
