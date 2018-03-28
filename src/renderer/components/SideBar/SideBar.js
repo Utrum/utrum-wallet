@@ -11,7 +11,7 @@ export default {
     getCanBuy() {
       const config = this.$store.getters.getConfig;
       const date = Date();
-      if (!(config.progress <= 1 && config.icoBegin > date && date < config.icoEnd)) {
+      if (!(config.progress <= 1 && config.icoStartDate < date && date < config.icoEndDate)) {
         return true;
       }
       this.$swal('Monaize ICO',
