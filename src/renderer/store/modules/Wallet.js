@@ -23,6 +23,11 @@ const getters = {
   isUpdate: (state) => {
     return state.isUpdate;
   },
+  getHistoryBuy: (state, getters) => (ticker) => {
+    return getters
+    .getWalletTxs('MNZ')
+    .filter(el => el.origin.ticker === ticker);
+  },
   getWalletByTicker: (state) => (ticker) => {
     return state.wallets[ticker];
   },

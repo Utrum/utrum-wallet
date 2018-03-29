@@ -17,7 +17,7 @@ const actions = {
         params: [walletBuy.address],
       }).then(response => {
 
-        const wallet = new Wallet(walletBuy.privkey, walletBuy.coin, rootGetters.isTestMode);
+        const wallet = new Wallet(walletBuy.privKey, walletBuy.coin, rootGetters.isTestMode);
         const pubKeysBuy = rootGetters.getPubKeysBuy;
         let pubKeyAddress = '';
 

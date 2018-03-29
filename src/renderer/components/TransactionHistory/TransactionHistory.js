@@ -63,10 +63,8 @@ export default {
       return this.$store.getters.getWalletByTicker(this.coin.ticker);
     },
     txHistory() {
-      return this.fromTokenSale ? this.$store.getters
-      .getWalletTxs('MNZ')
-      .filter(el => el.fromMNZ)
-      .filter(el => el.origin.ticker === this.coin.ticker) : this.$store.getters.getWalletTxs(this.coin.ticker);
+      return this.fromTokenSale ? this.$store.getters.getHistoryBuy(this.coin.ticker)
+       : this.$store.getters.getWalletTxs(this.coin.ticker);
     },
     fields()  {
       if (this.fromTokenSale) {
