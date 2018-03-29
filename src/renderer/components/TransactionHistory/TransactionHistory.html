@@ -30,9 +30,6 @@
     </b-table>
 
     <b-table v-else id="txTable" thead-tr-class="theadTrClass" tbody-tr-class="theadClass" tbody-class="cardTable" thead-class="theadClass" hover :sort-desc.sync="sortDesc" :sort-by.sync="sortBy" :fields="fields" :items="txHistory">
-        <template slot="time" slot-scope="row">
-            <span>{{dateFormat(row.value)}}</span>
-        </template>
         <template slot="origin" slot-scope="row">
             <img :src="getIconFromTicker(row.value.ticker)" alt="iconTicker">
         </template>

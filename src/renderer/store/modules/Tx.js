@@ -12,7 +12,9 @@ const actions = {
     return axios.post('http://localhost:8000', payload);
   },
   decodeTx({ commit, dispatch, rootGetters, rootState }, { wallet, tx }) {
-    const txExists = rootGetters.getWallets[wallet.ticker].txs.map(t => { return t.tx_hash; }).indexOf(tx.tx_hash);
+    const txExists = rootGetters.getWallets[wallet.ticker].txs.map(t => {
+      return t.tx_hash;
+    }).indexOf(tx.tx_hash);
 
     if (txExists < 0) {
       dispatch('getRawTx', { ticker: wallet.ticker, tx: tx }).then(response => {
