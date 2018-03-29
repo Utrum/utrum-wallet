@@ -65,11 +65,11 @@ const mutations = {
   UPDATE_IS_UPDATE(state, isUpdate) {
     state.isUpdate = isUpdate;
   },
-  ADD_TX(state, { wallet, tx }) {
-    state.wallets[wallet.ticker].txs.unshift(tx);
-  },
-  ADD_TX_LOCAL(state, { ticker, tx }) {
+  ADD_TX(state, { ticker, tx }) {
     state.wallets[ticker].txs.unshift(tx);
+  },
+  DELETE_TX(state, { ticker, tx }) {
+    state.wallets[ticker].txs.slice(state.wallets[ticker].txs.indexOf(tx), 1);
   },
 };
 

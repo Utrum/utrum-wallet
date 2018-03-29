@@ -7,7 +7,7 @@ const actions = {
       address: walletBuy.address,
       amount: amountBuy,
       fromMnz: true,
-      height: 0,
+      height: -42,
       time: new Date().getTime() / 1000,
       tx_hash: txHash,
     };
@@ -15,7 +15,7 @@ const actions = {
       address: '',
       amount: amountMnzBuy,
       fromMnz: true,
-      height: 0,
+      height: -42,
       origin: {
         ticker: walletBuy.ticker,
         txHash: txHash.substring(0, 9),
@@ -23,8 +23,8 @@ const actions = {
       time: new Date().getTime() / 1000,
       tx_hash: '',
     };
-    commit('ADD_TX_LOCAL', { ticker: walletBuy.ticker, tx: txLocalBuy }, { root: true });
-    commit('ADD_TX_LOCAL', { ticker: 'MNZ', tx: txLocalMnz }, { root: true });
+    commit('ADD_TX', { ticker: walletBuy.ticker, tx: txLocalBuy }, { root: true });
+    commit('ADD_TX', { ticker: 'MNZ', tx: txLocalMnz }, { root: true });
   },
   getRawTx({ commit, rootGetters }, { ticker, tx }) {
     const payload = {
@@ -43,7 +43,12 @@ const actions = {
     if (txExists < 0) {
       dispatch('getRawTx', { ticker: wallet.ticker, tx: tx }).then(response => {
         const verboseTx = getTxFromRawTx(wallet, response.data, tx.height, rootGetters.isTestMode);
-        commit('ADD_TX', { wallet, tx: verboseTx }, { root: true });
+        // const pendingTxs = wallet.txs.filter(el => (el.height === 0 || el.height === -1));
+        // const localTxs = wallet.txs.filter(el => el.height === -42);
+
+        // console.log(pendingTxs)
+
+        commit('ADD_TX', { ticker: wallet.ticker, tx: verboseTx }, { root: true });
       });
     }
   },
