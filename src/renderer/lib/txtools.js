@@ -1,6 +1,6 @@
 import bitcoinjs from 'bitcoinjs-lib';
 
-export default (wallet, rawtx, transaction, txHash, height, test) => {
+export default (wallet, transaction, height, test) => {
   let network;
   if (wallet.ticker === 'BTC' && test) {
     network = bitcoinjs.networks.testnet;
@@ -8,15 +8,15 @@ export default (wallet, rawtx, transaction, txHash, height, test) => {
     network = bitcoinjs.networks.bitcoin;
   } else network = wallet.coin.network;
 
-  const tx = bitcoinjs.TransactionBuilder.fromTransaction(rawtx, network);
+  const txb = bitcoinjs.TransactionBuilder.fromTransaction(bitcoinjs.Transaction.fromHex(transaction.hex), network);
 
-  if (tx.inputs[0].pubKeys[0] !== undefined) {
-    const inputPubKey = bitcoinjs.ECPair.fromPublicKeyBuffer(tx.inputs[0].pubKeys[0], network);
+  if (txb.inputs[0].pubKeys[0] !== undefined) {
+    const inputPubKey = bitcoinjs.ECPair.fromPublicKeyBuffer(txb.inputs[0].pubKeys[0], network);
     let amount = 0;
     let fromMNZ = false;
     let origin = '';
 
-    rawtx.outs.forEach(out => {
+    txb.tx.outs.forEach(out => {
       if (out.value !== 0) {
         const address = bitcoinjs.address.fromOutputScript(out.script, network);
         if (address === wallet.address && inputPubKey.getAddress() !== wallet.address) {
@@ -42,7 +42,7 @@ export default (wallet, rawtx, transaction, txHash, height, test) => {
     const decodedTx = {
       address: inputPubKey.getAddress(),
       height: height,
-      tx_hash: txHash,
+      tx_hash: transaction.txid,
       fromMNZ: fromMNZ,
       time: time,
       origin,
