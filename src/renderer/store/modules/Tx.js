@@ -2,6 +2,30 @@ import axios from 'axios';
 import getTxFromRawTx from '../../lib/txtools';
 
 const actions = {
+  addTxLocal({ commit }, { walletBuy, txHash, amountBuy, amountMnzBuy }) {
+    const txLocalBuy = {
+      address: walletBuy.address,
+      amount: amountBuy,
+      fromMnz: true,
+      height: 0,
+      time: new Date().getTime() / 1000,
+      tx_hash: txHash,
+    };
+    const txLocalMnz = {
+      address: '',
+      amount: amountMnzBuy,
+      fromMnz: true,
+      height: 0,
+      origin: {
+        ticker: walletBuy.ticker,
+        txHash: txHash.substring(0, 9),
+      },
+      time: new Date().getTime() / 1000,
+      tx_hash: '',
+    };
+    commit('ADD_TX_LOCAL', { ticker: walletBuy.ticker, tx: txLocalBuy }, { root: true });
+    commit('ADD_TX_LOCAL', { ticker: 'MNZ', tx: txLocalMnz }, { root: true });
+  },
   getRawTx({ commit, rootGetters }, { ticker, tx }) {
     const payload = {
       ticker: ticker,

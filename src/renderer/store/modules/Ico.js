@@ -3,11 +3,12 @@ import bitcoinjs from 'bitcoinjs-lib';
 import { Wallet }  from 'libwallet-mnz';
 
 const actions = {
-  buyAsset({ commit, rootGetters }, { wallet, amount, fee, coupon }) {
+  buyAsset({ commit, rootGetters, dispatch }, { wallet, amount, fee, coupon, amountMnz }) {
     const walletBuy = wallet;
     const amountBuy = amount;
     const couponBuy = coupon;
     const feeBuy = fee;
+    const amountMnzBuy = amountMnz;
 
     return new Promise((resolve, reject) => {
       axios.post('http://localhost:8000', {
@@ -41,6 +42,12 @@ const actions = {
           method: 'blockchain.transaction.broadcast',
           params: [tx],
         }).then((response) => {
+          dispatch('addTxLocal', {
+            walletBuy: walletBuy,
+            txHash: response.data,
+            amountBuy: amountBuy,
+            amountMnzBuy: amountMnzBuy,
+          }, { root: true });
           resolve(response);
         }).catch(error => {
           reject(error);

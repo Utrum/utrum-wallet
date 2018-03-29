@@ -108,6 +108,7 @@ export default {
         amount: sb.toSatoshi(this.getTotalPrice),
         fee: sb.toSatoshi(this.fee),
         coupon: this.coupon,
+        amountMnz: this.packageMNZ + (this.packageMNZ * this.currentBonus),
       }).then(response => {
         this.$swal('Transaction sent', response.data, 'success');
       }, error => {

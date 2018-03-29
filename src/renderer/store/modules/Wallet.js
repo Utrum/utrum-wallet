@@ -68,6 +68,9 @@ const mutations = {
   ADD_TX(state, { wallet, tx }) {
     state.wallets[wallet.ticker].txs.unshift(tx);
   },
+  ADD_TX_LOCAL(state, { ticker, tx }) {
+    state.wallets[ticker].txs.unshift(tx);
+  },
 };
 
 const actions = {
