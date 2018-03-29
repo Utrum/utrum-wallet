@@ -85,7 +85,7 @@
     "jsonrpc-node": "^1.2.93",
     "less": "^3.0.1",
     "less-loader": "^4.0.5",
-    "libwallet-mnz": "^2.8.1",
+    "libwallet-mnz": "^2.8.2",
     "moment": "^2.21.0",
     "satoshi-bitcoin": "^1.0.4",
     "sweetalert2": "^7.9.2",

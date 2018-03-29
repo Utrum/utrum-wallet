@@ -48,14 +48,8 @@ const getters = {
 };
 
 const mutations = {
-  INIT_WALLET(state, { payload, privkey, testMode }) {
-    const wallet = new Wallet(privkey, payload.coin, testMode);
-    wallet.ticker = payload.coin.ticker;
-    wallet.balance = 0;
-    wallet.balance_usd = 0;
-    wallet.txs = [];
-    wallet.privkey = privkey;
-    state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet);
+  ADD_WALLET(state, wallet) {
+    state.wallets[wallet.ticker] = Vue.set(state.wallets, wallet.ticker, wallet);
   },
   DESTROY_WALLETS(state) {
     state.wallets = {};
@@ -81,13 +75,17 @@ const actions = {
     }
 
     dispatch('setPrivKey', createPrivKey(rootGetters.passphrase));
+
     coins.all.forEach(coin => {
-      const payload = {
-        coin: Object.assign({}, coin),
-        passphrase: rootGetters.passphrase,
-      };
-      commit('INIT_WALLET', { payload: payload, privkey: rootGetters.privKey, testMode: rootGetters.isTestMode });
+      const wallet = new Wallet(rootGetters.privKey, coin, rootGetters.isTestMode);
+      wallet.ticker = coin.ticker;
+      wallet.balance = 0;
+      wallet.balance_usd = 0;
+      wallet.txs = [];
+      wallet.privKey = rootGetters.privKey;
+      commit('ADD_WALLET', wallet);
     });
+
     dispatch('updateAllBalances');
   },
   destroyWallets({ commit }) {

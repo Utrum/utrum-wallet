@@ -1,19 +1,13 @@
 import axios from 'axios';
 import getTxFromRawTx from '../../lib/txtools';
 
-// const mutations = {
-//   ADD_TX(state, { wallet, rawtx, transaction, tx_hash, height, testMode }) {
-//     state.wallets[wallet.ticker].txs.unshift(tx);
-//   },
-// };
-
 const actions = {
   getRawTx({ commit, rootGetters }, { ticker, tx }) {
     const payload = {
       ticker: ticker,
       test: rootGetters.isTestMode,
       method: 'blockchain.transaction.get',
-      params: [tx.tx_hash, true],
+      params: [tx.tx_hash, 1],
     };
     return axios.post('http://localhost:8000', payload);
   },

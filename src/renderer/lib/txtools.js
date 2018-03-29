@@ -7,7 +7,6 @@ export default (wallet, transaction, height, test) => {
   } else if (wallet.ticker === 'BTC' && !test) {
     network = bitcoinjs.networks.bitcoin;
   } else network = wallet.coin.network;
-
   const txb = bitcoinjs.TransactionBuilder.fromTransaction(bitcoinjs.Transaction.fromHex(transaction.hex), network);
 
   if (txb.inputs[0].pubKeys[0] !== undefined) {
