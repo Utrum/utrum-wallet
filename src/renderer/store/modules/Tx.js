@@ -3,30 +3,6 @@ import axios from 'axios';
 import getTxFromRawTx from '../../lib/txtools';
 
 const actions = {
-  addTxLocal({ commit }, { walletBuy, txHash, amountBuy, amountMnzBuy }) {
-    const txLocalBuy = {
-      address: walletBuy.address,
-      amount: amountBuy,
-      fromMnz: true,
-      height: -42,
-      time: new Date().getTime() / 1000,
-      tx_hash: txHash,
-    };
-    const txLocalMnz = {
-      address: '',
-      amount: amountMnzBuy,
-      fromMnz: true,
-      height: -42,
-      origin: {
-        ticker: walletBuy.ticker,
-        txHash: txHash.substring(0, 9),
-      },
-      time: new Date().getTime() / 1000,
-      tx_hash: '',
-    };
-    commit('ADD_TX', { ticker: walletBuy.ticker, tx: txLocalBuy }, { root: true });
-    commit('ADD_TX', { ticker: 'MNZ', tx: txLocalMnz }, { root: true });
-  },
   getRawTx({ commit, rootGetters }, { ticker, tx }) {
     const payload = {
       ticker: ticker,
@@ -37,54 +13,71 @@ const actions = {
     return axios.post('http://localhost:8000', payload);
   },
   decodeTx({ commit, dispatch, rootGetters, rootState }, { wallet, tx }) {
-    const txExists = rootGetters.getWallets[wallet.ticker].txs.map(t => {
-      return t.tx_hash;
-    }).indexOf(tx.tx_hash);
+    // const txExists = rootGetters.getWallets[wallet.ticker].txs.map(t => {
+    //   return t.tx_hash;
+    // }).indexOf(tx.tx_hash);
 
-    if (txExists < 0) {
-      dispatch('getRawTx', { ticker: wallet.ticker, tx: tx }).then(response => {
+    // if (txExists >= 0) {
+    //   return Promise.resolve();
+    // }
+    return dispatch('getRawTx', { ticker: wallet.ticker, tx: tx })
+      .then(response => {
         const verboseTx = getTxFromRawTx(wallet, response.data, tx.height, rootGetters.isTestMode);
-
-        const doneTxs = rootGetters.getHistoryBuy().filter(el => (el.height > 0));
-        // const pendingTxs = wallet.txs.filter(el => (el.height === 0 || el.height === -1));
-        // const localTxs = wallet.txs.filter(el => el.height === -42);
-
-        // if (pendingTxs.length > 0 && (pendingTxs.origin.txHash === verboseTx.origin.txHash)) {
-        //   console.log(verboseTx);
-        // }
-        // console.log("VERBOSE:", verboseTx);
-        // console.log(pendingTxs);
-        // console.log(localTxs);
-        _.forEach(doneTxs, (doneTx) => {
-          if (doneTx.origin) {
-            // console.log("DoneTX with origin:", doneTx);
-          }
-
-          if (doneTx.origin.ticker === wallet.ticker && doneTx.height <= 0 && verboseTx.origin.txHash === doneTx.origin.txHash) {
-            // console.log(doneTx);
-            commit('DELETE_TX', { ticker: doneTx.origin.ticker, tx: doneTxs }, { root: true });
-          }
-        });
-        commit('ADD_TX', { ticker: wallet.ticker, tx: verboseTx }, { root: true });
-      });
-    }
+        commit('DELETE_PENDING_TX', verboseTx.tx_hash, { root: true });
+        return verboseTx;
+      })
+    ;
   },
   buildTxHistory({ commit, dispatch, getters, rootGetters }, wallet) {
-    axios.post('http://localhost:8000', {
-      ticker: wallet.ticker,
-      test: rootGetters.isTestMode,
-      method: 'blockchain.address.get_history',
-      params: [wallet.address],
-    }).then(response => {
-      if (response.data.length > 0) {
-        const txs = response.data;
-
-        txs.forEach(tx => {
-          dispatch('decodeTx', { wallet: wallet, tx: tx });
-        });
-      }
-    });
+    return axios
+      .post('http://localhost:8000', {
+        ticker: wallet.ticker,
+        test: rootGetters.isTestMode,
+        method: 'blockchain.address.get_history',
+        params: [wallet.address],
+      })
+      .then(response => {
+        if (response.data.length > 0) {
+          const txs = response.data;
+          const promises = _.map(txs, tx => {
+            return dispatch('decodeTx', { wallet: wallet, tx: tx });
+          });
+          return Promise.all(promises);
+        }
+      })
+      .then((txsDetails) => {
+        commit('ADD_TXS', { ticker: wallet.ticker, txs: txsDetails }, { root: true });
+      })
+      .then(() => {
+        const promiseForKMDWallet = rootGetters.getWalletByTicker('KMD');
+        const promiseForBTCWallet = rootGetters.getWalletByTicker('BTC');
+        const promiseForMNZWallet = rootGetters.getWalletByTicker('MNZ');
+        return Promise.all([promiseForKMDWallet, promiseForBTCWallet, promiseForMNZWallet]);
+      })
+      .then((wallets) => {
+        const associations = associateTxsFromWallet(wallets[0].txs.concat(wallets[1].txs), wallets[2].txs);
+        commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
+      })
+    ;
   },
+};
+
+const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
+  const associateArray = [];
+  _.forEach(mnzTxs, (mnzTx) => {
+    if (mnzTx.origin != null) {
+      const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
+        if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
+          return true;
+        }
+        return false;
+      });
+      if (cryptoTxsForMnz[0]) {
+        associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
+      }
+    }
+  });
+  return associateArray;
 };
 
 export default {

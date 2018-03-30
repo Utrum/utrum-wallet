@@ -16,9 +16,6 @@ export default {
     explorer: ExplorerLink,
   },
   methods: {
-    getRow(value) {
-      return value;
-    },
     myRowClickHandler(record) {
       this.$swal('Swap info', JSON.stringify(record));
     },
@@ -28,80 +25,60 @@ export default {
     getColorAmount(amount) {
       return (amount > 0) ? 'positiveColor' : 'negativeColor';
     },
-    dateFormat(value) {
-      const blockchainDateUtc = moment.utc(value * 1000);
+    dateFormat(time) {
+      const blockchainDateUtc = moment.utc(time * 1000);
       const dateString = moment(blockchainDateUtc).local().format('hh:mm A DD/MM/YYYY');
       return dateString;
     },
     getIconFromTicker(value) {
       return require(`@/assets/icon-${value}.svg`); // eslint-disable-line
     },
-    getPrice(value) {
-      const amountMnz = value.item.amount;
-      let amountOrigin = 0;
 
-      const txOrigin = this.$store.getters
-        .getWalletTxs(value.item.origin.ticker)
-        .filter(el => value.item.origin.txHash === el.tx_hash.substring(0, 9));
-      amountOrigin = txOrigin[0].amount;
-
-      return Math.abs(amountOrigin / amountMnz).toFixed(8);
+    // KMD/BTC
+    getPrice(row) {
+      return Math.abs(row.item.cryptoTx.amount / row.item.mnzTx.amount).toFixed(8);
     },
-    getTotalPrice(value) {
-      let amountOrigin = 0;
 
-      const txOrigin = this.$store.getters
-        .getWalletTxs(value.item.origin.ticker)
-        .filter(el => value.item.origin.txHash === el.tx_hash.substring(0, 9));
-      amountOrigin = txOrigin[0].amount;
-
-      return Math.abs(sb.toBitcoin(amountOrigin));
+    // MNZ
+    getTotalPrice(row) {
+      return sb.toBitcoin(Math.abs(row.item.mnzTx.amount));
     },
-    getStatus(value) {
-      return (value < 0) ? 'Pending' : 'Done';
-    },
-  },
-  mounted() {
-    this.$store.dispatch('buildTxHistory', this.wallet);
   },
   computed: {
-    wallet() {
-      return this.$store.getters.getWalletByTicker(this.coin.ticker);
-    },
     txHistory() {
-      return this.fromTokenSale ? this.$store.getters.getHistoryBuy
+      return this.fromTokenSale ? this.$store.getters.getSwapList
        : this.$store.getters.getWalletTxs(this.coin.ticker);
     },
     fields()  {
       if (this.fromTokenSale) {
         return [
           {
-            key: 'time',
+            key: 'cryptoTx.time',
             label: 'Date / Hours',
             sortable: true,
           },
           {
-            key: 'origin',
+            key: 'ticker',
             label: 'Type',
             sortable: true,
           },
           {
-            key: 'amount',
-            label: 'Amount (MNZ)',
+            key: 'mnzTx.amount',
+            label: 'Amount',
             sortable: true,
           },
           {
-            key: 'origin.txHash',
+            key: 'price41',
             label: 'Price',
             sortable: true,
           },
           {
-            key: 'item',
+            key: 'price4all',
             label: 'Total',
             sortable: true,
           },
           {
-            key: 'height',
+            key: 'status',
             label: 'Status',
             sortable: true,
           },

@@ -36,8 +36,8 @@ export default {
   },
   mounted() {
     this.selectFee = this.fees[0].label;
-    this.$store.dispatch('buildTxHistory', this.wallet);
-    this.$store.dispatch('buildTxHistory', this.walletMnz);
+    // this.$store.dispatch('buildTxHistory', this.wallet);
+    // this.$store.dispatch('buildTxHistory', this.walletMnz);
   },
   methods: {
     isHistory() {
@@ -91,8 +91,8 @@ export default {
     },
     valueChange(value) {
       this.select = value;
-      this.$store.dispatch('buildTxHistory', this.wallet);
-      this.$store.dispatch('buildTxHistory', this.walletMnz);
+      // this.$store.dispatch('buildTxHistory', this.wallet);
+      // this.$store.dispatch('buildTxHistory', this.walletMnz);
     },
     incrementPackage() {
       if (this.packageMNZ <= this.getMaxBuy - this.packageIncrement) {
@@ -107,17 +107,20 @@ export default {
     buyMnz() {
       this.hideModal();
 
-      this.$store.dispatch('buyAsset', {
+      this.$store
+      .dispatch('buyAsset', {
         wallet: this.wallet,
         amount: sb.toSatoshi(this.getTotalPrice),
         fee: sb.toSatoshi(this.fee),
         coupon: this.coupon,
         amountMnz: this.packageMNZ + (this.packageMNZ * this.currentBonus),
-      }).then(response => {
+      })
+      .then(response => {
         this.$swal('Transaction sent', response.data, 'success');
       }, error => {
         this.$swal('Transaction not sent', error.response, 'error');
-      });
+      })
+      ;
     },
   },
   watch: {

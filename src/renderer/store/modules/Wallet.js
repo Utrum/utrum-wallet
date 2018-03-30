@@ -7,13 +7,13 @@ import getCmcData from '../../lib/coinmarketcap';
 import createPrivKey from '../../lib/createPrivKey';
 
 const state = {
-  wallets: {
+  wallets: [{
     balance: 0,
     balance_unconfirmed: 0,
     balance_usd: 0,
     ticker: null,
     txs: {},
-  },
+  }],
   coins: [],
   calculating: false,
   isUpdate: false,
@@ -24,10 +24,10 @@ const getters = {
     return state.isUpdate;
   },
   getHistoryBuy: (state, getters) => {
-    const history = getters
-    .getWalletTxs('MNZ');
+    const history = getters.getWalletTxs('MNZ');
     Object.keys(coins).forEach((coin) => {
-      history.concat(history.filter(el => el.origin.ticker === coin));
+      const filteredHistory = history.filter(el => el.origin.ticker === coin)
+      history.concat(filteredHistory);
     });
     return history;
   },
@@ -68,8 +68,11 @@ const mutations = {
   UPDATE_IS_UPDATE(state, isUpdate) {
     state.isUpdate = isUpdate;
   },
-  ADD_TX(state, { ticker, tx }) {
-    state.wallets[ticker].txs.unshift(tx);
+  // ADD_TX(state, { ticker, tx }) {
+  //   state.wallets[ticker].txs.unshift(tx);
+  // },
+  ADD_TXS(state, { ticker, txs }) {
+    state.wallets[ticker].txs = txs;
   },
   DELETE_TX(state, { ticker, tx }) {
     state.wallets[ticker].txs.slice(state.wallets[ticker].txs.indexOf(tx), 1);
@@ -95,6 +98,7 @@ const actions = {
       wallet.txs = [];
       wallet.privKey = rootGetters.privKey;
       commit('ADD_WALLET', wallet);
+      dispatch('buildTxHistory', wallet, { root: true });
     });
 
     dispatch('updateAllBalances');
@@ -169,7 +173,7 @@ const actions = {
         dispatch('startUpdateHistory');
       }
       clearTimeout(interval);
-    }, rand * 1000);
+    }, /*rand * 1000*/ 10000);
   },
 };
 
