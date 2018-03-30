@@ -27,10 +27,6 @@ Object.keys(coins.all).forEach(coin => {
   });
 });
 
-// Object.keys(clients).forEach((ticker) => {
-//   c
-// });
-
 export default (ticker, test, method, params, done) => {
   if (!ticker || !method || !params) throw new Error('ERROR: Missing arguments');
   if (test) {
