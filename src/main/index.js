@@ -107,6 +107,7 @@ function createWindow() {
               return res.end(stdout);
             });
           } else {
+            console.log(payload);
             electrumCall(payload.ticker, payload.test, payload.method, payload.params, (err, response) => {
               if (err) res.end(JSON.stringify({ error: err }));
               console.log(payload, response)

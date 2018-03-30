@@ -36,6 +36,8 @@ export default {
   },
   mounted() {
     this.selectFee = this.fees[0].label;
+    this.$store.dispatch('buildTxHistory', this.wallet);
+    this.$store.dispatch('buildTxHistory', this.walletMnz);
   },
   methods: {
     isHistory() {
@@ -89,6 +91,8 @@ export default {
     },
     valueChange(value) {
       this.select = value;
+      this.$store.dispatch('buildTxHistory', this.wallet);
+      this.$store.dispatch('buildTxHistory', this.walletMnz);
     },
     incrementPackage() {
       if (this.packageMNZ <= this.getMaxBuy - this.packageIncrement) {
@@ -148,16 +152,19 @@ export default {
       },
     },
     getMinBuy() {
-      return this.$store.getters.getConfig.minBuy;
+      return sb.toSatoshi(this.$store.getters.getConfig.minBuy);
     },
     getMaxBuy() {
-      return this.$store.getters.getConfig.maxBuy;
+      return sb.toSatoshi(this.$store.getters.getConfig.maxBuy);
     },
     getConfig() {
       return this.$store.getters.getConfig;
     },
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
+    },
+    walletMnz() {
+      return this.$store.getters.getWalletByTicker('MNZ');
     },
     getBalance() {
       return this.numberWithSpaces(this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8));

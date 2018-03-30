@@ -23,10 +23,13 @@ const getters = {
   isUpdate: (state) => {
     return state.isUpdate;
   },
-  getHistoryBuy: (state, getters) => (ticker) => {
-    return getters
-    .getWalletTxs('MNZ')
-    .filter(el => el.origin.ticker === ticker);
+  getHistoryBuy: (state, getters) => {
+    const history = getters
+    .getWalletTxs('MNZ');
+    Object.keys(coins).forEach((coin) => {
+      history.concat(history.filter(el => el.origin.ticker === coin));
+    });
+    return history;
   },
   getWalletByTicker: (state) => (ticker) => {
     return state.wallets[ticker];

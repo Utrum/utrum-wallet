@@ -33,3 +33,7 @@
 #totalPrice {
     border-right: 1px solid rgba(151, 151, 151, 0.5);
 }
+
+.pointer {
+    cursor: pointer;
+}

@@ -26,7 +26,7 @@ const mutations = {
 const actions = {
   updateConfig({ commit }) {
     const endPointConfig
-    = 'https://gist.githubusercontent.com/Kiruel/216ee8a27116a3bcf2e343dad07dc85b/raw/1a491271f840c8fe713365be83ecf525b4243485/conf.json';
+    = 'http://51.15.203.171/icoClientConfiguration.json';
     axios.get(endPointConfig, {
     }).then(response => {
       commit('SET_CONFIG', response.data);

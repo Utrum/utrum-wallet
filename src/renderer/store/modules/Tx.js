@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import axios from 'axios';
 import getTxFromRawTx from '../../lib/txtools';
 
@@ -43,11 +44,27 @@ const actions = {
     if (txExists < 0) {
       dispatch('getRawTx', { ticker: wallet.ticker, tx: tx }).then(response => {
         const verboseTx = getTxFromRawTx(wallet, response.data, tx.height, rootGetters.isTestMode);
+
+        const doneTxs = rootGetters.getHistoryBuy().filter(el => (el.height > 0));
         // const pendingTxs = wallet.txs.filter(el => (el.height === 0 || el.height === -1));
         // const localTxs = wallet.txs.filter(el => el.height === -42);
 
-        // console.log(pendingTxs)
-
+        // if (pendingTxs.length > 0 && (pendingTxs.origin.txHash === verboseTx.origin.txHash)) {
+        //   console.log(verboseTx);
+        // }
+        console.log("VERBOSE:", verboseTx);
+        // console.log(pendingTxs);
+        // console.log(localTxs);
+        _.forEach(doneTxs, (doneTx) => {
+          if (doneTx.origin) {
+            console.log("DoneTX with origin:", doneTx);
+          }
+          
+          if (doneTx.origin.ticker === wallet.ticker && doneTx.height <= 0 && verboseTx.origin.txHash === doneTx.origin.txHash) {
+            console.log(doneTx);
+            commit('DELETE_TX', { ticker: doneTx.origin.ticker, tx: doneTxs }, { root: true });
+          }
+        });
         commit('ADD_TX', { ticker: wallet.ticker, tx: verboseTx }, { root: true });
       });
     }

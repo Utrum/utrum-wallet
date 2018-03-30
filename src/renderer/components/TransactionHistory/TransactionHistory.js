@@ -16,6 +16,12 @@ export default {
     explorer: ExplorerLink,
   },
   methods: {
+    getRow(value) {
+      return value;
+    },
+    myRowClickHandler(record) {
+      this.$swal('Swap info', JSON.stringify(record));
+    },
     satoshiToBitcoin(amount) {
       return sb.toBitcoin(amount);
     },
@@ -52,7 +58,7 @@ export default {
       return Math.abs(sb.toBitcoin(amountOrigin));
     },
     getStatus(value) {
-      return (value === 0 || value === -1) ? 'Pending' : 'Done';
+      return (value < 0) ? 'Pending' : 'Done';
     },
   },
   mounted() {
@@ -63,7 +69,7 @@ export default {
       return this.$store.getters.getWalletByTicker(this.coin.ticker);
     },
     txHistory() {
-      return this.fromTokenSale ? this.$store.getters.getHistoryBuy(this.coin.ticker)
+      return this.fromTokenSale ? this.$store.getters.getHistoryBuy
        : this.$store.getters.getWalletTxs(this.coin.ticker);
     },
     fields()  {
