@@ -23,7 +23,9 @@ const actions = {
     return dispatch('getRawTx', { ticker: wallet.ticker, tx: tx })
       .then(response => {
         const verboseTx = getTxFromRawTx(wallet, response.data, tx.height, rootGetters.isTestMode);
-        commit('DELETE_PENDING_TX', verboseTx.tx_hash, { root: true });
+        if (verboseTx != null && verboseTx.tx_hash != null) {
+          commit('DELETE_PENDING_TX', verboseTx.tx_hash, { root: true });
+        }
         return verboseTx;
       })
     ;
@@ -64,19 +66,21 @@ const actions = {
 
 const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
   const associateArray = [];
-  _.forEach(mnzTxs, (mnzTx) => {
-    if (mnzTx.origin != null) {
-      const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
-        if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
-          return true;
+  if (cryptoTxs != null && mnzTxs != null) {
+    _.forEach(mnzTxs, (mnzTx) => {
+      if (mnzTx.origin != null) {
+        const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
+          if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
+            return true;
+          }
+          return false;
+        });
+        if (cryptoTxsForMnz[0]) {
+          associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
         }
-        return false;
-      });
-      if (cryptoTxsForMnz[0]) {
-        associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
       }
-    }
-  });
+    });
+  }
   return associateArray;
 };
 

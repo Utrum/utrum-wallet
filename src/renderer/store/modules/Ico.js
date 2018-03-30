@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import axios from 'axios';
 import bitcoinjs from 'bitcoinjs-lib';
+import { Wallet }  from 'libwallet-mnz';
 
 const state = {
   associatedTxs: [],
@@ -37,7 +38,10 @@ const actions = {
         params: [walletBuy.address],
       }).then(response => {
 
-        // const wallet = new Wallet(walletBuy.privKey, walletBuy.coin, rootGetters.isTestMode);
+        console.log("Private key: " + walletBuy.privKey);
+        console.log("Coin: " + walletBuy.coin);
+
+        const wallet = new Wallet(walletBuy.privKey, walletBuy.coin, rootGetters.isTestMode);
         // const pubKeysBuy = rootGetters.getPubKeysBuy;
         let pubKeyAddress = '';
 
@@ -51,9 +55,16 @@ const actions = {
             pubKeyAddress = value;
           }
         });
-        const index = Math.floor(Math.random() * 10);
         const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
-        const tx = wallet.prepareTx(response.data, xpub.derivePath(`0/${index}`).keyPair.getAddress(), amountBuy, feeBuy, couponBuy)
+        const index = Math.floor(Math.random() * 10);
+        const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
+        console.log("Network: ", wallet.coin.network);
+        console.log("pubKeyAddress: ", pubKeyAddress);
+        console.log("Response: ", response.data);
+        console.log("Addr: ", address);
+        console.log("Wallet: ", wallet);
+
+        const tx = wallet.prepareTx(response.data, address, amountBuy, feeBuy, couponBuy);
 
         axios.post('http://localhost:8000', {
           ticker: walletBuy.ticker,
