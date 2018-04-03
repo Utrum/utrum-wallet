@@ -103,7 +103,7 @@ export default {
       .dispatch('buyAsset', {
         wallet: this.wallet,
         amount: sb.toSatoshi(this.getTotalPrice),
-        fee: sb.toSatoshi(this.fee),
+        fee: this.fee,
         coupon: this.coupon,
         amountMnz: this.packageMNZ + (this.packageMNZ * this.currentBonus),
       })
@@ -132,8 +132,8 @@ export default {
             },
           ],
         });
-      }, error => {
-        this.$toasted.show(error.response);
+      }).catch(error => {
+        this.$toasted.error(error);
       })
       ;
     },

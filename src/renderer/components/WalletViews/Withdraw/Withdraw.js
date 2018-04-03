@@ -1,5 +1,4 @@
 import bitcoinjs from 'bitcoinjs-lib';
-import { Wallet } from 'libwallet-mnz';
 import { QrcodeReader } from 'vue-qrcode-reader';
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
@@ -145,10 +144,9 @@ export default {
       if (this.canWithdraw && this.addressIsValid) {
         const self = this;
         this.wallet.electrum.listUnspent(this.wallet.address).then(response => {
-          const wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode);
-          wallet.ticker = self.wallet.ticker;
+          this.wallet.ticker = self.wallet.ticker;
 
-          const tx = wallet.prepareTx(response, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), sb.toSatoshi(self.fee));
+          const tx = this.wallet.prepareTx(response, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), self.fee);
 
           self.wallet.electrum.broadcast(tx)
           .then((response) => {
