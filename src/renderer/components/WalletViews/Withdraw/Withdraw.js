@@ -139,8 +139,6 @@ export default {
       };
       this.select = value;
       this.withdraw.coin = value;
-
-      this.$store.dispatch('buildTxHistory', this.wallet);
     },
     withdrawFunds() {
       this.hideModal();
