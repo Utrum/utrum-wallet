@@ -79,6 +79,14 @@ const actions = {
 // key: 'status',
 
 const getters = {
+  isCanBuy: (state, rootGetters) => {
+    const config = rootGetters.getConfig;
+    const date = Date();
+    if (!(config.progress <= 1 && config.icoStartDate < date && date < config.icoEndDate)) {
+      return true;
+    }
+    return false;
+  },
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs);
   },

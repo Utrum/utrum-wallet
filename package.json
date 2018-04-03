@@ -93,7 +93,7 @@
     "vue": "^2.3.3",
     "vue-clipboard2": "0.0.8",
     "vue-electron": "^1.0.6",
-    "vue-qrcode-reader": "^0.7.1",
+    "vue-qrcode-reader": "^0.7.2",
     "vue-qriously": "^1.1.1",
     "vue-router": "^2.5.3",
     "vue-sweetalert": "^0.1.18",

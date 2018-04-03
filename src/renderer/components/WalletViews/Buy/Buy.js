@@ -37,8 +37,6 @@ export default {
   },
   mounted() {
     this.selectFee = this.fees[0].label;
-    // this.$store.dispatch('buildTxHistory', this.wallet);
-    // this.$store.dispatch('buildTxHistory', this.walletMnz);
   },
   methods: {
     isHistory() {
@@ -92,8 +90,6 @@ export default {
     },
     valueChange(value) {
       this.select = value;
-      // this.$store.dispatch('buildTxHistory', this.wallet);
-      // this.$store.dispatch('buildTxHistory', this.walletMnz);
     },
     incrementPackage() {
       if (this.packageMNZ <= this.getMaxBuy - this.packageIncrement) {
