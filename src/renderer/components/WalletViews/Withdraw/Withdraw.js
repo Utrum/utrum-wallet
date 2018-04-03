@@ -67,12 +67,8 @@ export default {
     },
     callEstimateFee(blocks) {
       const self = this;
-      this.$http.post('http://localhost:8000', {
-        ticker: self.select,
-        method: 'blockchain.estimatefee',
-        params: [Number(blocks)],
-      }).then(response => {
-        self.fee = response.data;
+      this.wallet.electrum.getEstimateFee(blocks).then(response => {
+        self.fee = response;
       });
     },
     onChange(value) {
@@ -144,27 +140,15 @@ export default {
       this.hideModal();
       if (this.canWithdraw && this.addressIsValid) {
         const self = this;
-        this.$http.post('http://localhost:8000', {
-          ticker: this.wallet.ticker,
-          test: self.$store.getters.isTestMode,
-          method: 'blockchain.address.listunspent',
-          params: [this.wallet.address],
-        }).then(response => {
-          const wallet = new Wallet(self.wallet.privKey, self.wallet.coin, self.$store.getters.isTestMode);
+        this.wallet.electrum.listUnspent(this.wallet.address).then(response => {
+          const wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode);
           wallet.ticker = self.wallet.ticker;
 
-          const tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), self.fee);
+          const tx = wallet.prepareTx(response, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), sb.toSatoshi(self.fee));
 
-          self.$http.post('http://localhost:8000', {
-            ticker: self.wallet.ticker,
-            test: self.$store.getters.isTestMode,
-            method: 'blockchain.transaction.broadcast',
-            params: [tx],
-          }).then((response) => {
-            self.$swal('Transaction sent', response.data, 'success');
-          }).catch((error) => {
-            self.$swal('Transaction not send', error, 'error');
-          });
+          self.wallet.electrum.broadcast(tx).then((response) => {
+            self.$swal('Transaction sent', response, 'success');
+          }).catch((error) => { self.$swal('Transaction not send', error, 'error'); });
         });
       }
     },

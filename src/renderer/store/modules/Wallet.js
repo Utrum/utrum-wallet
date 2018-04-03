@@ -1,8 +1,8 @@
 import { Wallet, coins }  from 'libwallet-mnz';
 import sb from 'satoshi-bitcoin';
 import Vue from 'vue';
-
-import getBalance from '../../lib/electrum';
+import store from '../../store';
+import ElectrumService from '../../lib/electrum';
 import getCmcData from '../../lib/coinmarketcap';
 import createPrivKey from '../../lib/createPrivKey';
 
@@ -83,20 +83,26 @@ const actions = {
   setIsUpdate({ commit }, isUpdate) {
     commit('UPDATE_IS_UPDATE', isUpdate);
   },
-  initWallets({ commit, dispatch, rootGetters }) {
+  async initWallets({ commit, dispatch, rootGetters }) {
     if (Object.keys(state.wallets).length > 0) {
       dispatch('destroyWallets');
     }
 
     dispatch('setPrivKey', createPrivKey(rootGetters.passphrase));
 
-    coins.all.forEach(coin => {
-      const wallet = new Wallet(rootGetters.privKey, coin, rootGetters.isTestMode);
-      wallet.ticker = coin.ticker;
+    const privateKey = rootGetters.privKey;
+    const isTestMode = rootGetters.isTestMode;
+
+    coins.all.forEach(async (coin) => {
+      const ticker = coin.ticker;
+      const wallet = new Wallet(privateKey, coin, isTestMode);
+      wallet.electrum = new ElectrumService(store, ticker, isTestMode);
+      await wallet.electrum.serverVersion('Monaize ICO Wallet 0.1', '1.2');
+      wallet.ticker = ticker;
       wallet.balance = 0;
       wallet.balance_usd = 0;
       wallet.txs = [];
-      wallet.privKey = rootGetters.privKey;
+      wallet.privKey = privateKey;
       commit('ADD_WALLET', wallet);
       dispatch('buildTxHistory', wallet, { root: true });
     });
@@ -112,9 +118,12 @@ const actions = {
     });
   },
   updateBalance({ commit, getters, rootGetters }, wallet) {
-    getBalance(wallet, rootGetters.isTestMode).then(response => {
-      wallet.balance = sb.toBitcoin(response.data.confirmed);
-      wallet.balance_unconfirmed = sb.toBitcoin(response.data.unconfirmed);
+    wallet.electrum.getBalance(wallet.address).then(response => {
+      if (response.error) {
+        throw new Error(`Failed to retrieve ${wallet.ticker} balance\n${response.error}`);
+      }
+      wallet.balance = sb.toBitcoin(response.confirmed);
+      wallet.balance_unconfirmed = sb.toBitcoin(response.unconfirmed);
       if (wallet.coin.name !== 'monaize') {
         getCmcData(wallet.coin.name).then(response => {
           response.data.forEach((cmcCoin) => {

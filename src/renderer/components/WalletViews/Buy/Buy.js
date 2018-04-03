@@ -56,13 +56,8 @@ export default {
     },
     callEstimateFee(blocks) {
       const self = this;
-      this.$http.post('http://localhost:8000', {
-        test: self.$store.getters.isTestMode,
-        ticker: self.select,
-        method: 'blockchain.estimatefee',
-        params: [Number(blocks)],
-      }).then(response => {
-        self.fee = response.data;
+      this.wallet.electrum.getEstimateFee(blocks).then(response => {
+        self.fee = response;
       });
     },
     buyMnzModal() {

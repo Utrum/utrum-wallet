@@ -4,13 +4,13 @@ import getTxFromRawTx from '../../lib/txtools';
 
 const actions = {
   getRawTx({ commit, rootGetters }, { ticker, tx }) {
-    const payload = {
-      ticker: ticker,
-      test: rootGetters.isTestMode,
-      method: 'blockchain.transaction.get',
-      params: [tx.tx_hash, 1],
-    };
-    return axios.post('http://localhost:8000', payload);
+    // const payload = {
+    //   ticker: ticker,
+    //   test: rootGetters.isTestMode,
+    //   method: 'blockchain.transaction.get',
+    //   params: [tx.tx_hash, 1],
+    // };
+    return rootGetters.getWallets[ticker].electrum.getTransaction(tx.tx_hash, true);
   },
   decodeTx({ commit, dispatch, rootGetters, rootState }, { wallet, tx }) {
     // const txExists = rootGetters.getWallets[wallet.ticker].txs.map(t => {
@@ -22,7 +22,7 @@ const actions = {
     // }
     return dispatch('getRawTx', { ticker: wallet.ticker, tx: tx })
       .then(response => {
-        const verboseTx = getTxFromRawTx(wallet, response.data, tx.height, rootGetters.isTestMode);
+        const verboseTx = getTxFromRawTx(wallet, response, tx.height, rootGetters.isTestMode);
         if (verboseTx != null && verboseTx.tx_hash != null) {
           commit('DELETE_PENDING_TX', verboseTx.tx_hash, { root: true });
         }
@@ -31,16 +31,10 @@ const actions = {
     ;
   },
   buildTxHistory({ commit, dispatch, getters, rootGetters }, wallet) {
-    return axios
-      .post('http://localhost:8000', {
-        ticker: wallet.ticker,
-        test: rootGetters.isTestMode,
-        method: 'blockchain.address.get_history',
-        params: [wallet.address],
-      })
+    return wallet.electrum.getTransactionHistory(wallet.address)
       .then(response => {
-        if (response.data.length > 0) {
-          const txs = response.data;
+        if (response.length > 0) {
+          const txs = response;
           const promises = _.map(txs, tx => {
             return dispatch('decodeTx', { wallet: wallet, tx: tx });
           });

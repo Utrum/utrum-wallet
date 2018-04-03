@@ -14,16 +14,17 @@ Object.keys(coins.all).forEach(coin => {
     }
 
     const client = new Client(parseInt(electrumServer.port, 10), electrumServer.host);
-    client.on('error', err => {
-      throw new Error(`ERROR: ELECTRUM SOCKET: ${err}`);
-    });
-    client.call('server.version', ['monaize', '1.2'], (error, response) => {
-      if (error) {
-        throw new Error(`Electrum Error: \n${error}\n${response}`);
-      } else {
-        clients[ticker] = client;
-      }
-    });
+    clients[ticker] = client;
+    // client.on('error', err => {
+    //   throw new Error(`ERROR: ELECTRUM SOCKET: ${err}`);
+    // });
+    // client.call('server.version', ['monaize', '1.2'], (error, response) => {
+    //   if (error) {
+    //     throw new Error(`Electrum Error: \n${error}\n${response}`);
+    //   } else {
+    //     
+    //   }
+    // });
   });
 });
 
