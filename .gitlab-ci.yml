@@ -5,6 +5,10 @@ cache:
   paths:
     - node_modules/
 
+before_script:
+  - yarn config set registry http://mon-1:4873
+  - echo $NPMRC | base64 -d > ~/.npmrc
+
 build for mac:
   stage: build installer
   tags:
