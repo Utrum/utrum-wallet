@@ -6,7 +6,7 @@ import VueQrcodeReader from 'vue-qrcode-reader';
 import Vue from 'vue';
 import axios from 'axios';
 import Toasted from 'vue-toasted';
-import Vue2Filters from 'vue2-filters'
+import Vue2Filters from 'vue2-filters';
 
 import App from './App.vue';
 import router from './router';
