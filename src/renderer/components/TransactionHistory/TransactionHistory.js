@@ -16,8 +16,7 @@ export default {
     explorer: ExplorerLink,
   },
   methods: {
-    myRowClickHandler(record) {
-      this.$swal('Swap info', JSON.stringify(record));
+    myRowClickHandler() {
     },
     satoshiToBitcoin(amount) {
       return sb.toBitcoin(amount);

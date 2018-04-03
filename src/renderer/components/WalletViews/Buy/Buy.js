@@ -3,6 +3,7 @@ import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 
 const sb = require('satoshi-bitcoin');
+const { clipboard } = require('electron');
 
 export default {
   name: 'buy',
@@ -36,8 +37,6 @@ export default {
   },
   mounted() {
     this.selectFee = this.fees[0].label;
-    // this.$store.dispatch('buildTxHistory', this.wallet);
-    // this.$store.dispatch('buildTxHistory', this.walletMnz);
   },
   methods: {
     isHistory() {
@@ -86,8 +85,6 @@ export default {
     },
     valueChange(value) {
       this.select = value;
-      // this.$store.dispatch('buildTxHistory', this.wallet);
-      // this.$store.dispatch('buildTxHistory', this.walletMnz);
     },
     incrementPackage() {
       if (this.packageMNZ <= this.getMaxBuy - this.packageIncrement) {
@@ -111,9 +108,32 @@ export default {
         amountMnz: this.packageMNZ + (this.packageMNZ * this.currentBonus),
       })
       .then(response => {
-        this.$swal('Transaction sent', response.data, 'success');
+        this.$toasted.show('Transaction sent !', {
+          icon: 'done',
+          action: [
+            {
+              icon: 'close',
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+              },
+            },
+            {
+              icon: 'content_copy',
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+                clipboard.writeText(response.data);
+                setTimeout(() => {
+                  this.$toasted.show('Copied !', {
+                    duration: 1000,
+                    icon: 'done',
+                  });
+                }, 800);
+              },
+            },
+          ],
+        });
       }, error => {
-        this.$swal('Transaction not sent', error.response, 'error');
+        this.$toasted.show(error.response);
       })
       ;
     },

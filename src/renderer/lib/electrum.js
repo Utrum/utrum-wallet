@@ -11,7 +11,7 @@ export default class ElectrumService {
     };
   }
 
-  call(method, params) {
+  async call(method, params) {
     this.payload.method = method;
     this.payload.params = params;
     return new Promise((resolve) => {

@@ -282,3 +282,7 @@
     border-radius: 4px;
     border: none;
 }
+
+#qrcode {
+	margin-top: 15px;
+}

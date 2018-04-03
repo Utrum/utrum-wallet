@@ -35,7 +35,10 @@ const getters = {
     return state.wallets[ticker];
   },
   getWalletTxs: (state, getters) => (ticker) => {
-    return getters.getWalletByTicker(ticker).txs;
+    if (ticker != null) {
+      return getters.getWalletByTicker(ticker).txs;
+    }
+    return [];
   },
   getWallets: (state) => {
     return state.wallets;
@@ -104,7 +107,7 @@ const actions = {
       wallet.txs = [];
       wallet.privKey = privateKey;
       commit('ADD_WALLET', wallet);
-      dispatch('buildTxHistory', wallet, { root: true });
+      // dispatch('buildTxHistory', wallet, { root: true });
       dispatch('updateBalance', wallet);
     });
   },

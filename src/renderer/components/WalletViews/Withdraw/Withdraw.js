@@ -6,6 +6,7 @@ import TransactionHistory from '@/components/TransactionHistory/TransactionHisto
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 
 const sb = require('satoshi-bitcoin');
+const { clipboard } = require('electron');
 
 export default {
   name: 'withdraw',
@@ -27,14 +28,14 @@ export default {
       ],
       videoConstraints: {
         width: {
-          min: 400,
-          ideal: 400,
-          max: 400,
+          min: 265,
+          ideal: 265,
+          max: 265,
         },
         height: {
-          min: 400,
-          ideal: 400,
-          max: 400,
+          min: 250,
+          ideal: 250,
+          max: 250,
         },
       },
       paused: false,
@@ -85,8 +86,13 @@ export default {
     onDecode(content) {
       if (this.checkAddress(content)) {
         this.withdraw.address = content;
+        this.$toasted.show('Address inserted !', {
+          icon: 'done',
+        });
       } else {
-        this.$swal('This address is not valid !', content, 'error');
+        this.$toasted.error('This address is not valid !', {
+          icon: 'error',
+        });
       }
 
       this.readingQRCode = false;
@@ -146,9 +152,37 @@ export default {
 
           const tx = wallet.prepareTx(response, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), sb.toSatoshi(self.fee));
 
-          self.wallet.electrum.broadcast(tx).then((response) => {
-            self.$swal('Transaction sent', response, 'success');
-          }).catch((error) => { self.$swal('Transaction not send', error, 'error'); });
+          self.wallet.electrum.broadcast(tx)
+          .then((response) => {
+            this.$toasted.show('Transaction sent !', {
+              icon: 'done',
+              action: [
+                {
+                  icon: 'close',
+                  onClick: (e, toastObject) => {
+                    toastObject.goAway(0);
+                  },
+                },
+                {
+                  icon: 'content_copy',
+                  onClick: (e, toastObject) => {
+                    toastObject.goAway(0);
+                    clipboard.writeText(response.data);
+                    setTimeout(() => {
+                      this.$toasted.show('Copied !', {
+                        duration: 1000,
+                        icon: 'done',
+                      });
+                    }, 800);
+                  },
+                },
+              ],
+            });
+          }).catch((error) => {
+            this.$toasted.error('Transaction not sent !', {
+              text: error.response,
+            });
+          });
         });
       }
     },
