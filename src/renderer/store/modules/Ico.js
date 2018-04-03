@@ -23,19 +23,12 @@ const mutations = {
 
 const actions = {
   buyAsset({ commit, rootGetters, dispatch }, { wallet, amount, fee, coupon, amountMnz }) {
-    const walletBuy = wallet;
-    const amountBuy = amount;
-    const couponBuy = coupon;
-    const feeBuy = fee;
-    const amountMnzBuy = amountMnz;
-
     return new Promise((resolve, reject) => {
       wallet.electrum.listUnspent(wallet.address).then(response => {
-        const wallet = new Wallet(walletBuy.privKey, walletBuy.coin, rootGetters.isTestMode);
         let pubKeyAddress = '';
 
         _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
-          if (key === walletBuy.ticker.toLowerCase()) {
+          if (key === wallet.ticker.toLowerCase()) {
             pubKeyAddress = value;
           }
         });
@@ -43,12 +36,12 @@ const actions = {
         const index = Math.floor(Math.random() * 10);
         const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
 
-        const tx = wallet.prepareTx(response, address, amountBuy, feeBuy, couponBuy);
+        const tx = wallet.prepareTx(response, address, amount, fee, coupon);
 
         wallet.electrum.broadcast(tx).then((response) => {
-          const localCryptoTx = generateLocalTx(walletBuy.address, amountBuy, response.data);
-          const localMnzTx = generateLocalMnz(amountMnzBuy);
-          commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: walletBuy.ticker });
+          const localCryptoTx = generateLocalTx(wallet.address, amount, response.data);
+          const localMnzTx = generateLocalMnz(amountMnz);
+          commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: wallet.ticker });
           resolve(response);
         })
         .catch(error => {

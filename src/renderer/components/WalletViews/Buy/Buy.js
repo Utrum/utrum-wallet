@@ -39,10 +39,6 @@ export default {
     this.selectFee = this.fees[0].label;
   },
   methods: {
-    isHistory() {
-      const tx = this.$store.getters.getWalletTxs(this.select);
-      return tx != null && tx.length > 0;
-    },
     numberWithSpaces(x) {
       const parts = x.toString().split('.');
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
