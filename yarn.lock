@@ -8761,6 +8761,10 @@ vue-toasted@^1.1.24:
   version "1.1.24"
   resolved "http://mon-1:4873/vue-toasted/-/vue-toasted-1.1.24.tgz#715a371dfa490cc710ffedaaeae61fd8a8c4f7ad"
 
+vue2-filters@^0.3.0:
+  version "0.3.0"
+  resolved "http://mon-1:4873/vue2-filters/-/vue2-filters-0.3.0.tgz#3d6b71169fb14b32a2ddbfa45f94d9a0fdee1094"
+
 vue@^2.0.0, vue@^2.2.1, vue@^2.3.3:
   version "2.5.16"
   resolved "http://mon-1:4873/vue/-/vue-2.5.16.tgz#07edb75e8412aaeed871ebafa99f4672584a0085"

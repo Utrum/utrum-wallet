@@ -77,11 +77,6 @@ export default {
     hideModal() {
       this.$refs.confirmWithdraw.hide();
     },
-    numberWithSpaces(x) {
-      const parts = x.toString().split('.');
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-      return parts.join('.');
-    },
     onDecode(content) {
       if (this.checkAddress(content)) {
         this.withdraw.address = content;
@@ -188,16 +183,16 @@ export default {
       return this.$store.getters.getConfig;
     },
     getTotalPriceWithFee() {
-      return this.numberWithSpaces((Number(this.withdraw.amount) + sb.toBitcoin(this.fee)).toFixed(8));
+      return (Number(this.withdraw.amount) + sb.toBitcoin(this.fee)).toFixed(8);
     },
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
     },
     getBalance() {
-      return this.numberWithSpaces(this.$store.getters.getWalletByTicker(this.select).balance);
+      return this.$store.getters.getWalletByTicker(this.select).balance;
     },
     canWithdraw() {
-      return (this.withdraw.amount < this.getBalance && this.withdraw.amount > 0 && this.addressIsValid);
+      return (this.withdraw.amount <= this.getBalance && this.withdraw.amount > 0 && this.addressIsValid);
     },
     addressIsValid() {
       if (this.withdraw.address) return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0;

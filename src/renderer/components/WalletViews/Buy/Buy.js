@@ -185,10 +185,10 @@ export default {
       return this.$store.getters.getWalletByTicker('MNZ');
     },
     getBalance() {
-      return this.numberWithSpaces(this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8));
+      return this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8);
     },
     getMnzBalance() {
-      return this.numberWithSpaces(this.$store.getters.getWalletByTicker('MNZ').balance);
+      return this.$store.getters.getWalletByTicker('MNZ').balance;
     },
     getStringTicket() {
       return this.$store.getters.getWalletByTicker(this.select).coin.name;
@@ -197,7 +197,7 @@ export default {
       return this.totalPrice();
     },
     getTotalPriceWithFee() {
-      return this.numberWithSpaces((this.getTotalPrice + this.fee).toFixed(8));
+      return (this.getTotalPrice + this.fee).toFixed(8);
     },
     isBonus() {
       const date = new Date().getTime() / 1000;
