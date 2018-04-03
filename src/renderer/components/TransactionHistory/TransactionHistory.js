@@ -31,29 +31,27 @@ export default {
       return dateString;
     },
     getIconFromTicker(value) {
+      console.log(value)
       return require(`@/assets/icon-${value}.svg`); // eslint-disable-line
     },
-
-    // KMD/BTC
     getPrice(row) {
-      return Math.abs(row.item.cryptoTx.amount / row.item.mnzTx.amount).toFixed(8);
+      return Number(Math.abs(row.item.cryptoAmount / row.item.mnzAmount).toFixed(8));
     },
-
-    // MNZ
     getTotalPrice(row) {
-      return sb.toBitcoin(Math.abs(row.item.mnzTx.amount));
+      return sb.toBitcoin(Math.abs(row.item.cryptoAmount));
     },
   },
   computed: {
     txHistory() {
-      return this.fromTokenSale ? this.$store.getters.getSwapList
+      return this.fromTokenSale ? this.$store.getters.getSwapList2
+      // .map(el => { return el.cryptoTx; })
        : this.$store.getters.getWalletTxs(this.coin.ticker);
     },
     fields()  {
       if (this.fromTokenSale) {
         return [
           {
-            key: 'cryptoTx.time',
+            key: 'time',
             label: 'Date / Hours',
             sortable: true,
           },
@@ -63,13 +61,13 @@ export default {
             sortable: true,
           },
           {
-            key: 'mnzTx.amount',
-            label: 'Amount',
+            key: 'mnzAmount',
+            label: 'MNZ',
             sortable: true,
           },
           {
             key: 'price41',
-            label: 'Price',
+            label: 'Price - 1 MNZ',
             sortable: true,
           },
           {

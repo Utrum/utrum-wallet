@@ -105,9 +105,8 @@ const actions = {
       wallet.privKey = privateKey;
       commit('ADD_WALLET', wallet);
       dispatch('buildTxHistory', wallet, { root: true });
+      dispatch('updateBalance', wallet);
     });
-
-    dispatch('updateAllBalances');
   },
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');

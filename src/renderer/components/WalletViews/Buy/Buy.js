@@ -102,6 +102,7 @@ export default {
     buyMnz() {
       this.hideModal();
 
+      const self = this;
       this.$store
       .dispatch('buyAsset', {
         wallet: this.wallet,

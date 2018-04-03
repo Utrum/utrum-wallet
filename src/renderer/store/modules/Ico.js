@@ -32,14 +32,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       wallet.electrum.listUnspent(wallet.address).then(response => {
         const wallet = new Wallet(walletBuy.privKey, walletBuy.coin, rootGetters.isTestMode);
-        // const pubKeysBuy = rootGetters.getPubKeysBuy;
         let pubKeyAddress = '';
 
-        // Object.keys(pubKeysBuy).forEach(ticker => {
-        //   if (ticker === walletBuy.ticker.toLowerCase()) {
-        //     pubKeyAddress = pubKeysBuy[ticker];
-        //   }
-        // });
         _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
           if (key === walletBuy.ticker.toLowerCase()) {
             pubKeyAddress = value;
@@ -65,9 +59,29 @@ const actions = {
   },
 };
 
+// key: 'cryptoTx.time',
+// key: 'ticker',
+// key: 'mnzTx',
+// key: 'price41',
+// key: 'price4all',
+// key: 'status',
+
 const getters = {
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs);
+  },
+  getSwapList2: (state, getters) => {
+
+    return getters.getSwapList.map(swap => {
+      console.log(swap.ticker)
+      return {
+        time: swap.cryptoTx.time,
+        ticker: swap.ticker,
+        mnzAmount: swap.mnzTx.amount,
+        cryptoAmount: swap.cryptoTx.amount,
+        mnzTxHash: swap.mnzTx.tx_hash,
+      };
+    });
   },
 };
 
