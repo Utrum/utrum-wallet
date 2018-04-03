@@ -33,6 +33,6 @@ build for linux & windows:
     - nvm install 8.9
     - yarn
     - yarn run build -lwm
-    - scp build/*.exe mnzico@51.15.203.171:www/downloads
-    - scp build/*.AppImage mnzico@51.15.203.171:www/downloads
-    - scp build/*.zip mnzico@51.15.203.171:www/downloads
+    - scp -P 4242 build/*.exe mnzico@51.15.203.171:www/downloads
+    - scp -P 4242 build/*.AppImage mnzico@51.15.203.171:www/downloads
+    - scp -P 4242 build/*.zip mnzico@51.15.203.171:www/downloads
