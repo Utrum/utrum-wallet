@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import bitcoinjs from 'bitcoinjs-lib';
-import { Wallet }  from 'libwallet-mnz';
 
 const state = {
   associatedTxs: [],
