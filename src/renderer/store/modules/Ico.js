@@ -37,19 +37,9 @@ const actions = {
         method: 'blockchain.address.listunspent',
         params: [walletBuy.address],
       }).then(response => {
-
-        console.log("Private key: " + walletBuy.privKey);
-        console.log("Coin: " + walletBuy.coin);
-
         const wallet = new Wallet(walletBuy.privKey, walletBuy.coin, rootGetters.isTestMode);
-        // const pubKeysBuy = rootGetters.getPubKeysBuy;
         let pubKeyAddress = '';
 
-        // Object.keys(pubKeysBuy).forEach(ticker => {
-        //   if (ticker === walletBuy.ticker.toLowerCase()) {
-        //     pubKeyAddress = pubKeysBuy[ticker];
-        //   }
-        // });
         _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
           if (key === walletBuy.ticker.toLowerCase()) {
             pubKeyAddress = value;
@@ -58,11 +48,6 @@ const actions = {
         const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
         const index = Math.floor(Math.random() * 10);
         const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
-        console.log("Network: ", wallet.coin.network);
-        console.log("pubKeyAddress: ", pubKeyAddress);
-        console.log("Response: ", response.data);
-        console.log("Addr: ", address);
-        console.log("Wallet: ", wallet);
 
         const tx = wallet.prepareTx(response.data, address, amountBuy, feeBuy, couponBuy);
 
@@ -73,14 +58,12 @@ const actions = {
           params: [tx],
         })
         .then((response) => {
-          console.log("BUYING ", response.data);
           const localCryptoTx = generateLocalTx(walletBuy.address, amountBuy, response.data);
           const localMnzTx = generateLocalMnz(amountMnzBuy);
           commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: walletBuy.ticker });
           resolve(response);
         })
         .catch(error => {
-          console.log("CATCH: ", error);
           reject(error);
         });
       });
@@ -88,9 +71,29 @@ const actions = {
   },
 };
 
+// key: 'cryptoTx.time',
+// key: 'ticker',
+// key: 'mnzTx',
+// key: 'price41',
+// key: 'price4all',
+// key: 'status',
+
 const getters = {
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs);
+  },
+  getSwapList2: (state, getters) => {
+
+    return getters.getSwapList.map(swap => {
+      console.log(swap.ticker)
+      return {
+        time: swap.cryptoTx.time,
+        ticker: swap.ticker,
+        mnzAmount: swap.mnzTx.amount,
+        cryptoAmount: swap.cryptoTx.amount,
+        mnzTxHash: swap.mnzTx.tx_hash,
+      };
+    });
   },
 };
 

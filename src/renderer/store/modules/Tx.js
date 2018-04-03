@@ -13,13 +13,13 @@ const actions = {
     return axios.post('http://localhost:8000', payload);
   },
   decodeTx({ commit, dispatch, rootGetters, rootState }, { wallet, tx }) {
-    // const txExists = rootGetters.getWallets[wallet.ticker].txs.map(t => {
-    //   return t.tx_hash;
-    // }).indexOf(tx.tx_hash);
+    const txExists = rootGetters.getWallets[wallet.ticker].txs.map(t => {
+      return t.tx_hash;
+    }).indexOf(tx.tx_hash);
 
-    // if (txExists >= 0) {
-    //   return Promise.resolve();
-    // }
+    if (txExists >= 0) {
+      return Promise.reject();
+    }
     return dispatch('getRawTx', { ticker: wallet.ticker, tx: tx })
       .then(response => {
         const verboseTx = getTxFromRawTx(wallet, response.data, tx.height, rootGetters.isTestMode);
@@ -59,7 +59,7 @@ const actions = {
       .then((wallets) => {
         const associations = associateTxsFromWallet(wallets[0].txs.concat(wallets[1].txs), wallets[2].txs);
         commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
-      })
+      }).catch(() => {})
     ;
   },
 };
