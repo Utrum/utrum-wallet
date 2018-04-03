@@ -85,7 +85,6 @@ const getters = {
   getSwapList2: (state, getters) => {
 
     return getters.getSwapList.map(swap => {
-      console.log(swap.ticker)
       return {
         time: swap.cryptoTx.time,
         ticker: swap.ticker,

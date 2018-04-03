@@ -3,6 +3,7 @@ import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 
 const sb = require('satoshi-bitcoin');
+const { clipboard } = require('electron');
 
 export default {
   name: 'buy',
@@ -107,7 +108,6 @@ export default {
     buyMnz() {
       this.hideModal();
 
-      const self = this;
       this.$store
       .dispatch('buyAsset', {
         wallet: this.wallet,
@@ -117,9 +117,32 @@ export default {
         amountMnz: this.packageMNZ + (this.packageMNZ * this.currentBonus),
       })
       .then(response => {
-        this.$swal('Transaction sent', response.data, 'success');
+        this.$toasted.show('Transaction sent !', {
+          icon: 'done',
+          action: [
+            {
+              icon: 'close',
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+              },
+            },
+            {
+              icon: 'content_copy',
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+                clipboard.writeText(response.data);
+                setTimeout(() => {
+                  this.$toasted.show('Copied !', {
+                    duration: 1000,
+                    icon: 'done',
+                  });
+                }, 800);
+              },
+            },
+          ],
+        });
       }, error => {
-        this.$swal('Transaction not sent', error.response, 'error');
+        this.$toasted.show(error.response);
       })
       ;
     },
