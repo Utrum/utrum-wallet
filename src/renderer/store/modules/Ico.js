@@ -55,31 +55,12 @@ const actions = {
         console.log("Addr: ", address);
         console.log("Wallet: ", wallet);
 
-<<<<<<< HEAD
-        const tx = wallet.prepareTx(response.data, address, amountBuy, feeBuy, couponBuy);
-
-        axios.post('http://localhost:8000', {
-          ticker: walletBuy.ticker,
-          test: rootGetters.isTestMode,
-          method: 'blockchain.transaction.broadcast',
-          params: [tx],
-        })
-        .then((response) => {
-          console.log("BUYING ", response.data);
-          const localCryptoTx = generateLocalTx(walletBuy.address, amountBuy, response.data);
-          const localMnzTx = generateLocalMnz(amountMnzBuy);
-          commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: walletBuy.ticker });
-=======
         const tx = wallet.prepareTx(response, newAddress(xpub, index), amountBuy, feeBuy, couponBuy);
 
         wallet.electrum.broadcast(tx).then((response) => {
-          dispatch('addTxLocal', {
-            walletBuy: walletBuy,
-            txHash: response,
-            amountBuy: amountBuy,
-            amountMnzBuy: amountMnzBuy,
-          }, { root: true });
->>>>>>> feat: first preview
+          const localCryptoTx = generateLocalTx(walletBuy.address, amountBuy, response.data);
+          const localMnzTx = generateLocalMnz(amountMnzBuy);
+          commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: walletBuy.ticker });
           resolve(response);
         })
         .catch(error => {
