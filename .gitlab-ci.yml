@@ -1,0 +1,36 @@
+stages:
+  - build installer
+
+cache:
+  paths:
+    - node_modules/
+
+build for mac:
+  stage: build installer
+  tags:
+    - osx
+    - shell
+  # only: master
+  script:
+    - nvm install 8.9
+    - yarn
+    - yarn run build -m
+    - ls build/*.zip && ls build/*.dmg
+  artifacts:
+    paths:
+      - build/*.zip
+      - build/*.dmg
+
+
+build for linux & windows:
+  stage: build installer
+  # only: master
+  script:
+    - nvm install 8.9
+    - yarn
+    - yarn run build -lw
+    - ls build/*.exe && ls build/*.AppImage
+  artifacts:
+    paths:
+      - build/*.exe
+      - build/*.AppImage
