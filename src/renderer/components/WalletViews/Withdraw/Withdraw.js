@@ -150,10 +150,10 @@ export default {
           method: 'blockchain.address.listunspent',
           params: [this.wallet.address],
         }).then(response => {
-          const wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode);
+          const wallet = new Wallet(self.wallet.privKey, self.wallet.coin, self.$store.getters.isTestMode);
           wallet.ticker = self.wallet.ticker;
 
-          const tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), sb.toSatoshi(self.fee));
+          const tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), self.fee);
 
           self.$http.post('http://localhost:8000', {
             ticker: self.wallet.ticker,
@@ -162,7 +162,9 @@ export default {
             params: [tx],
           }).then((response) => {
             self.$swal('Transaction sent', response.data, 'success');
-          }).catch((error) => { self.$swal('Transaction not send', error, 'error'); });
+          }).catch((error) => {
+            self.$swal('Transaction not send', error, 'error');
+          });
         });
       }
     },

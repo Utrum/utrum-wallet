@@ -173,7 +173,7 @@ const actions = {
         dispatch('startUpdateHistory');
       }
       clearTimeout(interval);
-    }, /*rand * 1000*/ 10000);
+    }, rand * 1000);
   },
 };
 
