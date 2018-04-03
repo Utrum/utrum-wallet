@@ -53,10 +53,10 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "build/icons/512x512.png"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/512x512.png"
     },
     "linux": {
       "icon": "build/icons"
