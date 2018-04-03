@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import axios from 'axios';
 import getTxFromRawTx from '../../lib/txtools';
 
 const actions = {

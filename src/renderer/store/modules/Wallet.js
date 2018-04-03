@@ -26,7 +26,7 @@ const getters = {
   getHistoryBuy: (state, getters) => {
     const history = getters.getWalletTxs('MNZ');
     Object.keys(coins).forEach((coin) => {
-      const filteredHistory = history.filter(el => el.origin.ticker === coin)
+      const filteredHistory = history.filter(el => el.origin.ticker === coin);
       history.concat(filteredHistory);
     });
     return history;

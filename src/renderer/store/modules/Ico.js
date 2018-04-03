@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import axios from 'axios';
 import bitcoinjs from 'bitcoinjs-lib';
 import { Wallet }  from 'libwallet-mnz';
 
@@ -49,13 +48,8 @@ const actions = {
         const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
         const index = Math.floor(Math.random() * 10);
         const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
-        console.log("Network: ", wallet.coin.network);
-        console.log("pubKeyAddress: ", pubKeyAddress);
-        console.log("Response: ", response.data);
-        console.log("Addr: ", address);
-        console.log("Wallet: ", wallet);
 
-        const tx = wallet.prepareTx(response, newAddress(xpub, index), amountBuy, feeBuy, couponBuy);
+        const tx = wallet.prepareTx(response, address, amountBuy, feeBuy, couponBuy);
 
         wallet.electrum.broadcast(tx).then((response) => {
           const localCryptoTx = generateLocalTx(walletBuy.address, amountBuy, response.data);
@@ -64,7 +58,6 @@ const actions = {
           resolve(response);
         })
         .catch(error => {
-          console.log("CATCH: ", error);
           reject(error);
         });
       });

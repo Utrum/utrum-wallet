@@ -22,7 +22,6 @@ Object.keys(coins.all).forEach(coin => {
     //   if (error) {
     //     throw new Error(`Electrum Error: \n${error}\n${response}`);
     //   } else {
-    //     
     //   }
     // });
   });
