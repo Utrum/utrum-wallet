@@ -5580,6 +5580,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
+material-design-icons@^3.0.1:
+  version "3.0.1"
+  resolved "http://mon-1:4873/material-design-icons/-/material-design-icons-3.0.1.tgz#9a71c48747218ebca51e51a66da682038cdcb7bf"
+
 math-expression-evaluator@^1.2.14:
   version "1.2.17"
   resolved "http://mon-1:4873/math-expression-evaluator/-/math-expression-evaluator-1.2.17.tgz#de819fdbcd84dccd8fae59c6aeb79615b9d266ac"
@@ -8142,10 +8146,6 @@ sweetalert2@^6.6.6:
   version "6.11.5"
   resolved "http://mon-1:4873/sweetalert2/-/sweetalert2-6.11.5.tgz#a1ede34089225eb864898f4b613db4fec5dbe334"
 
-sweetalert2@^7.9.2:
-  version "7.18.0"
-  resolved "http://mon-1:4873/sweetalert2/-/sweetalert2-7.18.0.tgz#10f1019aae0a842eebefcf5b06fe42ea1ef53e79"
-
 table@^3.7.8:
   version "3.8.3"
   resolved "http://mon-1:4873/table/-/table-3.8.3.tgz#2bbc542f0fda9861a755d3947fefd8b3f513855f"
@@ -8710,7 +8710,7 @@ vue-material@^1.0.0-beta-7:
   version "1.0.0-beta-8"
   resolved "http://mon-1:4873/vue-material/-/vue-material-1.0.0-beta-8.tgz#88b44095a59d46df5beed722dd5e2fb962f74138"
 
-vue-qrcode-reader@^0.7.1:
+vue-qrcode-reader@^0.7.2:
   version "0.7.2"
   resolved "http://mon-1:4873/vue-qrcode-reader/-/vue-qrcode-reader-0.7.2.tgz#a3e011d1d7e4a64f1245b9ed0f88b70fa38b7edb"
   dependencies:
@@ -8756,6 +8756,10 @@ vue-template-compiler@^2.4.2:
 vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "http://mon-1:4873/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
+
+vue-toasted@^1.1.24:
+  version "1.1.24"
+  resolved "http://mon-1:4873/vue-toasted/-/vue-toasted-1.1.24.tgz#715a371dfa490cc710ffedaaeae61fd8a8c4f7ad"
 
 vue@^2.0.0, vue@^2.2.1, vue@^2.3.3:
   version "2.5.16"
