@@ -40,7 +40,8 @@ function createWindow() {
    */
   mainWindow = new BrowserWindow({
     // useContentSize: true,
-    // titleBarStyle: 'hidden',
+    titleBarStyle: 'hidden',
+    transparent: true, frame: false,
     center: true,
     width: 1100,
     height: 650,
