@@ -31,7 +31,6 @@ export default {
       return dateString;
     },
     getIconFromTicker(value) {
-      console.log(value)
       return require(`@/assets/icon-${value}.svg`); // eslint-disable-line
     },
     getPrice(row) {
