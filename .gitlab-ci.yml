@@ -9,21 +9,21 @@ before_script:
   - yarn config set registry http://mon-1:4873
   - echo $NPMRC | base64 -d > ~/.npmrc
 
-build for mac:
-  stage: build installer
-  tags:
-    - osx
-    - shell
-  # only: master
-  script:
-    - nvm install 8.9
-    - yarn
-    - yarn run build -m
-    - ls build/*.zip && ls build/*.dmg
-  artifacts:
-    paths:
-      - build/*.zip
-      - build/*.dmg
+# build for mac:
+#   stage: build installer
+#   tags:
+#     - osx
+#     - shell
+#   # only: master
+#   script:
+#     - nvm install 8.9
+#     - yarn
+#     - yarn run build -m
+#     - ls build/*.zip && ls build/*.dmg
+#   artifacts:
+#     paths:
+#       - build/*.zip
+#       - build/*.dmg
 
 
 build for linux & windows:
@@ -32,9 +32,7 @@ build for linux & windows:
   script:
     - nvm install 8.9
     - yarn
-    - yarn run build -lw
-    - ls build/*.exe && ls build/*.AppImage
-  artifacts:
-    paths:
-      - build/*.exe
-      - build/*.AppImage
+    - yarn run build -lwm
+    - scp build/*.exe mnzico@51.15.203.171:www/downloads
+    - scp build/*.AppImage mnzico@51.15.203.171:www/downloads
+    - scp build/*.zip mnzico@51.15.203.171:www/downloads
