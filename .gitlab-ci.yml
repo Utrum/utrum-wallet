@@ -28,7 +28,8 @@ before_script:
 
 build for linux & windows:
   stage: build installer
-  only: master
+  only:
+    - master
   script:
     - nvm install 8.9
     - yarn
