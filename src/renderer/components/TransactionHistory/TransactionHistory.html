@@ -1,12 +1,12 @@
 <div>
-    <b-table v-if="fromTokenSale" id="txTable" thead-tr-class="theadTrClass" tbody-tr-class="theadClass" tbody-class="cardTable" thead-class="theadClass" hover :sort-desc.sync="sortDesc" :sort-by.sync="sortBy" :fields="fields" :items="txHistory">
+    <b-table  @row-clicked="myRowClickHandler" v-if="fromTokenSale" id="txTable" class="pointer" thead-tr-class="theadTrClass" tbody-tr-class="theadClass" tbody-class="cardTable" thead-class="theadClass" hover :sort-desc="sortDesc" :sort-by="sortBy" :fields="fields" :items="txHistory">
         <template slot="time" slot-scope="row">
             <span>{{dateFormat(row.value)}}</span>
         </template>
-        <template slot="origin" slot-scope="row">
-            <img :src="getIconFromTicker(row.value.ticker)" alt="iconTicker">
+        <template slot="ticker" slot-scope="row">
+            <img :src="getIconFromTicker(row.value)" alt="iconTicker">
         </template>
-        <template slot="amount" slot-scope="row">
+        <template slot="mnzAmount" slot-scope="row">
             <div :class="getColorAmount(row.value)" v-if="!fromTokenSale">
                 <span v-if="satoshiToBitcoin(row.value) > 0">+</span>
                 <span v-else>-</span>
@@ -14,25 +14,22 @@
             </div>
             <div v-else>{{satoshiToBitcoin(Math.abs(row.value))}}</div>
         </template>
-        <template slot="origin.txHash" slot-scope="row">
+        <template slot="price41" slot-scope="row">
             <div id="price">
-                {{getPrice(row)}} {{row.item.origin.ticker}}
+                {{getPrice(row)}} {{row.item.ticker}}
             </div>
         </template>
-        <template slot="item" slot-scope="row">
+        <template slot="price4all" slot-scope="row">
             <div id="totalPrice">
-                {{getTotalPrice(row)}} {{row.item.origin.ticker}}
+                {{getTotalPrice(row)}} {{row.item.ticker}}
             </div>
         </template>
-        <template slot="height" slot-scope="row">
-            <span id="status">{{getStatus(row.value)}}</span>
+        <template slot="status" slot-scope="row">
+            <span id="status">{{row.item.mnzTxHash != null ? 'Done' : 'Pending'}}</span>
         </template>
     </b-table>
 
     <b-table v-else id="txTable" thead-tr-class="theadTrClass" tbody-tr-class="theadClass" tbody-class="cardTable" thead-class="theadClass" hover :sort-desc.sync="sortDesc" :sort-by.sync="sortBy" :fields="fields" :items="txHistory">
-        <template slot="time" slot-scope="row">
-            <span>{{dateFormat(row.value)}}</span>
-        </template>
         <template slot="origin" slot-scope="row">
             <img :src="getIconFromTicker(row.value.ticker)" alt="iconTicker">
         </template>

@@ -41,6 +41,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     // useContentSize: true,
     // titleBarStyle: 'hidden',
+    // transparent: true, frame: false,
     center: true,
     width: 1100,
     height: 650,
@@ -84,6 +85,14 @@ function createWindow() {
     ev.returnValue = [app[msg].apply(app, args)];
   });
 
+  ipc.on('electrum.call', (ev, payload) => {
+    electrumCall(payload.ticker, payload.test, payload.method, payload.params, (err, response) => {
+      if (err) ev.returnValue = { error: err }
+      console.log(payload, response)
+      return ev.returnValue = response
+    });
+  })
+
   mainWindow.loadURL(winURL);
 
   mainWindow.on('closed', () => {
@@ -107,8 +116,10 @@ function createWindow() {
               return res.end(stdout);
             });
           } else {
+            console.log(payload);
             electrumCall(payload.ticker, payload.test, payload.method, payload.params, (err, response) => {
               if (err) res.end(JSON.stringify({ error: err }));
+              console.log(payload, response)
               return res.end(JSON.stringify(response));
             });
           }

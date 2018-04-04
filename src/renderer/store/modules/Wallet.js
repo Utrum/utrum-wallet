@@ -1,22 +1,19 @@
 import { Wallet, coins }  from 'libwallet-mnz';
 import sb from 'satoshi-bitcoin';
-import bitcoinjs from 'bitcoinjs-lib';
-import axios from 'axios';
 import Vue from 'vue';
-
-import getBalance from '../../lib/electrum';
+import store from '../../store';
+import ElectrumService from '../../lib/electrum';
 import getCmcData from '../../lib/coinmarketcap';
-import getTxFromRawTx from '../../lib/txtools';
 import createPrivKey from '../../lib/createPrivKey';
 
 const state = {
-  wallets: {
+  wallets: [{
     balance: 0,
     balance_unconfirmed: 0,
     balance_usd: 0,
     ticker: null,
     txs: {},
-  },
+  }],
   coins: [],
   calculating: false,
   isUpdate: false,
@@ -26,11 +23,22 @@ const getters = {
   isUpdate: (state) => {
     return state.isUpdate;
   },
+  getHistoryBuy: (state, getters) => {
+    const history = getters.getWalletTxs('MNZ');
+    Object.keys(coins).forEach((coin) => {
+      const filteredHistory = history.filter(el => el.origin.ticker === coin);
+      history.concat(filteredHistory);
+    });
+    return history;
+  },
   getWalletByTicker: (state) => (ticker) => {
     return state.wallets[ticker];
   },
   getWalletTxs: (state, getters) => (ticker) => {
-    return getters.getWalletByTicker(ticker).txs;
+    if (ticker != null) {
+      return getters.getWalletByTicker(ticker).txs;
+    }
+    return [];
   },
   getWallets: (state) => {
     return state.wallets;
@@ -51,27 +59,11 @@ const getters = {
 };
 
 const mutations = {
-  INIT_WALLET(state, { payload, privkey, testMode }) {
-    const wallet = new Wallet(privkey, payload.coin, testMode);
-    wallet.ticker = payload.coin.ticker;
-    wallet.balance = 0;
-    wallet.balance_usd = 0;
-    wallet.txs = [];
-    wallet.privkey = privkey;
-    state.wallets[payload.coin.ticker] = Vue.set(state.wallets, payload.coin.ticker, wallet);
+  ADD_WALLET(state, wallet) {
+    state.wallets[wallet.ticker] = Vue.set(state.wallets, wallet.ticker, wallet);
   },
   DESTROY_WALLETS(state) {
     state.wallets = {};
-  },
-  ADD_TX(state, { wallet, rawtx, transaction, tx_hash, height, testMode }) {
-    const tx = getTxFromRawTx(wallet, rawtx, transaction, tx_hash, height, testMode);
-    if (tx != null) {
-      const txExists = state.wallets[wallet.ticker].txs.map(t => { return t.tx_hash; }).indexOf(tx.tx_hash);
-
-      if (txExists < 0) {
-        state.wallets[wallet.ticker].txs.unshift(tx);
-      }
-    }
   },
   UPDATE_BALANCE(state, wallet) {
     Vue.set(state.wallets, wallet.ticker, wallet);
@@ -79,26 +71,45 @@ const mutations = {
   UPDATE_IS_UPDATE(state, isUpdate) {
     state.isUpdate = isUpdate;
   },
+  // ADD_TX(state, { ticker, tx }) {
+  //   state.wallets[ticker].txs.unshift(tx);
+  // },
+  ADD_TXS(state, { ticker, txs }) {
+    state.wallets[ticker].txs = txs;
+  },
+  DELETE_TX(state, { ticker, tx }) {
+    state.wallets[ticker].txs.slice(state.wallets[ticker].txs.indexOf(tx), 1);
+  },
 };
 
 const actions = {
   setIsUpdate({ commit }, isUpdate) {
     commit('UPDATE_IS_UPDATE', isUpdate);
   },
-  initWallets({ commit, dispatch, rootGetters }) {
+  async initWallets({ commit, dispatch, rootGetters }) {
     if (Object.keys(state.wallets).length > 0) {
       dispatch('destroyWallets');
     }
 
     dispatch('setPrivKey', createPrivKey(rootGetters.passphrase));
-    coins.all.forEach(coin => {
-      const payload = {
-        coin: Object.assign({}, coin),
-        passphrase: rootGetters.passphrase,
-      };
-      commit('INIT_WALLET', { payload: payload, privkey: rootGetters.privKey, testMode: rootGetters.isTestMode });
+
+    const privateKey = rootGetters.privKey;
+    const isTestMode = rootGetters.isTestMode;
+
+    coins.all.forEach(async (coin) => {
+      const ticker = coin.ticker;
+      const wallet = new Wallet(privateKey, coin, isTestMode);
+      wallet.electrum = new ElectrumService(store, ticker, isTestMode);
+      await wallet.electrum.serverVersion('Monaize ICO Wallet 0.1', '1.2');
+      wallet.ticker = ticker;
+      wallet.balance = 0;
+      wallet.balance_usd = 0;
+      wallet.txs = [];
+      wallet.privKey = privateKey;
+      commit('ADD_WALLET', wallet);
+      // dispatch('buildTxHistory', wallet, { root: true });
+      dispatch('updateBalance', wallet);
     });
-    dispatch('updateAllBalances');
   },
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');
@@ -109,9 +120,12 @@ const actions = {
     });
   },
   updateBalance({ commit, getters, rootGetters }, wallet) {
-    getBalance(wallet, rootGetters.isTestMode).then(response => {
-      wallet.balance = sb.toBitcoin(response.data.confirmed);
-      wallet.balance_unconfirmed = sb.toBitcoin(response.data.unconfirmed);
+    wallet.electrum.getBalance(wallet.address).then(response => {
+      if (response.error) {
+        throw new Error(`Failed to retrieve ${wallet.ticker} balance\n${response.error}`);
+      }
+      wallet.balance = sb.toBitcoin(response.confirmed);
+      wallet.balance_unconfirmed = sb.toBitcoin(response.unconfirmed);
       if (wallet.coin.name !== 'monaize') {
         getCmcData(wallet.coin.name).then(response => {
           response.data.forEach((cmcCoin) => {
@@ -164,93 +178,13 @@ const actions = {
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
       Object.keys(getters.getWallets).forEach((ticker) => {
-        dispatch('buildTxHistory', getters.getWallets[ticker]);
+        dispatch('buildTxHistory', getters.getWallets[ticker], { root: true });
       });
       if (getters.isUpdate) {
         dispatch('startUpdateHistory');
       }
       clearTimeout(interval);
     }, rand * 1000);
-  },
-  getRawTx({ commit, rootGetters }, { ticker, tx }) {
-    const payload = {
-      ticker: ticker,
-      test: rootGetters.isTestMode,
-      method: 'blockchain.transaction.get',
-      params: [tx.tx_hash, true],
-    };
-    return axios.post('http://localhost:8000', payload);
-  },
-  addTx({ commit, dispatch, getters }, { wallet, tx }) {
-    const txExists = getters.getWallets[wallet.ticker].txs.map(t => { return t.tx_hash; }).indexOf(tx.tx_hash);
-
-    if (txExists < 0) {
-      dispatch('getRawTx', { ticker: wallet.ticker, tx: tx }).then(response => {
-        const decodedTx = bitcoinjs.Transaction.fromHex(response.data.hex);
-        commit('ADD_TX', { wallet: wallet, rawtx: decodedTx, transaction: response.data, tx_hash: tx.tx_hash, height: tx.height });
-      });
-    }
-  },
-  buildTxHistory({ commit, dispatch, getters, rootGetters }, wallet) {
-    axios.post('http://localhost:8000', {
-      ticker: wallet.ticker,
-      test: rootGetters.isTestMode,
-      method: 'blockchain.address.get_history',
-      params: [wallet.address],
-    }).then(response => {
-      if (response.data.length > 0) {
-        const txs = response.data;
-
-        txs.forEach(tx => {
-          dispatch('addTx', { wallet: wallet, tx: tx });
-        });
-      }
-    });
-  },
-  buyAsset({ commit, rootGetters }, { wallet, amount, fee, coupon }) {
-    const walletBuy = wallet;
-    const amountBuy = amount;
-    const couponBuy = coupon;
-    const feeBuy = fee;
-
-    return new Promise((resolve, reject) => {
-      axios.post('http://localhost:8000', {
-        ticker: walletBuy.ticker,
-        test: rootGetters.isTestMode,
-        method: 'blockchain.address.listunspent',
-        params: [walletBuy.address],
-      }).then(response => {
-
-        const wallet = new Wallet(walletBuy.privkey, walletBuy.coin, rootGetters.isTestMode);
-        const pubKeysBuy = rootGetters.getPubKeysBuy;
-        let pubKeyAddress = '';
-
-        Object.keys(pubKeysBuy).forEach(ticker => {
-          if (ticker === walletBuy.ticker.toLowerCase()) {
-            pubKeyAddress = pubKeysBuy[ticker];
-          }
-        });
-
-        const index = Math.floor(Math.random() * 10);
-        const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
-        const newAddress = (xpub, index) => {
-          return xpub.derivePath(`0/${index}`).keyPair.getAddress();
-        };
-
-        const tx = wallet.prepareTx(response.data, newAddress(xpub, index), amountBuy, feeBuy, couponBuy);
-
-        axios.post('http://localhost:8000', {
-          ticker: walletBuy.ticker,
-          test: rootGetters.isTestMode,
-          method: 'blockchain.transaction.broadcast',
-          params: [tx],
-        }).then((response) => {
-          resolve(response);
-        }).catch(error => {
-          reject(error);
-        });
-      });
-    });
   },
 };
 

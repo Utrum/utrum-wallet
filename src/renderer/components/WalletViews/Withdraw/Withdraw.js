@@ -1,11 +1,11 @@
 import bitcoinjs from 'bitcoinjs-lib';
-import { Wallet } from 'libwallet-mnz';
 import { QrcodeReader } from 'vue-qrcode-reader';
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 
 const sb = require('satoshi-bitcoin');
+const { clipboard } = require('electron');
 
 export default {
   name: 'withdraw',
@@ -27,14 +27,14 @@ export default {
       ],
       videoConstraints: {
         width: {
-          min: 400,
-          ideal: 400,
-          max: 400,
+          min: 265,
+          ideal: 265,
+          max: 265,
         },
         height: {
-          min: 400,
-          ideal: 400,
-          max: 400,
+          min: 250,
+          ideal: 250,
+          max: 250,
         },
       },
       paused: false,
@@ -67,12 +67,8 @@ export default {
     },
     callEstimateFee(blocks) {
       const self = this;
-      this.$http.post('http://localhost:8000', {
-        ticker: self.select,
-        method: 'blockchain.estimatefee',
-        params: [Number(blocks)],
-      }).then(response => {
-        self.fee = response.data;
+      this.wallet.electrum.getEstimateFee(blocks).then(response => {
+        self.fee = response;
       });
     },
     onChange(value) {
@@ -81,16 +77,16 @@ export default {
     hideModal() {
       this.$refs.confirmWithdraw.hide();
     },
-    numberWithSpaces(x) {
-      const parts = x.toString().split('.');
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-      return parts.join('.');
-    },
     onDecode(content) {
       if (this.checkAddress(content)) {
         this.withdraw.address = content;
+        this.$toasted.show('Address inserted !', {
+          icon: 'done',
+        });
       } else {
-        this.$swal('This address is not valid !', content, 'error');
+        this.$toasted.error('This address is not valid !', {
+          icon: 'error',
+        });
       }
 
       this.readingQRCode = false;
@@ -137,32 +133,47 @@ export default {
       };
       this.select = value;
       this.withdraw.coin = value;
-
-      this.$store.dispatch('buildTxHistory', this.wallet);
     },
     withdrawFunds() {
       this.hideModal();
       if (this.canWithdraw && this.addressIsValid) {
         const self = this;
-        this.$http.post('http://localhost:8000', {
-          ticker: this.wallet.ticker,
-          test: self.$store.getters.isTestMode,
-          method: 'blockchain.address.listunspent',
-          params: [this.wallet.address],
-        }).then(response => {
-          const wallet = new Wallet(self.wallet.privkey, self.wallet.coin, self.$store.getters.isTestMode);
-          wallet.ticker = self.wallet.ticker;
+        this.wallet.electrum.listUnspent(this.wallet.address).then(response => {
+          this.wallet.ticker = self.wallet.ticker;
 
-          const tx = wallet.prepareTx(response.data, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), sb.toSatoshi(self.fee));
+          const tx = this.wallet.prepareTx(response, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), self.fee);
 
-          self.$http.post('http://localhost:8000', {
-            ticker: self.wallet.ticker,
-            test: self.$store.getters.isTestMode,
-            method: 'blockchain.transaction.broadcast',
-            params: [tx],
-          }).then((response) => {
-            self.$swal('Transaction sent', response.data, 'success');
-          }).catch((error) => { self.$swal('Transaction not send', error, 'error'); });
+          self.wallet.electrum.broadcast(tx)
+          .then((response) => {
+            this.$toasted.show('Transaction sent !', {
+              icon: 'done',
+              action: [
+                {
+                  icon: 'close',
+                  onClick: (e, toastObject) => {
+                    toastObject.goAway(0);
+                  },
+                },
+                {
+                  icon: 'content_copy',
+                  onClick: (e, toastObject) => {
+                    toastObject.goAway(0);
+                    clipboard.writeText(response.data);
+                    setTimeout(() => {
+                      this.$toasted.show('Copied !', {
+                        duration: 1000,
+                        icon: 'done',
+                      });
+                    }, 800);
+                  },
+                },
+              ],
+            });
+          }).catch((error) => {
+            this.$toasted.error('Transaction not sent !', {
+              text: error.response,
+            });
+          });
         });
       }
     },
@@ -172,16 +183,16 @@ export default {
       return this.$store.getters.getConfig;
     },
     getTotalPriceWithFee() {
-      return this.numberWithSpaces((Number(this.withdraw.amount) + sb.toBitcoin(this.fee)).toFixed(8));
+      return (Number(this.withdraw.amount) + sb.toBitcoin(this.fee)).toFixed(8);
     },
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
     },
     getBalance() {
-      return this.numberWithSpaces(this.$store.getters.getWalletByTicker(this.select).balance);
+      return this.$store.getters.getWalletByTicker(this.select).balance;
     },
     canWithdraw() {
-      return (this.withdraw.amount < this.getBalance && this.withdraw.amount > 0 && this.addressIsValid);
+      return (this.withdraw.amount <= this.getBalance && this.withdraw.amount > 0 && this.addressIsValid);
     },
     addressIsValid() {
       if (this.withdraw.address) return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0;

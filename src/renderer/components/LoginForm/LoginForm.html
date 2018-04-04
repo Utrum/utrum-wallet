@@ -4,7 +4,7 @@
   <div class="col input-login">
     <div class="row">
       <form id="login" class="row login" method="POST" enctype="multipart/form-data">
-        <textarea v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="passphrase" class="col" type="text" name="input-login"></textarea>
+        <textarea @keydown.enter.stop.prevent="validatePassPhrase()" v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="passphrase" class="col" type="text" name="input-login"></textarea>
         <button @click.prevent="validatePassPhrase()" :class="btnSendStatus" class="btn-send-enabled"><img src="~@/assets/icon-send-login.svg"></button>
       </form>
     </div>

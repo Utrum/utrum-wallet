@@ -10,8 +10,6 @@ export default {
 
     };
   },
-  created() {
-  },
   computed: {
     userLoggedIn() {
       return this.$store.state.User.loggedIn;

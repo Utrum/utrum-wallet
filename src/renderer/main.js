@@ -5,6 +5,8 @@ import VueClipboard from 'vue-clipboard2';
 import VueQrcodeReader from 'vue-qrcode-reader';
 import Vue from 'vue';
 import axios from 'axios';
+import Toasted from 'vue-toasted';
+import Vue2Filters from 'vue2-filters';
 
 import App from './App.vue';
 import router from './router';
@@ -18,7 +20,12 @@ Vue.use(VueSweetAlert);
 Vue.use(VueQriously);
 Vue.use(VueClipboard);
 Vue.use(VueQrcodeReader);
-
+Vue.use(Vue2Filters);
+Vue.use(Toasted, {
+  iconPack: 'material',
+  position: 'top-right',
+  duration: 4000,
+});
 
 if (!process.env.IS_WEB) Vue.use(vueElectron);
 

@@ -3,6 +3,7 @@ import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 
 const sb = require('satoshi-bitcoin');
+const { clipboard } = require('electron');
 
 export default {
   name: 'buy',
@@ -38,10 +39,6 @@ export default {
     this.selectFee = this.fees[0].label;
   },
   methods: {
-    isHistory() {
-      const tx = this.$store.getters.getWalletTxs(this.select);
-      return tx != null && tx.length > 0;
-    },
     numberWithSpaces(x) {
       const parts = x.toString().split('.');
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -54,13 +51,8 @@ export default {
     },
     callEstimateFee(blocks) {
       const self = this;
-      this.$http.post('http://localhost:8000', {
-        test: self.$store.getters.isTestMode,
-        ticker: self.select,
-        method: 'blockchain.estimatefee',
-        params: [Number(blocks)],
-      }).then(response => {
-        self.fee = response.data;
+      this.wallet.electrum.getEstimateFee(blocks).then(response => {
+        self.fee = response;
       });
     },
     buyMnzModal() {
@@ -103,16 +95,43 @@ export default {
     buyMnz() {
       this.hideModal();
 
-      this.$store.dispatch('buyAsset', {
+      this.$store
+      .dispatch('buyAsset', {
         wallet: this.wallet,
         amount: sb.toSatoshi(this.getTotalPrice),
-        fee: sb.toSatoshi(this.fee),
+        fee: this.fee,
         coupon: this.coupon,
-      }).then(response => {
-        this.$swal('Transaction sent', response.data, 'success');
-      }, error => {
-        this.$swal('Transaction not sent', error.response, 'error');
-      });
+        amountMnz: this.packageMNZ + (this.packageMNZ * this.currentBonus),
+      })
+      .then(response => {
+        this.$toasted.show('Transaction sent !', {
+          icon: 'done',
+          action: [
+            {
+              icon: 'close',
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+              },
+            },
+            {
+              icon: 'content_copy',
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+                clipboard.writeText(response.data);
+                setTimeout(() => {
+                  this.$toasted.show('Copied !', {
+                    duration: 1000,
+                    icon: 'done',
+                  });
+                }, 800);
+              },
+            },
+          ],
+        });
+      }).catch(error => {
+        this.$toasted.error(error);
+      })
+      ;
     },
   },
   watch: {
@@ -147,10 +166,10 @@ export default {
       },
     },
     getMinBuy() {
-      return this.$store.getters.getConfig.minBuy;
+      return sb.toSatoshi(this.$store.getters.getConfig.minBuy);
     },
     getMaxBuy() {
-      return this.$store.getters.getConfig.maxBuy;
+      return sb.toSatoshi(this.$store.getters.getConfig.maxBuy);
     },
     getConfig() {
       return this.$store.getters.getConfig;
@@ -158,11 +177,14 @@ export default {
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
     },
+    walletMnz() {
+      return this.$store.getters.getWalletByTicker('MNZ');
+    },
     getBalance() {
-      return this.numberWithSpaces(this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8));
+      return this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8);
     },
     getMnzBalance() {
-      return this.numberWithSpaces(this.$store.getters.getWalletByTicker('MNZ').balance);
+      return this.$store.getters.getWalletByTicker('MNZ').balance;
     },
     getStringTicket() {
       return this.$store.getters.getWalletByTicker(this.select).coin.name;
@@ -171,7 +193,7 @@ export default {
       return this.totalPrice();
     },
     getTotalPriceWithFee() {
-      return this.numberWithSpaces((this.getTotalPrice + this.fee).toFixed(8));
+      return (this.getTotalPrice + this.fee).toFixed(8);
     },
     isBonus() {
       const date = new Date().getTime() / 1000;

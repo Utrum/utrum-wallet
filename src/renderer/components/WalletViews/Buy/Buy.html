@@ -111,7 +111,7 @@
 
 	</div>
 
-	<div id="historyMnzBuy" v-if="isHistory()">
+	<div id="historyMnzBuy" v-if="$store.getters.getSwapList2">
 		<h3>TRANSACTIONS</h3>
 		<transaction-history :fromTokenSale="true" :coin="wallet.coin"></transaction-history>
 	</div>
@@ -125,21 +125,21 @@
 				<div class="row">
 					<span class="subTitle">Amount to buy</span>
 					<div class="col-custom row-main-item">
-						<span class="col-custom"><span class="selectAmount">{{getPackage}} </span>MNZ</span>
+						<span class="col-custom"><span class="selectAmount">{{getPackage | currency('', getPackage.toString().split(".")[1].length || 0, { decimalSeparator: '.', thousandsSeparator: ' '})}} </span>MNZ</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
 				<div class="row" v-if="isBonus">
 					<span class="subTitle">Plus ({{currentBonus*100}}%) bonus</span>
 					<div class="col-custom row-main-item">
-						<span class="col-custom"><span class="selectAmount">{{getPackage+(getPackage * currentBonus)}} </span>MNZ</span>
+						<span class="col-custom"><span class="selectAmount">{{getPackage+(getPackage * currentBonus) | currency('', (getPackage+(getPackage * currentBonus)).toString().split(".")[1].length || 0, { decimalSeparator: '.', thousandsSeparator: ' '})}} </span>MNZ</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
 				<div class="row">
 					<span class="subTitle">Price</span>
 					<div class="col-custom row-main-item">
-						<span class="col-custom"><span class="selectAmount">{{getTotalPrice}} </span>{{select}}</span>
+						<span class="col-custom"><span class="selectAmount">{{getTotalPrice | currency('', getTotalPrice.toString().split(".")[1].length || 0, { decimalSeparator: '.', thousandsSeparator: ' '})}} </span>{{select}}</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
@@ -164,7 +164,7 @@
 				</div>
 				<div id="amountTotal" class="col-custom row">
 					<div class="row">
-						<span id="totalAmount">{{getTotalPriceWithFee}}</span>
+						<span id="totalAmount">{{getTotalPriceWithFee | currency('', getTotalPriceWithFee.toString().split(".")[1].length || 0, { decimalSeparator: '.', thousandsSeparator: ' '})}}</span>
 						<span id="totalAmountCoin">{{select}}</span>
 					</div>
 				</div>
