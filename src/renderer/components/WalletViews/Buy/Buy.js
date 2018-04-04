@@ -18,6 +18,8 @@ export default {
       currentBonus: 0,
       blocks: 1,
       fee: 0,
+      estimatedFee: 0,
+      preparedTx: {},
       feeSpeed: 'veryFast',
       fees: [
         { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
@@ -44,24 +46,28 @@ export default {
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
       return parts.join('.');
     },
-    onChangeFee() {
+    onFeeChange(data) {
+      this.blocks = data.blocks;
+      this.prepareTx();
+    },
+    async onShowBuyModal() {
+      await this.prepareTx();
+      if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+        this.hideModal();
+        this.$toasted.info("You don't have enough funds for buying (with fees included)");
+      } else {
+        this.$refs.confirmBuy.show();
+      }
+    },
+    async prepareTx() {
+      const tx = await this.estimateTransaction();
+      if (tx.alphaTx.ouputs && tx.alphaTx.inputs) {
+        this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
+      }
+      this.preparedTx = tx.alphaTx;
     },
     hideModal() {
       this.$refs.confirmBuy.hide();
-    },
-    callEstimateFee(blocks) {
-      const self = this;
-      this.wallet.electrum.getEstimateFee(blocks).then(response => {
-        self.fee = response;
-      });
-    },
-    buyMnzModal() {
-      if (this.select !== 'KMD') this.callEstimateFee(this.fees[0].blocks);
-      else this.fee = 0.0001;
-    },
-    onChange(value) {
-      if (this.select !== 'KMD') this.callEstimateFee(value.blocks);
-      else this.fee = 0.0001;
     },
     methodToRunOnSelect(payload) {
       this.object = payload;
@@ -77,7 +83,6 @@ export default {
       } else if (this.select === 'KMD') {
         price = sb.toSatoshi(priceMNZ / priceKMD);
       }
-
       return sb.toBitcoin((sb.toBitcoin(this.packageMNZ) * price).toFixed(0));
     },
     valueChange(value) {
@@ -93,18 +98,29 @@ export default {
         this.packageMNZ -= this.packageIncrement;
       }
     },
+    async estimateTransaction() {
+      return await this.$store.dispatch('prepareTransaction', {
+        wallet: this.wallet,
+        address: this.buyAddress,
+        amount: sb.toSatoshi(this.getTotalPrice),
+        blocks: this.blocks,
+        coupon: this.coupon,
+      });
+    },
     buyMnz() {
-      this.hideModal();
+      const payload = {
+        wallet: this.wallet,
+        ...this.preparedTx,
+        amountMnz: this.totalMnzWitBonus,
+      };
 
       this.$store
-      .dispatch('buyAsset', {
-        wallet: this.wallet,
-        amount: sb.toSatoshi(this.getTotalPrice),
-        fee: this.fee,
-        coupon: this.coupon.trim(),
-        amountMnz: this.packageMNZ + (this.packageMNZ * this.currentBonus),
-      })
+      .dispatch('buyAsset', payload)
       .then(response => {
+        if (response.error) {
+          this.$toasted.error(response.error);
+          Promise.reject();
+        }
         this.$toasted.show('Transaction sent !', {
           icon: 'done',
           action: [
@@ -130,9 +146,10 @@ export default {
           ],
         });
       }).catch(error => {
-        this.$toasted.error(error);
+        this.$toasted.error(error.msg);
       })
       ;
+      this.hideModal();
     },
   },
   watch: {
@@ -150,6 +167,9 @@ export default {
     },
   },
   computed: {
+    totalMnzWitBonus() {
+      return this.getPackage + (this.getPackage * this.currentBonus);
+    },
     getPackage: {
       get: function () {
         return sb.toBitcoin(this.packageMNZ);
@@ -194,7 +214,7 @@ export default {
       return this.totalPrice();
     },
     getTotalPriceWithFee() {
-      return (this.getTotalPrice + this.fee).toFixed(8);
+      return (this.getTotalPrice + this.estimatedFee).toFixed(8);
     },
     isBonus() {
       const date = new Date().getTime() / 1000;

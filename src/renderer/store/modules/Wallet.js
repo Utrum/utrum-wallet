@@ -111,6 +111,40 @@ const actions = {
       dispatch('updateBalance', wallet);
     });
   },
+  async prepareTransaction({ commit, dispatch }, { wallet, address = 'buyMnzAddress', amount, blocks = 6, data = null }) {
+    if (address === 'buyMnzAddress') {
+      address = await dispatch('getNewBuyAddress', wallet, { root: true });
+    }
+
+    const utxos = await wallet.electrum.listUnspent(wallet.address);
+
+    let feeRate = 0.0001;
+    if (wallet.ticker === 'BTC') {
+      feeRate = await wallet.electrum.getEstimateFee(blocks);
+    }
+
+    feeRate = sb.toSatoshi(feeRate);
+    const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, feeRate, data);
+    const payload = {
+      alphaTx: {
+        inputs,
+        outputs,
+        dataScript,
+        fee,
+        amount,
+      },
+    };
+    return payload;
+  },
+  async sendTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
+    const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
+    const txId = buildedTx.getId();
+    const broadcastedTx = await wallet.electrum.broadcast(buildedTx.toHex());
+    if (txId === broadcastedTx) {
+      return broadcastedTx;
+    }
+    return { error: broadcastedTx };
+  },
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');
   },

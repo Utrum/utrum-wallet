@@ -103,7 +103,7 @@
 				</div>
 			</div>
 
-			<button @click="buyMnzModal" :disabled="canBuy"  v-b-modal="'confirmBuy'" id="buycoins" class="btn sendcoins" type="button">
+			<button @click="onShowBuyModal()" :disabled="canBuy"  id="buycoins" class="btn sendcoins" type="button">
 				BUY
 			</button>
 
@@ -146,7 +146,7 @@
 				<div class="row">
 					<span class="subTitle">Transaction fees</span>
 					<div class="col-custom row-main-item">
-						<select-awesome @change="onChange" :value="fees[0].label" :fees="fees" class="col-custom"></select-awesome>
+						<select-awesome @change="onFeeChange" :value="fees[0].label" :fees="fees" class="col-custom"></select-awesome>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
