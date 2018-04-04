@@ -24,10 +24,10 @@ export default {
       return moment.unix(startDate).toNow(true);
     },
     icoIsOver() {
-      return this.$store.getters.icoIsOver;
+      return this.$store.getters.icoIsOver && !this.icoWillBegin;
     },
     icoWillBegin() {
       return this.$store.getters.icoWillBegin;
-    }
+    },
   },
 };

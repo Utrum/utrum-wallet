@@ -160,9 +160,10 @@ const actions = {
       clearTimeout(interval);
     }, rand * 1000);
   },
-  startUpdateConfig({ dispatch }) {
-    const min = 1800;
-    const max = 3600;
+  startUpdateConfig({ dispatch, rootGetters }) {
+    const icoWillBegin = rootGetters.icoWillBegin;
+    const min = icoWillBegin ? 20 : 1800;
+    const max = icoWillBegin ? 50 : 3600;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
       dispatch('updateConfig');

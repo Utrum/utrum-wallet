@@ -38,8 +38,6 @@ const actions = {
         const index = Math.floor(Math.random() * 10);
         const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
 
-        console.log(amount);
-        console.log(fee);
         const tx = wallet.prepareTx(response, address, amount, sb.toSatoshi(fee), coupon);
 
         wallet.electrum.broadcast(tx).then((response) => {
