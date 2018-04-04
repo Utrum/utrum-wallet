@@ -101,7 +101,7 @@ export default {
         wallet: this.wallet,
         amount: sb.toSatoshi(this.getTotalPrice),
         fee: this.fee,
-        coupon: this.coupon,
+        coupon: this.coupon.trim(),
         amountMnz: this.packageMNZ + (this.packageMNZ * this.currentBonus),
       })
       .then(response => {
