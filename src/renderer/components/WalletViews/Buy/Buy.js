@@ -77,7 +77,8 @@ export default {
       } else if (this.select === 'KMD') {
         price = sb.toSatoshi(priceMNZ / priceKMD);
       }
-      return sb.toBitcoin(sb.toBitcoin(Number(this.packageMNZ)) * price);
+
+      return sb.toBitcoin((sb.toBitcoin(this.packageMNZ) * price).toFixed(0));
     },
     valueChange(value) {
       this.select = value;
@@ -117,7 +118,8 @@ export default {
               icon: 'content_copy',
               onClick: (e, toastObject) => {
                 toastObject.goAway(0);
-                clipboard.writeText(response.data);
+                console.log(response);
+                clipboard.writeText(response);
                 setTimeout(() => {
                   this.$toasted.show('Copied !', {
                     duration: 1000,

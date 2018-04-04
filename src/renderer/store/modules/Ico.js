@@ -2,6 +2,8 @@ import * as _ from 'lodash';
 import moment from 'moment';
 import bitcoinjs from 'bitcoinjs-lib';
 
+const sb = require('satoshi-bitcoin');
+
 const state = {
   associatedTxs: [],
   pendingSwaps: [],
@@ -36,7 +38,9 @@ const actions = {
         const index = Math.floor(Math.random() * 10);
         const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
 
-        const tx = wallet.prepareTx(response, address, amount, fee, coupon);
+        console.log(amount);
+        console.log(fee);
+        const tx = wallet.prepareTx(response, address, amount, sb.toSatoshi(fee), coupon);
 
         wallet.electrum.broadcast(tx).then((response) => {
           const localCryptoTx = generateLocalTx(wallet.address, amount, response.data);
