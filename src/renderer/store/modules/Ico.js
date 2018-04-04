@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import moment from 'moment';
 import bitcoinjs from 'bitcoinjs-lib';
 
 const state = {
@@ -61,16 +62,14 @@ const actions = {
 const getters = {
   icoIsOver: (state, rootGetters) => {
     const config = rootGetters.getConfig;
-    const date = Date();
-    if (!(config.progress <= 1 || config.icoStartDate < date || date < config.icoEndDate)) {
+    if ((config.progress >= 1 || (moment.unix(config.icoStartDate) > moment() || moment() > moment.unix(config.icoEndDate)))) {
       return true;
     }
     return false;
   },
   icoWillBegin: (state, rootGetters) => {
     const config = rootGetters.getConfig;
-    const date = Date();
-    if (date < config.icoStartDate) {
+    if (moment() < moment.unix(config.icoStartDate)) {
       return true;
     }
     return false;
