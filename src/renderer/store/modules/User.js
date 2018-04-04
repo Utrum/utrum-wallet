@@ -44,7 +44,6 @@ const actions = {
   },
   login({ commit, dispatch }, passphrase) {
     dispatch('startUpdates');
-    dispatch('updateConfig', {}, { root: true });
     commit('SET_PASSPHRASE', passphrase);
     commit('USER_LOGIN');
   },

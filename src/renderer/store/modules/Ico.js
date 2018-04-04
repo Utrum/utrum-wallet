@@ -59,13 +59,24 @@ const actions = {
 // key: 'status',
 
 const getters = {
-  isCanBuy: (state, rootGetters) => {
+  icoIsOver: (state, rootGetters) => {
     const config = rootGetters.getConfig;
     const date = Date();
-    if (!(config.progress <= 1 && config.icoStartDate < date && date < config.icoEndDate)) {
+    if (!(config.progress <= 1 || config.icoStartDate < date || date < config.icoEndDate)) {
       return true;
     }
     return false;
+  },
+  icoWillBegin: (state, rootGetters) => {
+    const config = rootGetters.getConfig;
+    const date = Date();
+    if (date < config.icoStartDate) {
+      return true;
+    }
+    return false;
+  },
+  icoStartDate: (state, rootGetters) => {
+    return rootGetters.getConfig.icoStartDate;
   },
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs);

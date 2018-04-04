@@ -1,4 +1,5 @@
 <div id="app">
   <router-view></router-view>
-  <div v-if="!$store.getters.isCanBuy" id="monaizeOver">The Monaize ICO is now over. We would like to thank our loyal MNZ token holders for their participation.</div>
+  <div v-if="!$store.getters.icoIsOver" id="monaizeOver">The Monaize ICO is now over. We would like to thank our loyal MNZ token holders for their participation.</div>
+  <div v-if="!$store.getters.icoWillBegin" id="monaizeOver">The Monaize ICO will begin in {{icoStartDate}}.</div>
 </div>
