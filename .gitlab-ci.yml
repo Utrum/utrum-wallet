@@ -1,9 +1,9 @@
 stages:
   - build installer
 
-cache:
-  paths:
-    - node_modules/
+# cache:
+#   paths:
+#     - node_modules/
 
 before_script:
   - yarn config set registry http://mon-1:4873
@@ -28,7 +28,7 @@ before_script:
 
 build for linux & windows:
   stage: build installer
-  # only: master
+  only: master
   script:
     - nvm install 8.9
     - yarn
