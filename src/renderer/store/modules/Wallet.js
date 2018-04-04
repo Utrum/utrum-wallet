@@ -107,7 +107,7 @@ const actions = {
       wallet.txs = [];
       wallet.privKey = privateKey;
       commit('ADD_WALLET', wallet);
-      // dispatch('buildTxHistory', wallet, { root: true });
+      dispatch('buildTxHistory', wallet, { root: true });
       dispatch('updateBalance', wallet);
     });
   },
