@@ -10,6 +10,7 @@ const BabiliWebpackPlugin = require('babili-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 /**
  * List of node_modules to include in webpack bundle
@@ -120,7 +121,22 @@ let rendererConfig = {
         : false
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: {
+        reserved: [
+          'Buffer',
+          'BigInteger',
+          'Point',
+          'ECPubKey',
+          'ECKey',
+          'sha512_asm',
+          'asm',
+          'ECPair',
+          'HDNode'
+        ]
+      }
+    })
   ],
   output: {
     filename: '[name].js',

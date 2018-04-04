@@ -2,8 +2,6 @@ import * as _ from 'lodash';
 import moment from 'moment';
 import bitcoinjs from 'bitcoinjs-lib';
 
-const sb = require('satoshi-bitcoin');
-
 const state = {
   associatedTxs: [],
   pendingSwaps: [],
@@ -24,32 +22,29 @@ const mutations = {
 };
 
 const actions = {
-  buyAsset({ commit, rootGetters, dispatch }, { wallet, amount, fee, coupon, amountMnz }) {
-    return new Promise((resolve, reject) => {
-      wallet.electrum.listUnspent(wallet.address).then(response => {
-        let pubKeyAddress = '';
-
-        _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
-          if (key === wallet.ticker.toLowerCase()) {
-            pubKeyAddress = value;
-          }
-        });
-        const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
-        const index = Math.floor(Math.random() * 10);
-        const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
-
-        const tx = wallet.prepareTx(response, address, amount, sb.toSatoshi(fee), coupon);
-
-        wallet.electrum.broadcast(tx).then((response) => {
-          const localCryptoTx = generateLocalTx(wallet.address, amount, response.data);
-          const localMnzTx = generateLocalMnz(amountMnz);
-          commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: wallet.ticker });
-          resolve(response);
-        })
-        .catch(error => {
-          reject(error);
-        });
-      });
+  getNewBuyAddress({ rootGetters }, wallet) {
+    let pubKeyAddress;
+    _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
+      if (key === wallet.ticker.toLowerCase()) {
+        pubKeyAddress = value;
+      }
+    });
+    const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
+    const index = Math.floor(Math.random() * 10);
+    const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
+    return address;
+  },
+  buyAsset({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
+    return new Promise(async (resolve, reject) => {
+      const sentTxId = await dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript });
+      if (!sentTxId.error) {
+        const localCryptoTx = generateLocalTx(wallet.address, amount, sentTxId);
+        const localMnzTx = generateLocalMnz(amountMnz);
+        commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: wallet.ticker });
+        resolve(sentTxId);
+      } else {
+        reject({ msg: `Can't send transaction, verify your pending tx and unconfirmed balance: ${sentTxId.error}` });
+      }
     });
   },
 };
