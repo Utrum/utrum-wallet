@@ -50,7 +50,18 @@ const actions = {
         return Promise.all([promiseForKMDWallet, promiseForBTCWallet, promiseForMNZWallet]);
       })
       .then((wallets) => {
-        const associations = associateTxsFromWallet(wallets[0].txs.concat(wallets[1].txs), wallets[2].txs);
+        let associations = [];
+        let cryptoTxs = [];
+
+        if (wallets[0].txs !== undefined) {
+          cryptoTxs = wallets[0].txs;
+        }
+        if (wallets[1].txs !== undefined) {
+          cryptoTxs.concat(wallets[1].txs);
+        }
+        if (wallets[2].txs !== undefined) {
+          associations = associateTxsFromWallet(cryptoTxs, wallets[2].txs);
+        }
         commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
       }).catch(() => {})
     ;

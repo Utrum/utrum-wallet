@@ -1,5 +1,4 @@
 import BootstrapVue from 'bootstrap-vue';
-import VueSweetAlert from 'vue-sweetalert';
 import VueQriously from 'vue-qriously';
 import VueClipboard from 'vue-clipboard2';
 import VueQrcodeReader from 'vue-qrcode-reader';
@@ -16,7 +15,6 @@ require('bootstrap/dist/css/bootstrap.min.css');
 const vueElectron = require('vue-electron');
 
 Vue.use(BootstrapVue);
-Vue.use(VueSweetAlert);
 Vue.use(VueQriously);
 Vue.use(VueClipboard);
 Vue.use(VueQrcodeReader);

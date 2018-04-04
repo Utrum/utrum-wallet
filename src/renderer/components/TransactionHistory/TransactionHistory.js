@@ -42,7 +42,6 @@ export default {
   computed: {
     txHistory() {
       return this.fromTokenSale ? this.$store.getters.getSwapList2
-      // .map(el => { return el.cryptoTx; })
        : this.$store.getters.getWalletTxs(this.coin.ticker);
     },
     fields()  {
