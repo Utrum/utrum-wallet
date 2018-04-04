@@ -158,7 +158,7 @@ export default {
                   icon: 'content_copy',
                   onClick: (e, toastObject) => {
                     toastObject.goAway(0);
-                    clipboard.writeText(response.data);
+                    clipboard.writeText(response);
                     setTimeout(() => {
                       this.$toasted.show('Copied !', {
                         duration: 1000,
