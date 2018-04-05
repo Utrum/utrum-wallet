@@ -177,7 +177,6 @@ const actions = {
   startUpdates({ dispatch }) {
     dispatch('setIsUpdate', true);
     dispatch('startUpdateBalances');
-    dispatch('startUpdateConfig');
     dispatch('startUpdateHistory');
   },
   startUpdateBalances({ dispatch, getters, rootGetters }) {
@@ -196,8 +195,8 @@ const actions = {
   },
   startUpdateConfig({ dispatch, rootGetters }) {
     const icoWillBegin = rootGetters.icoWillBegin;
-    const min = icoWillBegin ? 20 : 1800;
-    const max = icoWillBegin ? 50 : 3600;
+    const min = icoWillBegin ? 20 : 30;
+    const max = icoWillBegin ? 50 : 30;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
       dispatch('updateConfig');
