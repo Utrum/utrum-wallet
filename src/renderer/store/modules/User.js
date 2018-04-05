@@ -1,7 +1,7 @@
 const state = {
   loggedIn: false,
   testMode: true,
-  passphrase: 'titi',
+  passphrase: 'toto',
   privKey: '',
 };
 

@@ -16,7 +16,7 @@ export default {
     return {
       searchable: false,
       currentBonus: 0,
-      blocks: 1,
+      blocks: 36,
       fee: 0,
       estimatedFee: 0,
       preparedTx: {},
@@ -59,12 +59,24 @@ export default {
         this.$refs.confirmBuy.show();
       }
     },
-    async prepareTx() {
-      const tx = await this.estimateTransaction();
-      if (tx.alphaTx.ouputs && tx.alphaTx.inputs) {
-        this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
-      }
-      this.preparedTx = tx.alphaTx;
+    prepareTx() {
+      this.estimateTransaction().then(tx => {
+        console.log(tx)
+        if (tx.alphaTx.outputs.length > 0 && tx.alphaTx.inputs.length > 0) {
+          this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
+          console.log(this.estimatedFee)
+        }
+        this.preparedTx = tx.alphaTx;
+      });
+    },
+    async estimateTransaction() {
+      return this.$store.dispatch('prepareTransaction', {
+        wallet: this.wallet,
+        address: this.buyAddress,
+        amount: sb.toSatoshi(this.getTotalPrice),
+        blocks: this.blocks,
+        coupon: this.coupon,
+      });
     },
     hideModal() {
       this.$refs.confirmBuy.hide();
@@ -97,15 +109,6 @@ export default {
       if (this.packageMNZ > this.getMinBuy) {
         this.packageMNZ -= this.packageIncrement;
       }
-    },
-    async estimateTransaction() {
-      return await this.$store.dispatch('prepareTransaction', {
-        wallet: this.wallet,
-        address: this.buyAddress,
-        amount: sb.toSatoshi(this.getTotalPrice),
-        blocks: this.blocks,
-        coupon: this.coupon,
-      });
     },
     buyMnz() {
       const payload = {
