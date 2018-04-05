@@ -61,10 +61,8 @@ export default {
     },
     prepareTx() {
       this.estimateTransaction().then(tx => {
-        console.log(tx)
         if (tx.alphaTx.outputs.length > 0 && tx.alphaTx.inputs.length > 0) {
           this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
-          console.log(this.estimatedFee)
         }
         this.preparedTx = tx.alphaTx;
       });

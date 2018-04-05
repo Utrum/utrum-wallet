@@ -1,7 +1,6 @@
 import { Wallet, coins }  from 'libwallet-mnz';
 import sb from 'satoshi-bitcoin';
 import Vue from 'vue';
-import bitcoinjs from 'bitcoinjs-lib';
 import store from '../../store';
 import ElectrumService from '../../lib/electrum';
 import getCmcData from '../../lib/coinmarketcap';
@@ -127,8 +126,6 @@ const actions = {
     feeRate = sb.toSatoshi(feeRate);
     const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, feeRate, data);
     const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
-
-    console.log(buildedTx, buildedTx.weight())
 
     const payload = {
       alphaTx: {
