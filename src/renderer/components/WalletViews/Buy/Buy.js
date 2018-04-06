@@ -35,6 +35,7 @@ export default {
       packageMNZ: 100000000000,
       packageIncrement: 50000000000,
       coupon: '',
+      timer: true,
     };
   },
   mounted() {
@@ -109,6 +110,11 @@ export default {
       });
     },
     async buyMnz() {
+      this.timer = false;
+      setTimeout(() => {
+        this.timer = true;
+      }, 3000);
+
       await this.prepareTx();
       const payload = {
         wallet: this.wallet,
