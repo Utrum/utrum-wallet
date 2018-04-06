@@ -3,13 +3,23 @@ import ExplorerLink from '@/components/Utils/ExplorerLink/ExplorerLink.vue';
 const sb = require('satoshi-bitcoin');
 const moment = require('moment');
 
+
 export default {
-  name: 'transaction-history',
-  props: ['fromTokenSale', 'coin'],
+  name: 'transaction-buy-history',
+  props: ['coin'],
   data() {
     return {
+      totalRows: this.$store.getters.getWalletTxs(this.coin.ticker).length,
       sortBy: 'time',
       sortDesc: true,
+      currentPage: 1,
+      perPage: 10,
+      fields: [
+        { key: 'time', label: 'Date / Hours', sortable: true },
+        { key: 'height', label: 'Block Height', sortable: true },
+        { key: 'amount', label: `Amount (${this.coin.ticker})`, sortable: true },
+        { key: 'address', label: 'Address', sortable: true },
+      ],
     };
   },
   components: {
@@ -41,56 +51,7 @@ export default {
   },
   computed: {
     txHistory() {
-      return this.fromTokenSale ? this.$store.getters.getSwapList2
-       : this.$store.getters.getWalletTxs(this.coin.ticker);
-    },
-    fields()  {
-      if (this.fromTokenSale) {
-        return [
-          {
-            key: 'time',
-            label: 'Date / Hours',
-            sortable: true,
-          },
-          {
-            key: 'ticker',
-            label: 'Type',
-            sortable: true,
-          },
-          {
-            key: 'mnzAmount',
-            label: 'MNZ',
-            sortable: true,
-          },
-          {
-            key: 'price41',
-            label: 'Price - 1 MNZ',
-            sortable: true,
-          },
-          {
-            key: 'price4all',
-            label: 'Total',
-            sortable: true,
-          },
-          {
-            key: 'status',
-            label: 'Status',
-            sortable: true,
-          },
-        ];
-      }
-      return [
-        {
-          key: 'height',
-          label: 'Block Height',
-          sortable: true,
-        },
-        {
-          key: 'amount',
-          label: `Amount (${this.coin.ticker})`,
-          sortable: true,
-        },
-      ];
+      return this.$store.getters.getWalletTxs(this.coin.ticker);
     },
   },
 };

@@ -1,6 +1,6 @@
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
-import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
+import TransactionBuyHistory from '@/components/TransactionBuyHistory/TransactionBuyHistory.vue';
 
 const sb = require('satoshi-bitcoin');
 const { clipboard } = require('electron');
@@ -10,7 +10,7 @@ export default {
   components: {
     select2: Select2,
     'select-awesome': SelectAwesome,
-    'transaction-history': TransactionHistory,
+    'transaction-buy-history': TransactionBuyHistory,
   },
   data() {
     return {

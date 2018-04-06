@@ -113,7 +113,7 @@
 
 	<div id="historyMnzBuy" v-if="$store.getters.getSwapList2">
 		<h3>TRANSACTIONS</h3>
-		<transaction-history :fromTokenSale="true" :coin="wallet.coin"></transaction-history>
+		<transaction-buy-history :coin="wallet.coin"></transaction-buy-history>
 	</div>
 
 	<b-modal ref="confirmBuy" id="confirmBuy" centered>
