@@ -497,5 +497,9 @@ input[type=number]::-webkit-outer-spin-button {
 #coupon:focus {
 	outline: none !important;
 	border:1px solid #7c398a;
-	box-shadow: 0 0 10px #719ECE;
+}
+
+#warningInfo {
+	font-weight: 400;
+	font-size: 1.1em;
 }
