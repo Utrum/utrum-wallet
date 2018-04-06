@@ -1,4 +1,4 @@
-import electron from 'electron';
+const { shell } = require('electron');
 
 export default {
   name: 'version-update',
@@ -12,7 +12,7 @@ export default {
     openLink: (event) => {
       event.preventDefault();
       const link = event.target.href;
-      electron.shell.openExternal(link);
+      shell.openExternal(link);
     },
   },
   computed: {
