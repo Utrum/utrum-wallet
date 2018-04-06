@@ -103,7 +103,7 @@
 				</div>
 			</div>
 
-			<button @click="onShowBuyModal()" :disabled="canBuy"  id="buycoins" class="btn sendcoins" type="button">
+			<button @click="onShowBuyModal()" :disabled="!timer || canBuy"  id="buycoins" class="btn sendcoins" type="button">
 				BUY
 			</button>
 
