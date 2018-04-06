@@ -113,7 +113,7 @@ export default {
       const payload = {
         wallet: this.wallet,
         ...this.preparedTx,
-        amountMnz: this.totalMnzWitBonus,
+        amountMnz: sb.toSatoshi(this.totalMnzWitBonus),
       };
 
       this.$store
