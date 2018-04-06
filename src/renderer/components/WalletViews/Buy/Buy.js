@@ -52,6 +52,7 @@ export default {
     },
     async onShowBuyModal() {
       await this.prepareTx();
+
       if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
         this.hideModal();
         this.$toasted.info("You don't have enough funds for buying (with fees included)");
@@ -104,10 +105,11 @@ export default {
         address: this.buyAddress,
         amount: sb.toSatoshi(this.getTotalPrice),
         blocks: this.blocks,
-        coupon: this.coupon,
+        data: this.coupon,
       });
     },
-    buyMnz() {
+    async buyMnz() {
+      await this.prepareTx();
       const payload = {
         wallet: this.wallet,
         ...this.preparedTx,
