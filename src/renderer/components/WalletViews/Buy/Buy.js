@@ -61,10 +61,10 @@ export default {
     },
     async prepareTx() {
       const tx = await this.estimateTransaction();
-      if (tx.alphaTx.ouputs && tx.alphaTx.inputs) {
-        this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
+      if (tx.ouputs && tx.inputs) {
+        this.estimatedFee = sb.toBitcoin(tx.fee);
       }
-      this.preparedTx = tx.alphaTx;
+      this.preparedTx = tx;
     },
     hideModal() {
       this.$refs.confirmBuy.hide();
@@ -101,7 +101,6 @@ export default {
     async estimateTransaction() {
       return await this.$store.dispatch('prepareTransaction', {
         wallet: this.wallet,
-        address: this.buyAddress,
         amount: sb.toSatoshi(this.getTotalPrice),
         blocks: this.blocks,
         coupon: this.coupon,
@@ -115,39 +114,40 @@ export default {
       };
 
       this.$store
-      .dispatch('buyAsset', payload)
-      .then(response => {
-        if (response.error) {
-          this.$toasted.error(response.error);
-          Promise.reject();
-        }
-        this.$toasted.show('Transaction sent !', {
-          icon: 'done',
-          action: [
-            {
-              icon: 'close',
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0);
+        .dispatch('buyAsset', payload)
+        .then(response => {
+          // if (response.error) {
+          //   this.$toasted.error(response.error);
+          //   Promise.reject();
+          // }
+          this.$toasted.show('Transaction sent !', {
+            icon: 'done',
+            action: [
+              {
+                icon: 'close',
+                onClick: (e, toastObject) => {
+                  toastObject.goAway(0);
+                },
               },
-            },
-            {
-              icon: 'content_copy',
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0);
-                clipboard.writeText(response);
-                setTimeout(() => {
-                  this.$toasted.show('Copied !', {
-                    duration: 1000,
-                    icon: 'done',
-                  });
-                }, 800);
+              {
+                icon: 'content_copy',
+                onClick: (e, toastObject) => {
+                  toastObject.goAway(0);
+                  clipboard.writeText(response);
+                  setTimeout(() => {
+                    this.$toasted.show('Copied !', {
+                      duration: 1000,
+                      icon: 'done',
+                    });
+                  }, 800);
+                },
               },
-            },
-          ],
-        });
-      }).catch(error => {
-        this.$toasted.error(error.msg);
-      })
+            ],
+          });
+        })
+        .catch(error => {
+          this.$toasted.error(`Can't send transaction, verify your pending tx and unconfirmed balance: ${error.msg}`);
+        })
       ;
       this.hideModal();
     },

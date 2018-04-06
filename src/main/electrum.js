@@ -5,32 +5,29 @@ Client.timeout = 10000;
 
 const clients = {};
 
-Object.keys(coins.all).forEach(coin => {
-  const electrumServers = coins.all[coin].electrum;
-  electrumServers.forEach(electrumServer => {
-    let ticker = coins.all[coin].ticker;
-    if (electrumServer.test) {
-      ticker = `TEST${ticker}`;
-    }
-
-    const client = new Client(parseInt(electrumServer.port, 10), electrumServer.host);
-    clients[ticker] = client;
-    // client.on('error', err => {
-    //   throw new Error(`ERROR: ELECTRUM SOCKET: ${err}`);
-    // });
-    // client.call('server.version', ['monaize', '1.2'], (error, response) => {
-    //   if (error) {
-    //     throw new Error(`Electrum Error: \n${error}\n${response}`);
-    //   } else {
-    //   }
-    // });
+coins.all.forEach(coin => {
+  coin.electrum.forEach(electrumServer => {
+    let ticker = coin.ticker;
+    if (electrumServer.test === true) { ticker = `TEST${ticker}`; }
+    clients[ticker] = new Client(parseInt(electrumServer.port, 10), electrumServer.host);
   });
 });
 
-export default (ticker, test, method, params, done) => {
-  if (!ticker || !method || !params) throw new Error('ERROR: Missing arguments');
-  if (test) {
-    ticker = `TEST${ticker}`;
+export default (ticker, test, method, params) => {
+  if (!ticker || !method || !params) {
+    return Promise.reject(new Error('ERROR: Missing arguments'));
   }
-  clients[ticker].call(method, params, done);
+
+  if (test) { ticker = `TEST${ticker}`; }
+
+  return new Promise((resolve, reject) => {
+    const callback = (error, response) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(response);
+      }
+    };
+    clients[ticker].call(method, params, callback);
+  });
 };

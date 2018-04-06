@@ -35,17 +35,13 @@ const actions = {
     return address;
   },
   buyAsset({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
-    return new Promise(async (resolve, reject) => {
-      const sentTxId = await dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript });
-      if (!sentTxId.error) {
+    return dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript })
+      .then((sentTxId) => {
         const localCryptoTx = generateLocalTx(wallet.address, amount, sentTxId);
         const localMnzTx = generateLocalMnz(amountMnz);
         commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: wallet.ticker });
-        resolve(sentTxId);
-      } else {
-        reject({ msg: `Can't send transaction, verify your pending tx and unconfirmed balance: ${sentTxId.error}` });
-      }
-    });
+      })
+    ;
   },
 };
 
@@ -107,7 +103,6 @@ const generateLocalMnz = (amount) => {
     amount: amount,
   };
 };
-
 
 export default {
   state,
