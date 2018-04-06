@@ -25,10 +25,12 @@ const actions = {
   getNewBuyAddress({ rootGetters }, wallet) {
     let pubKeyAddress;
     _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
-      if (key === wallet.ticker.toLowerCase()) {
+      // console.log(key, wallet.ticker.toLowerCase(), key.indexOf(wallet.ticker.toLowerCase()))
+      if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
         pubKeyAddress = value;
       }
     });
+
     const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
     const index = Math.floor(Math.random() * 10);
     const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
@@ -43,7 +45,7 @@ const actions = {
         commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: wallet.ticker });
         resolve(sentTxId);
       } else {
-        reject({ msg: `Can't send transaction, verify your pending tx and unconfirmed balance: ${sentTxId.error}` });
+        reject({ msg: 'Can\'t send transaction, wait for utxos to come back (~5 seconds)' });
       }
     });
   },

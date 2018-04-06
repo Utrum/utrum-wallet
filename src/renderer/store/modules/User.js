@@ -1,8 +1,11 @@
+import { coins } from 'libwallet-mnz';
+
 const state = {
   loggedIn: false,
   testMode: true,
-  passphrase: 'toto',
+  passphrase: 'default',
   privKey: '',
+  enabledCoins: ['BTC', 'KMD', 'MNZ'],
 };
 
 const getters = {
@@ -17,6 +20,9 @@ const getters = {
   },
   privKey: (state) => {
     return state.privKey;
+  },
+  enabledCoins: (state) => {
+    return state.enabledCoins.map(ticker => coins.get(state.testMode ? `TEST${ticker}` : ticker));
   },
 };
 

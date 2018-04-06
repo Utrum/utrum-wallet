@@ -23,8 +23,8 @@ const getters = {
   isUpdate: (state) => {
     return state.isUpdate;
   },
-  getHistoryBuy: (state, getters) => {
-    const history = getters.getWalletTxs('MNZ');
+  getHistoryBuy: (state, getters, rootGetters) => {
+    const history = getters.getWalletTxs(rootGetters.isTestMode ? 'TESTMNZ' : 'MNZ');
     Object.keys(coins).forEach((coin) => {
       const filteredHistory = history.filter(el => el.origin.ticker === coin);
       history.concat(filteredHistory);
@@ -36,7 +36,7 @@ const getters = {
   },
   getWalletTxs: (state, getters) => (ticker) => {
     if (ticker != null) {
-      return getters.getWalletByTicker(ticker).txs;
+      return  getters.getWalletByTicker(ticker).txs;
     }
     return [];
   },
@@ -95,8 +95,9 @@ const actions = {
 
     const privateKey = rootGetters.privKey;
     const isTestMode = rootGetters.isTestMode;
+    const enabledCoins = rootGetters.enabledCoins;
 
-    coins.all.forEach(async (coin) => {
+    enabledCoins.forEach(async (coin) => {
       const ticker = coin.ticker;
       const wallet = new Wallet(privateKey, coin, isTestMode);
       wallet.electrum = new ElectrumService(store, ticker, isTestMode);
@@ -119,14 +120,13 @@ const actions = {
     const utxos = await wallet.electrum.listUnspent(wallet.address);
 
     let feeRate = 0;
-    if (wallet.ticker === 'BTC') {
+    if (wallet.ticker.indexOf('BTC') >= 0) {
       feeRate = await wallet.electrum.getEstimateFee(blocks);
     }
 
     feeRate = sb.toSatoshi(feeRate);
     const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, feeRate, data);
-    const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
-
+    // const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
     const payload = {
       alphaTx: {
         inputs,
@@ -134,7 +134,7 @@ const actions = {
         dataScript,
         fee,
         amount,
-        totalFees: buildedTx.weight() * fee,
+        totalFees: fee,
       },
     };
     return payload;

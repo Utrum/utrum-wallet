@@ -15,6 +15,9 @@ export default {
     'select-awesome': SelectAwesome,
     QrcodeReader,
   },
+  created() {
+    this.select = this.$store.getters.isTestMode ? 'TESTMNZ' : 'MNZ';
+  },
   data() {
     return {
       blocks: 1,
@@ -39,12 +42,7 @@ export default {
       },
       paused: false,
       readingQRCode: false,
-      listData: [
-        'BTC',
-        'KMD',
-        'MNZ',
-      ],
-      select: 'MNZ',
+      select: '',
       withdraw: {
         amount: null,
         address: '',
@@ -181,6 +179,9 @@ export default {
   computed: {
     getConfig() {
       return this.$store.getters.getConfig;
+    },
+    coins() {
+      return this.$store.getters.enabledCoins.map(coin => coin.ticker);
     },
     getTotalPriceWithFee() {
       return (Number(this.withdraw.amount) + sb.toBitcoin(this.fee)).toFixed(8);

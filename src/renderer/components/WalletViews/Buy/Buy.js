@@ -20,18 +20,14 @@ export default {
       fee: 0,
       estimatedFee: 0,
       preparedTx: {},
-      feeSpeed: 'veryFast',
+      feeSpeed: 'low',
       fees: [
         { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
         { id: 1, label: 'Fast', blocks: 6, value: 'fast' },
         { id: 2, label: 'Low', blocks: 36, value: 'low' },
       ],
       selectedFee: null,
-      listData: [
-        'BTC',
-        'KMD',
-      ],
-      select: 'BTC',
+      select: '',
       packageMNZ: 100000000000,
       packageIncrement: 50000000000,
       coupon: '',
@@ -40,6 +36,9 @@ export default {
   mounted() {
     this.selectFee = this.fees[0].label;
   },
+  created() {
+    this.select = this.$store.getters.isTestMode ? 'TESTBTC' : 'BTC';
+  },
   methods: {
     numberWithSpaces(x) {
       const parts = x.toString().split('.');
@@ -47,21 +46,31 @@ export default {
       return parts.join('.');
     },
     onFeeChange(data) {
+      const oldLabel = this.feeSpeed;
+      const oldBlocks = this.blocks;
       this.blocks = data.blocks;
-      this.prepareTx();
+      this.feeSpeed = data.label;
+      this.prepareTx().then(() => {
+        if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+          this.$refs.feeSelector.selectedLabel = oldLabel;
+          this.blocks = oldBlocks;
+          this.$toasted.error('You don\'t have enough funds to select this.');
+        }
+      });
     },
-    async onShowBuyModal() {
-      await this.prepareTx();
-      if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
-        this.hideModal();
-        this.$toasted.info("You don't have enough funds for buying (with fees included)");
-      } else {
-        this.$refs.confirmBuy.show();
-      }
+    onShowBuyModal() {
+      this.prepareTx().then(() => {
+        if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+          this.hideModal();
+          this.$toasted.info("You don't have enough funds for buying (with fees included)");
+        } else {
+          this.$refs.confirmBuy.show();
+        }
+      });
     },
     prepareTx() {
-      this.estimateTransaction().then(tx => {
-        if (tx.alphaTx.outputs.length > 0 && tx.alphaTx.inputs.length > 0) {
+      return this.estimateTransaction().then(tx => {
+        if (tx.alphaTx.outputs != null && tx.alphaTx.inputs != null) {
           this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
         }
         this.preparedTx = tx.alphaTx;
@@ -73,7 +82,7 @@ export default {
         address: this.buyAddress,
         amount: sb.toSatoshi(this.getTotalPrice),
         blocks: this.blocks,
-        coupon: this.coupon,
+        data: this.coupon,
       });
     },
     hideModal() {
@@ -88,15 +97,16 @@ export default {
       let price = 0;
       const priceMNZ = config.coinPrices.mnz;
       const priceKMD = config.coinPrices.kmd;
-      if (this.select === 'BTC') {
+      if (this.select.indexOf('BTC') >= 0) {
         price = priceMNZ;
-      } else if (this.select === 'KMD') {
+      } else if (this.select.indexOf('KMD') >= 0) {
         price = sb.toSatoshi(priceMNZ / priceKMD);
       }
       return sb.toBitcoin((sb.toBitcoin(this.packageMNZ) * price).toFixed(0));
     },
     valueChange(value) {
       this.select = value;
+      this.prepareTx();
     },
     incrementPackage() {
       if (this.packageMNZ <= this.getMaxBuy - this.packageIncrement) {
@@ -168,6 +178,14 @@ export default {
     },
   },
   computed: {
+    mnzTicker() {
+      return this.$store.getters.isTestMode ? 'TESTMNZ' : 'MNZ';
+    },
+    coins() {
+      return this.$store.getters.enabledCoins
+        .filter(coin => coin.ticker.indexOf('MNZ') < 0)
+        .map(coin => coin.ticker);
+    },
     totalMnzWitBonus() {
       return this.getPackage + (this.getPackage * this.currentBonus);
     },
@@ -200,13 +218,13 @@ export default {
       return this.$store.getters.getWalletByTicker(this.select);
     },
     walletMnz() {
-      return this.$store.getters.getWalletByTicker('MNZ');
+      return this.$store.getters.getWalletByTicker(this.mnzTicker);
     },
     getBalance() {
       return this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8);
     },
     getMnzBalance() {
-      return this.$store.getters.getWalletByTicker('MNZ').balance;
+      return this.$store.getters.getWalletByTicker(this.mnzTicker).balance;
     },
     getStringTicket() {
       return this.$store.getters.getWalletByTicker(this.select).coin.name;
@@ -246,7 +264,7 @@ export default {
     },
     canBuy() {
       const mnzToBuy = this.packageMNZ;
-      const balance = this.$store.getters.getWalletByTicker(this.select).balance;
+      const balance = this.wallet.balance - this.wallet.balance_unconfirmed;
 
       return mnzToBuy <= 0 || this.totalPrice() > balance;
     },
