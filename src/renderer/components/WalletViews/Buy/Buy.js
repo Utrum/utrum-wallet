@@ -118,7 +118,8 @@ export default {
         this.packageMNZ -= this.packageIncrement;
       }
     },
-    buyMnz() {
+    async buyMnz() {
+      await this.prepareTx();
       const payload = {
         wallet: this.wallet,
         ...this.preparedTx,

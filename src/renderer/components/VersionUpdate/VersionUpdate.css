@@ -1,0 +1,29 @@
+.row-main-item {
+  text-align: center;
+}
+
+h3 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-weight: 400;
+  font-size: 1.5em;
+}
+
+p {
+  width: 400px;
+  color: black;
+  font-weight: 400;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #7c398a;
+}
+
+.flex-center-vertically {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 90vh;
+}
