@@ -2,9 +2,11 @@
 
 #login-background {
 	width: 100%;
+	bottom: 0;
 	position: absolute;
 	bottom:0px;
 	z-index: -1;
+	padding: 0px;
 }
 
 .input-login .row {
