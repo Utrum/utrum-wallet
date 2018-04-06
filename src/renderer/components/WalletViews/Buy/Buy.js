@@ -113,8 +113,7 @@ export default {
       this.timer = false;
       setTimeout(() => {
         this.timer = true;
-      },
-      3000);
+      }, 3000);
 
       await this.prepareTx();
       const payload = {
