@@ -1,4 +1,5 @@
 import { Wallet, coins }  from 'libwallet-mnz';
+import * as _ from 'lodash';
 import sb from 'satoshi-bitcoin';
 import Vue from 'vue';
 import store from '../../store';
@@ -71,8 +72,18 @@ const mutations = {
   UPDATE_IS_UPDATE(state, isUpdate) {
     state.isUpate = isUpdate;
   },
-  ADD_TX(state, { ticker, tx }) {
-    state.wallets[ticker].txs.unshift(tx);
+  ADD_TX(state, { ticker, newTx }) {
+    state.wallets[ticker].txs.unshift(newTx);
+    // let found = false;
+    // _.filter(state.wallets[ticker].txs, (tx) => {
+    //   if (tx.tx_hash === newTx.tx_hash) {
+    //     found = true;
+    //     return false;
+    //   }
+    // });
+    // if (found === false) {
+    //   state.wallets[ticker].txs.unshift(newTx);
+    // }
   },
   ADD_TXS(state, { ticker, txs }) {
     state.wallets[ticker].txs = txs;
@@ -196,10 +207,10 @@ const actions = {
     commit('UPDATE_BALANCE', wallet);
   },
   startUpdates({ dispatch }) {
-    // dispatch('setIsUpdate', true);
-    // dispatch('startUpdateBalances');
-    // dispatch('startUpdateConfig');
-    // dispatch('startUpdateHistory');
+    dispatch('setIsUpdate', true);
+    dispatch('startUpdateBalances');
+    dispatch('startUpdateConfig');
+    dispatch('startUpdateHistory');
   },
   startUpdateBalances({ dispatch, getters, rootGetters }) {
     const min = 20;
@@ -212,7 +223,7 @@ const actions = {
       if (getters.isUpdate) {
         dispatch('startUpdateBalances');
       }
-      clearTimeout(interval);
+      // clearTimeout(interval);
     }, rand * 1000);
   },
   startUpdateConfig({ dispatch, rootGetters }) {
@@ -225,7 +236,7 @@ const actions = {
       if (getters.isUpdate) {
         dispatch('startUpdateConfig');
       }
-      clearTimeout(interval);
+      // clearTimeout(interval);
     }, rand * 1000);
   },
   startUpdateHistory({ dispatch, getters }) {
@@ -239,8 +250,8 @@ const actions = {
       if (getters.isUpdate) {
         dispatch('startUpdateHistory');
       }
-      clearTimeout(interval);
-    }, rand * 1000);
+      // clearTimeout(interval);
+    }, 30 * 1000);
   },
 };
 

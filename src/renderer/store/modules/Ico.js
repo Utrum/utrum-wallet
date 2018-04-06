@@ -44,7 +44,6 @@ const actions = {
     ;
   },
   buildSwapList({ commit, rootGetters }) {
-    console.log("====> Build swap list");
     const promiseForKMDWallet = rootGetters.getWalletByTicker('KMD');
     const promiseForBTCWallet = rootGetters.getWalletByTicker('BTC');
     const promiseForMNZWallet = rootGetters.getWalletByTicker('MNZ');
