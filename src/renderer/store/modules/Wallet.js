@@ -111,7 +111,7 @@ const actions = {
       dispatch('updateBalance', wallet);
     });
   },
-  async prepareTransaction({ commit, dispatch }, { wallet, address = 'buyMnzAddress', amount, blocks = 6, data = null }) {
+  async prepareTransaction({ commit, dispatch }, { wallet, address = 'buyMnzAddress', amount, blocks = 6, data }) {
     if (address === 'buyMnzAddress') {
       address = await dispatch('getNewBuyAddress', wallet, { root: true });
     }

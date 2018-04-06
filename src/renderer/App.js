@@ -25,7 +25,7 @@ export default {
         const version = this.$store.getters.getConfig.client.version === Number(pjson.version.split('.')[0]);
         return version;
       }
-      return false;
+      return true;
     },
     userLoggedIn() {
       return this.$store.state.User.loggedIn;
