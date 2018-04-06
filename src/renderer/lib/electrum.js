@@ -17,14 +17,15 @@ export default class ElectrumService {
     this.payload.params = params;
     this.payload.tag = this.tag;
     ipcRenderer.send('electrum.call', this.payload);
-    // console.log("Call: ", method);
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const callback = (event, arg) => {
-        
-        resolve(arg);
+        if (arg.error != null) {
+          reject(arg.error);
+        } else {
+          resolve(arg);
+        }
       };
-      // console.log("LISTEN ON: ", `electrum.call.${method}.${this.ticker}.${this.payload.tag}`);
       ipcRenderer.once(`electrum.call.${method}.${this.ticker}.${this.payload.tag}`, callback);
       this.tag += 1;
     });

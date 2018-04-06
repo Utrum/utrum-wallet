@@ -43,6 +43,50 @@ const actions = {
       })
     ;
   },
+  buildSwapList({ commit, rootGetters }) {
+    console.log("====> Build swap list");
+    const promiseForKMDWallet = rootGetters.getWalletByTicker('KMD');
+    const promiseForBTCWallet = rootGetters.getWalletByTicker('BTC');
+    const promiseForMNZWallet = rootGetters.getWalletByTicker('MNZ');
+    return Promise.all([promiseForKMDWallet, promiseForBTCWallet, promiseForMNZWallet])
+      .then((wallets) => {
+        let associations = [];
+        let cryptoTxs = [];
+
+        if (wallets[0].txs !== undefined) {
+          cryptoTxs = wallets[0].txs;
+        }
+        if (wallets[1].txs !== undefined) {
+          cryptoTxs.concat(wallets[1].txs);
+        }
+        if (wallets[2].txs !== undefined) {
+          associations = associateTxsFromWallet(cryptoTxs, wallets[2].txs);
+        }
+        commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
+      })
+      .catch(() => {})
+    ;
+  },
+};
+
+const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
+  const associateArray = [];
+  if (cryptoTxs != null && mnzTxs != null) {
+    _.forEach(mnzTxs, (mnzTx) => {
+      if (mnzTx.origin != null) {
+        const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
+          if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
+            return true;
+          }
+          return false;
+        });
+        if (cryptoTxsForMnz[0]) {
+          associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
+        }
+      }
+    });
+  }
+  return associateArray;
 };
 
 // key: 'cryptoTx.time',

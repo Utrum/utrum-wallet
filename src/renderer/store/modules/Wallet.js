@@ -69,11 +69,11 @@ const mutations = {
     Vue.set(state.wallets, wallet.ticker, wallet);
   },
   UPDATE_IS_UPDATE(state, isUpdate) {
-    state.isUpdate = isUpdate;
+    state.isUpate = isUpdate;
   },
-  // ADD_TX(state, { ticker, tx }) {
-  //   state.wallets[ticker].txs.unshift(tx);
-  // },
+  ADD_TX(state, { ticker, tx }) {
+    state.wallets[ticker].txs.unshift(tx);
+  },
   ADD_TXS(state, { ticker, txs }) {
     state.wallets[ticker].txs = txs;
   },
@@ -169,14 +169,12 @@ const actions = {
     });
   },
   updateBalance({ commit, getters, rootGetters }, wallet) {
-    // console.log("GET Balance");
     wallet.electrum
       .getBalance(wallet.address)
+      .catch((error) => {
+        return Promise.reject(new Error(`Failed to retrieve ${wallet.ticker} balance\n${error}`));
+      })
       .then(response => {
-        // console.log("GET Balance res: ", response);
-        if (response.error) {
-          return Promise.reject(new Error(`Failed to retrieve ${wallet.ticker} balance\n${response.error}`));
-        }
         wallet.balance = sb.toBitcoin(response.confirmed);
         wallet.balance_unconfirmed = sb.toBitcoin(response.unconfirmed);
         if (wallet.coin.name !== 'monaize') {
