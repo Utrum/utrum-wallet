@@ -16,7 +16,7 @@ export default {
     return {
       searchable: false,
       currentBonus: 0,
-      blocks: 1,
+      blocks: 6,
       fee: 0,
       estimatedFee: 0,
       preparedTx: {},
