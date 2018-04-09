@@ -54,25 +54,39 @@ export default {
     };
   },
   methods: {
-    calculateFees(value) {
-      if (this.select === 'BTC') this.callEstimateFee(value.blocks);
-      else if (this.select === 'MNZ') {
-        this.fee = 0;
+    async onShowBuyModal() {
+      await this.prepareTx();
+      if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+        this.hideModal();
+        this.$toasted.info("You don't have enough funds for buying (with fees included)");
       } else {
-        this.fee = 10000;
+        this.$refs.confirmBuy.show();
       }
     },
-    sendToken() {
-      this.calculateFees(this.fees[0]);
-    },
-    callEstimateFee(blocks) {
-      const self = this;
-      this.wallet.electrum.getEstimateFee(blocks).then(response => {
-        self.fee = response;
+    async estimateTransaction() {
+      return await this.$store.dispatch('prepareTransaction', {
+        wallet: this.wallet,
+        address: this.withdraw.address,
+        amount: sb.toSatoshi(this.withdraw.amount),
+        blocks: this.blocks,
       });
     },
-    onChange(value) {
-      this.calculateFees(value);
+    async prepareTx() {
+      const tx = await this.estimateTransaction();
+      if (tx.alphaTx.ouputs && tx.alphaTx.inputs) {
+        this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
+      }
+      this.preparedTx = tx.alphaTx;
+    },
+    onChange() {
+      this.prepareTx();
+    },
+    onFeeChange(data) {
+      this.blocks = data.blocks;
+      this.prepareTx();
+    },
+    onConfirmWithdrawModal() {
+      this.prepareTx();
     },
     hideModal() {
       this.$refs.confirmWithdraw.hide();
@@ -136,43 +150,40 @@ export default {
     },
     withdrawFunds() {
       this.hideModal();
-      if (this.canWithdraw && this.addressIsValid) {
-        const self = this;
-        this.wallet.electrum.listUnspent(this.wallet.address).then(response => {
-          this.wallet.ticker = self.wallet.ticker;
-
-          const tx = this.wallet.prepareTx(response, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), self.fee);
-
-          self.wallet.electrum.broadcast(tx)
-          .then((response) => {
-            this.$toasted.show('Transaction sent !', {
-              icon: 'done',
-              action: [
-                {
-                  icon: 'close',
-                  onClick: (e, toastObject) => {
-                    toastObject.goAway(0);
-                  },
+      if (this.canWithdraw && this.addressIsValid) {        
+        this.$store.dispatch('sendTransaction', {
+          wallet: this.wallet,
+          ...this.preparedTx,
+        })
+        .then((response) => {
+          this.$toasted.show('Transaction sent !', {
+            icon: 'done',
+            action: [
+              {
+                icon: 'close',
+                onClick: (e, toastObject) => {
+                  toastObject.goAway(0);
                 },
-                {
-                  icon: 'content_copy',
-                  onClick: (e, toastObject) => {
-                    toastObject.goAway(0);
-                    clipboard.writeText(response);
-                    setTimeout(() => {
-                      this.$toasted.show('Copied !', {
-                        duration: 1000,
-                        icon: 'done',
-                      });
-                    }, 800);
-                  },
+              },
+              {
+                icon: 'content_copy',
+                onClick: (e, toastObject) => {
+                  toastObject.goAway(0);
+                  clipboard.writeText(response);
+                  setTimeout(() => {
+                    this.$toasted.show('Copied !', {
+                      duration: 1000,
+                      icon: 'done',
+                    });
+                  }, 800);
                 },
-              ],
-            });
-          }).catch((error) => {
-            this.$toasted.error('Transaction not sent !', {
-              text: error.response,
-            });
+              },
+            ],
+          });
+        }).catch((error) => {
+          console.error(error)
+          this.$toasted.error('Transaction not sent !', {
+            text: error.response,
           });
         });
       }
