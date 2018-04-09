@@ -1,12 +1,19 @@
 <div class="content-login row-main-item">
   <img id="icon-login" src="~@/assets/icon-login-monaize.svg" height="60" class="col">
   <span class="col">DECENTRALIZED ICO PLATFORM</span>
-  <div class="col input-login">
-    <div class="row">
-      <form id="login" class="row login" method="POST" enctype="multipart/form-data">
-        <textarea @keydown.enter.stop.prevent="validatePassPhrase()" v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="passphrase" class="col" type="text" name="input-login"></textarea>
-        <button @click.prevent="validatePassPhrase()" :class="btnSendStatus" class="btn-send-enabled"><img src="~@/assets/icon-send-login.svg"></button>
-      </form>
+  <div class="col">
+    <div class="row align-items-center justify-content-start">
+      <div class="col-1 offset-2">
+        <img :id="iconMdpId" class="icon-mdp" src="@/assets/icon-mdp.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
+      </div>
+      <div class="col-6">
+        <div class="row input-login">
+          <form id="login" class="row login" method="POST" enctype="multipart/form-data">
+            <input :type="typeInput" class="col" @keydown.enter.stop.prevent="validatePassPhrase()" v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" :id="passphraseId">
+            <button @click.prevent="validatePassPhrase()" :class="btnSendStatus" class="btn-send-enabled"><img src="~@/assets/icon-send-login.svg"></button>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
   <input @change="checkboxTestMode" type="checkbox" id="checkbox" v-model="testMode">

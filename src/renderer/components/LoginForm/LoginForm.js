@@ -2,9 +2,21 @@ export default {
   name: 'login-form',
   data() {
     return {
+      passphraseId: 'passphrase-show',
+      iconMdpId: 'icon-mdp-show',
+      typeInput: 'password',
       passphrase: '',
-      btnSendStatus: 'btn-send-enabled',
+      btnSendStatus: '',
     };
+  },
+  watch: {
+    passphrase(passphrase) {
+      if (passphrase !== '') {
+        this.btnSendStatus = 'show-button';
+      } else {
+        this.btnSendStatus = '';
+      }
+    },
   },
   created() {
     this.testMode = this.$store.getters.isTestMode;
@@ -22,6 +34,17 @@ export default {
     },
     createPassphrase() {
       this.$router.push('/createpassphrase');
+    },
+    changeTypeInputPassphrase() {
+      if (this.typeInput === 'password') {
+        this.passphraseId = 'passphrase-hide';
+        this.iconMdpId = 'icon-mdp-hide';
+        this.typeInput = 'text';
+      } else {
+        this.passphraseId = 'passphrase-show';
+        this.iconMdpId = 'icon-mdp-show';
+        this.typeInput = 'password';
+      }
     },
   },
 };
