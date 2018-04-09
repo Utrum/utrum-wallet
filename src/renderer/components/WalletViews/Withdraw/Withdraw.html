@@ -55,8 +55,11 @@
   <div class="btn-center">
     <button @click="sendToken" :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
   </div>
-  <h3 id="title">TRANSACTIONS</h3>
-  <transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
+
+  <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">
+      <h3 id="title">TRANSACTIONS</h3>
+      <transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
+  </div>
 
   <b-modal size="sm" :hide-header="true" :hide-footer="true" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
     <qrcode-reader id="qrcode" :video-constraints="videoConstraints" @decode="onDecode" :paused="paused" v-if="readingQRCode" @init="onInit"></qrcode-reader>

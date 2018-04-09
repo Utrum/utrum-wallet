@@ -9,16 +9,18 @@ export default {
   props: ['coin'],
   data() {
     return {
-      totalRows: this.$store.getters.getWalletTxs(this.coin.ticker).length,
+      totalRows: this.$store.getters.getSwapList2.length,
       sortBy: 'time',
       sortDesc: true,
       currentPage: 1,
       perPage: 10,
       fields: [
         { key: 'time', label: 'Date / Hours', sortable: true },
-        { key: 'height', label: 'Block Height', sortable: true },
-        { key: 'amount', label: `Amount (${this.coin.ticker})`, sortable: true },
-        { key: 'address', label: 'Address', sortable: true },
+        { key: 'ticker', label: 'Type', sortable: true },
+        { key: 'mnzAmount', label: 'MNZ', sortable: true },
+        { key: 'price41', label: 'Price - 1 MNZ', sortable: true },
+        { key: 'price4all', label: 'Total', sortable: true },
+        { key: 'status', label: 'Status', sortable: true },
       ],
     };
   },
@@ -26,8 +28,6 @@ export default {
     explorer: ExplorerLink,
   },
   methods: {
-    myRowClickHandler() {
-    },
     satoshiToBitcoin(amount) {
       return sb.toBitcoin(amount);
     },
@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     txHistory() {
-      return this.$store.getters.getWalletTxs(this.coin.ticker);
+      return this.$store.getters.getSwapList2;
     },
   },
 };

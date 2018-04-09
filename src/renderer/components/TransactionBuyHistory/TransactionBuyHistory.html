@@ -1,0 +1,40 @@
+<div>
+    <b-table  hover
+              id="txTable"
+              class="pointer"
+              thead-tr-class="theadTrClass"
+              tbody-tr-class="theadClass"
+              tbody-class="cardTable"
+              thead-class="theadClass"
+              :sort-desc="sortDesc"
+              :sort-by="sortBy"
+              :fields="fields"
+              :items="txHistory"
+              :current-page="currentPage"
+              :per-page="perPage"
+    >
+        <template slot="time" slot-scope="row">
+            <span>{{dateFormat(row.value)}}</span>
+        </template>
+        <template slot="ticker" slot-scope="row">
+            <img :src="getIconFromTicker(row.value)" alt="iconTicker">
+        </template>
+        <template slot="mnzAmount" slot-scope="row">
+            {{satoshiToBitcoin(Math.abs(row.value))}}
+        </template>
+        <template slot="price41" slot-scope="row">
+            <div id="price">
+                {{getPrice(row)}} {{row.item.ticker}}
+            </div>
+        </template>
+        <template slot="price4all" slot-scope="row">
+            <div id="totalPrice">
+                {{getTotalPrice(row)}} {{row.item.ticker}}
+            </div>
+        </template>
+        <template slot="status" slot-scope="row">
+            <span id="status">{{row.item.mnzTxHash != null ? 'Done' : 'Pending'}}</span>
+        </template>
+    </b-table>
+    <b-pagination align="center" :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+</div>
