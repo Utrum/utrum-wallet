@@ -12,7 +12,6 @@
               :items="txHistory"
               :current-page="currentPage"
               :per-page="perPage"
-              @row-clicked="myRowClickHandler"
     >
         <template slot="time" slot-scope="row">
             <span>{{dateFormat(row.value)}}</span>

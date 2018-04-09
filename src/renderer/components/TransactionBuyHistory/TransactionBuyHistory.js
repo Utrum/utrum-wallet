@@ -28,8 +28,6 @@ export default {
     explorer: ExplorerLink,
   },
   methods: {
-    myRowClickHandler() {
-    },
     satoshiToBitcoin(amount) {
       return sb.toBitcoin(amount);
     },
