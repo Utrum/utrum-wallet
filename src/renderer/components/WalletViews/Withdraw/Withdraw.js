@@ -15,6 +15,9 @@ export default {
     'select-awesome': SelectAwesome,
     QrcodeReader,
   },
+  created() {
+    this.select = this.$store.getters.isTestMode ? 'TESTMNZ' : 'MNZ';
+  },
   data() {
     return {
       blocks: 1,
@@ -39,12 +42,7 @@ export default {
       },
       paused: false,
       readingQRCode: false,
-      listData: [
-        'BTC',
-        'KMD',
-        'MNZ',
-      ],
-      select: 'MNZ',
+      select: '',
       withdraw: {
         amount: null,
         address: '',
@@ -54,25 +52,39 @@ export default {
     };
   },
   methods: {
-    calculateFees(value) {
-      if (this.select === 'BTC') this.callEstimateFee(value.blocks);
-      else if (this.select === 'MNZ') {
-        this.fee = 0;
+    async onShowBuyModal() {
+      await this.prepareTx();
+      if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+        this.hideModal();
+        this.$toasted.info("You don't have enough funds for buying (with fees included)");
       } else {
-        this.fee = 10000;
+        this.$refs.confirmBuy.show();
       }
     },
-    sendToken() {
-      this.calculateFees(this.fees[0]);
-    },
-    callEstimateFee(blocks) {
-      const self = this;
-      this.wallet.electrum.getEstimateFee(blocks).then(response => {
-        self.fee = response;
+    async estimateTransaction() {
+      return await this.$store.dispatch('prepareTransaction', {
+        wallet: this.wallet,
+        address: this.withdraw.address,
+        amount: sb.toSatoshi(this.withdraw.amount),
+        blocks: this.blocks,
       });
     },
-    onChange(value) {
-      this.calculateFees(value);
+    async prepareTx() {
+      const tx = await this.estimateTransaction();
+      if (tx.alphaTx.ouputs && tx.alphaTx.inputs) {
+        this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
+      }
+      this.preparedTx = tx.alphaTx;
+    },
+    onChange() {
+      this.prepareTx();
+    },
+    onFeeChange(data) {
+      this.blocks = data.blocks;
+      this.prepareTx();
+    },
+    onConfirmWithdrawModal() {
+      this.prepareTx();
     },
     hideModal() {
       this.$refs.confirmWithdraw.hide();
@@ -129,50 +141,45 @@ export default {
       this.withdraw = {
         amount: null,
         address: '',
-        coin: 'MNZ',
+        coin: value,
       };
       this.select = value;
-      this.withdraw.coin = value;
     },
     withdrawFunds() {
       this.hideModal();
       if (this.canWithdraw && this.addressIsValid) {
-        const self = this;
-        this.wallet.electrum.listUnspent(this.wallet.address).then(response => {
-          this.wallet.ticker = self.wallet.ticker;
-
-          const tx = this.wallet.prepareTx(response, self.withdraw.address, sb.toSatoshi(self.withdraw.amount), self.fee);
-
-          self.wallet.electrum.broadcast(tx)
-          .then((response) => {
-            this.$toasted.show('Transaction sent !', {
-              icon: 'done',
-              action: [
-                {
-                  icon: 'close',
-                  onClick: (e, toastObject) => {
-                    toastObject.goAway(0);
+        this.prepareTx().then(tx => {
+          this.$store.dispatch('sendTransaction', { wallet: this.wallet, ...tx }).then(txBroadcast => {
+            if (!txBroadcast.error) {
+              this.$toasted.show('Transaction sent !', {
+                icon: 'done',
+                action: [
+                  {
+                    icon: 'close',
+                    onClick: (e, toastObject) => {
+                      toastObject.goAway(0);
+                    },
                   },
-                },
-                {
-                  icon: 'content_copy',
-                  onClick: (e, toastObject) => {
-                    toastObject.goAway(0);
-                    clipboard.writeText(response);
-                    setTimeout(() => {
-                      this.$toasted.show('Copied !', {
-                        duration: 1000,
-                        icon: 'done',
-                      });
-                    }, 800);
+                  {
+                    icon: 'content_copy',
+                    onClick: (e, toastObject) => {
+                      toastObject.goAway(0);
+                      clipboard.writeText(txBroadcast);
+                      setTimeout(() => {
+                        this.$toasted.show('Copied !', {
+                          duration: 1000,
+                          icon: 'done',
+                        });
+                      }, 800);
+                    },
                   },
-                },
-              ],
-            });
-          }).catch((error) => {
-            this.$toasted.error('Transaction not sent !', {
-              text: error.response,
-            });
+                ],
+              });
+            } else {
+              this.$toasted.error('Transaction not sent !', {
+                text: txBroadcast.error,
+              });
+            }
           });
         });
       }
@@ -181,6 +188,9 @@ export default {
   computed: {
     getConfig() {
       return this.$store.getters.getConfig;
+    },
+    coins() {
+      return this.$store.getters.enabledCoins.map(coin => coin.ticker);
     },
     getTotalPriceWithFee() {
       return (Number(this.withdraw.amount) + sb.toBitcoin(this.fee)).toFixed(8);
@@ -195,7 +205,13 @@ export default {
       return (this.withdraw.amount <= this.getBalance && this.withdraw.amount > 0 && this.addressIsValid);
     },
     addressIsValid() {
-      if (this.withdraw.address) return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0;
+      if (this.withdraw.address) {
+        try {
+          return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0;
+        } catch (error) {
+          return false;
+        }
+      }
     },
   },
 };

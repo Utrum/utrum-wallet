@@ -7,7 +7,10 @@ export default {
   },
   mounted() {
     Object.keys(this.wallets).forEach((ticker) => {
-      this.$store.dispatch('updateBalance', this.wallets[ticker]);
+      this.$store
+        .dispatch('updateBalance', this.wallets[ticker])
+        .catch(() => { })
+      ;
     }, this);
   },
   methods: {

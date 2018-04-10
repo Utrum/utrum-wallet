@@ -2,6 +2,7 @@ const { ipcRenderer } = require('electron');
 
 export default class ElectrumService {
   constructor(store, ticker, test) {
+    this.tag = 0;
     this.store = store;
     this.ticker = ticker;
     this.test = test;
@@ -11,12 +12,22 @@ export default class ElectrumService {
     };
   }
 
-  async call(method, params) {
+  call(method, params) {
     this.payload.method = method;
     this.payload.params = params;
-    return new Promise((resolve) => {
-      const response = ipcRenderer.sendSync('electrum.call', this.payload);
-      resolve(response);
+    this.payload.tag = this.tag;
+    ipcRenderer.send('electrum.call', this.payload);
+
+    return new Promise((resolve, reject) => {
+      const callback = (event, arg) => {
+        if (arg.error != null) {
+          reject(arg.error);
+        } else {
+          resolve(arg);
+        }
+      };
+      ipcRenderer.once(`electrum.call.${method}.${this.ticker}.${this.payload.tag}`, callback);
+      this.tag += 1;
     });
   }
 
