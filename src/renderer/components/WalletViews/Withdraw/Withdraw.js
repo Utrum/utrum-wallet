@@ -52,19 +52,39 @@ export default {
     };
   },
   methods: {
-    calculateFees(value) {
-      if (this.select === 'BTC') this.callEstimateFee(value.blocks);
-      else if (this.select === 'MNZ') {
-        this.fee = 0;
+    async onShowBuyModal() {
+      await this.prepareTx();
+      if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+        this.hideModal();
+        this.$toasted.info("You don't have enough funds for buying (with fees included)");
       } else {
-        this.fee = 10000;
+        this.$refs.confirmBuy.show();
       }
     },
-    sendToken() {
-      this.calculateFees(this.fees[0]);
+    async estimateTransaction() {
+      return await this.$store.dispatch('prepareTransaction', {
+        wallet: this.wallet,
+        address: this.withdraw.address,
+        amount: sb.toSatoshi(this.withdraw.amount),
+        blocks: this.blocks,
+      });
     },
-    async onChange() {
-      await this.prepareTx();
+    async prepareTx() {
+      const tx = await this.estimateTransaction();
+      if (tx.alphaTx.ouputs && tx.alphaTx.inputs) {
+        this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
+      }
+      this.preparedTx = tx.alphaTx;
+    },
+    onChange() {
+      this.prepareTx();
+    },
+    onFeeChange(data) {
+      this.blocks = data.blocks;
+      this.prepareTx();
+    },
+    onConfirmWithdrawModal() {
+      this.prepareTx();
     },
     hideModal() {
       this.$refs.confirmWithdraw.hide();
