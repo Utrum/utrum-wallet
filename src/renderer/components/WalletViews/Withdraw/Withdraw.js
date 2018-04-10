@@ -145,23 +145,6 @@ export default {
       };
       this.select = value;
     },
-    prepareTx() {
-      return this.estimateTransaction().then(tx => {
-        if (tx.alphaTx.outputs != null && tx.alphaTx.inputs != null) {
-          this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
-        }
-        this.preparedTx = tx.alphaTx;
-        return this.preparedTx;
-      });
-    },
-    estimateTransaction() {
-      return this.$store.dispatch('prepareTransaction', {
-        wallet: this.wallet,
-        address: this.withdraw.address,
-        amount: sb.toSatoshi(this.withdraw.amount),
-        blocks: this.blocks,
-      });
-    },
     withdrawFunds() {
       this.hideModal();
       if (this.canWithdraw && this.addressIsValid) {
