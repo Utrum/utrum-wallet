@@ -99,22 +99,22 @@ const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
 // key: 'status',
 
 const getters = {
-  icoIsOver: (state, rootGetters) => {
-    const config = rootGetters.getConfig;
+  icoIsOver: (state, getters) => {
+    const config = getters.getConfig;
     if ((config.progress >= 1 || (moment.unix(config.icoStartDate) > moment() || moment() > moment.unix(config.icoEndDate)))) {
       return true;
     }
     return false;
   },
-  icoWillBegin: (state, rootGetters) => {
-    const config = rootGetters.getConfig;
+  icoWillBegin: (state, getters) => {
+    const config = getters.getConfig;
     if (moment() < moment.unix(config.icoStartDate)) {
       return true;
     }
     return false;
   },
-  icoStartDate: (state, rootGetters) => {
-    return rootGetters.getConfig.icoStartDate;
+  icoStartDate: (state, getters) => {
+    return getters.getConfig.icoStartDate;
   },
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs);

@@ -79,7 +79,6 @@ export default {
     estimateTransaction() {
       return this.$store.dispatch('prepareTransaction', {
         wallet: this.wallet,
-        address: this.buyAddress,
         amount: sb.toSatoshi(this.getTotalPrice),
         blocks: this.blocks,
         data: this.coupon,

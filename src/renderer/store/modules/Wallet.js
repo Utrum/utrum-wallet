@@ -24,8 +24,9 @@ const getters = {
   isUpdate: (state) => {
     return state.isUpdate;
   },
-  getHistoryBuy: (state, getters, rootGetters) => {
-    const history = getters.getWalletTxs(rootGetters.isTestMode ? 'TESTMNZ' : 'MNZ');
+  getHistoryBuy: (state, getters) => {
+    const mnzTicker = getters.isTestMode ? 'TESTMNZ' : 'MNZ';
+    const history = getters.getWalletTxs(mnzTicker);
     Object.keys(coins).forEach((coin) => {
       const filteredHistory = history.filter(el => el.origin.ticker === coin);
       history.concat(filteredHistory);
@@ -134,7 +135,10 @@ const actions = {
     let address;
     let utxos;
 
-    return wallet.electrum.listUnspent(wallet.address)
+    return dispatch('getNewBuyAddress', wallet).then((_address) => {
+      address = _address;
+    })
+    .then(() => wallet.electrum.listUnspent(wallet.address))
     .then((_utxos) => {
       utxos = _utxos;
       if (wallet.ticker.indexOf('BTC') >= 0) {
