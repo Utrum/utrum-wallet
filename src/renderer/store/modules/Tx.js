@@ -55,6 +55,7 @@ const decodeTx = (wallet, tx, isTestMode) => {
       }
       return transaction;
     })
+    .catch(() => { })
   ;
 };
 
