@@ -37,18 +37,57 @@ const actions = {
     return address;
   },
   buyAsset({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
-    return new Promise(async (resolve, reject) => {
-      const sentTxId = await dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript });
-      if (!sentTxId.error) {
+    return dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript })
+      .then((sentTxId) => {
         const localCryptoTx = generateLocalTx(wallet.address, amount, sentTxId);
         const localMnzTx = generateLocalMnz(amountMnz);
         commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: wallet.ticker });
-        resolve(sentTxId);
-      } else {
-        reject({ msg: 'Can\'t send transaction, wait for utxos to come back (~5 seconds)' });
+      })
+    ;
+  },
+  buildSwapList({ commit, rootGetters }) {
+    const promiseForKMDWallet = rootGetters.getWalletByTicker('KMD');
+    const promiseForBTCWallet = rootGetters.getWalletByTicker('BTC');
+    const promiseForMNZWallet = rootGetters.getWalletByTicker('MNZ');
+    return Promise.all([promiseForKMDWallet, promiseForBTCWallet, promiseForMNZWallet])
+      .then((wallets) => {
+        let associations = [];
+        let cryptoTxs = [];
+
+        if (wallets[0].txs !== undefined) {
+          cryptoTxs = wallets[0].txs;
+        }
+        if (wallets[1].txs !== undefined) {
+          cryptoTxs.concat(wallets[1].txs);
+        }
+        if (wallets[2].txs !== undefined) {
+          associations = associateTxsFromWallet(cryptoTxs, wallets[2].txs);
+        }
+        commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
+      })
+      .catch(() => {})
+    ;
+  },
+};
+
+const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
+  const associateArray = [];
+  if (cryptoTxs != null && mnzTxs != null) {
+    _.forEach(mnzTxs, (mnzTx) => {
+      if (mnzTx.origin != null) {
+        const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
+          if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
+            return true;
+          }
+          return false;
+        });
+        if (cryptoTxsForMnz[0]) {
+          associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
+        }
       }
     });
-  },
+  }
+  return associateArray;
 };
 
 // key: 'cryptoTx.time',
@@ -109,7 +148,6 @@ const generateLocalMnz = (amount) => {
     amount: amount,
   };
 };
-
 
 export default {
   state,

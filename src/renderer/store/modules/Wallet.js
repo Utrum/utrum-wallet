@@ -1,4 +1,5 @@
 import { Wallet, coins }  from 'libwallet-mnz';
+import * as _ from 'lodash';
 import sb from 'satoshi-bitcoin';
 import Vue from 'vue';
 import store from '../../store';
@@ -69,11 +70,21 @@ const mutations = {
     Vue.set(state.wallets, wallet.ticker, wallet);
   },
   UPDATE_IS_UPDATE(state, isUpdate) {
-    state.isUpdate = isUpdate;
+    state.isUpate = isUpdate;
   },
-  // ADD_TX(state, { ticker, tx }) {
-  //   state.wallets[ticker].txs.unshift(tx);
-  // },
+  ADD_TX(state, { ticker, newTx }) {
+    // state.wallets[ticker].txs.unshift(newTx);
+    let found = false;
+    _.filter(state.wallets[ticker].txs, (tx) => {
+      if (tx.tx_hash === newTx.tx_hash) {
+        found = true;
+        return false;
+      }
+    });
+    if (found === false) {
+      state.wallets[ticker].txs.unshift(newTx);
+    }
+  },
   ADD_TXS(state, { ticker, txs }) {
     state.wallets[ticker].txs = txs;
   },
@@ -86,7 +97,7 @@ const actions = {
   setIsUpdate({ commit }, isUpdate) {
     commit('UPDATE_IS_UPDATE', isUpdate);
   },
-  async initWallets({ commit, dispatch, rootGetters }) {
+  initWallets({ commit, dispatch, rootGetters }) {
     if (Object.keys(state.wallets).length > 0) {
       dispatch('destroyWallets');
     }
@@ -97,56 +108,67 @@ const actions = {
     const isTestMode = rootGetters.isTestMode;
     const enabledCoins = rootGetters.enabledCoins;
 
-    enabledCoins.forEach(async (coin) => {
+    const promises = enabledCoins.map((coin) => {
       const ticker = coin.ticker;
       const wallet = new Wallet(privateKey, coin, isTestMode);
       wallet.electrum = new ElectrumService(store, ticker, isTestMode);
-      await wallet.electrum.serverVersion('Monaize ICO Wallet 0.1', '1.2');
       wallet.ticker = ticker;
       wallet.balance = 0;
       wallet.balance_usd = 0;
       wallet.txs = [];
       wallet.privKey = privateKey;
       commit('ADD_WALLET', wallet);
-      dispatch('buildTxHistory', wallet, { root: true });
-      dispatch('updateBalance', wallet);
+
+      return wallet.electrum
+        .serverVersion('Monaize ICO Wallet 0.1', '1.2')
+        .then(() => {
+          dispatch('buildTxHistory', wallet, { root: true });
+          dispatch('updateBalance', wallet);
+        })
+      ;
     });
+    return Promise.all(promises);
   },
-  async prepareTransaction({ commit, dispatch }, { wallet, address = 'buyMnzAddress', amount, blocks = 6, data = null }) {
-    if (address === 'buyMnzAddress') {
-      address = await dispatch('getNewBuyAddress', wallet, { root: true });
-    }
+  prepareTransaction({ commit, dispatch }, { wallet, amount, blocks = 6, data = null }) {
 
-    const utxos = await wallet.electrum.listUnspent(wallet.address);
+    let address;
+    let utxos;
 
-    let feeRate = 0;
-    if (wallet.ticker.indexOf('BTC') >= 0) {
-      feeRate = await wallet.electrum.getEstimateFee(blocks);
-    }
-
-    feeRate = sb.toSatoshi(feeRate);
-    const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, feeRate, data);
-    // const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
-    const payload = {
-      alphaTx: {
+    return new Promise(() => {
+      return wallet.electrum.listUnspent(wallet.address);
+    })
+    .then((_utxos) => {
+      utxos = _utxos;
+      if (wallet.ticker.indexOf('BTC') >= 0) {
+        return wallet.electrum.getEstimateFee(blocks);
+      }
+      return 0.0001;
+    })
+    .then((_feeRate) => {
+      const { inputs, outputs, fee, dataScript } = wallet.prepareTx(sb.toSatoshi(utxos), address, amount, sb.toSatoshi(_feeRate), data);
+      return {
         inputs,
         outputs,
         dataScript,
         fee,
         amount,
-        totalFees: fee,
-      },
-    };
-    return payload;
+      };
+    })
+    ;
   },
-  async sendTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
+  sendTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
     const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
     const txId = buildedTx.getId();
-    const broadcastedTx = await wallet.electrum.broadcast(buildedTx.toHex());
-    if (txId === broadcastedTx) {
-      return broadcastedTx;
-    }
-    return { error: broadcastedTx };
+
+    return wallet.electrum
+      .broadcast(buildedTx.toHex())
+      .then((broadcastedTx) => {
+        if (txId === broadcastedTx) {
+          return broadcastedTx;
+        }
+        return Promise.reject(new Error(`Broadcasted tx ${broadcastedTx} is not the same as built tx ${txId}`));
+      })
+    ;
   },
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');
@@ -157,24 +179,30 @@ const actions = {
     });
   },
   updateBalance({ commit, getters, rootGetters }, wallet) {
-    wallet.electrum.getBalance(wallet.address).then(response => {
-      if (response.error) {
-        throw new Error(`Failed to retrieve ${wallet.ticker} balance\n${response.error}`);
-      }
-      wallet.balance = sb.toBitcoin(response.confirmed);
-      wallet.balance_unconfirmed = sb.toBitcoin(response.unconfirmed);
-      if (wallet.coin.name !== 'monaize') {
-        getCmcData(wallet.coin.name).then(response => {
-          response.data.forEach((cmcCoin) => {
-            wallet.balance_usd = wallet.balance * cmcCoin.price_usd;
-          });
-        });
-      } else {
-        getCmcData('bitcoin').then(response => {
-          wallet.balance_usd = wallet.balance * (response.data[0].price_usd / 15000);
-        });
-      }
-    });
+    wallet.electrum
+      .getBalance(wallet.address)
+      .catch((error) => {
+        return Promise.reject(new Error(`Failed to retrieve ${wallet.ticker} balance\n${error}`));
+      })
+      .then(response => {
+        wallet.balance = sb.toBitcoin(response.confirmed);
+        wallet.balance_unconfirmed = sb.toBitcoin(response.unconfirmed);
+        if (wallet.coin.name !== 'monaize') {
+          getCmcData(wallet.coin.name)
+            .then(response => {
+              response.data.forEach((cmcCoin) => {
+                wallet.balance_usd = wallet.balance * cmcCoin.price_usd;
+              });
+            })
+          ;
+        }
+        getCmcData('bitcoin')
+          .then(response => {
+            wallet.balance_usd = wallet.balance * (response.data[0].price_usd / 15000);
+          })
+        ;
+      })
+    ;
     commit('UPDATE_BALANCE', wallet);
   },
   startUpdates({ dispatch }) {
@@ -193,7 +221,7 @@ const actions = {
       if (getters.isUpdate) {
         dispatch('startUpdateBalances');
       }
-      clearTimeout(interval);
+      clearInterval(interval);
     }, rand * 1000);
   },
   startUpdateConfig({ dispatch, rootGetters }) {
@@ -206,12 +234,12 @@ const actions = {
       if (getters.isUpdate) {
         dispatch('startUpdateConfig');
       }
-      clearTimeout(interval);
+      clearInterval(interval);
     }, rand * 1000);
   },
   startUpdateHistory({ dispatch, getters }) {
-    const min = 60;
-    const max = 120;
+    const min = 30;
+    const max = 60;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
       Object.keys(getters.getWallets).forEach((ticker) => {
@@ -220,7 +248,7 @@ const actions = {
       if (getters.isUpdate) {
         dispatch('startUpdateHistory');
       }
-      clearTimeout(interval);
+      clearInterval(interval);
     }, rand * 1000);
   },
 };

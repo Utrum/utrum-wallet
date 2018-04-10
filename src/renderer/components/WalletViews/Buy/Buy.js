@@ -127,39 +127,40 @@ export default {
       };
 
       this.$store
-      .dispatch('buyAsset', payload)
-      .then(response => {
-        if (response.error) {
-          this.$toasted.error(response.error);
-          Promise.reject();
-        }
-        this.$toasted.show('Transaction sent !', {
-          icon: 'done',
-          action: [
-            {
-              icon: 'close',
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0);
+        .dispatch('buyAsset', payload)
+        .then(response => {
+          // if (response.error) {
+          //   this.$toasted.error(response.error);
+          //   Promise.reject();
+          // }
+          this.$toasted.show('Transaction sent !', {
+            icon: 'done',
+            action: [
+              {
+                icon: 'close',
+                onClick: (e, toastObject) => {
+                  toastObject.goAway(0);
+                },
               },
-            },
-            {
-              icon: 'content_copy',
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0);
-                clipboard.writeText(response);
-                setTimeout(() => {
-                  this.$toasted.show('Copied !', {
-                    duration: 1000,
-                    icon: 'done',
-                  });
-                }, 800);
+              {
+                icon: 'content_copy',
+                onClick: (e, toastObject) => {
+                  toastObject.goAway(0);
+                  clipboard.writeText(response);
+                  setTimeout(() => {
+                    this.$toasted.show('Copied !', {
+                      duration: 1000,
+                      icon: 'done',
+                    });
+                  }, 800);
+                },
               },
-            },
-          ],
-        });
-      }).catch(error => {
-        this.$toasted.error(error.msg);
-      })
+            ],
+          });
+        })
+        .catch(error => {
+          this.$toasted.error(`Can't send transaction, verify your pending tx and unconfirmed balance: ${error.msg}`);
+        })
       ;
       this.hideModal();
     },

@@ -70,6 +70,7 @@
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-lib-zcash": "^3.3.2",
+    "bluebird": "^3.5.1",
     "bootstrap": "^4.0.0",
     "bootstrap-sass": "^3.3.7",
     "bootstrap-vue": "^2.0.0-rc.6",
