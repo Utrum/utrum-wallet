@@ -128,7 +128,9 @@ const actions = {
         })
       ;
     });
-    return Promise.all(promises);
+    return Promise.all(promises)
+      .catch(() => {})
+    ;
   },
   prepareTransaction({ commit, dispatch }, { wallet, amount, blocks = 6, data = null }) {
 
@@ -176,11 +178,12 @@ const actions = {
     commit('DESTROY_WALLETS');
   },
   updateAllBalances({ dispatch, getters }) {
+    // todo => Promise.all();
     Object.keys(getters.getWallets).forEach((ticker) => {
       dispatch('updateBalance', getters.getWallets[ticker]);
     });
   },
-  updateBalance({ commit, getters, rootGetters }, wallet) {
+  updateBalance({ commit, getters, rootGetters }, wallet) { // todo: return promise
     wallet.electrum
       .getBalance(wallet.address)
       .catch((error) => {
@@ -207,26 +210,26 @@ const actions = {
     ;
     commit('UPDATE_BALANCE', wallet);
   },
-  startUpdates({ dispatch }) {
+  startUpdates({ dispatch }) { // todo: return promise
     dispatch('setIsUpdate', true);
     dispatch('startUpdateBalances');
     dispatch('startUpdateHistory');
   },
-  startUpdateBalances({ dispatch, getters, rootGetters }) {
+  startUpdateBalances({ dispatch, getters, rootGetters }) { // todo: return promise
     const min = 20;
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
       if (rootGetters.passphrase !== '') {
-        dispatch('updateAllBalances');
       }
+      dispatch('updateAllBalances');
       if (getters.isUpdate) {
         dispatch('startUpdateBalances');
       }
       clearInterval(interval);
     }, rand * 1000);
   },
-  startUpdateConfig({ dispatch, rootGetters }) {
+  startUpdateConfig({ dispatch, rootGetters }) {  // todo: return promise
     const icoWillBegin = rootGetters.icoWillBegin;
     const min = icoWillBegin ? 20 : 30;
     const max = icoWillBegin ? 50 : 30;
@@ -239,7 +242,7 @@ const actions = {
       clearInterval(interval);
     }, rand * 1000);
   },
-  startUpdateHistory({ dispatch, getters }) {
+  startUpdateHistory({ dispatch, getters }) { // todo: return promise
     const min = 30;
     const max = 60;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));

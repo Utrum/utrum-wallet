@@ -47,31 +47,26 @@ const actions = {
     ;
   },
   buildSwapList({ commit, rootGetters }) {
-    const promiseForKMDWallet = rootGetters.getWalletByTicker('KMD');
-    const promiseForBTCWallet = rootGetters.getWalletByTicker('BTC');
-    const promiseForMNZWallet = rootGetters.getWalletByTicker('MNZ');
-    return Promise.all([promiseForKMDWallet, promiseForBTCWallet, promiseForMNZWallet])
-      .then((wallets) => {
-        let associations = [];
-        let cryptoTxs = [];
 
-        if (wallets[0].txs !== undefined) {
-          cryptoTxs = wallets[0].txs;
-        }
-        if (wallets[1].txs !== undefined) {
-          cryptoTxs.concat(wallets[1].txs);
-        }
-        if (wallets[2].txs !== undefined) {
-          associations = associateTxsFromWallet(cryptoTxs, wallets[2].txs);
-        }
-        commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
-      })
-      .catch(() => {})
-    ;
+    let cryptoTxs = [];
+    let icoCoinTxs = [];
+    _.map(rootGetters.enabledCoins, (coin) => {
+      if (coin.ticker.indexOf('MNZ') < 0) {
+        cryptoTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
+        // console.log("Coin: " + coin.ticker + ", txs: " + cryptoTxs.length);
+      } else {
+        icoCoinTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
+      }
+    });
+
+    const associations = associateTxsFromWallet(cryptoTxs, icoCoinTxs);
+    // console.log("Associations: ", associations);
+    commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
   },
 };
 
 const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
+  // console.log("mnzTxs: ", mnzTxs);
   const associateArray = [];
   if (cryptoTxs != null && mnzTxs != null) {
     _.forEach(mnzTxs, (mnzTx) => {

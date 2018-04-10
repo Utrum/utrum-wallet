@@ -9,14 +9,17 @@ const actions = {
       .then((transactionList) => filterExistingTransactions(wallet.txs, transactionList))
       .then(transactionList => {
         return bluebird.mapSeries(transactionList, transaction => {
-          commit('DELETE_PENDING_TX', transaction.tx_hash, { root: true });
+          // commit('DELETE_PENDING_TX', transaction.tx_hash, { root: true });
           return decodeTx(wallet, transaction, rootGetters.isTestMode)
             .then((transactionDetail) => {
               // console.log("post decode: " + transactionDetail.tx_hash);
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
               dispatch('buildSwapList', { root: true });
             })
-            .catch((error) => { return new Error(error); })
+            .catch((error) => {
+              console.log("Error bh: ", error);
+              return Promise.reject(new Error(error));
+            })
           ;
         });
       })
