@@ -70,13 +70,13 @@ export default {
     },
     prepareTx() {
       return this.estimateTransaction().then(tx => {
-        if (tx.alphaTx.outputs != null && tx.alphaTx.inputs != null) {
-          this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
+        if (tx.outputs != null && tx.inputs != null) {
+          this.estimatedFee = sb.toBitcoin(tx.fee);
         }
-        this.preparedTx = tx.alphaTx;
+        this.preparedTx = tx;
       });
     },
-    async estimateTransaction() {
+    estimateTransaction() {
       return this.$store.dispatch('prepareTransaction', {
         wallet: this.wallet,
         address: this.buyAddress,
@@ -129,10 +129,10 @@ export default {
       this.$store
         .dispatch('buyAsset', payload)
         .then(response => {
-          // if (response.error) {
-          //   this.$toasted.error(response.error);
-          //   Promise.reject();
-          // }
+          if (response.error) {
+            this.$toasted.error(response.error);
+            Promise.reject();
+          }
           this.$toasted.show('Transaction sent !', {
             icon: 'done',
             action: [

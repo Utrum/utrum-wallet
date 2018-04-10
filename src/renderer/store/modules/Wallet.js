@@ -134,9 +134,7 @@ const actions = {
     let address;
     let utxos;
 
-    return new Promise(() => {
-      return wallet.electrum.listUnspent(wallet.address);
-    })
+    return wallet.electrum.listUnspent(wallet.address)
     .then((_utxos) => {
       utxos = _utxos;
       if (wallet.ticker.indexOf('BTC') >= 0) {
@@ -145,7 +143,7 @@ const actions = {
       return 0.0001;
     })
     .then((_feeRate) => {
-      const { inputs, outputs, fee, dataScript } = wallet.prepareTx(sb.toSatoshi(utxos), address, amount, sb.toSatoshi(_feeRate), data);
+      const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, sb.toSatoshi(_feeRate), data);
       return {
         inputs,
         outputs,
