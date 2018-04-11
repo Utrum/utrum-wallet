@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import bitcoinjs from 'bitcoinjs-lib';
 
 const state = {
@@ -96,15 +96,15 @@ const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
 const getters = {
   icoWillBegin: (state, getters) => {
     const config = getters.getConfig;
-    if (moment() < moment.unix(config.icoStartDate)) {
+    if (moment() < moment.tz(config.icoStartDate, 'GMT')) {
       return true;
     }
     return false;
   },
   icoIsRunning: (state, getters) => {
     const config = getters.getConfig;
-    const start = moment.unix(config.icoStartDate);
-    const end = moment.unix(config.icoStartDate);
+    const start = moment.tz(config.icoStartDate, 'GMT');
+    const end = moment.tz(config.icoEndDate, 'GMT');
     return moment().isBetween(start, end, null, '[]');
   },
   icoStartDate: (state, getters) => {
