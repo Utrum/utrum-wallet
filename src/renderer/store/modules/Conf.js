@@ -29,7 +29,6 @@ const actions = {
     = 'http://51.15.203.171/icoClientConfiguration.json';
     axios.get(endPointConfig, {
     }).then(response => {
-      console.log(response);
       commit('SET_CONFIG', response.data);
     });
   },

@@ -97,7 +97,6 @@ const getters = {
   icoIsOver: (state, getters) => {
     const config = getters.getConfig;
     if ((config.progress >= 1 || (moment.unix(config.icoStartDate) > moment() || moment() > moment.unix(config.icoEndDate)))) {
-      console.log('icoover');
       return true;
     }
     return false;

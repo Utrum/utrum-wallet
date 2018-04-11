@@ -16,7 +16,7 @@ const actions = {
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
               dispatch('buildSwapList', { root: true });
             })
-            .catch((error) => {
+            .catch(() => {
               // console.log("Error bh: ", error);
               // return Promise.reject(new Error(error));
             })
