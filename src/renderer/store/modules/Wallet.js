@@ -220,8 +220,6 @@ const actions = {
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
-      if (rootGetters.passphrase !== '') {
-      }
       dispatch('updateAllBalances');
       if (getters.isUpdate) {
         dispatch('startUpdateBalances');
