@@ -35,8 +35,8 @@ export default {
       moment.locale('en_us');
       return moment.unix(startDate).toNow(true);
     },
-    icoIsOver() {
-      return this.$store.getters.icoIsOver && !this.icoWillBegin;
+    icoIsRunning() {
+      return this.$store.getters.icoIsRunning;
     },
     icoWillBegin() {
       return this.$store.getters.icoWillBegin;

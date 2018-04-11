@@ -94,19 +94,18 @@ const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
 // key: 'status',
 
 const getters = {
-  icoIsOver: (state, getters) => {
-    const config = getters.getConfig;
-    if ((config.progress >= 1 || (moment.unix(config.icoStartDate) > moment() || moment() > moment.unix(config.icoEndDate)))) {
-      return true;
-    }
-    return false;
-  },
   icoWillBegin: (state, getters) => {
     const config = getters.getConfig;
     if (moment() < moment.unix(config.icoStartDate)) {
       return true;
     }
     return false;
+  },
+  icoIsRunning: (state, getters) => {
+    const config = getters.getConfig;
+    const start = moment.unix(config.icoStartDate);
+    const end = moment.unix(config.icoStartDate);
+    return moment().isBetween(start, end, null, '[]');
   },
   icoStartDate: (state, getters) => {
     return getters.getConfig.icoStartDate;
