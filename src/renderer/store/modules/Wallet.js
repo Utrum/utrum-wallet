@@ -221,12 +221,12 @@ const actions = {
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
       if (rootGetters.passphrase !== '') {
+        dispatch('updateAllBalances');
+        if (getters.isUpdate) {
+          dispatch('startUpdateBalances');
+        }
+        clearInterval(interval);
       }
-      dispatch('updateAllBalances');
-      if (getters.isUpdate) {
-        dispatch('startUpdateBalances');
-      }
-      clearInterval(interval);
     }, rand * 1000);
   },
   startUpdateConfig({ dispatch, rootGetters }) {  // todo: return promise
