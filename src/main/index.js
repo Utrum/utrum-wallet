@@ -8,6 +8,8 @@ require('electron-debug')({ showDevTools: true });
 const path = require('path');
 const ipc = require('electron').ipcMain;
 const http = require('http');
+const copyright = require('./copyright.json');
+const pkg = require('../../package.json');
 
 /**
  * Set `__static` path to static files in production
@@ -53,6 +55,12 @@ function createWindow() {
       webSecurity: false,
     },
   });
+
+  app.setAboutPanelOptions({
+    applicationVersion: pkg.version,
+    version: pkg.version,
+  })
+
   mainWindow.webContents.openDevTools();
   const template = [{
     label: 'Monaize ICO App',
