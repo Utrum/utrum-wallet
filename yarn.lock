@@ -1434,7 +1434,7 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
   resolved "http://mon-1:4873/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
 
-body-parser@*, body-parser@1.18.2, body-parser@^1.16.1:
+body-parser@1.18.2, body-parser@^1.16.1:
   version "1.18.2"
   resolved "http://mon-1:4873/body-parser/-/body-parser-1.18.2.tgz#87678a19d84b47d859b83199bd59bce222b10454"
   dependencies:
@@ -2132,10 +2132,6 @@ coa@~1.0.1:
 code-point-at@^1.0.0:
   version "1.1.0"
   resolved "http://mon-1:4873/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
-
-coffee-script@*:
-  version "1.12.7"
-  resolved "http://mon-1:4873/coffee-script/-/coffee-script-1.12.7.tgz#c05dae0cb79591d05b3070a8433a98c9a89ccc53"
 
 coinselect@^3.1.11:
   version "3.1.11"
@@ -3172,6 +3168,10 @@ electrum-client@^0.0.5:
   version "0.0.5"
   resolved "http://mon-1:4873/electrum-client/-/electrum-client-0.0.5.tgz#7508bc987ab1ee73ad72fd4a7cb2331e637d064a"
 
+electrum-client@^0.0.6:
+  version "0.0.6"
+  resolved "http://mon-1:4873/electrum-client/-/electrum-client-0.0.6.tgz#f6ad1285a2b2dc25a820ca3eab7c704e350dfcdb"
+
 elliptic@^6.0.0, elliptic@^6.4.0:
   version "6.4.0"
   resolved "http://mon-1:4873/elliptic/-/elliptic-6.4.0.tgz#cac9af8762c85836187003c8dfe193e5e2eae5df"
@@ -3601,7 +3601,7 @@ expand-range@^1.8.1:
   dependencies:
     fill-range "^2.1.0"
 
-express@*, express@^4.16.2, express@^4.16.3:
+express@^4.16.2, express@^4.16.3:
   version "4.16.3"
   resolved "http://mon-1:4873/express/-/express-4.16.3.tgz#6af8a502350db3246ecc4becf6b5a34d22f7ed53"
   dependencies:
@@ -5161,14 +5161,6 @@ jsonify@~0.0.0:
 jsonpointer@^4.0.0:
   version "4.0.1"
   resolved "http://mon-1:4873/jsonpointer/-/jsonpointer-4.0.1.tgz#4fd92cb34e0e9db3c89c8622ecf51f9b978c6cb9"
-
-jsonrpc-node@^1.2.93:
-  version "1.2.93"
-  resolved "http://mon-1:4873/jsonrpc-node/-/jsonrpc-node-1.2.93.tgz#592efd92b58bc2413b84364b9ad512ca5a6604a4"
-  dependencies:
-    body-parser "*"
-    coffee-script "*"
-    express "*"
 
 jsprim@^1.2.2:
   version "1.4.1"

@@ -2,9 +2,9 @@ import { app, BrowserWindow, Menu } from 'electron';
 import { join as joinPath } from 'path';
 import { execFile } from 'child_process';
 import getPlatform from './get-platform';
-import Electrums from './electrums';
+import ElectrumManager from './electrumManager';
 
-const electrums = new Electrums();
+const electrumManager = new ElectrumManager();
 
 require('electron-debug')({ showDevTools: true });
 const path = require('path');
@@ -86,16 +86,24 @@ function createWindow() {
     const args = [].slice.call(arguments, 2);
     ev.returnValue = [app[msg].apply(app, args)];
   });
+  
+  ipc.on('electrum.init', (event, payload) => {
+    electrumManager.initClient(payload.ticker, payload.electrumConfig)
+      .then((response) => {
+        event.sender.send(`electrum.init.${payload.ticker}.${payload.tag}`, response);
+      })
+      .catch((error) => {
+        event.sender.send(`electrum.init.${payload.ticker}.${payload.tag}`, {error});
+      })
+    ;
+  });
 
   ipc.on('electrum.call', (event, payload) => {
-    electrums.getRpcClientForTicker(payload.ticker).call(payload.method, payload.params)
-    // electrumCall(payload.ticker, payload.test, payload.method, payload.params)
+    electrumManager.requestClient(payload.ticker, payload.method, payload.params)
       .then((response) => {
-        // console.log("Reply ON: ", `electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`);
         event.sender.send(`electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`, response);
       })
       .catch((error) => {
-        // console.log("Error -> ", error);
         event.sender.send(`electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`, {error});
       })
     ;
@@ -106,36 +114,6 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  // mainWindow.webContents.once('did-finish-load', function () {
-  //   const server = http.createServer(function (req, res) {
-  //     if (req.method === 'POST') {
-  //       const chunks = [];
-  //       req.on('data', chunk => {
-  //         chunks.push(chunk);
-  //       });
-  //       req.on('end', () => {
-  //         const data = Buffer.concat(chunks);
-  //         const payload = JSON.parse(data);
-  //         if (payload.method === 'generateaddress') {
-           
-  //           execFile(cmd, ['calcaddress', payload.params[0]], (err, stdout) => {
-  //             if (err) console.log(err);
-  //             return res.end(stdout);
-  //           });
-  //         } else {
-  //           console.log(payload);
-  //           electrumCall(payload.ticker, payload.test, payload.method, payload.params, (err, response) => {
-  //             if (err) res.end(JSON.stringify({ error: err }));
-  //             console.log(payload, response)
-  //             return res.end(JSON.stringify(response));
-  //           });
-  //         }
-  //       });
-  //     }
-  //   });
-  //   server.listen(8000);
-  // });
 }
 
 app.on('ready', createWindow);
