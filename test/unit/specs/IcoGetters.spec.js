@@ -5,8 +5,6 @@ import modules from '../../../src/renderer/store/modules';
 
 Vue.use(Vuex);
 
-const today = new Date();
-
 describe('Ico openings and closings', () => {
 
   let store, start, end, config;
@@ -14,18 +12,13 @@ describe('Ico openings and closings', () => {
   describe('Ico is in the future.', () => {
     beforeEach(() => {
       store = new Vuex.Store({ modules });
-      start = new Date();  end = new Date();
       config = {
-        icoStartDate: start.setHours(today.getHours() + 2),
-        icoEndDate: end.setHours(today.getHours() + 4),
+        icoStartDate: new Date().setHours(new Date().getHours() + 2) / 1000,
+        icoEndDate: new Date().setHours(new Date().getHours() + 4) / 1000,
       };
       store.commit('SET_CONFIG', config);
-      console.log(store.state.Conf.config.icoStartDate, store.state.Conf.config.icoEndDate);
+      console.log(new Date().getTime(), store.state.Conf.config.icoStartDate, store.state.Conf.config.icoEndDate);
     });
-
-    // afterEach(() => {
-    //   store = start = end = config = null;
-    // });
 
     it('Ico should start in the future', () => {
       expect(store.getters.icoWillBegin).equal(true);
@@ -39,18 +32,12 @@ describe('Ico openings and closings', () => {
   describe('Ico is live !', () => {
     beforeEach(() => {
       store = new Vuex.Store({ modules });
-      start = new Date(); end = new Date();
       config = {
-        icoStartDate: start.setHours(today.getHours() - 2),
-        icoEndDate: end.setHours(today.getHours() + 4),
+        icoStartDate: new Date().setHours(new Date().getHours() - 2) / 1000,
+        icoEndDate: new Date().setHours(new Date().getHours() + 4) / 1000,
       };
       store.commit('SET_CONFIG', config);
-      console.log(store.state.Conf.config.icoStartDate, store.state.Conf.config.icoEndDate);
     });
-
-    // afterEach(() => {
-    //   store = start = end = config = null;
-    // });
 
     it('Ico should have started after startDate', () => {
       expect(store.getters.icoWillBegin).equal(false);
@@ -64,18 +51,12 @@ describe('Ico openings and closings', () => {
   describe('Ico is in the past.', () => {
     beforeEach(() => {
       store = new Vuex.Store({ modules });
-      start = new Date(); end = new Date();
       config = {
-        icoStartDate: start.setHours(today.getHours() - 4),
-        icoEndDate: end.setHours(today.getHours() - 1),
+        icoStartDate: new Date().setHours(new Date().getHours() - 4) / 1000,
+        icoEndDate: new Date().setHours(new Date().getHours() - 1) / 1000,
       };
       store.commit('SET_CONFIG', config);
-      console.log(store.state.Conf.config.icoStartDate, store.state.Conf.config.icoEndDate);
     });
-
-    // afterEach(() => {
-    //   store = start = end = config = null;
-    // });
 
     it('Ico shouldn\'t be running after endDate', () => {
       expect(store.getters.icoIsRunning).equal(false);
