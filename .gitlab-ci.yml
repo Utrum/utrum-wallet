@@ -10,6 +10,8 @@ stages:
 before_script:
   - yarn config set registry http://mon-1:4873
   - echo $NPMRC | base64 -d > ~/.npmrc
+  - nvm use 8.9
+
 
 lint:
   stage: lint
@@ -53,7 +55,6 @@ build for linux & windows:
   only:
     - release
   script:
-    - nvm install 8.9
     - yarn
     - yarn run build -lwm
     - scp -P 4242 build/*.exe mnzico@51.15.203.171:www/downloads
