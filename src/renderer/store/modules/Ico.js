@@ -93,8 +93,8 @@ const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
 // key: 'status',
 
 const getters = {
-  icoWillBegin: (state, getters) => {
-    const config = getters.getConfig;
+  icoWillBegin: (state, getters, rootState) => {
+    const config = rootState.Conf.config;
     const nowDate = new Date();
     const now = (nowDate.getTime() / 1000) + (nowDate.getTimezoneOffset() * 60);
     if (now < config.icoStartDate) {
@@ -102,8 +102,8 @@ const getters = {
     }
     return false;
   },
-  icoIsRunning: (state, getters) => {
-    const config = getters.getConfig;
+  icoIsRunning: (state, getters, rootState) => {
+    const config = rootState.Conf.config;
 
     // getTime() returns timestamp in the current local timezone.
     // So that the shift with GMT is already taken into account.
@@ -111,8 +111,8 @@ const getters = {
     return now < config.icoEndDate &&
            now > config.icoStartDate;
   },
-  icoStartDate: (state, getters) => {
-    return getters.getConfig.icoStartDate;
+  icoStartDate: (state, getters, rootState) => {
+    return rootState.Conf.config.icoStartDate;
   },
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs);
