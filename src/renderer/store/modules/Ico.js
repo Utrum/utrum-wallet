@@ -104,10 +104,12 @@ const getters = {
   },
   icoIsRunning: (state, getters) => {
     const config = getters.getConfig;
-    const nowDate = new Date();
-    const now = (nowDate.getTime() / 1000) + (nowDate.getTimezoneOffset() * 60);
-    console.log(now, nowDate, now < config.icoEndDate, config.icoEndDate, now > config.icoStartDate, config.icoStartDate, nowDate.getTimezoneOffset(), nowDate.getTime())
-    return now < config.icoEndDate && now > config.icoStartDate;
+
+    // getTime() returns timestamp in the current local timezone.
+    // So that the shift with GMT is already taken into account.
+    const now = new Date().getTime() / 1000;
+    return now < config.icoEndDate &&
+           now > config.icoStartDate;
   },
   icoStartDate: (state, getters) => {
     return getters.getConfig.icoStartDate;
