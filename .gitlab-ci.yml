@@ -1,5 +1,7 @@
 stages:
-  - build installer
+  - lint
+  - test
+  - build
 
 # cache:
 #   paths:
@@ -42,7 +44,7 @@ test:
 
 
 build for linux & windows:
-  stage: build installer
+  stage: build
   only:
     - release
   script:
