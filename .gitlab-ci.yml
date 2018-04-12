@@ -9,6 +9,21 @@ before_script:
   - yarn config set registry http://mon-1:4873
   - echo $NPMRC | base64 -d > ~/.npmrc
 
+lint:
+  stage: lint
+  script:
+    - yarn eslint
+
+test:
+  stage: test
+  cache:
+    paths:
+      - node_modules/
+  script:
+    - yarn
+    - xvfb-run yarn test
+
+
 # build for mac:
 #   stage: build installer
 #   tags:
