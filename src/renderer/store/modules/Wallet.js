@@ -215,13 +215,11 @@ const actions = {
     dispatch('startUpdateBalances');
     dispatch('startUpdateHistory');
   },
-  startUpdateBalances({ dispatch, getters, rootGetters }) { // todo: return promise
+  startUpdateBalances({ dispatch, getters }) { // todo: return promise
     const min = 20;
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
-      if (rootGetters.passphrase !== '') {
-      }
       dispatch('updateAllBalances');
       if (getters.isUpdate) {
         dispatch('startUpdateBalances');
