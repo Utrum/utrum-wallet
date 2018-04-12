@@ -16,22 +16,18 @@ export default {
     return {
       searchable: false,
       currentBonus: 0,
-      blocks: 1,
+      blocks: 36,
       fee: 0,
       estimatedFee: 0,
       preparedTx: {},
-      feeSpeed: 'veryFast',
+      feeSpeed: 'low',
       fees: [
         { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
         { id: 1, label: 'Fast', blocks: 6, value: 'fast' },
         { id: 2, label: 'Low', blocks: 36, value: 'low' },
       ],
       selectedFee: null,
-      listData: [
-        'BTC',
-        'KMD',
-      ],
-      select: 'BTC',
+      select: '',
       packageMNZ: 100000000000,
       packageIncrement: 50000000000,
       coupon: '',
@@ -41,6 +37,9 @@ export default {
   mounted() {
     this.selectFee = this.fees[0].label;
   },
+  created() {
+    this.select = this.$store.getters.isTestMode ? 'TESTBTC' : 'BTC';
+  },
   methods: {
     numberWithSpaces(x) {
       const parts = x.toString().split('.');
@@ -48,25 +47,43 @@ export default {
       return parts.join('.');
     },
     onFeeChange(data) {
+      const oldLabel = this.feeSpeed;
+      const oldBlocks = this.blocks;
       this.blocks = data.blocks;
-      this.prepareTx();
+      this.feeSpeed = data.label;
+      this.prepareTx().then(() => {
+        if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+          this.$refs.feeSelector.selectedLabel = oldLabel;
+          this.blocks = oldBlocks;
+          this.$toasted.error('You don\'t have enough funds to select this.');
+        }
+      });
     },
-    async onShowBuyModal() {
-      await this.prepareTx();
-
-      if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
-        this.hideModal();
-        this.$toasted.info("You don't have enough funds for buying (with fees included)");
-      } else {
-        this.$refs.confirmBuy.show();
-      }
+    onShowBuyModal() {
+      this.prepareTx().then(() => {
+        if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+          this.hideModal();
+          this.$toasted.info("You don't have enough funds for buying (with fees included)");
+        } else {
+          this.$refs.confirmBuy.show();
+        }
+      });
     },
-    async prepareTx() {
-      const tx = await this.estimateTransaction();
-      if (tx.alphaTx.ouputs && tx.alphaTx.inputs) {
-        this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
-      }
-      this.preparedTx = tx.alphaTx;
+    prepareTx() {
+      return this.estimateTransaction().then(tx => {
+        if (tx.outputs != null && tx.inputs != null) {
+          this.estimatedFee = sb.toBitcoin(tx.fee);
+        }
+        this.preparedTx = tx;
+      });
+    },
+    estimateTransaction() {
+      return this.$store.dispatch('prepareTransaction', {
+        wallet: this.wallet,
+        amount: sb.toSatoshi(this.getTotalPrice),
+        blocks: this.blocks,
+        data: this.coupon,
+      });
     },
     hideModal() {
       this.$refs.confirmBuy.hide();
@@ -80,15 +97,16 @@ export default {
       let price = 0;
       const priceMNZ = config.coinPrices.mnz;
       const priceKMD = config.coinPrices.kmd;
-      if (this.select === 'BTC') {
+      if (this.select.indexOf('BTC') >= 0) {
         price = priceMNZ;
-      } else if (this.select === 'KMD') {
+      } else if (this.select.indexOf('KMD') >= 0) {
         price = sb.toSatoshi(priceMNZ / priceKMD);
       }
       return sb.toBitcoin((sb.toBitcoin(this.packageMNZ) * price).toFixed(0));
     },
     valueChange(value) {
       this.select = value;
+      this.prepareTx();
     },
     incrementPackage() {
       if (this.packageMNZ <= this.getMaxBuy - this.packageIncrement) {
@@ -99,15 +117,6 @@ export default {
       if (this.packageMNZ > this.getMinBuy) {
         this.packageMNZ -= this.packageIncrement;
       }
-    },
-    async estimateTransaction() {
-      return await this.$store.dispatch('prepareTransaction', {
-        wallet: this.wallet,
-        address: this.buyAddress,
-        amount: sb.toSatoshi(this.getTotalPrice),
-        blocks: this.blocks,
-        data: this.coupon,
-      });
     },
     async buyMnz() {
       this.timer = false;
@@ -123,39 +132,40 @@ export default {
       };
 
       this.$store
-      .dispatch('buyAsset', payload)
-      .then(response => {
-        if (response.error) {
-          this.$toasted.error(response.error);
-          Promise.reject();
-        }
-        this.$toasted.show('Transaction sent !', {
-          icon: 'done',
-          action: [
-            {
-              icon: 'close',
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0);
+        .dispatch('buyAsset', payload)
+        .then(response => {
+          if (response.error) {
+            this.$toasted.error(response.error);
+            Promise.reject();
+          }
+          this.$toasted.show('Transaction sent !', {
+            icon: 'done',
+            action: [
+              {
+                icon: 'close',
+                onClick: (e, toastObject) => {
+                  toastObject.goAway(0);
+                },
               },
-            },
-            {
-              icon: 'content_copy',
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0);
-                clipboard.writeText(response);
-                setTimeout(() => {
-                  this.$toasted.show('Copied !', {
-                    duration: 1000,
-                    icon: 'done',
-                  });
-                }, 800);
+              {
+                icon: 'content_copy',
+                onClick: (e, toastObject) => {
+                  toastObject.goAway(0);
+                  clipboard.writeText(response);
+                  setTimeout(() => {
+                    this.$toasted.show('Copied !', {
+                      duration: 1000,
+                      icon: 'done',
+                    });
+                  }, 800);
+                },
               },
-            },
-          ],
-        });
-      }).catch(error => {
-        this.$toasted.error(error.msg);
-      })
+            ],
+          });
+        })
+        .catch(error => {
+          this.$toasted.error(`Can't send transaction, verify your pending tx and unconfirmed balance: ${error.msg}`);
+        })
       ;
       this.hideModal();
     },
@@ -175,6 +185,14 @@ export default {
     },
   },
   computed: {
+    mnzTicker() {
+      return this.$store.getters.isTestMode ? 'TESTMNZ' : 'MNZ';
+    },
+    coins() {
+      return this.$store.getters.enabledCoins
+        .filter(coin => coin.ticker.indexOf('MNZ') < 0)
+        .map(coin => coin.ticker);
+    },
     totalMnzWitBonus() {
       return this.getPackage + (this.getPackage * this.currentBonus);
     },
@@ -207,13 +225,13 @@ export default {
       return this.$store.getters.getWalletByTicker(this.select);
     },
     walletMnz() {
-      return this.$store.getters.getWalletByTicker('MNZ');
+      return this.$store.getters.getWalletByTicker(this.mnzTicker);
     },
     getBalance() {
       return this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8);
     },
     getMnzBalance() {
-      return this.$store.getters.getWalletByTicker('MNZ').balance;
+      return this.$store.getters.getWalletByTicker(this.mnzTicker).balance;
     },
     getStringTicket() {
       return this.$store.getters.getWalletByTicker(this.select).coin.name;
@@ -253,7 +271,7 @@ export default {
     },
     canBuy() {
       const mnzToBuy = this.packageMNZ;
-      const balance = this.$store.getters.getWalletByTicker(this.select).balance;
+      const balance = this.wallet.balance - this.wallet.balance_unconfirmed;
 
       return mnzToBuy <= 0 || this.totalPrice() > balance;
     },

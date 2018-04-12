@@ -5364,14 +5364,15 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libwallet-mnz@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/libwallet-mnz/-/libwallet-mnz-3.0.0.tgz#1624c47067eabce3c7ce8b797439dd6e4738db06"
+libwallet-mnz@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/libwallet-mnz/-/libwallet-mnz-3.1.1.tgz#011e31d6d5b36d306fbb8d4a64b6591ea924bd2d"
   dependencies:
     bitcoinjs-lib "^3.3.2"
     coinselect "^3.1.11"
     coinstring "^2.3.0"
     electrum-client "^0.0.5"
+    js-sha256 "^0.9.0"
     satoshi-bitcoin "^1.0.4"
     wif "^2.0.6"
 

@@ -93,13 +93,18 @@ function createWindow() {
     ev.returnValue = [app[msg].apply(app, args)];
   });
 
-  ipc.on('electrum.call', (ev, payload) => {
-    electrumCall(payload.ticker, payload.test, payload.method, payload.params, (err, response) => {
-      if (err) ev.returnValue = { error: err }
-      console.log(payload, response)
-      return ev.returnValue = response
-    });
-  })
+  ipc.on('electrum.call', (event, payload) => {
+    electrumCall(payload.ticker, payload.test, payload.method, payload.params)
+      .then((response) => {
+        console.log("Reply ON: ", `electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`);
+        event.sender.send(`electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`, response);
+      })
+      .catch((error) => {
+        console.log("Error -> ", error);
+        event.sender.send(`electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`, {error});
+      })
+    ;
+  });
 
   mainWindow.loadURL(winURL);
 

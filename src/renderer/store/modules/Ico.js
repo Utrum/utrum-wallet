@@ -25,28 +25,65 @@ const actions = {
   getNewBuyAddress({ rootGetters }, wallet) {
     let pubKeyAddress;
     _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
-      if (key === wallet.ticker.toLowerCase()) {
+      // console.log(key, wallet.ticker.toLowerCase(), key.indexOf(wallet.ticker.toLowerCase()))
+      if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
         pubKeyAddress = value;
       }
     });
+
     const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
     const index = Math.floor(Math.random() * 10);
     const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
     return address;
   },
   buyAsset({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
-    return new Promise(async (resolve, reject) => {
-      const sentTxId = await dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript });
-      if (!sentTxId.error) {
+    return dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript })
+      .then((sentTxId) => {
         const localCryptoTx = generateLocalTx(wallet.address, amount, sentTxId);
         const localMnzTx = generateLocalMnz(amountMnz);
         commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: wallet.ticker });
-        resolve(sentTxId);
+        return sentTxId;
+      })
+    ;
+  },
+  buildSwapList({ commit, rootGetters }) {
+
+    let cryptoTxs = [];
+    let icoCoinTxs = [];
+    _.map(rootGetters.enabledCoins, (coin) => {
+      if (coin.ticker.indexOf('MNZ') < 0) {
+        cryptoTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
+        // console.log("Coin: " + coin.ticker + ", txs: " + cryptoTxs.length);
       } else {
-        reject({ msg: `Can't send transaction, verify your pending tx and unconfirmed balance: ${sentTxId.error}` });
+        icoCoinTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
       }
     });
+
+    const associations = associateTxsFromWallet(cryptoTxs, icoCoinTxs);
+    // console.log("Associations: ", associations);
+    commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
   },
+};
+
+const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
+  // console.log("mnzTxs: ", mnzTxs);
+  const associateArray = [];
+  if (cryptoTxs != null && mnzTxs != null) {
+    _.forEach(mnzTxs, (mnzTx) => {
+      if (mnzTx.origin != null) {
+        const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
+          if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
+            return true;
+          }
+          return false;
+        });
+        if (cryptoTxsForMnz[0]) {
+          associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
+        }
+      }
+    });
+  }
+  return associateArray;
 };
 
 // key: 'cryptoTx.time',
@@ -57,22 +94,22 @@ const actions = {
 // key: 'status',
 
 const getters = {
-  icoIsOver: (state, rootGetters) => {
-    const config = rootGetters.getConfig;
+  icoIsOver: (state, getters) => {
+    const config = getters.getConfig;
     if ((config.progress >= 1 || (moment.unix(config.icoStartDate) > moment() || moment() > moment.unix(config.icoEndDate)))) {
       return true;
     }
     return false;
   },
-  icoWillBegin: (state, rootGetters) => {
-    const config = rootGetters.getConfig;
+  icoWillBegin: (state, getters) => {
+    const config = getters.getConfig;
     if (moment() < moment.unix(config.icoStartDate)) {
       return true;
     }
     return false;
   },
-  icoStartDate: (state, rootGetters) => {
-    return rootGetters.getConfig.icoStartDate;
+  icoStartDate: (state, getters) => {
+    return getters.getConfig.icoStartDate;
   },
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs);
@@ -107,7 +144,6 @@ const generateLocalMnz = (amount) => {
     amount: amount,
   };
 };
-
 
 export default {
   state,
