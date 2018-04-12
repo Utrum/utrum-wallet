@@ -1,11 +1,11 @@
 <div>
   <div class="content-createpassphrase row-main-item">
     <div v-on:click="backArrow" v-if="(step2 || step3)" id="back-arrow" class="row-custom">
-      <img src="@/assets/icon-back.svg">
+      <img src="~@/assets/icon-back.svg">
       <p>Back</p>
     </div>
 
-    <img id="icon-login" src="@/assets/icon-login-monaize.svg" height="60" class="col-custom">
+    <img id="icon-login" src="~@/assets/icon-login-monaize.svg" height="60" class="col-custom">
     <h3 class="col-custom">CREATE PASSPHRASE</h3>
     <div v-if="step1" class="col-custom">
       <p>
@@ -45,7 +45,7 @@
       <button v-on:click="continueCreate" v-if="step2" id="btn-continue" class="col-custom btn-round-light">
         <div class="row-custom">
           <p class="col-custom">Continue</p>
-          <img class="col-custom" src="@/assets/icon-continue.svg">
+          <img class="col-custom" src="~@/assets/icon-continue.svg">
         </div>
       </button>
       <button :class="disabledBtn" v-if="step3" @click.prevent="validatePassPhrase()" id="btn-confirm" class="col-custom btn-round-light" type="button">
