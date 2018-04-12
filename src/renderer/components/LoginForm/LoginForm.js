@@ -1,3 +1,5 @@
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'login-form',
   data() {
@@ -7,6 +9,7 @@ export default {
       typeInput: 'password',
       passphrase: '',
       btnSendStatus: '',
+      testMode: null,
     };
   },
   watch: {
@@ -19,7 +22,10 @@ export default {
     },
   },
   created() {
-    this.testMode = this.$store.getters.isTestMode;
+    this.testMode = this.isTestMode;
+  },
+  computed: {
+    ...mapGetters(['isTestMode']),
   },
   methods: {
     checkboxTestMode() {
