@@ -5918,9 +5918,9 @@ moment-timezone@^0.5.14:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.21.0:
+"moment@>= 2.9.0", moment@^2.22.0:
   version "2.22.0"
-  resolved "http://mon-1:4873/moment/-/moment-2.22.0.tgz#7921ade01017dd45186e7fee5f424f0b8663a730"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.0.tgz#7921ade01017dd45186e7fee5f424f0b8663a730"
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -8558,7 +8558,7 @@ uglifyjs-webpack-plugin@^0.4.6:
 
 uglifyjs-webpack-plugin@^1.2.4:
   version "1.2.4"
-  resolved "http://mon-1:4873/uglifyjs-webpack-plugin/-/uglifyjs-webpack-plugin-1.2.4.tgz#5eec941b2e9b8538be0a20fc6eda25b14c7c1043"
+  resolved "https://registry.yarnpkg.com/uglifyjs-webpack-plugin/-/uglifyjs-webpack-plugin-1.2.4.tgz#5eec941b2e9b8538be0a20fc6eda25b14c7c1043"
   dependencies:
     cacache "^10.0.4"
     find-cache-dir "^1.0.0"
