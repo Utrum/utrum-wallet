@@ -75,6 +75,7 @@ export default {
         this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
       }
       this.preparedTx = tx.alphaTx;
+      return tx;
     },
     onChange() {
       this.prepareTx();
