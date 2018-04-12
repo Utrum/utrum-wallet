@@ -71,7 +71,7 @@ export default {
     },
     async prepareTx() {
       const tx = await this.estimateTransaction();
-      if (tx.alphaTx.ouputs && tx.alphaTx.inputs) {
+      if (tx.alphaTx.outputs && tx.alphaTx.inputs) {
         this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
       }
       this.preparedTx = tx.alphaTx;
