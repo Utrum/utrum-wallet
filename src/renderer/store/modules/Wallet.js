@@ -17,7 +17,7 @@ const state = {
   }],
   coins: [],
   calculating: false,
-  isUpdate: false,
+  isUpdate: true,
 };
 
 const getters = {
@@ -206,13 +206,11 @@ const actions = {
     ;
   },
   startUpdates({ dispatch }) { // todo: return promise
-    console.log("===========================> STARTUPDATES");
     dispatch('setIsUpdate', true);
     dispatch('startUpdateBalances');
-    // dispatch('startUpdateHistory');
+    dispatch('startUpdateHistory');
   },
   startUpdateBalances({ dispatch, getters }) { // todo: return promise
-    console.log("START UPDATE BALANCE");
     const min = 20;
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
@@ -220,11 +218,10 @@ const actions = {
       Object.keys(getters.getWallets).forEach((ticker) => {
         dispatch('updateBalance', getters.getWallets[ticker]);
       });
-      console.log("IS UPDATE: " + getters.isUpdate);
       if (getters.isUpdate) {
         dispatch('startUpdateBalances');
       }
-    }, 10 * 1000);
+    }, rand * 1000);
   },
   startUpdateHistory({ dispatch, getters }) { // todo: return promise
     const min = 30;
@@ -234,6 +231,7 @@ const actions = {
       Object.keys(getters.getWallets).forEach((ticker) => {
         dispatch('buildTxHistory', getters.getWallets[ticker], { root: true });
       });
+
       if (getters.isUpdate) {
         dispatch('startUpdateHistory');
       }
