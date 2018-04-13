@@ -1,6 +1,6 @@
 {
   "name": "vue-dico",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "author": "Maxime Saddok <maxime@monaize.com>",
   "description": "Monaize ICO Wallet",
   "license": null,
@@ -78,7 +78,7 @@
     "electron-debug": "^1.4.0",
     "electron-publisher-s3": "^20.8.1",
     "electron-spawn": "^5.0.0",
-    "electrum-client": "^0.0.5",
+    "electrum-client": "https://github.com/Monaize/node-electrum-client.git#electrumx-persistence",
     "elliptic": "^6.4.0",
     "express": "^4.16.3",
     "glyphicons": "^0.2.0",
