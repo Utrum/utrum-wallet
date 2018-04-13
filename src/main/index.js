@@ -7,7 +7,6 @@ require('electron-debug')({ showDevTools: true });
 const path = require('path');
 const ipc = require('electron').ipcMain;
 const http = require('http');
-const copyright = require('./copyright.json');
 const pkg = require('../../package.json');
 
 /**
