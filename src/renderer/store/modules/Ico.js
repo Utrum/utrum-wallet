@@ -62,7 +62,6 @@ const actions = {
 };
 
 const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
-  // console.log("mnzTxs: ", mnzTxs);
   const associateArray = [];
   if (cryptoTxs != null && mnzTxs != null) {
     _.forEach(mnzTxs, (mnzTx) => {
