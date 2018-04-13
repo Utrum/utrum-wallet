@@ -1,13 +1,29 @@
 stages:
-  - build installer
+  - lint
+  - test
+  - build
 
-# cache:
-#   paths:
-#     - node_modules/
+cache:
+  paths:
+    - node_modules/
 
 before_script:
   - yarn config set registry http://mon-1:4873
   - echo $NPMRC | base64 -d > ~/.npmrc
+  - nvm use 8.9
+  - yarn
+
+
+lint:
+  stage: lint
+  script:
+    - yarn eslint
+
+test:
+  stage: test
+  script:
+    - xvfb-run yarn test
+
 
 # build for mac:
 #   stage: build installer
@@ -17,7 +33,6 @@ before_script:
 #   # only: master
 #   script:
 #     - nvm install 8.9
-#     - yarn
 #     - yarn run build -m
 #     - ls build/*.zip && ls build/*.dmg
 #   artifacts:
@@ -27,12 +42,10 @@ before_script:
 
 
 build for linux & windows:
-  stage: build installer
+  stage: build
   only:
     - release
   script:
-    - nvm install 8.9
-    - yarn
     - yarn run build -lwm
     - scp -P 4242 build/*.exe mnzico@51.15.203.171:www/downloads
     - scp -P 4242 build/*.AppImage mnzico@51.15.203.171:www/downloads

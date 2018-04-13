@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import moment from 'moment';
 import bitcoinjs from 'bitcoinjs-lib';
 
 const state = {
@@ -25,14 +24,13 @@ const actions = {
   getNewBuyAddress({ rootGetters }, wallet) {
     let pubKeyAddress;
     _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
-      // console.log(key, wallet.ticker.toLowerCase(), key.indexOf(wallet.ticker.toLowerCase()))
       if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
         pubKeyAddress = value;
       }
     });
 
     const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
-    const index = Math.floor(Math.random() * 10);
+    const index = Math.floor(Math.random() * 10000);
     const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
     return address;
   },
@@ -53,14 +51,12 @@ const actions = {
     _.map(rootGetters.enabledCoins, (coin) => {
       if (coin.ticker.indexOf('MNZ') < 0) {
         cryptoTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
-        // console.log("Coin: " + coin.ticker + ", txs: " + cryptoTxs.length);
       } else {
         icoCoinTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
       }
     });
 
     const associations = associateTxsFromWallet(cryptoTxs, icoCoinTxs);
-    // console.log("Associations: ", associations);
     commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
   },
 };
@@ -94,22 +90,26 @@ const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
 // key: 'status',
 
 const getters = {
-  icoIsOver: (state, getters) => {
-    const config = getters.getConfig;
-    if ((config.progress >= 1 || (moment.unix(config.icoStartDate) > moment() || moment() > moment.unix(config.icoEndDate)))) {
+  icoWillBegin: (state, getters, rootState) => {
+    const config = rootState.Conf.config;
+    const nowDate = new Date();
+    const now = (nowDate.getTime() / 1000) + (nowDate.getTimezoneOffset() * 60);
+    if (now < config.icoStartDate) {
       return true;
     }
     return false;
   },
-  icoWillBegin: (state, getters) => {
-    const config = getters.getConfig;
-    if (moment() < moment.unix(config.icoStartDate)) {
-      return true;
-    }
-    return false;
+  icoIsRunning: (state, getters, rootState) => {
+    const config = rootState.Conf.config;
+
+    // getTime() returns timestamp in the current local timezone.
+    // So that the shift with GMT is already taken into account.
+    const now = new Date().getTime() / 1000;
+    return now < config.icoEndDate &&
+           now > config.icoStartDate;
   },
-  icoStartDate: (state, getters) => {
-    return getters.getConfig.icoStartDate;
+  icoStartDate: (state, getters, rootState) => {
+    return rootState.Conf.config.icoStartDate;
   },
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs);
