@@ -25,7 +25,6 @@ const actions = {
   getNewBuyAddress({ rootGetters }, wallet) {
     let pubKeyAddress;
     _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
-      // console.log(key, wallet.ticker.toLowerCase(), key.indexOf(wallet.ticker.toLowerCase()))
       if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
         pubKeyAddress = value;
       }
@@ -53,14 +52,12 @@ const actions = {
     _.map(rootGetters.enabledCoins, (coin) => {
       if (coin.ticker.indexOf('MNZ') < 0) {
         cryptoTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
-        // console.log("Coin: " + coin.ticker + ", txs: " + cryptoTxs.length);
       } else {
         icoCoinTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
       }
     });
 
     const associations = associateTxsFromWallet(cryptoTxs, icoCoinTxs);
-    // console.log("Associations: ", associations);
     commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
   },
 };
