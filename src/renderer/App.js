@@ -11,7 +11,6 @@ export default {
   },
   name: 'vue-dico',
   created() {
-    this.$store.dispatch('updateConfig', {});
     this.$store.dispatch('startUpdateConfig');
   },
   data() {

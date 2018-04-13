@@ -17,7 +17,7 @@ const state = {
   }],
   coins: [],
   calculating: false,
-  isUpdate: false,
+  isUpdate: true,
 };
 
 const getters = {
@@ -177,14 +177,9 @@ const actions = {
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');
   },
-  updateAllBalances({ dispatch, getters }) {
-    // todo => Promise.all();
-    Object.keys(getters.getWallets).forEach((ticker) => {
-      dispatch('updateBalance', getters.getWallets[ticker]);
-    });
-  },
-  updateBalance({ commit, getters, rootGetters }, wallet) { // todo: return promise
-    wallet.electrum
+  updateBalance({ commit, getters, rootGetters }, wallet) {
+    commit('UPDATE_BALANCE', wallet);
+    return wallet.electrum
       .getBalance(wallet.address)
       .catch((error) => {
         return Promise.reject(new Error(`Failed to retrieve ${wallet.ticker} balance\n${error}`));
@@ -192,7 +187,13 @@ const actions = {
       .then(response => {
         wallet.balance = sb.toBitcoin(response.confirmed);
         wallet.balance_unconfirmed = sb.toBitcoin(response.unconfirmed);
-        if (wallet.coin.name !== 'monaize') {
+        if (wallet.coin.name === 'monaize') {
+          getCmcData('bitcoin')
+            .then(response => {
+              wallet.balance_usd = wallet.balance * (response.data[0].price_usd / 15000);
+            })
+          ;
+        } else {
           getCmcData(wallet.coin.name)
             .then(response => {
               response.data.forEach((cmcCoin) => {
@@ -201,14 +202,8 @@ const actions = {
             })
           ;
         }
-        getCmcData('bitcoin')
-          .then(response => {
-            wallet.balance_usd = wallet.balance * (response.data[0].price_usd / 15000);
-          })
-        ;
       })
     ;
-    commit('UPDATE_BALANCE', wallet);
   },
   startUpdates({ dispatch }) { // todo: return promise
     dispatch('setIsUpdate', true);
@@ -219,39 +214,27 @@ const actions = {
     const min = 20;
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
-    const interval = setInterval(() => {
-      dispatch('updateAllBalances');
+    setTimeout(() => {
+      Object.keys(getters.getWallets).forEach((ticker) => {
+        dispatch('updateBalance', getters.getWallets[ticker]);
+      });
       if (getters.isUpdate) {
         dispatch('startUpdateBalances');
       }
-      clearInterval(interval);
-    }, rand * 1000);
-  },
-  startUpdateConfig({ dispatch, rootGetters }) {  // todo: return promise
-    const icoWillBegin = rootGetters.icoWillBegin;
-    const min = icoWillBegin ? 20 : 30;
-    const max = icoWillBegin ? 50 : 30;
-    const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
-    const interval = setInterval(() => {
-      dispatch('updateConfig');
-      if (getters.isUpdate) {
-        dispatch('startUpdateConfig');
-      }
-      clearInterval(interval);
     }, rand * 1000);
   },
   startUpdateHistory({ dispatch, getters }) { // todo: return promise
     const min = 30;
     const max = 60;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
-    const interval = setInterval(() => {
+    setTimeout(() => {
       Object.keys(getters.getWallets).forEach((ticker) => {
         dispatch('buildTxHistory', getters.getWallets[ticker], { root: true });
       });
+
       if (getters.isUpdate) {
         dispatch('startUpdateHistory');
       }
-      clearInterval(interval);
     }, rand * 1000);
   },
 };
