@@ -19,7 +19,8 @@
 
 #readerQrcode {
 	height: 100%;
-	margin-left: 10px;
+	margin-left: 18px;
+	margin-right: 52px;
 	border: 1px solid #7D3A8B;
 	background-color: transparent;
 	border-radius: 5px;
@@ -255,6 +256,8 @@
 	font-size: 1.8em;
 	color: #687078;
 	font-weight: 200;
+	margin-right: 45px;
+    margin-left: 7px;
 }
 
 .card span {

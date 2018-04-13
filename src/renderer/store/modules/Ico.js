@@ -30,7 +30,7 @@ const actions = {
     });
 
     const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
-    const index = Math.floor(Math.random() * 10);
+    const index = Math.floor(Math.random() * 10000);
     const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
     return address;
   },

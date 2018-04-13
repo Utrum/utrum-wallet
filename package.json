@@ -84,7 +84,6 @@
     "glyphicons": "^0.2.0",
     "jquery": "^3.3.1",
     "js-sha256": "^0.9.0",
-    "jsonrpc-node": "^1.2.93",
     "less": "^3.0.1",
     "less-loader": "^4.0.5",
     "libwallet-mnz": "3.1.1",

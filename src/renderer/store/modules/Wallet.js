@@ -112,7 +112,7 @@ const actions = {
     const promises = enabledCoins.map((coin) => {
       const ticker = coin.ticker;
       const wallet = new Wallet(privateKey, coin, isTestMode);
-      wallet.electrum = new ElectrumService(store, ticker, isTestMode);
+      wallet.electrum = new ElectrumService(store, ticker, isTestMode, { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
       wallet.ticker = ticker;
       wallet.balance = 0;
       wallet.balance_usd = 0;
@@ -121,7 +121,7 @@ const actions = {
       commit('ADD_WALLET', wallet);
 
       return wallet.electrum
-        .serverVersion('Monaize ICO Wallet 0.1', '1.2')
+        .init()
         .then(() => {
           dispatch('buildTxHistory', wallet, { root: true });
           dispatch('updateBalance', wallet);
@@ -215,7 +215,7 @@ const actions = {
     dispatch('startUpdateBalances');
     dispatch('startUpdateHistory');
   },
-  startUpdateBalances({ dispatch, getters, rootGetters }) { // todo: return promise
+  startUpdateBalances({ dispatch, getters }) { // todo: return promise
     const min = 20;
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
