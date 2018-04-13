@@ -43,7 +43,6 @@ const getRefreshRate = (icoWillBegin) => {
 };
 
 const pullConfiguration = () => {
-  console.log("GET CONFIGURATION");
   return axios
     .get('http://51.15.203.171/icoClientConfiguration.json')
     .then(response => {

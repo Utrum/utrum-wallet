@@ -186,7 +186,7 @@ const actions = {
       })
       .then(response => {
         wallet.balance = sb.toBitcoin(response.confirmed);
-        wallet.balance_unconfirmed = sb.toBitcoin(response.unconfirmed);        
+        wallet.balance_unconfirmed = sb.toBitcoin(response.unconfirmed);
         if (wallet.coin.name === 'monaize') {
           getCmcData('bitcoin')
             .then(response => {
