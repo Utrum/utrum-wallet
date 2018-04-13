@@ -3172,6 +3172,10 @@ electrum-client@^0.0.5:
   version "0.0.5"
   resolved "http://mon-1:4873/electrum-client/-/electrum-client-0.0.5.tgz#7508bc987ab1ee73ad72fd4a7cb2331e637d064a"
 
+"electrum-client@https://github.com/Monaize/node-electrum-client.git#electrumx-persistence":
+  version "0.0.7"
+  resolved "https://github.com/Monaize/node-electrum-client.git#8eb02adb1277510a7428558c579b2d174bf523ae"
+
 elliptic@^6.0.0, elliptic@^6.4.0:
   version "6.4.0"
   resolved "http://mon-1:4873/elliptic/-/elliptic-6.4.0.tgz#cac9af8762c85836187003c8dfe193e5e2eae5df"
