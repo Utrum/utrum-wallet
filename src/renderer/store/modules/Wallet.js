@@ -215,7 +215,7 @@ const actions = {
     dispatch('startUpdateBalances');
     dispatch('startUpdateHistory');
   },
-  startUpdateBalances({ dispatch, getters, rootGetters }) { // todo: return promise
+  startUpdateBalances({ dispatch, getters }) { // todo: return promise
     const min = 20;
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
