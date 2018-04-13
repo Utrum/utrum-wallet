@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu } from 'electron';
-import Electrums from './electrums';
+import ElectrumManager from './electrumManager';
 
-const electrums = new Electrums();
+const electrumManager = new ElectrumManager();
 
 require('electron-debug')({ showDevTools: true });
 const path = require('path');
@@ -75,16 +75,24 @@ function createWindow() {
     const args = [].slice.call(arguments, 2);
     ev.returnValue = [app[msg].apply(app, args)];
   });
+  
+  ipc.on('electrum.init', (event, payload) => {
+    electrumManager.initClient(payload.ticker, payload.electrumConfig)
+      .then((response) => {
+        event.sender.send(`electrum.init.${payload.ticker}.${payload.tag}`, response);
+      })
+      .catch((error) => {
+        event.sender.send(`electrum.init.${payload.ticker}.${payload.tag}`, {error});
+      })
+    ;
+  });
 
   ipc.on('electrum.call', (event, payload) => {
-    electrums.getRpcClientForTicker(payload.ticker).call(payload.method, payload.params)
-    // electrumCall(payload.ticker, payload.test, payload.method, payload.params)
+    electrumManager.requestClient(payload.ticker, payload.method, payload.params)
       .then((response) => {
-        // console.log("Reply ON: ", `electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`);
         event.sender.send(`electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`, response);
       })
       .catch((error) => {
-        // console.log("Error -> ", error);
         event.sender.send(`electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`, {error});
       })
     ;
