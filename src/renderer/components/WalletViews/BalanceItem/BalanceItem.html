@@ -2,15 +2,15 @@
   <div class="row-title">
     <h2 id="balance-item">{{numberWithSpaces(wallet.balance)}}</h2>
     <h2 id="coin-item">{{wallet.ticker}}</h2>
-    <p id="us-dollar" class="col-header"><img src="@/assets/icon-usdollar.svg"/> {{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
+    <p id="us-dollar" class="col-header"><img src="~@/assets/icon-usdollar.svg"/> {{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
   </div>
   <div class="row-content" :class="getQRCodeClass(wallet.balance_unconfirmed)">
     <div v-if="wallet.balance_unconfirmed !== 0">
-      <img v-if="wallet.balance_unconfirmed < 0" src="@/assets/icon-in.svg" alt="icon-unconfirmed-balance">
-      <img v-else src="@/assets/icon-out.svg" alt="icon-unconfirmed-balance">
+      <img v-if="wallet.balance_unconfirmed < 0" src="~@/assets/icon-in.svg" alt="icon-unconfirmed-balance">
+      <img v-else src="~@/assets/icon-out.svg" alt="icon-unconfirmed-balance">
       <span :class="getUnconfirmedColor(wallet.balance_unconfirmed)"><span v-if="wallet.balance_unconfirmed > 0">+</span>{{numberWithSpaces(wallet.balance_unconfirmed)}}</span>
     </div>
-    <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="@/assets/icon-qrcode-select.svg"></button>
+    <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="~@/assets/icon-qrcode-select.svg"></button>
   </div>
   <div class="row-footer">
     <p class="col-header">Your deposit {{wallet.coin.name}} address :</p>

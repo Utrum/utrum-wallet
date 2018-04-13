@@ -14,6 +14,8 @@
  *                                                                            *
  ******************************************************************************/
 
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'sidebar',
   data() {
@@ -39,5 +41,8 @@ export default {
       this.buyMnzState = false;
       this.withdrawalState = true;
     },
+  },
+  computed: {
+    ...mapGetters(['icoIsRunning']),
   },
 };

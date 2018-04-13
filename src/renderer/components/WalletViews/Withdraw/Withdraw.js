@@ -70,7 +70,7 @@ export default {
   methods: {
     async onShowBuyModal() {
       await this.prepareTx();
-      if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+      if (!this.preparedTx.inputs && !this.preparedTx.outputs) {
         this.hideModal();
         this.$toasted.info("You don't have enough funds for buying (with fees included)");
       } else {
@@ -87,10 +87,11 @@ export default {
     },
     async prepareTx() {
       const tx = await this.estimateTransaction();
-      if (tx.alphaTx.ouputs && tx.alphaTx.inputs) {
+      if (tx.alphaTx && tx.alphaTx.outputs && tx.alphaTx.inputs) {
         this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
       }
       this.preparedTx = tx.alphaTx;
+      return tx;
     },
     onChange() {
       this.prepareTx();
