@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import moment from 'moment';
 import bitcoinjs from 'bitcoinjs-lib';
 
 const state = {
@@ -91,22 +90,26 @@ const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
 // key: 'status',
 
 const getters = {
-  icoIsOver: (state, getters) => {
-    const config = getters.getConfig;
-    if ((config.progress >= 1 || (moment.unix(config.icoStartDate) > moment() || moment() > moment.unix(config.icoEndDate)))) {
+  icoWillBegin: (state, getters, rootState) => {
+    const config = rootState.Conf.config;
+    const nowDate = new Date();
+    const now = (nowDate.getTime() / 1000) + (nowDate.getTimezoneOffset() * 60);
+    if (now < config.icoStartDate) {
       return true;
     }
     return false;
   },
-  icoWillBegin: (state, getters) => {
-    const config = getters.getConfig;
-    if (moment() < moment.unix(config.icoStartDate)) {
-      return true;
-    }
-    return false;
+  icoIsRunning: (state, getters, rootState) => {
+    const config = rootState.Conf.config;
+
+    // getTime() returns timestamp in the current local timezone.
+    // So that the shift with GMT is already taken into account.
+    const now = new Date().getTime() / 1000;
+    return now < config.icoEndDate &&
+           now > config.icoStartDate;
   },
-  icoStartDate: (state, getters) => {
-    return getters.getConfig.icoStartDate;
+  icoStartDate: (state, getters, rootState) => {
+    return rootState.Conf.config.icoStartDate;
   },
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs);

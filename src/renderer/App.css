@@ -405,7 +405,8 @@ textarea {
 	color: #95989c;
 }
 
-#monaizeOver {
+#icoEndedBanner,
+#icoWillBeginBanner {
   background-color: #7c398a;
   text-align: center;
   padding-bottom: 5px;
