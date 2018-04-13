@@ -1,9 +1,9 @@
 {
-  "name": "vue-dico",
+  "name": "mnz-wallet",
   "version": "0.5.1",
-  "author": "Maxime Saddok <maxime@monaize.com>",
+  "author": "./LEGAL/AUTHORS",
   "description": "Monaize ICO Wallet",
-  "license": null,
+  "license": "GPL-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
     "eslint": "./node_modules/.bin/eslint src/",
@@ -20,7 +20,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "vue-dico",
+    "productName": "mnz-wallet",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
@@ -80,6 +80,7 @@
     "electron-spawn": "^5.0.0",
     "electrum-client": "^0.0.5",
     "elliptic": "^6.4.0",
+    "eslint-plugin-header": "^1.2.0",
     "express": "^4.16.3",
     "glyphicons": "^0.2.0",
     "jquery": "^3.3.1",

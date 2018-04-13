@@ -3404,6 +3404,10 @@ eslint-module-utils@^2.2.0:
     debug "^2.6.8"
     pkg-dir "^1.0.0"
 
+eslint-plugin-header@^1.2.0:
+  version "1.2.0"
+  resolved "http://mon-1:4873/eslint-plugin-header/-/eslint-plugin-header-1.2.0.tgz#f704779c6fbc7c668f180d835de1f462b0467c37"
+
 eslint-plugin-import@^2.2.0:
   version "2.10.0"
   resolved "http://mon-1:4873/eslint-plugin-import/-/eslint-plugin-import-2.10.0.tgz#fa09083d5a75288df9c6c7d09fe12255985655e7"

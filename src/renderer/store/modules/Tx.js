@@ -1,3 +1,19 @@
+/** ***************************************************************************
+ * Copyright © 2018 Monaize Singapore PTE. LTD.                               *
+ *                                                                            *
+ * See the AUTHORS, and LICENSE files at the top-level directory of this      *
+ * distribution for the individual copyright holder information and the       *
+ * developer policies on copyright and licensing.                             *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Monaize Singapore PTE. LTD software, including this file may be copied,    *
+ * modified, propagated or distributed except according to the terms          *
+ * contained in the LICENSE file                                              *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/
+
 import * as _ from 'lodash';
 import * as bluebird from 'bluebird';
 import getTxFromRawTx from '../../lib/txtools';
@@ -16,7 +32,7 @@ const actions = {
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
               dispatch('buildSwapList', { root: true });
             })
-            .catch((error) => {
+            .catch(() => {
               // console.log("Error bh: ", error);
               // return Promise.reject(new Error(error));
             })

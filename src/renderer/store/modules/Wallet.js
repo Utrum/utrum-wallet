@@ -1,3 +1,19 @@
+/** ***************************************************************************
+ * Copyright © 2018 Monaize Singapore PTE. LTD.                               *
+ *                                                                            *
+ * See the AUTHORS, and LICENSE files at the top-level directory of this      *
+ * distribution for the individual copyright holder information and the       *
+ * developer policies on copyright and licensing.                             *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Monaize Singapore PTE. LTD software, including this file may be copied,    *
+ * modified, propagated or distributed except according to the terms          *
+ * contained in the LICENSE file                                              *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/
+
 import { Wallet, coins }  from 'libwallet-mnz';
 import * as _ from 'lodash';
 import sb from 'satoshi-bitcoin';
@@ -215,13 +231,11 @@ const actions = {
     dispatch('startUpdateBalances');
     dispatch('startUpdateHistory');
   },
-  startUpdateBalances({ dispatch, getters, rootGetters }) { // todo: return promise
+  startUpdateBalances({ dispatch, getters }) { // todo: return promise
     const min = 20;
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     const interval = setInterval(() => {
-      if (rootGetters.passphrase !== '') {
-      }
       dispatch('updateAllBalances');
       if (getters.isUpdate) {
         dispatch('startUpdateBalances');

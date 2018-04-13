@@ -1,10 +1,14 @@
 {
+  "plugins": [
+    "header"
+  ],
   "extends": "@monaize/eslint-config-monaize",
   "parserOptions": {
     "ecmaVersion": 8,
     "sourceType": "module"
   },
   "rules": {
+    "header/header": [2, "LEGAL/HEADER_FILE"],
     "import/no-unresolved": "off",
     "no-shadow": "off",
     "no-param-reassign": "off",
