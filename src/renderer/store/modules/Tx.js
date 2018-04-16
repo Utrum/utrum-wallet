@@ -10,9 +10,11 @@ const actions = {
       .then(transactionList => {
         return bluebird.mapSeries(transactionList, transaction => {
           commit('DELETE_PENDING_TX', transaction.tx_hash, { root: true });
+          console.log("Delete: ", transaction.tx_hash);
           return decodeTx(wallet, transaction, rootGetters.isTestMode)
             .then((transactionDetail) => {
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
+              console.log("Add: ", transaction.tx_hash);
               dispatch('buildSwapList', { root: true });
             })
             .catch(() => { })
@@ -24,20 +26,16 @@ const actions = {
 };
 
 const filterExistingTransactions = (walletTxs, txs) => {
-  if (walletTxs.length === 0) {
-    return txs;
-  }
+  const transactions = _.filter(txs, (tx) => { return tx.height > 0; });
   return _
-    .filter(txs, (tx) => {
+    .filter(transactions, (tx) => {
       let found = false;
-      if (tx.height > 0) {
-        _.forEach(walletTxs, (walletTx) => {
-          if (walletTx.tx_hash === tx.tx_hash) {
-            found = true;
-            return false;
-          }
-        });
-      }
+      _.forEach(walletTxs, (walletTx) => {
+        if (walletTx.tx_hash === tx.tx_hash) {
+          found = true;
+          return false;
+        }
+      });
       return !found;
     })
   ;
@@ -53,9 +51,6 @@ const decodeTx = (wallet, tx, isTestMode) => {
       }
       return transaction;
     })
-    // .catch((error) => {
-    //   console.log("ErrorDecode: ", error);
-    // })
   ;
 };
 
