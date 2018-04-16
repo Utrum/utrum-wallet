@@ -128,7 +128,7 @@ const getters = {
 
 const generateLocalTx = (address, amount, txHash) => {
   const nowDate = new Date();
-  const now = (nowDate.getTime() / 1000) + (nowDate.getTimezoneOffset() * 60);
+  const now = nowDate.getTime() / 1000;
 
   return {
     address: address,
