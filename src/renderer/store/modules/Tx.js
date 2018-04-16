@@ -53,9 +53,9 @@ const decodeTx = (wallet, tx, isTestMode) => {
       }
       return transaction;
     })
-    .catch((error) => {
-      console.log("ErrorDecode: ", error);
-    })
+    // .catch((error) => {
+    //   console.log("ErrorDecode: ", error);
+    // })
   ;
 };
 
