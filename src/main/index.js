@@ -6,6 +6,7 @@ const electrumManager = new ElectrumManager();
 require('electron-debug')({ showDevTools: true });
 const path = require('path');
 const ipc = require('electron').ipcMain;
+const {ipcRenderer} = require('electron');
 const http = require('http');
 const pkg = require('../../package.json');
 
@@ -22,64 +23,12 @@ const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
 
-
-let win;
 /**
- * Create windows electron for open terms and conditions.
+ * Create windows electron for open aboutView.
  * @returns {null} None
  */
-function termsAndConditions() {
-  const winUrl = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:9080/#/termsAndConditions'
-  : `file://${__dirname}/index.html#termsAndConditions`;
-
-  if (win) {
-    win.close();
-  }
-  win = new BrowserWindow({
-    width: 600, 
-    height: 800,
-    minWidth: 600,
-    minHeight: 800,
-    maxWidth: 600,
-    maxHeight: 800,
-    title: "Terms And Conditions",
-    fullscreenWindowTitle: false,
-  });
-  win.on('closed', () => {
-    win = null
-  })
-
-  win.loadURL(winUrl)
-}
-
-/**
- * Create windows electron for open disclamer.
- * @returns {null} None
- */
-function disclamer() {
-  const winUrl = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:9080/#/disclamer'
-  : `file://${__dirname}/index.html#disclamer`;
-
-  if (win) {
-    win.close();
-  }
-  win = new BrowserWindow({
-    width: 600, 
-    height: 800,
-    minWidth: 600,
-    minHeight: 800,
-    maxWidth: 600,
-    maxHeight: 800,
-    title: "Disclamer",
-    fullscreenWindowTitle: false,
-  });
-  win.on('closed', () => {
-    win = null
-  })
-
-  win.loadURL(winUrl)
+function aboutView() {
+  mainWindow.webContents.send('aboutView');
 }
 
 /**
@@ -106,19 +55,14 @@ function createWindow() {
     },
   });
 
-  app.setAboutPanelOptions({
-    applicationVersion: pkg.version,
-    version: process.type
-  })
-
   mainWindow.webContents.openDevTools();
   const template = [{
     label: 'Monaize ICO App',
     submenu: [
-        { label: 'About Monaize ICO App', selector: 'orderFrontStandardAboutPanel:' },
-        { label: 'Terms and Conditions', click: function () { termsAndConditions() } },
-        { label: 'Disclamer', click: function () { disclamer() } },
-        { label: 'Monaize ICO WebSite', click: function () { shell.openExternal('https://monaize.com/#/uk/ico'); } },
+        { label: 'About Monaize ICO App', click: function () { aboutView() } },
+        // { label: 'Terms and Conditions', click: function () { termsAndConditions() } },
+        // { label: 'Disclamer', click: function () { disclamer() } },
+        // { label: 'Monaize ICO WebSite', click: function () { shell.openExternal('https://monaize.com/#/uk/ico'); } },
         { type: 'separator' },
         { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); } },
     ] }, {

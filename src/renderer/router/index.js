@@ -23,8 +23,7 @@ import CreatePassphrase from '@/components/CreatePassphrase/CreatePassphrase.vue
 import WalletView from '@/components/WalletViews/WalletView.vue';
 import Balance from '@/components/WalletViews/Balance/Balance.vue';
 import Withdraw from '@/components/WalletViews/Withdraw/Withdraw.vue';
-import TermsAndConditions from '@/components/TermsAndConditions/TermsAndConditions.vue';
-import Disclamer from '@/components/Disclamer/Disclamer.vue';
+import About from '@/components/About/About.vue';
 
 Vue.use(Router);
 
@@ -69,12 +68,8 @@ export default new Router({
       ],
     },
     {
-      path: '/termsAndConditions',
-      component: TermsAndConditions,
-    },
-    {
-      path: '/disclamer',
-      component: Disclamer,
+      path: '/about',
+      component: About,
     },
     {
       path: '*',
