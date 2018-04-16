@@ -10,11 +10,9 @@ const actions = {
       .then(transactionList => {
         return bluebird.mapSeries(transactionList, transaction => {
           commit('DELETE_PENDING_TX', transaction.tx_hash, { root: true });
-          console.log("Delete: ", transaction.tx_hash);
           return decodeTx(wallet, transaction, rootGetters.isTestMode)
             .then((transactionDetail) => {
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
-              console.log("Add: ", transaction.tx_hash);
               dispatch('buildSwapList', { root: true });
             })
             .catch(() => { })
