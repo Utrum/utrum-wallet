@@ -30,12 +30,14 @@ const filterExistingTransactions = (walletTxs, txs) => {
   return _
     .filter(txs, (tx) => {
       let found = false;
-      _.forEach(walletTxs, (walletTx) => {
-        if (walletTx.tx_hash === tx.tx_hash) {
-          found = true;
-          return false;
-        }
-      });
+      if (tx.height > 0) {
+        _.forEach(walletTxs, (walletTx) => {
+          if (walletTx.tx_hash === tx.tx_hash) {
+            found = true;
+            return false;
+          }
+        });
+      }
       return !found;
     })
   ;
@@ -51,7 +53,9 @@ const decodeTx = (wallet, tx, isTestMode) => {
       }
       return transaction;
     })
-    .catch(() => { })
+    .catch((error) => {
+      console.log("ErrorDecode: ", error);
+    })
   ;
 };
 
