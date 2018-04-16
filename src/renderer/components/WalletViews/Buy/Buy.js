@@ -39,7 +39,7 @@ export default {
     this.selectFee = this.fees[0].label;
   },
   created() {
-    this.select = this.$store.getters.isTestMode ? 'TESTBTC' : 'BTC';
+    this.select = this.$store.getters.isTestMode ? 'TESTKMD' : 'KMD';
   },
   methods: {
     numberWithSpaces(x) {
