@@ -1,6 +1,7 @@
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionBuyHistory from '@/components/TransactionBuyHistory/TransactionBuyHistory.vue';
+import { BigNumber } from 'bignumber.js';
 
 const sb = require('satoshi-bitcoin');
 const { clipboard } = require('electron');
@@ -28,8 +29,8 @@ export default {
       ],
       selectedFee: null,
       select: '',
-      packageMNZ: 100000000000,
-      packageIncrement: 50000000000,
+      packageMNZ: BigNumber(sb.toSatoshi(this.$store.getters.getConfig.minBuy)),
+      packageIncrement: BigNumber(sb.toSatoshi(this.$store.getters.getConfig.minBuy)),
       coupon: '',
       timer: true,
     };
@@ -102,20 +103,20 @@ export default {
       } else if (this.select.indexOf('KMD') >= 0) {
         price = sb.toSatoshi(priceMNZ / priceKMD);
       }
-      return sb.toBitcoin((sb.toBitcoin(this.packageMNZ) * price).toFixed(0));
+      return sb.toBitcoin((this.getPackage * price).toFixed(0));
     },
     valueChange(value) {
       this.select = value;
       this.prepareTx();
     },
     incrementPackage() {
-      if (this.packageMNZ <= this.getMaxBuy - this.packageIncrement) {
-        this.packageMNZ += this.packageIncrement;
+      if (sb.toSatoshi(this.getPackage) <= this.getMaxBuy - this.packageIncrement) {
+        this.getPackage += sb.toBitcoin(this.packageIncrement.toNumber());
       }
     },
     decrementPackage() {
-      if (this.packageMNZ > this.getMinBuy) {
-        this.packageMNZ -= this.packageIncrement;
+      if (sb.toSatoshi(this.getPackage) > this.getMinBuy) {
+        this.getPackage -= sb.toBitcoin(this.packageIncrement.toNumber());
       }
     },
     async buyMnz() {
@@ -169,18 +170,14 @@ export default {
       ;
       this.hideModal();
     },
-  },
-  watch: {
-    packageMNZ: (newValue) => {
-      const value = Number(newValue);
-
-      if (value <= this.getMaxBuy - this.packageIncrement) {
-        this.packageMNZ = value;
-      } else {
-        this.packageMNZ = this.getMaxBuy;
+    checkMin() {
+      if (sb.toSatoshi(this.getPackage) === this.getMinBuy) {
+        return 'invisible';
       }
-      if (value <= 0) {
-        this.packageMNZ = 0;
+    },
+    checkMax() {
+      if (sb.toSatoshi(this.getPackage) === this.getMaxBuy) {
+        return 'invisible';
       }
     },
   },
@@ -198,19 +195,24 @@ export default {
     },
     getPackage: {
       get: function () {
-        return sb.toBitcoin(this.packageMNZ);
+        return sb.toBitcoin(BigNumber(this.packageMNZ).toNumber());
       },
       set: function (newValue) {
-        const value = sb.toSatoshi(newValue);
+        const value = BigNumber(sb.toSatoshi(newValue));
+        const maxBuy = this.getMaxBuy;
+        const minBuy = this.getMinBuy;
 
-        if (value >= this.getMaxBuy) {
-          this.packageMNZ = this.getMaxBuy;
-        } else if (value <= this.getMinBuy || value <= 0) {
-          this.packageMNZ = this.getMinBuy;
+        if (value > maxBuy) {
+          this.packageMNZ = BigNumber(maxBuy);
+        } else if (value < minBuy) {
+          this.packageMNZ = BigNumber(minBuy);
         } else {
-          this.packageMNZ = value;
+          this.packageMNZ = BigNumber(value);
         }
       },
+    },
+    getPlaceholder() {
+      return `Amount ${this.mnzTicker}...`;
     },
     getMinBuy() {
       return sb.toSatoshi(this.$store.getters.getConfig.minBuy);

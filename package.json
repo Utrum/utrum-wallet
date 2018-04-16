@@ -67,6 +67,7 @@
     "@monaize/eslint-config-monaize": "0.0.3",
     "app-root-dir": "^1.0.2",
     "axios": "^0.16.1",
+    "bignumber.js": "^6.0.0",
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-lib-zcash": "^3.3.2",
