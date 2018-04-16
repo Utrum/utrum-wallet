@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import bitcoinjs from 'bitcoinjs-lib';
 
+const sb = require('satoshi-bitcoin');
+
 const state = {
   associatedTxs: [],
   pendingSwaps: [],
@@ -21,18 +23,24 @@ const mutations = {
 };
 
 const actions = {
-  getNewBuyAddress({ rootGetters }, wallet) {
-    let pubKeyAddress;
-    _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
-      if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
-        pubKeyAddress = value;
-      }
-    });
+  prepareTransaction({ commit, rootGetters }, { wallet, amount, blocks = 6, data = null }) {
+    let address;
+    let utxos;
 
-    const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
-    const index = Math.floor(Math.random() * 10000);
-    const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
-    return address;
+    return getNewBuyAddress(wallet, rootGetters.getPubKeysBuy)
+      .then((_address) => {
+        address = _address;
+      })
+      .then(() => wallet.electrum.listUnspent(wallet.address))
+      .then((_utxos) => {
+        utxos = _utxos;
+        return getEstimatedFees(wallet, blocks);
+      })
+      .then((_feeRate) => {
+        const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, sb.toSatoshi(_feeRate), data);
+        return { inputs, outputs, fee, dataScript, amount };
+      })
+    ;
   },
   buyAsset({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
     return dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript })
@@ -60,34 +68,12 @@ const actions = {
     commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
   },
 };
-
-const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
-  const associateArray = [];
-  if (cryptoTxs != null && mnzTxs != null) {
-    _.forEach(mnzTxs, (mnzTx) => {
-      if (mnzTx.origin != null) {
-        const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
-          if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
-            return true;
-          }
-          return false;
-        });
-        if (cryptoTxsForMnz[0]) {
-          associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
-        }
-      }
-    });
-  }
-  return associateArray;
-};
-
 // key: 'cryptoTx.time',
 // key: 'ticker',
 // key: 'mnzTx',
 // key: 'price41',
 // key: 'price4all',
 // key: 'status',
-
 const getters = {
   icoWillBegin: (state, getters, rootState) => {
     const config = rootState.Conf.config;
@@ -126,6 +112,50 @@ const getters = {
   },
 };
 
+// New recipient ICO address
+const getNewBuyAddress = (wallet, pubKeysBuy) => {
+  let pubKeyAddress;
+  _.mapKeys(pubKeysBuy, (value, key) => {
+    if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
+      pubKeyAddress = value;
+    }
+  });
+
+  const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
+  const index = Math.floor(Math.random() * 10000);
+  const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
+  return address;
+};
+
+const getEstimatedFees = (wallet, blocks) => {
+  if (wallet.ticker.indexOf('KMD') >= 0) {
+    return 0.0001;
+  }
+  return wallet.electrum.getEstimateFee(blocks);
+};
+
+// Swap association
+const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
+  const associateArray = [];
+  if (cryptoTxs != null && mnzTxs != null) {
+    _.forEach(mnzTxs, (mnzTx) => {
+      if (mnzTx.origin != null) {
+        const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
+          if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
+            return true;
+          }
+          return false;
+        });
+        if (cryptoTxsForMnz[0]) {
+          associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
+        }
+      }
+    });
+  }
+  return associateArray;
+};
+
+// Local management
 const generateLocalTx = (address, amount, txHash) => {
   const nowDate = new Date();
   const now = (nowDate.getTime() / 1000) + (nowDate.getTimezoneOffset() * 60);

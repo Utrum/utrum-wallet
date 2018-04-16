@@ -70,12 +70,14 @@ export default {
       });
     },
     prepareTx() {
-      return this.estimateTransaction().then(tx => {
-        if (tx.outputs != null && tx.inputs != null) {
-          this.estimatedFee = sb.toBitcoin(tx.fee);
-        }
-        this.preparedTx = tx;
-      });
+      return this.estimateTransaction()
+        .then(tx => {
+          if (tx.outputs != null && tx.inputs != null) {
+            this.estimatedFee = sb.toBitcoin(tx.fee);
+          }
+          this.preparedTx = tx;
+        })
+      ;
     },
     estimateTransaction() {
       return this.$store.dispatch('prepareTransaction', {

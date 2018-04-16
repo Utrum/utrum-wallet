@@ -93,15 +93,10 @@ export default {
     onDecode(content) {
       if (this.checkAddress(content)) {
         this.withdraw.address = content;
-        this.$toasted.show('Address inserted !', {
-          icon: 'done',
-        });
+        this.$toasted.show('Address inserted !', { icon: 'done' });
       } else {
-        this.$toasted.error('This address is not valid !', {
-          icon: 'error',
-        });
+        this.$toasted.error('This address is not valid !', { icon: 'error' });
       }
-
       this.readingQRCode = false;
       this.$root.$emit('bv::hide::modal', 'readerQrcodeModal');
     },

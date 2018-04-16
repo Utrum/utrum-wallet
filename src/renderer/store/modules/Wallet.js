@@ -132,34 +132,6 @@ const actions = {
       .catch(() => {})
     ;
   },
-  prepareTransaction({ commit, dispatch }, { wallet, amount, blocks = 6, data = null }) {
-
-    let address;
-    let utxos;
-
-    return dispatch('getNewBuyAddress', wallet).then((_address) => {
-      address = _address;
-    })
-    .then(() => wallet.electrum.listUnspent(wallet.address))
-    .then((_utxos) => {
-      utxos = _utxos;
-      if (wallet.ticker.indexOf('BTC') >= 0) {
-        return wallet.electrum.getEstimateFee(blocks);
-      }
-      return 0.0001;
-    })
-    .then((_feeRate) => {
-      const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, sb.toSatoshi(_feeRate), data);
-      return {
-        inputs,
-        outputs,
-        dataScript,
-        fee,
-        amount,
-      };
-    })
-    ;
-  },
   sendTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
     const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
     const txId = buildedTx.getId();
