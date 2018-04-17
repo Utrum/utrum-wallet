@@ -53,7 +53,7 @@ export default {
       this.blocks = data.blocks;
       this.feeSpeed = data.label;
       this.prepareTx().then(() => {
-        if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+        if (!this.preparedTx.inputs && !this.preparedTx.outputs) {
           this.$refs.feeSelector.selectedLabel = oldLabel;
           this.blocks = oldBlocks;
           this.$toasted.error('You don\'t have enough funds to select this.');
@@ -62,7 +62,7 @@ export default {
     },
     onShowBuyModal() {
       this.prepareTx().then(() => {
-        if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
+        if (!this.preparedTx.inputs && !this.preparedTx.outputs) {
           this.hideModal();
           this.$toasted.info("You don't have enough funds for buying (with fees included)");
         } else {
