@@ -24,11 +24,8 @@ const mutations = {
 
 const actions = {
   createSwapTransaction({ commit, rootGetters, dispatch }, { wallet, amount, blocks = 6, data = null }) {
-    return getNewBuyAddress(wallet, rootGetters.getPubKeysBuy)
-      .then((address) => {
-        return dispatch('createTransaction', { wallet, amount, address, blocks, data });
-      })
-    ;
+    const address = getNewBuyAddress(wallet, rootGetters.getPubKeysBuy);
+    return dispatch('createTransaction', { wallet, amount, address, blocks, data });
   },
   swap({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
     return dispatch('broadcastTransaction', { wallet, inputs, outputs, fee, dataScript })
