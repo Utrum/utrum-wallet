@@ -74,7 +74,8 @@ const getters = {
     // So that the shift with GMT is already taken into account.
     const now = new Date().getTime() / 1000;
     return now < config.icoEndDate &&
-           now > config.icoStartDate;
+           now > config.icoStartDate &&
+           config.progress < 1;
   },
   icoStartDate: (state, getters, rootState) => {
     return rootState.Conf.config.icoStartDate;
