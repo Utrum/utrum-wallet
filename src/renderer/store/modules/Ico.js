@@ -23,27 +23,15 @@ const mutations = {
 };
 
 const actions = {
-  prepareTransaction({ commit, rootGetters }, { wallet, amount, blocks = 6, data = null }) {
-    let address;
-    let utxos;
-
+  createSwapTransaction({ commit, rootGetters, dispatch }, { wallet, amount, blocks = 6, data = null }) {
     return getNewBuyAddress(wallet, rootGetters.getPubKeysBuy)
-      .then((_address) => {
-        address = _address;
-      })
-      .then(() => wallet.electrum.listUnspent(wallet.address))
-      .then((_utxos) => {
-        utxos = _utxos;
-        return getEstimatedFees(wallet, blocks);
-      })
-      .then((_feeRate) => {
-        const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, sb.toSatoshi(_feeRate), data);
-        return { inputs, outputs, fee, dataScript, amount };
+      .then((address) => {
+        return dispatch('createTransaction', { wallet, amount, address, blocks, data });
       })
     ;
   },
-  buyAsset({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
-    return dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript })
+  swap({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
+    return dispatch('broadcastTransaction', { wallet, inputs, outputs, fee, dataScript })
       .then((sentTxId) => {
         const localCryptoTx = generateLocalTx(wallet.address, amount, sentTxId);
         const localMnzTx = generateLocalMnz(amountMnz);
@@ -125,13 +113,6 @@ const getNewBuyAddress = (wallet, pubKeysBuy) => {
   const index = Math.floor(Math.random() * 10000);
   const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
   return address;
-};
-
-const getEstimatedFees = (wallet, blocks) => {
-  if (wallet.ticker.indexOf('KMD') >= 0) {
-    return 0.0001;
-  }
-  return wallet.electrum.getEstimateFee(blocks);
 };
 
 // Swap association

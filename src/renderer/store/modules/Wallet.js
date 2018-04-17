@@ -74,7 +74,6 @@ const mutations = {
     state.isUpate = isUpdate;
   },
   ADD_TX(state, { ticker, newTx }) {
-    // state.wallets[ticker].txs.unshift(newTx);
     let found = false;
     _.filter(state.wallets[ticker].txs, (tx) => {
       if (tx.tx_hash === newTx.tx_hash) {
@@ -132,7 +131,21 @@ const actions = {
       .catch(() => {})
     ;
   },
-  sendTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
+  createTransaction({ commit, rootGetters }, { wallet, amount, address, blocks = 6, data = null }) {
+    let utxos;
+
+    return wallet.electrum.listUnspent(wallet.address)
+      .then((_utxos) => {
+        utxos = _utxos;
+        return getEstimatedFees(wallet, blocks);
+      })
+      .then((feeRate) => {
+        const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, sb.toSatoshi(feeRate), data);
+        return { inputs, outputs, fee, dataScript, amount };
+      })
+    ;
+  },
+  broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
     const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
     const txId = buildedTx.getId();
 
@@ -209,6 +222,13 @@ const actions = {
       }
     }, rand * 1000);
   },
+};
+
+const getEstimatedFees = (wallet, blocks) => {
+  if (wallet.ticker.indexOf('KMD') >= 0) {
+    return 0.0001;
+  }
+  return wallet.electrum.getEstimateFee(blocks);
 };
 
 export default {

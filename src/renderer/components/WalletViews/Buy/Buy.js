@@ -60,32 +60,16 @@ export default {
       });
     },
     onShowBuyModal() {
-      this.prepareTx().then(() => {
-        if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
-          this.hideModal();
-          this.$toasted.info("You don't have enough funds for buying (with fees included)");
-        } else {
-          this.$refs.confirmBuy.show();
-        }
-      });
-    },
-    prepareTx() {
-      return this.estimateTransaction()
-        .then(tx => {
-          if (tx.outputs != null && tx.inputs != null) {
-            this.estimatedFee = sb.toBitcoin(tx.fee);
+      this.prepareTx()
+        .then((tx) => {
+          if (tx.inputs == null && tx.outputs == null) {
+            this.hideModal();
+            this.$toasted.info("You don't have enough funds for buying (with fees included)");
+          } else {
+            this.$refs.confirmBuy.show();
           }
-          this.preparedTx = tx;
         })
       ;
-    },
-    estimateTransaction() {
-      return this.$store.dispatch('prepareTransaction', {
-        wallet: this.wallet,
-        amount: sb.toSatoshi(this.getTotalPrice),
-        blocks: this.blocks,
-        data: this.coupon,
-      });
     },
     hideModal() {
       this.$refs.confirmBuy.hide();
@@ -120,56 +104,46 @@ export default {
         this.packageMNZ -= this.packageIncrement;
       }
     },
-    async buyMnz() {
-      this.timer = false;
-      setTimeout(() => {
-        this.timer = true;
-      }, 3000);
-
-      await this.prepareTx();
-      const payload = {
+    prepareTx() {
+      const object = {
         wallet: this.wallet,
-        ...this.preparedTx,
-        amountMnz: sb.toSatoshi(this.totalMnzWitBonus),
+        amount: sb.toSatoshi(this.getTotalPrice),
+        blocks: this.blocks,
+        data: this.coupon,
       };
 
-      this.$store
-        .dispatch('buyAsset', payload)
-        .then(response => {
-          if (response.error) {
-            this.$toasted.error(response.error);
-            Promise.reject();
+      return this.$store.dispatch('createSwapTransaction', object)
+        .then((tx) => {
+          if (tx != null &&
+              tx.outputs != null &&
+              tx.inputs != null) {
+            this.estimatedFee = sb.toBitcoin(tx.fee);
           }
-          this.$toasted.show('Transaction sent !', {
-            icon: 'done',
-            action: [
-              {
-                icon: 'close',
-                onClick: (e, toastObject) => {
-                  toastObject.goAway(0);
-                },
-              },
-              {
-                icon: 'content_copy',
-                onClick: (e, toastObject) => {
-                  toastObject.goAway(0);
-                  clipboard.writeText(response);
-                  setTimeout(() => {
-                    this.$toasted.show('Copied !', {
-                      duration: 1000,
-                      icon: 'done',
-                    });
-                  }, 800);
-                },
-              },
-            ],
-          });
+          return tx;
+        })
+      ;
+    },
+    buyMnz() {
+      this.timer = false;
+      this.hideModal();
+
+      return this.prepareTx()
+        .then((tx) => {
+          const payload = {
+            wallet: this.wallet,
+            ...tx,
+            amountMnz: sb.toSatoshi(this.totalMnzWitBonus),
+          };
+          return this.$store.dispatch('swap', payload);
+        })
+        .then((response) => {
+          alert(this.$toasted.show, response);
+          setTimeout(() => { this.timer = true; }, 3000);
         })
         .catch(error => {
           this.$toasted.error(`Can't send transaction, verify your pending tx and unconfirmed balance: ${error.msg}`);
         })
       ;
-      this.hideModal();
     },
   },
   watch: {
@@ -274,8 +248,39 @@ export default {
     canBuy() {
       const mnzToBuy = this.packageMNZ;
       const balance = this.wallet.balance - this.wallet.balance_unconfirmed;
-
       return mnzToBuy <= 0 || this.totalPrice() > balance;
     },
   },
+};
+
+const alert = (alertFunction, message) => {
+  if (message.error) {
+    alertFunction('Transaction not sent !', { text: message.error });
+    return;
+  }
+
+  alertFunction('Transaction sent !', {
+    icon: 'done',
+    action: [
+      {
+        icon: 'close',
+        onClick: (e, toastObject) => {
+          toastObject.goAway(0);
+        },
+      },
+      {
+        icon: 'content_copy',
+        onClick: (e, toastObject) => {
+          toastObject.goAway(0);
+          clipboard.writeText(message);
+          setTimeout(() => {
+            this.$toasted.show('Copied !', {
+              duration: 1000,
+              icon: 'done',
+            });
+          }, 800);
+        },
+      },
+    ],
+  });
 };
