@@ -5719,9 +5719,9 @@ libqp@1.1.0:
   version "1.1.0"
   resolved "http://mon-1:4873/libqp/-/libqp-1.1.0.tgz#f5e6e06ad74b794fb5b5b66988bf728ef1dedbe8"
 
-libwallet-mnz@3.1.1:
-  version "3.1.1"
-  resolved "http://mon-1:4873/libwallet-mnz/-/libwallet-mnz-3.1.1.tgz#011e31d6d5b36d306fbb8d4a64b6591ea924bd2d"
+libwallet-mnz@3.2.2:
+  version "3.2.2"
+  resolved "http://mon-1:4873/libwallet-mnz/-/libwallet-mnz-3.2.2.tgz#85ed25944c0c57a012b47ab741808332fcc31344"
   dependencies:
     bitcoinjs-lib "^3.3.2"
     coinselect "^3.1.11"

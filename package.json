@@ -1,6 +1,6 @@
 {
   "name": "vue-dico",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "author": "Maxime Saddok <maxime@monaize.com>",
   "description": "Monaize ICO Wallet",
   "license": null,
@@ -87,7 +87,7 @@
     "js-sha256": "^0.9.0",
     "less": "^3.0.1",
     "less-loader": "^4.0.5",
-    "libwallet-mnz": "3.1.1",
+    "libwallet-mnz": "3.2.2",
     "lodash": "^4.17.5",
     "moment": "^2.22.0",
     "moment-timezone": "^0.5.14",

@@ -52,30 +52,17 @@ export default {
     };
   },
   methods: {
-    async onShowBuyModal() {
-      await this.prepareTx();
-      if (!this.preparedTx.inputs && !this.preparedTx.outputs) {
-        this.hideModal();
-        this.$toasted.info("You don't have enough funds for buying (with fees included)");
-      } else {
-        this.$refs.confirmBuy.show();
-      }
-    },
-    async estimateTransaction() {
-      return await this.$store.dispatch('prepareTransaction', {
-        wallet: this.wallet,
-        address: this.withdraw.address,
-        amount: sb.toSatoshi(this.withdraw.amount),
-        blocks: this.blocks,
-      });
-    },
-    async prepareTx() {
-      const tx = await this.estimateTransaction();
-      if (tx.alphaTx && tx.alphaTx.outputs && tx.alphaTx.inputs) {
-        this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
-      }
-      this.preparedTx = tx.alphaTx;
-      return tx;
+    onShowBuyModal() {
+      return this.prepareTx()
+        .then((tx) => {
+          if (tx.inputs == null && tx.outputs == null) {
+            this.hideModal();
+            this.$toasted.info("You don't have enough funds for buying (with fees included)");
+          } else {
+            this.$refs.confirmBuy.show();
+          }
+        })
+      ;
     },
     onChange() {
       this.prepareTx();
@@ -93,15 +80,10 @@ export default {
     onDecode(content) {
       if (this.checkAddress(content)) {
         this.withdraw.address = content;
-        this.$toasted.show('Address inserted !', {
-          icon: 'done',
-        });
+        this.$toasted.show('Address inserted !', { icon: 'done' });
       } else {
-        this.$toasted.error('This address is not valid !', {
-          icon: 'error',
-        });
+        this.$toasted.error('This address is not valid !', { icon: 'error' });
       }
-
       this.readingQRCode = false;
       this.$root.$emit('bv::hide::modal', 'readerQrcodeModal');
     },
@@ -146,43 +128,39 @@ export default {
       };
       this.select = value;
     },
+    prepareTx() {
+      const object = {
+        wallet: this.wallet,
+        address: this.withdraw.address,
+        amount: sb.toSatoshi(this.withdraw.amount),
+        blocks: this.blocks,
+      };
+
+      return this.$store.dispatch('createTransaction', object)
+        .then((tx) => {
+          if (tx != null &&
+              tx.outputs != null &&
+              tx.inputs != null) {
+            this.estimatedFee = sb.toBitcoin(tx.fee);
+          }
+          return tx;
+        })
+      ;
+    },
     withdrawFunds() {
       this.hideModal();
       if (this.canWithdraw && this.addressIsValid) {
-        this.prepareTx().then(tx => {
-          this.$store.dispatch('sendTransaction', { wallet: this.wallet, ...tx }).then(txBroadcast => {
-            if (!txBroadcast.error) {
-              this.$toasted.show('Transaction sent !', {
-                icon: 'done',
-                action: [
-                  {
-                    icon: 'close',
-                    onClick: (e, toastObject) => {
-                      toastObject.goAway(0);
-                    },
-                  },
-                  {
-                    icon: 'content_copy',
-                    onClick: (e, toastObject) => {
-                      toastObject.goAway(0);
-                      clipboard.writeText(txBroadcast);
-                      setTimeout(() => {
-                        this.$toasted.show('Copied !', {
-                          duration: 1000,
-                          icon: 'done',
-                        });
-                      }, 800);
-                    },
-                  },
-                ],
-              });
-            } else {
-              this.$toasted.error('Transaction not sent !', {
-                text: txBroadcast.error,
-              });
-            }
-          });
-        });
+        return this.prepareTx()
+          .then(tx => {
+            return this.$store.dispatch('broadcastTransaction', { wallet: this.wallet, ...tx });
+          })
+          .then((response) => {
+            alert(this.$toasted.show, response);
+          })
+          .catch(error => {
+            this.$toasted.error(`Can't send transaction: ${error.msg}`);
+          })
+        ;
       }
     },
   },
@@ -215,4 +193,36 @@ export default {
       }
     },
   },
+};
+
+const alert = (alertFunction, message) => {
+  if (message.error) {
+    alertFunction('Transaction not sent !', { text: message.error });
+    return;
+  }
+
+  alertFunction('Transaction sent !', {
+    icon: 'done',
+    action: [
+      {
+        icon: 'close',
+        onClick: (e, toastObject) => {
+          toastObject.goAway(0);
+        },
+      },
+      {
+        icon: 'content_copy',
+        onClick: (e, toastObject) => {
+          toastObject.goAway(0);
+          clipboard.writeText(message);
+          setTimeout(() => {
+            this.$toasted.show('Copied !', {
+              duration: 1000,
+              icon: 'done',
+            });
+          }, 800);
+        },
+      },
+    ],
+  });
 };
