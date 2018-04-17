@@ -65,11 +65,11 @@
 					</div>
 					<div id="package-mnz" class="row">
 						<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
-							<img :class="checkMin()" src="~@/assets/icon-less.svg"/>
+							<img :class="setInvisibleDecrement()" src="~@/assets/icon-less.svg"/>
 						</a>
 						<input id="package-value" class="col-center" v-model.number.sync="getPackage" :placeholder="getPlaceholder" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
 						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
-							<img :class="checkMax()" src="~@/assets/icon-more.svg"/>
+							<img :class="setInvisibleIncrement()" src="~@/assets/icon-more.svg"/>
 						</a>
 					</div>
 				</div>

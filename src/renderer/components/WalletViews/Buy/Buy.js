@@ -157,12 +157,12 @@ export default {
       ;
       this.hideModal();
     },
-    checkMin() {
+    setInvisibleDecrement() {
       if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() === this.getMinBuy) {
         return 'invisible';
       }
     },
-    checkMax() {
+    setInvisibleIncrement() {
       if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() === this.getMaxBuy) {
         return 'invisible';
       }
