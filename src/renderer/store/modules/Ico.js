@@ -1,12 +1,19 @@
 import * as _ from 'lodash';
 import bitcoinjs from 'bitcoinjs-lib';
+import { BigNumber } from 'bignumber.js';
+
+const satoshiNb = 100000000;
 
 const state = {
   associatedTxs: [],
   pendingSwaps: [],
+  totalPrice: 0,
 };
 
 const mutations = {
+  UPDATED_TOTAL_PRICE_FOR_COIN(state, price) {
+    state.totalPrice = price;
+  },
   UPDATE_ASSOCIATED_TXS(state, associations) {
     state.associatedTxs = associations;
   },
@@ -21,6 +28,47 @@ const mutations = {
 };
 
 const actions = {
+  getCurrentBonus({ rootGetters }, wallet) {
+    let currentBonus = 0;
+    const date = new Date().getTime() / 1000;
+    const config = rootGetters.getConfig;
+    const bonuses = config.bonuses;
+    let findDuration = true;
+
+    Object.keys(bonuses).forEach(k => {
+      if (wallet.ticker.toLowerCase().indexOf(k)) {
+        Object.keys(bonuses[k]).forEach(j => {
+          if (findDuration) {
+            const duration = bonuses[k][j].duration * 3600;
+            const value = bonuses[k][j].value;
+            const icoStart = config.icoStartDate;
+
+            if (icoStart < date && date < icoStart + duration) {
+              currentBonus = value / 100;
+              findDuration = false;
+            } else {
+              currentBonus = 0;
+            }
+          }
+        });
+      }
+    });
+    return currentBonus;
+  },
+  getTotalPriceForCoin({ commit, rootGetters }, wallet) {
+    const config = rootGetters.getConfig;
+
+    let price = 0;
+    const priceMNZ = config.coinPrices.mnz;
+    const priceKMD = config.coinPrices.kmd;
+
+    if (wallet.ticker.indexOf('BTC') >= 0) {
+      price = priceMNZ;
+    } else if (wallet.ticker.indexOf('KMD') >= 0) {
+      price = BigNumber(priceMNZ).dividedBy(priceKMD).multipliedBy(satoshiNb).decimalPlaces(8);
+    }
+    return price;
+  },
   getNewBuyAddress({ rootGetters }, wallet) {
     let pubKeyAddress;
     _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
@@ -45,7 +93,6 @@ const actions = {
     ;
   },
   buildSwapList({ commit, rootGetters }) {
-
     let cryptoTxs = [];
     let icoCoinTxs = [];
     _.map(rootGetters.enabledCoins, (coin) => {
@@ -80,13 +127,6 @@ const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
   }
   return associateArray;
 };
-
-// key: 'cryptoTx.time',
-// key: 'ticker',
-// key: 'mnzTx',
-// key: 'price41',
-// key: 'price4all',
-// key: 'status',
 
 const getters = {
   icoWillBegin: (state, getters, rootState) => {

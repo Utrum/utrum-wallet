@@ -3,8 +3,9 @@ import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionBuyHistory from '@/components/TransactionBuyHistory/TransactionBuyHistory.vue';
 import { BigNumber } from 'bignumber.js';
 
-const sb = require('satoshi-bitcoin');
 const { clipboard } = require('electron');
+
+const satoshiNb = 100000000;
 
 export default {
   name: 'buy',
@@ -29,10 +30,11 @@ export default {
       ],
       selectedFee: null,
       select: '',
-      packageMNZ: BigNumber(sb.toSatoshi(this.$store.getters.getConfig.minBuy)),
-      packageIncrement: BigNumber(sb.toSatoshi(this.$store.getters.getConfig.minBuy)),
+      packageMNZ: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb).toNumber(),
+      packageIncrement: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb).toNumber(),
       coupon: '',
       timer: true,
+      totalPriceFromCoin: 0,
     };
   },
   mounted() {
@@ -73,7 +75,7 @@ export default {
     prepareTx() {
       return this.estimateTransaction().then(tx => {
         if (tx.outputs != null && tx.inputs != null) {
-          this.estimatedFee = sb.toBitcoin(tx.fee);
+          this.estimatedFee = BigNumber(tx.fee).dividedBy(satoshiNb).toNumber();
         }
         this.preparedTx = tx;
       });
@@ -81,7 +83,7 @@ export default {
     estimateTransaction() {
       return this.$store.dispatch('prepareTransaction', {
         wallet: this.wallet,
-        amount: sb.toSatoshi(this.getTotalPrice),
+        amount: BigNumber(this.totalPriceFromCoin).multipliedBy(satoshiNb).toNumber(),
         blocks: this.blocks,
         data: this.coupon,
       });
@@ -93,30 +95,28 @@ export default {
       this.object = payload;
     },
     totalPrice() {
-      const config = this.getConfig;
-
-      let price = 0;
-      const priceMNZ = config.coinPrices.mnz;
-      const priceKMD = config.coinPrices.kmd;
-      if (this.select.indexOf('BTC') >= 0) {
-        price = priceMNZ;
-      } else if (this.select.indexOf('KMD') >= 0) {
-        price = sb.toSatoshi(priceMNZ / priceKMD);
-      }
-      return sb.toBitcoin((this.getPackage * price).toFixed(0));
+      this.$store.dispatch('getTotalPriceForCoin', this.wallet).then((price) => {
+        const totalPrice = BigNumber(this.getPackage)
+        .multipliedBy(price)
+        .dividedBy(satoshiNb)
+        .decimalPlaces(8)
+        .toNumber();
+        this.totalPriceFromCoin = totalPrice;
+        return totalPrice;
+      });
     },
     valueChange(value) {
       this.select = value;
       this.prepareTx();
     },
     incrementPackage() {
-      if (sb.toSatoshi(this.getPackage) <= this.getMaxBuy - this.packageIncrement) {
-        this.getPackage += sb.toBitcoin(this.packageIncrement.toNumber());
+      if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() <= this.getMaxBuy - this.packageIncrement) {
+        this.getPackage += BigNumber(this.packageIncrement).dividedBy(satoshiNb).toNumber();
       }
     },
     decrementPackage() {
-      if (sb.toSatoshi(this.getPackage) > this.getMinBuy) {
-        this.getPackage -= sb.toBitcoin(this.packageIncrement.toNumber());
+      if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() > this.getMinBuy) {
+        this.getPackage -= BigNumber(this.packageIncrement).dividedBy(satoshiNb).toNumber();
       }
     },
     async buyMnz() {
@@ -129,7 +129,7 @@ export default {
       const payload = {
         wallet: this.wallet,
         ...this.preparedTx,
-        amountMnz: sb.toSatoshi(this.totalMnzWitBonus),
+        amountMnz: BigNumber(this.totalMnzWitBonus).multipliedBy(satoshiNb).toNumber(),
       };
 
       this.$store
@@ -171,12 +171,12 @@ export default {
       this.hideModal();
     },
     checkMin() {
-      if (sb.toSatoshi(this.getPackage) === this.getMinBuy) {
+      if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() === this.getMinBuy) {
         return 'invisible';
       }
     },
     checkMax() {
-      if (sb.toSatoshi(this.getPackage) === this.getMaxBuy) {
+      if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() === this.getMaxBuy) {
         return 'invisible';
       }
     },
@@ -195,10 +195,10 @@ export default {
     },
     getPackage: {
       get: function () {
-        return sb.toBitcoin(BigNumber(this.packageMNZ).toNumber());
+        return BigNumber(this.packageMNZ).dividedBy(satoshiNb).toNumber();
       },
       set: function (newValue) {
-        const value = BigNumber(sb.toSatoshi(newValue));
+        const value = BigNumber(newValue).multipliedBy(satoshiNb).toNumber();
         const maxBuy = this.getMaxBuy;
         const minBuy = this.getMinBuy;
 
@@ -215,10 +215,10 @@ export default {
       return `Amount ${this.mnzTicker}...`;
     },
     getMinBuy() {
-      return sb.toSatoshi(this.$store.getters.getConfig.minBuy);
+      return BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb).toNumber();
     },
     getMaxBuy() {
-      return sb.toSatoshi(this.$store.getters.getConfig.maxBuy);
+      return BigNumber(this.$store.getters.getConfig.maxBuy).multipliedBy(satoshiNb).toNumber();
     },
     getConfig() {
       return this.$store.getters.getConfig;
@@ -242,34 +242,13 @@ export default {
       return this.totalPrice();
     },
     getTotalPriceWithFee() {
-      return (this.getTotalPrice + this.estimatedFee).toFixed(8);
+      return (this.totalPriceFromCoin + this.estimatedFee).toFixed(8);
     },
     isBonus() {
-      const date = new Date().getTime() / 1000;
-      const config = this.$store.getters.getConfig;
-      const bonuses = config.bonuses;
-      let findDuration = true;
-
-      Object.keys(bonuses).forEach(k => {
-        if (this.select.toLowerCase() === k) {
-          Object.keys(bonuses[k]).forEach(j => {
-            if (findDuration) {
-              const duration = bonuses[k][j].duration * 3600;
-              const value = bonuses[k][j].value;
-              const icoStart = config.icoStartDate;
-
-              if (icoStart < date && date < icoStart + duration) {
-                this.currentBonus = value / 100;
-                findDuration = false;
-              } else {
-                this.currentBonus = 0;
-              }
-            }
-          });
-        }
+      this.$store.dispatch('getCurrentBonus', this.wallet).then((bonus) => {
+        this.currentBonus = bonus;
+        return this.currentBonus !== 0;
       });
-
-      return this.currentBonus !== 0;
     },
     canBuy() {
       const mnzToBuy = this.packageMNZ;
