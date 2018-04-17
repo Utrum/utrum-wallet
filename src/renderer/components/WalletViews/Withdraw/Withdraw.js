@@ -52,30 +52,34 @@ export default {
     };
   },
   methods: {
-    async onShowBuyModal() {
-      await this.prepareTx();
-      if (!this.preparedTx.inputs && !this.preparedTx.outputs) {
-        this.hideModal();
-        this.$toasted.info("You don't have enough funds for buying (with fees included)");
-      } else {
-        this.$refs.confirmBuy.show();
-      }
+    onShowBuyModal() {
+      return this.prepareTx()
+        .then((tx) => {
+          if (tx.alphaTx.inputs == null && tx.alphaTx.outputs == null) {
+            this.hideModal();
+            this.$toasted.info("You don't have enough funds for buying (with fees included)");
+          } else {
+            this.$refs.confirmBuy.show();
+          }
+        })
+      ;
     },
-    async estimateTransaction() {
-      return await this.$store.dispatch('prepareTransaction', {
+    prepareTx() {
+      const object = {
         wallet: this.wallet,
         address: this.withdraw.address,
         amount: sb.toSatoshi(this.withdraw.amount),
         blocks: this.blocks,
-      });
-    },
-    async prepareTx() {
-      const tx = await this.estimateTransaction();
-      if (tx.alphaTx && tx.alphaTx.outputs && tx.alphaTx.inputs) {
-        this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
-      }
-      this.preparedTx = tx.alphaTx;
-      return tx;
+      };
+
+      return this.$store.dispatch('prepareTransaction', object)
+        .then((tx) => {
+          if (tx.alphaTx && tx.alphaTx.outputs && tx.alphaTx.inputs) {
+            this.estimatedFee = sb.toBitcoin(tx.alphaTx.fee);
+          }
+          return tx;
+        })
+      ;
     },
     onChange() {
       this.prepareTx();
@@ -144,40 +148,42 @@ export default {
     withdrawFunds() {
       this.hideModal();
       if (this.canWithdraw && this.addressIsValid) {
-        this.prepareTx().then(tx => {
-          this.$store.dispatch('sendTransaction', { wallet: this.wallet, ...tx }).then(txBroadcast => {
-            if (!txBroadcast.error) {
-              this.$toasted.show('Transaction sent !', {
-                icon: 'done',
-                action: [
-                  {
-                    icon: 'close',
-                    onClick: (e, toastObject) => {
-                      toastObject.goAway(0);
+        this.prepareTx()
+          .then(tx => {
+            this.$store.dispatch('sendTransaction', { wallet: this.wallet, ...tx }).then(txBroadcast => {
+              if (!txBroadcast.error) {
+                this.$toasted.show('Transaction sent !', {
+                  icon: 'done',
+                  action: [
+                    {
+                      icon: 'close',
+                      onClick: (e, toastObject) => {
+                        toastObject.goAway(0);
+                      },
                     },
-                  },
-                  {
-                    icon: 'content_copy',
-                    onClick: (e, toastObject) => {
-                      toastObject.goAway(0);
-                      clipboard.writeText(txBroadcast);
-                      setTimeout(() => {
-                        this.$toasted.show('Copied !', {
-                          duration: 1000,
-                          icon: 'done',
-                        });
-                      }, 800);
+                    {
+                      icon: 'content_copy',
+                      onClick: (e, toastObject) => {
+                        toastObject.goAway(0);
+                        clipboard.writeText(txBroadcast);
+                        setTimeout(() => {
+                          this.$toasted.show('Copied !', {
+                            duration: 1000,
+                            icon: 'done',
+                          });
+                        }, 800);
+                      },
                     },
-                  },
-                ],
-              });
-            } else {
-              this.$toasted.error('Transaction not sent !', {
-                text: txBroadcast.error,
-              });
-            }
-          });
-        });
+                  ],
+                });
+              } else {
+                this.$toasted.error('Transaction not sent !', {
+                  text: txBroadcast.error,
+                });
+              }
+            });
+          })
+        ;
       }
     },
   },
