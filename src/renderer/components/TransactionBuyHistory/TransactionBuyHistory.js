@@ -1,7 +1,9 @@
 import ExplorerLink from '@/components/Utils/ExplorerLink/ExplorerLink.vue';
+import { BigNumber } from 'bignumber.js';
 
-const sb = require('satoshi-bitcoin');
 const moment = require('moment');
+
+const satoshiNb = 100000000;
 
 
 export default {
@@ -29,7 +31,7 @@ export default {
   },
   methods: {
     satoshiToBitcoin(amount) {
-      return sb.toBitcoin(amount);
+      return BigNumber(amount).dividedBy(satoshiNb).toNumber();
     },
     getColorAmount(amount) {
       return (amount > 0) ? 'positiveColor' : 'negativeColor';
@@ -46,7 +48,7 @@ export default {
       return Number(Math.abs(row.item.cryptoAmount / row.item.mnzAmount).toFixed(8));
     },
     getTotalPrice(row) {
-      return sb.toBitcoin(Math.abs(row.item.cryptoAmount));
+      return BigNumber(Math.abs(row.item.cryptoAmount)).dividedBy(satoshiNb).toNumber();
     },
   },
   computed: {

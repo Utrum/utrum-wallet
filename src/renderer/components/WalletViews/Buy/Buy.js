@@ -17,7 +17,6 @@ export default {
   data() {
     return {
       searchable: false,
-      currentBonus: 0,
       blocks: 36,
       fee: 0,
       estimatedFee: 0,
@@ -30,11 +29,10 @@ export default {
       ],
       selectedFee: null,
       select: '',
-      packageMNZ: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb).toNumber(),
-      packageIncrement: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb).toNumber(),
+      packageMNZ: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb),
+      packageIncrement: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb),
       coupon: '',
       timer: true,
-      totalPriceFromCoin: 0,
     };
   },
   mounted() {
@@ -83,7 +81,7 @@ export default {
     estimateTransaction() {
       return this.$store.dispatch('prepareTransaction', {
         wallet: this.wallet,
-        amount: BigNumber(this.totalPriceFromCoin).multipliedBy(satoshiNb).toNumber(),
+        amount: BigNumber(this.getTotalPrice).multipliedBy(satoshiNb).toNumber(),
         blocks: this.blocks,
         data: this.coupon,
       });
@@ -93,17 +91,6 @@ export default {
     },
     methodToRunOnSelect(payload) {
       this.object = payload;
-    },
-    totalPrice() {
-      this.$store.dispatch('getTotalPriceForCoin', this.wallet).then((price) => {
-        const totalPrice = BigNumber(this.getPackage)
-        .multipliedBy(price)
-        .dividedBy(satoshiNb)
-        .decimalPlaces(8)
-        .toNumber();
-        this.totalPriceFromCoin = totalPrice;
-        return totalPrice;
-      });
     },
     valueChange(value) {
       this.select = value;
@@ -129,7 +116,7 @@ export default {
       const payload = {
         wallet: this.wallet,
         ...this.preparedTx,
-        amountMnz: BigNumber(this.totalMnzWitBonus).multipliedBy(satoshiNb).toNumber(),
+        amountMnz: this.totalMnzWitBonus,
       };
 
       this.$store
@@ -191,7 +178,7 @@ export default {
         .map(coin => coin.ticker);
     },
     totalMnzWitBonus() {
-      return this.getPackage + (this.getPackage * this.currentBonus);
+      return this.packageMNZ.plus(this.packageMNZ.multipliedBy(this.getCurrentBonus));
     },
     getPackage: {
       get: function () {
@@ -239,22 +226,23 @@ export default {
       return this.$store.getters.getWalletByTicker(this.select).coin.name;
     },
     getTotalPrice() {
-      return this.totalPrice();
+      return this.packageMNZ.dividedBy(satoshiNb)
+      .multipliedBy(this.$store.getters.getTotalPrice(this.wallet)).dividedBy(satoshiNb).toFixed(8);
     },
     getTotalPriceWithFee() {
-      return (this.totalPriceFromCoin + this.estimatedFee).toFixed(8);
+      return BigNumber(this.getTotalPrice).plus(this.estimatedFee).toFixed(8);
+    },
+    getCurrentBonus() {
+      return this.$store.getters.getCurrentBonus(this.wallet);
     },
     isBonus() {
-      this.$store.dispatch('getCurrentBonus', this.wallet).then((bonus) => {
-        this.currentBonus = bonus;
-        return this.currentBonus !== 0;
-      });
+      return this.getCurrentBonus !== 0;
     },
     canBuy() {
       const mnzToBuy = this.packageMNZ;
       const balance = this.wallet.balance - this.wallet.balance_unconfirmed;
 
-      return mnzToBuy <= 0 || this.totalPrice() > balance;
+      return mnzToBuy <= 0 || this.getTotalPrice > balance;
     },
   },
 };
