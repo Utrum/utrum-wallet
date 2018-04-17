@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
 import bitcoinjs from 'bitcoinjs-lib';
 
-const sb = require('satoshi-bitcoin');
-
 const state = {
   associatedTxs: [],
   pendingSwaps: [],
