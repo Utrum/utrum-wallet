@@ -95,7 +95,7 @@ export default {
     prepareTx() {
       const object = {
         wallet: this.wallet,
-        amount: this.getTotalPrice.multipliedBy(satoshiNb).toFixed(8),
+        amount: this.getTotalPrice.multipliedBy(this.satoshiNb).toFixed(8),
         blocks: this.blocks,
         data: this.coupon,
       };
