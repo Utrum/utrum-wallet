@@ -164,7 +164,8 @@ export default {
         .map(coin => coin.ticker);
     },
     totalMnzWithBonus() {
-      return this.requestedNumberOfSatochisMnz.plus(this.requestedNumberOfSatochisMnz.multipliedBy(this.getCurrentBonus)).dividedBy(this.satoshiNb);
+      return this.requestedNumberOfSatochisMnz
+        .plus(this.requestedNumberOfSatochisMnz.multipliedBy(this.getCurrentBonus)).dividedBy(this.satoshiNb);
     },
     getPackage: {
       get: function () {

@@ -205,7 +205,8 @@ export default {
     },
     canWithdraw() {
       if (this.withdraw.amount != null) {
-        return (this.withdraw.amount.comparedTo(this.getSatoshisBalance) <= 0 && this.withdraw.amount.comparedTo(0) === 1 && this.addressIsValid);
+        return (this.withdraw.amount.comparedTo(this.getSatoshisBalance) <= 0 &&
+                this.withdraw.amount.comparedTo(0) === 1 && this.addressIsValid);
       }
       return false;
     },
