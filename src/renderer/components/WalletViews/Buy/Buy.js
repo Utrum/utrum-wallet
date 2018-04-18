@@ -144,12 +144,12 @@ export default {
       ;
     },
     setInvisibleDecrement() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) === 0) {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) === 0) {
         return 'invisible';
       }
     },
     setInvisibleIncrement() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy) === 0) {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy) === 0) {
         return 'invisible';
       }
     },
@@ -167,7 +167,7 @@ export default {
       return this.requestedNumberOfSatochisMnz
         .plus(this.requestedNumberOfSatochisMnz.multipliedBy(this.getCurrentBonus)).dividedBy(this.satoshiNb);
     },
-    getPackage: {
+    package: {
       get: function () {
         return this.requestedNumberOfSatochisMnz.dividedBy(this.satoshiNb);
       },
