@@ -7,13 +7,9 @@ const satoshiNb = 100000000;
 const state = {
   associatedTxs: [],
   pendingSwaps: [],
-  totalPrice: 0,
 };
 
 const mutations = {
-  UPDATED_TOTAL_PRICE_FOR_COIN(state, price) {
-    state.totalPrice = price;
-  },
   UPDATE_ASSOCIATED_TXS(state, associations) {
     state.associatedTxs = associations;
   },
@@ -95,7 +91,7 @@ const getters = {
       };
     });
   },
-  getCurrentBonus: (state, getters, rootState) => (wallet) => {
+  getCurrentBonus: (state, getters, rootState) => (ticker) => {
     let currentBonus = 0;
     const date = new Date().getTime() / 1000;
     const config = rootState.Conf.config;
@@ -104,7 +100,7 @@ const getters = {
     let findDuration = true;
 
     Object.keys(bonuses).forEach(k => {
-      if (wallet.ticker.toLowerCase().indexOf(k)) {
+      if (ticker.toLowerCase().indexOf(k)) {
         Object.keys(bonuses[k]).forEach(j => {
           if (findDuration) {
             const duration = bonuses[k][j].duration * 3600;
@@ -123,16 +119,16 @@ const getters = {
     });
     return currentBonus;
   },
-  getTotalPrice: (state, getters, rootState) => (wallet) => {
+  getTotalPrice: (state, getters, rootState) => (ticker) => {
     const config = rootState.Conf.config;
 
     let price = 0;
     const priceMNZ = config.coinPrices.mnz;
     const priceKMD = config.coinPrices.kmd;
 
-    if (wallet.ticker.indexOf('BTC') >= 0) {
+    if (ticker.indexOf('BTC') >= 0) {
       price = BigNumber(priceMNZ);
-    } else if (wallet.ticker.indexOf('KMD') >= 0) {
+    } else if (ticker.indexOf('KMD') >= 0) {
       price = BigNumber(priceMNZ).dividedBy(priceKMD).multipliedBy(satoshiNb);
     }
     return price;

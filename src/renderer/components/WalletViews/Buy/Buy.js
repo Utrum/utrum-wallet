@@ -203,13 +203,13 @@ export default {
     },
     getTotalPrice() {
       return this.packageMNZ.dividedBy(satoshiNb)
-      .multipliedBy(this.$store.getters.getTotalPrice(this.wallet)).dividedBy(satoshiNb).toFixed(8);
+      .multipliedBy(this.$store.getters.getTotalPrice(this.wallet.ticker)).dividedBy(satoshiNb).toFixed(8);
     },
     getTotalPriceWithFee() {
       return BigNumber(this.getTotalPrice).plus(this.estimatedFee).toFixed(8);
     },
     getCurrentBonus() {
-      return this.$store.getters.getCurrentBonus(this.wallet);
+      return this.$store.getters.getCurrentBonus(this.wallet.ticker);
     },
     isBonus() {
       return this.getCurrentBonus !== 0;
