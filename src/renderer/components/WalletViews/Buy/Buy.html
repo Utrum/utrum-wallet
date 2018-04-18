@@ -67,7 +67,7 @@
 						<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
 							<img :class="setInvisibleDecrement()" src="~@/assets/icon-less.svg"/>
 						</a>
-						<input id="package-value" class="col-center" v-model.number.sync="getPackage" :placeholder="getPlaceholder" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
+						<input id="package-value" class="col-center" v-model.number.lazy="package" :placeholder="getPlaceholder" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
 						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
 							<img :class="setInvisibleIncrement()" src="~@/assets/icon-more.svg"/>
 						</a>
@@ -98,7 +98,7 @@
 						{{mnzTicker}}
 					</div>
 					<div class="value">
-						{{getPackage.toString()}}
+						{{package.toString()}}
 					</div>
 				</div>
 			</div>
@@ -125,7 +125,7 @@
 				<div class="row">
 					<span class="subTitle">Amount to buy</span>
 					<div class="col-custom row-main-item">
-						<span class="col-custom"><span class="selectAmount">{{getPackage.toString()}} </span>{{mnzTicker}}</span>
+						<span class="col-custom"><span class="selectAmount">{{package.toString()}} </span>{{mnzTicker}}</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>

@@ -93,12 +93,12 @@ export default {
       this.prepareTx();
     },
     incrementPackage() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy.minus(this.packageIncrement)) <= 0) {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy.minus(this.packageIncrement)) <= 0) {
         this.packageMNZ = this.packageMNZ.plus(this.packageIncrement);
       }
     },
     decrementPackage() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) > 0) {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) > 0) {
         this.packageMNZ = this.packageMNZ.minus(this.packageIncrement);
       }
     },
@@ -145,12 +145,12 @@ export default {
       ;
     },
     setInvisibleDecrement() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) === 0) {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) === 0) {
         return 'invisible';
       }
     },
     setInvisibleIncrement() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy) === 0) {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy) === 0) {
         return 'invisible';
       }
     },
@@ -167,7 +167,7 @@ export default {
     totalMnzWithBonus() {
       return this.packageMNZ.plus(this.packageMNZ.multipliedBy(this.getCurrentBonus)).dividedBy(this.satoshiNb);
     },
-    getPackage: {
+    package: {
       get: function () {
         return this.packageMNZ.dividedBy(this.satoshiNb);
       },
