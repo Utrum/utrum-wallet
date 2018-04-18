@@ -24,7 +24,7 @@
     </div>
     <div @click="withdraw.amount = getBalance" id="card-current-balance" class="col-custom">
       <div v-b-tooltip.html.left title="Click to withdraw all funds" class="row current-balance card">
-        <span id="value-current-balance">{{getBalance}}&nbsp;</span><span>{{select}}</span>
+        <span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span><span>{{select}}</span>
       </div>
     </div>
   </div>
@@ -32,7 +32,7 @@
   <div id="select-amount" class="row">
     <span class="title-content">AMOUNT</span>
       <div class="col-custom input-field row">
-        <input v-model="withdraw.amount" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="col-custom input-field" placeholder="0.0">
+        <input v-model="amount" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="col-custom input-field" placeholder="0.0">
         <span id="current-coin"> {{select}}</span>
     </div>
   </div>
@@ -74,7 +74,7 @@
         <div class="row">
           <span class="subTitle">Amount to send</span>
           <div class="col-custom row-main-item">
-            <span class="col-custom"><span class="selectAmount">{{withdraw.amount}} </span>{{select}}</span>
+            <span class="col-custom"><span class="selectAmount">{{amount}} </span>{{select}}</span>
             <div class="col-custom"><hr></div>
           </div>
         </div>
@@ -101,7 +101,7 @@
         </div>
         <div id="amountTotal" class="col-custom row">
           <div class="row">
-            <span id="totalAmount">{{getTotalPriceWithFee}}</span>
+            <span id="totalAmount">{{getTotalPriceWithFee.toString()}}</span>
             <span id="totalAmountCoin">{{select}}</span>
           </div>
         </div>
