@@ -2,8 +2,6 @@ import * as _ from 'lodash';
 import bitcoinjs from 'bitcoinjs-lib';
 import { BigNumber } from 'bignumber.js';
 
-const satoshiNb = 100000000;
-
 const state = {
   associatedTxs: [],
   pendingSwaps: [],
