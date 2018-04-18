@@ -125,7 +125,7 @@ const getters = {
     const priceKMD = config.coinPrices.kmd;
 
     if (ticker.indexOf('BTC') >= 0) {
-      price = BigNumber(priceMNZ);
+      price = BigNumber(priceMNZ).dividedBy(100000000);
     } else if (ticker.indexOf('KMD') >= 0) {
       price = BigNumber(priceMNZ).dividedBy(priceKMD);
     }
