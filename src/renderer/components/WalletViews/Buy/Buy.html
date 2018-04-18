@@ -88,7 +88,7 @@
 						Total {{getStringTicket}}
 					</div>
 					<div class="value">
-						{{getTotalPrice}}
+						{{getTotalPrice.dividedBy(this.satoshiNb).toFixed(8)}}
 					</div>
 				</div>
 			</div>
@@ -125,7 +125,7 @@
 				<div class="row">
 					<span class="subTitle">Amount to buy</span>
 					<div class="col-custom row-main-item">
-						<span class="col-custom"><span class="selectAmount">{{getPackage}} </span>{{mnzTicker}}</span>
+						<span class="col-custom"><span class="selectAmount">{{getPackage.toFixed(8)}} </span>{{mnzTicker}}</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
@@ -164,7 +164,7 @@
 				</div>
 				<div id="amountTotal" class="col-custom row">
 					<div class="row">
-						<span id="totalAmount">{{getTotalPriceWithFee}}</span>
+						<span id="totalAmount">{{getTotalPriceWithFee.toFixed(8)}}</span>
 						<span id="totalAmountCoin">{{select}}</span>
 					</div>
 				</div>

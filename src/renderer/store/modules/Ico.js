@@ -129,7 +129,7 @@ const getters = {
     if (ticker.indexOf('BTC') >= 0) {
       price = BigNumber(priceMNZ);
     } else if (ticker.indexOf('KMD') >= 0) {
-      price = BigNumber(priceMNZ).dividedBy(priceKMD).multipliedBy(satoshiNb);
+      price = BigNumber(priceMNZ).dividedBy(priceKMD);
     }
     return price;
   },
