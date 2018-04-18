@@ -83,19 +83,19 @@ export default {
       this.prepareTx();
     },
     incrementPackage() {
-      if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() <= this.getMaxBuy - this.packageIncrement) {
-        this.getPackage += BigNumber(this.packageIncrement).dividedBy(satoshiNb).toNumber();
+      if (this.getPackage.multipliedBy(satoshiNb).comparedTo(this.getMaxBuy.minus(this.packageIncrement)) === -1) {
+        this.packageMNZ = this.packageMNZ.plus(this.packageIncrement);
       }
     },
     decrementPackage() {
-      if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() > this.getMinBuy) {
-        this.getPackage -= BigNumber(this.packageIncrement).dividedBy(satoshiNb).toNumber();
+      if (this.getPackage.multipliedBy(satoshiNb).comparedTo(this.getMinBuy) === 1) {
+        this.packageMNZ = this.packageMNZ.minus(this.packageIncrement);
       }
     },
     prepareTx() {
       const object = {
         wallet: this.wallet,
-        amount: BigNumber(this.getTotalPrice).multipliedBy(satoshiNb).toNumber(),
+        amount: this.getTotalPrice.multipliedBy(satoshiNb).toFixed(8),
         blocks: this.blocks,
         data: this.coupon,
       };
@@ -134,12 +134,12 @@ export default {
       ;
     },
     setInvisibleDecrement() {
-      if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() === this.getMinBuy) {
+      if (this.getPackage.multipliedBy(satoshiNb).comparedTo(this.getMinBuy) === 0) {
         return 'invisible';
       }
     },
     setInvisibleIncrement() {
-      if (BigNumber(this.getPackage).multipliedBy(satoshiNb).toNumber() === this.getMaxBuy) {
+      if (this.getPackage.multipliedBy(satoshiNb).comparedTo(this.getMaxBuy) === 0) {
         return 'invisible';
       }
     },
@@ -158,7 +158,7 @@ export default {
     },
     getPackage: {
       get: function () {
-        return BigNumber(this.packageMNZ).dividedBy(satoshiNb).toNumber();
+        return BigNumber(this.packageMNZ).dividedBy(satoshiNb);
       },
       set: function (newValue) {
         const value = BigNumber(newValue).multipliedBy(satoshiNb).toNumber();
@@ -178,10 +178,10 @@ export default {
       return `Amount ${this.mnzTicker}...`;
     },
     getMinBuy() {
-      return BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb).toNumber();
+      return BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb);
     },
     getMaxBuy() {
-      return BigNumber(this.$store.getters.getConfig.maxBuy).multipliedBy(satoshiNb).toNumber();
+      return BigNumber(this.$store.getters.getConfig.maxBuy).multipliedBy(satoshiNb);
     },
     getConfig() {
       return this.$store.getters.getConfig;
@@ -203,7 +203,7 @@ export default {
     },
     getTotalPrice() {
       return this.packageMNZ.dividedBy(satoshiNb)
-      .multipliedBy(this.$store.getters.getTotalPrice(this.wallet.ticker)).dividedBy(satoshiNb).toFixed(8);
+      .multipliedBy(this.$store.getters.getTotalPrice(this.wallet.ticker));
     },
     getTotalPriceWithFee() {
       return BigNumber(this.getTotalPrice).plus(this.estimatedFee).toFixed(8);
