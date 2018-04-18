@@ -20,6 +20,7 @@ const getters = {
 const mutations = {
   SET_CONFIG(state, config) {
     state.config = config;
+    state.config.maxBuy -= state.config.minBuy;
   },
 };
 

@@ -20,7 +20,6 @@ export default {
       blocks: 36,
       fee: 0,
       estimatedFee: 0,
-      preparedTx: {},
       feeSpeed: 'low',
       fees: [
         { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
@@ -52,13 +51,17 @@ export default {
       const oldBlocks = this.blocks;
       this.blocks = data.blocks;
       this.feeSpeed = data.label;
-      this.prepareTx().then(() => {
-        if (!this.preparedTx.inputs && !this.preparedTx.outputs) {
-          this.$refs.feeSelector.selectedLabel = oldLabel;
-          this.blocks = oldBlocks;
-          this.$toasted.error('You don\'t have enough funds to select this.');
-        }
-      });
+      this.prepareTx()
+        .then((tx) => {
+          if (tx != null &&
+            tx.outputs != null &&
+            tx.inputs != null) {
+            this.$refs.feeSelector.selectedLabel = oldLabel;
+            this.blocks = oldBlocks;
+            this.$toasted.error('You don\'t have enough funds to select this.');
+          }
+        })
+      ;
     },
     onShowBuyModal() {
       this.prepareTx()
@@ -67,13 +70,20 @@ export default {
             this.hideModal();
             this.$toasted.info("You don't have enough funds for buying (with fees included)");
           } else {
-            this.$refs.confirmBuy.show();
+            this.showModal();
           }
         })
       ;
     },
     hideModal() {
-      this.$refs.confirmBuy.hide();
+      if (this.$refs.confirmBuy != null) {
+        this.$refs.confirmBuy.hide();
+      }
+    },
+    showModal() {
+      if (this.$refs.confirmBuy != null) {
+        this.$refs.confirmBuy.show();
+      }
     },
     methodToRunOnSelect(payload) {
       this.object = payload;
@@ -83,29 +93,30 @@ export default {
       this.prepareTx();
     },
     incrementPackage() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy.minus(this.packageIncrement)) === -1) {
+      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy.minus(this.packageIncrement)) <= 0) {
         this.packageMNZ = this.packageMNZ.plus(this.packageIncrement);
       }
     },
     decrementPackage() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) === 1) {
+      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) > 0) {
         this.packageMNZ = this.packageMNZ.minus(this.packageIncrement);
       }
     },
     prepareTx() {
+      // Number here because of bitcoinjs incapacity to use Big types.
+      const amount = Number(this.getTotalSatochisPrice.toFixed(0));
       const object = {
         wallet: this.wallet,
-        amount: this.getTotalPrice.multipliedBy(this.satoshiNb).toFixed(8),
+        amount: amount,
         blocks: this.blocks,
         data: this.coupon,
       };
-
       return this.$store.dispatch('createSwapTransaction', object)
         .then((tx) => {
           if (tx != null &&
               tx.outputs != null &&
               tx.inputs != null) {
-            this.estimatedFee = BigNumber(tx.fee).dividedBy(this.satoshiNb).toNumber();
+            this.estimatedFee = BigNumber(tx.fee);
           }
           return tx;
         })
@@ -120,7 +131,7 @@ export default {
           const payload = {
             wallet: this.wallet,
             ...tx,
-            amountMnz: this.totalMnzWitBonus,
+            amountMnz: this.totalMnzWithBonus.multipliedBy(this.satoshiNb),
           };
           return this.$store.dispatch('swap', payload);
         })
@@ -153,24 +164,24 @@ export default {
         .filter(coin => coin.ticker.indexOf('MNZ') < 0)
         .map(coin => coin.ticker);
     },
-    totalMnzWitBonus() {
-      return this.packageMNZ.plus(this.packageMNZ.multipliedBy(this.getCurrentBonus));
+    totalMnzWithBonus() {
+      return this.packageMNZ.plus(this.packageMNZ.multipliedBy(this.getCurrentBonus)).dividedBy(this.satoshiNb);
     },
     getPackage: {
       get: function () {
-        return BigNumber(this.packageMNZ).dividedBy(this.satoshiNb);
+        return this.packageMNZ.dividedBy(this.satoshiNb);
       },
       set: function (newValue) {
-        const value = BigNumber(newValue).multipliedBy(this.satoshiNb).toNumber();
+        const value = BigNumber(newValue).multipliedBy(this.satoshiNb);
         const maxBuy = this.getMaxBuy;
         const minBuy = this.getMinBuy;
 
-        if (value > maxBuy) {
+        if (value.comparedTo(maxBuy) === 1) {
           this.packageMNZ = BigNumber(maxBuy);
-        } else if (value < minBuy) {
+        } else if (value.comparedTo(minBuy) === -1) {
           this.packageMNZ = BigNumber(minBuy);
         } else {
-          this.packageMNZ = BigNumber(value);
+          this.packageMNZ = value;
         }
       },
     },
@@ -195,12 +206,16 @@ export default {
     getStringTicket() {
       return this.$store.getters.getWalletByTicker(this.select).coin.name;
     },
-    getTotalPrice() {
+    getTotalSatochisPrice() {
       const priceFor1Mnz = this.$store.getters.getTotalPrice(this.wallet.ticker); // Price for 1 MNZ in sKMD or sBTC.
       return this.packageMNZ.multipliedBy(priceFor1Mnz);
     },
+    getTotalPrice() {
+      const priceFor1Mnz = this.$store.getters.getTotalPrice(this.wallet.ticker);
+      return this.packageMNZ.multipliedBy(priceFor1Mnz).dividedBy(this.satoshiNb);
+    },
     getTotalPriceWithFee() {
-      return this.getTotalPrice.plus(this.estimatedFee);
+      return this.getTotalSatochisPrice.plus(this.estimatedFee).dividedBy(this.satoshiNb);
     },
     getCurrentBonus() {
       return this.$store.getters.getCurrentBonus(this.wallet.ticker);
@@ -209,10 +224,8 @@ export default {
       return this.getCurrentBonus !== 0;
     },
     canBuy() {
-      const mnzToBuy = this.packageMNZ;
       const balance = this.wallet.balance - this.wallet.balance_unconfirmed;
-
-      return mnzToBuy <= 0 || this.getTotalPrice > balance;
+      return this.packageMNZ.comparedTo(0) <= 0 || this.getTotalPrice.comparedTo(balance) === 1;
     },
   },
 };
