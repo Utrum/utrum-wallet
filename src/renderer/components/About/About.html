@@ -1,8 +1,19 @@
-<div>
-  <p>about</p>
-  <p>about</p>
-  <p>about</p>
-  <p>about</p>
-  <p>about</p>
-  <p>about</p>
+<div class="content">
+  <div class="d-flex justify-content-center header-about">
+    <h4>About <img @click="closeAbout" src="~@/assets/icon-close.svg" alt="close"></h4>
+  </div>
+  <hr/>
+  <div>
+    <ul class="list-unstyled">
+      <li>
+        <router-link active-class="active" tag="a" to="version">VERSION</router-link>
+      </li>
+      <li>
+        <router-link active-class="active" tag="a" to="terms-and-conditions">TERMS & CONDITIONS</router-link>
+      </li>
+    </ul>
+  </div>
+
+  <router-view></router-view>
+
 </div>

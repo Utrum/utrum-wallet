@@ -29,7 +29,8 @@ export default {
   name: 'vue-dico',
   mounted() {
     ipcRenderer.on('aboutView', () => {
-      this.$router.push('about');
+      // console.log(this.$route.path);
+      this.$router.replace({ path: 'about', meta: this.$route.path });
     });
   },
   created() {

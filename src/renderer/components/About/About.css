@@ -1,0 +1,22 @@
+.header-about {
+  margin: 16px;
+}
+
+.content {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #f3f4fc;
+  padding: 0;
+}
+
+.side-bar{
+  position: fixed;
+  height: 100%;
+  width: 500px;
+}
