@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import bitcoinjs from 'bitcoinjs-lib';
+import { BigNumber } from 'bignumber.js';
 
 const state = {
   associatedTxs: [],
@@ -36,7 +37,6 @@ const actions = {
     ;
   },
   buildSwapList({ commit, rootGetters }) {
-
     let cryptoTxs = [];
     let icoCoinTxs = [];
     _.map(rootGetters.enabledCoins, (coin) => {
@@ -51,12 +51,7 @@ const actions = {
     commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
   },
 };
-// key: 'cryptoTx.time',
-// key: 'ticker',
-// key: 'mnzTx',
-// key: 'price41',
-// key: 'price4all',
-// key: 'status',
+
 const getters = {
   icoWillBegin: (state, getters, rootState) => {
     const config = rootState.Conf.config;
@@ -93,6 +88,48 @@ const getters = {
         mnzTxHash: swap.mnzTx.tx_hash,
       };
     });
+  },
+  getCurrentBonus: (state, getters, rootState) => (ticker) => {
+    let currentBonus = 0;
+    const date = new Date().getTime() / 1000;
+    const config = rootState.Conf.config;
+
+    const bonuses = config.bonuses;
+    let findDuration = true;
+
+    Object.keys(bonuses).forEach(k => {
+      if (ticker.toLowerCase().indexOf(k)) {
+        Object.keys(bonuses[k]).forEach(j => {
+          if (findDuration) {
+            const duration = bonuses[k][j].duration * 3600;
+            const value = bonuses[k][j].value;
+            const icoStart = config.icoStartDate;
+
+            if (icoStart < date && date < icoStart + duration) {
+              currentBonus = value / 100;
+              findDuration = false;
+            } else {
+              currentBonus = 0;
+            }
+          }
+        });
+      }
+    });
+    return currentBonus;
+  },
+  getTotalPrice: (state, getters, rootState) => (ticker) => {
+    const config = rootState.Conf.config;
+
+    let price = 0;
+    const priceMNZ = config.coinPrices.mnz;
+    const priceKMD = config.coinPrices.kmd;
+
+    if (ticker.indexOf('BTC') >= 0) {
+      price = BigNumber(priceMNZ).dividedBy(100000000);
+    } else if (ticker.indexOf('KMD') >= 0) {
+      price = BigNumber(priceMNZ).dividedBy(priceKMD);
+    }
+    return price;
   },
 };
 

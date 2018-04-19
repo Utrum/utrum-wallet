@@ -65,11 +65,11 @@
 					</div>
 					<div id="package-mnz" class="row">
 						<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
-							<img src="~@/assets/icon-less.svg"/>
+							<img :class="setInvisibleDecrement()" src="~@/assets/icon-less.svg"/>
 						</a>
-						<input id="package-value" class="col-center" v-model.number="getPackage" placeholder="0" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
+						<input id="package-value" class="col-center" v-model.number.lazy="package" :placeholder="getPlaceholder" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
 						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
-							<img src="~@/assets/icon-more.svg"/>
+							<img :class="setInvisibleIncrement()" src="~@/assets/icon-more.svg"/>
 						</a>
 					</div>
 				</div>
@@ -88,7 +88,7 @@
 						Total {{getStringTicket}}
 					</div>
 					<div class="value">
-						{{getTotalPrice}}
+						{{getTotalPrice.toFixed(8)}}
 					</div>
 				</div>
 			</div>
@@ -98,7 +98,7 @@
 						{{mnzTicker}}
 					</div>
 					<div class="value">
-						{{getPackage}}
+						{{package.toString()}}
 					</div>
 				</div>
 			</div>
@@ -125,21 +125,21 @@
 				<div class="row">
 					<span class="subTitle">Amount to buy</span>
 					<div class="col-custom row-main-item">
-						<span class="col-custom"><span class="selectAmount">{{getPackage}} </span>{{mnzTicker}}</span>
+						<span class="col-custom"><span class="selectAmount">{{package.toString()}} </span>{{mnzTicker}}</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
 				<div class="row" v-if="isBonus">
-					<span class="subTitle">Plus ({{currentBonus*100}}%) bonus</span>
+					<span class="subTitle">Plus ({{getCurrentBonus*100}}%) bonus</span>
 					<div class="col-custom row-main-item">
-						<span class="col-custom"><span class="selectAmount">{{getPackage+(getPackage * currentBonus)}} </span>{{mnzTicker}}</span>
+						<span class="col-custom"><span class="selectAmount">{{totalMnzWithBonus.toString()}} </span>{{mnzTicker}}</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
 				<div class="row">
 					<span class="subTitle">Price</span>
 					<div class="col-custom row-main-item">
-						<span class="col-custom"><span class="selectAmount">{{getTotalPrice}} </span>{{select}}</span>
+						<span class="col-custom"><span class="selectAmount">{{getTotalPrice.toFixed(8)}}</span>{{select}}</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
@@ -164,7 +164,7 @@
 				</div>
 				<div id="amountTotal" class="col-custom row">
 					<div class="row">
-						<span id="totalAmount">{{getTotalPriceWithFee}}</span>
+						<span id="totalAmount">{{getTotalPriceWithFee.toFixed(8)}}</span>
 						<span id="totalAmountCoin">{{select}}</span>
 					</div>
 				</div>
