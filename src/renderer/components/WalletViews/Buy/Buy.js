@@ -224,7 +224,7 @@ export default {
       return this.getCurrentBonus !== 0;
     },
     canBuy() {
-      const balance = this.wallet.balance - this.wallet.balance_unconfirmed;
+      const balance = BigNumber(this.wallet.balance).minus(BigNumber(this.wallet.balance_unconfirmed));
       return this.requestedNumberOfSatochisMnz.comparedTo(0) <= 0 || this.getTotalPrice.comparedTo(balance) === 1;
     },
   },
