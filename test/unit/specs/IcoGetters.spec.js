@@ -22,6 +22,7 @@ describe('Ico openings and closings', () => {
       config = {
         icoStartDate: new Date().setHours(new Date().getHours() + 2) / 1000,
         icoEndDate: new Date().setHours(new Date().getHours() + 4) / 1000,
+        progress: 0.5,
       };
       store.commit('SET_CONFIG', config);
     });
@@ -48,6 +49,7 @@ describe('Ico openings and closings', () => {
       config = {
         icoStartDate: new Date().setHours(new Date().getHours() - 2) / 1000,
         icoEndDate: new Date().setHours(new Date().getHours() + 4) / 1000,
+        progress: 0.5,
       };
       store.commit('SET_CONFIG', config);
     });
@@ -74,6 +76,7 @@ describe('Ico openings and closings', () => {
       config = {
         icoStartDate: new Date().setHours(new Date().getHours() - 4) / 1000,
         icoEndDate: new Date().setHours(new Date().getHours() - 1) / 1000,
+        progress: 0.5,
       };
       store.commit('SET_CONFIG', config);
     });
