@@ -1,11 +1,13 @@
 import { Wallet, coins }  from 'libwallet-mnz';
+import { BigNumber } from 'bignumber.js';
 import * as _ from 'lodash';
-import sb from 'satoshi-bitcoin';
 import Vue from 'vue';
 import store from '../../store';
 import ElectrumService from '../../lib/electrum';
 import getCmcData from '../../lib/coinmarketcap';
 import createPrivKey from '../../lib/createPrivKey';
+
+const satoshiNb = 100000000;
 
 const state = {
   wallets: [{
@@ -47,10 +49,10 @@ const getters = {
   },
   getTotalBalance: (state) => {
     const walletKeys = Object.keys(state.wallets);
-    let totalBalanceUsd = 0;
+    let totalBalanceUsd = BigNumber(0);
 
     walletKeys.forEach((key) => {
-      totalBalanceUsd += state.wallets[key].balance_usd;
+      totalBalanceUsd = totalBalanceUsd.plus(state.wallets[key].balance_usd);
     });
 
     return totalBalanceUsd;
@@ -140,7 +142,8 @@ const actions = {
         return getEstimatedFees(wallet, blocks);
       })
       .then((feeRate) => {
-        const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount, sb.toSatoshi(feeRate), data);
+        const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount,
+          BigNumber(feeRate).multipliedBy(satoshiNb), data);
         return { inputs, outputs, fee, dataScript, amount };
       })
     ;
@@ -170,19 +173,19 @@ const actions = {
         return Promise.reject(new Error(`Failed to retrieve ${wallet.ticker} balance\n${error}`));
       })
       .then(response => {
-        wallet.balance = sb.toBitcoin(response.confirmed);
-        wallet.balance_unconfirmed = sb.toBitcoin(response.unconfirmed);
+        wallet.balance = BigNumber(response.confirmed).dividedBy(satoshiNb);
+        wallet.balance_unconfirmed = BigNumber(response.unconfirmed).dividedBy(satoshiNb);
         if (wallet.coin.name === 'monaize') {
           getCmcData('bitcoin')
             .then(response => {
-              wallet.balance_usd = wallet.balance * (response.data[0].price_usd / 15000);
+              wallet.balance_usd = wallet.balance.multipliedBy(BigNumber(response.data[0].price_usd).dividedBy(15000));
             })
           ;
         } else {
           getCmcData(wallet.coin.name)
             .then(response => {
               response.data.forEach((cmcCoin) => {
-                wallet.balance_usd = wallet.balance * cmcCoin.price_usd;
+                wallet.balance_usd = wallet.balance.multipliedBy(cmcCoin.price_usd);
               });
             })
           ;
