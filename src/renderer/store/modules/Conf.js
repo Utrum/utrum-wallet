@@ -3,8 +3,8 @@ import axios from 'axios';
 const state = {
   config: {},
   pubKeysBuy: {
-    btc: 'tpubDDhuDCoxWD9ah9iTi6s1YAwqS2wQ6PLig3eWFp3sU1ruB6ULvhC4Un65jgcQ18SF1EcCAMWHp1GdGzPS5XxAE1dxYnF6bcRYqnAGvx7st8s',
-    kmd: 'xpub6CRoKaY7ZtdHyU9nr2HtcvakyEWA9SEwaGky2hJu5DtgNrS5UsGLCJHjYQu6wpq64gnrMn4C7wykc3Gjy2JQdEpXuo7kwznv8unkTNk6rS4',
+    btc: 'tpubDAh8QLsBrBjfnHpLmz9gJKt4nhop1hTpQtM9Tr1N6ZAUGV22PFxtExzcWvi9nH9HytSNnJZQ7xmLQB7BxGjRQB7N5sp7fJz1Uka8PY58xc6',
+    kmd: 'xpub6BRkm5Z8kjoCUceL1HWCVbtAFy7mth5sR7gPFr6zhPAboqFr45AyY5nwHMMS3RkNEiFCMucK8zhGUJxfYLqEE2cgWEubmHJGK9AFe2dJnFn',
   },
 };
 
