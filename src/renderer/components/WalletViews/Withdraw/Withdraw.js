@@ -178,7 +178,11 @@ export default {
       },
       set: function (value) {
         if (value !== '' && value[value.length - 1] !== '.') {
-          this.withdraw.amount = BigNumber(BigNumber(value).toFixed(8)).multipliedBy(this.satoshiNb);
+          try {
+            this.withdraw.amount = BigNumber(BigNumber(value).toFixed(8)).multipliedBy(this.satoshiNb);
+          } catch (error) {
+            this.withdraw.amount = null;
+          }
         }
       },
     },
