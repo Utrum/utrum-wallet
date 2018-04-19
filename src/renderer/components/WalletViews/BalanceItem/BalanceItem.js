@@ -18,10 +18,10 @@ export default {
   },
   methods: {
     getUnconfirmedColor(amount) {
-      return (amount > 0) ? 'positiveColor' : 'negativeColor';
+      return (amount.comparedTo(0) === 1) ? 'positiveColor' : 'negativeColor';
     },
     getQRCodeClass(amount) {
-      return amount === 0 ? 'row-custom' : '';
+      return amount.comparedTo(0) === 0 ? 'row-custom' : '';
     },
     numberWithSpaces(x) {
       if (Number(x) > 0) {
