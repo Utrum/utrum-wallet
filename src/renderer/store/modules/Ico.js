@@ -54,32 +54,26 @@ const actions = {
 
 const getters = {
   icoWillBegin: (state, getters, rootState) => {
-    const config = rootState.Conf.config;
-    const nowDate = new Date();
-    const now = (nowDate.getTime() / 1000) + (nowDate.getTimezoneOffset() * 60);
-    if (now < config.icoStartDate) {
+    const now = new Date().getTime() / 1000;
+    if (now < rootState.Conf.config.icoStartDate) {
       return true;
     }
     return false;
   },
   icoIsRunning: (state, getters, rootState) => {
-    const config = rootState.Conf.config;
 
     // getTime() returns timestamp in the current local timezone.
     // So that the shift with GMT is already taken into account.
     const now = new Date().getTime() / 1000;
-    return now < config.icoEndDate &&
-           now > config.icoStartDate &&
-           config.progress < 1;
+    return now < rootState.Conf.config.icoEndDate &&
+           now > rootState.Conf.config.icoStartDate &&
+           rootState.Conf.config.progress < 1;
   },
   icoStartDate: (state, getters, rootState) => {
     return rootState.Conf.config.icoStartDate;
   },
-  getSwapList: (state) => {
-    return state.pendingSwaps.concat(state.associatedTxs);
-  },
-  getSwapList2: (state, getters) => {
-    return getters.getSwapList.map(swap => {
+  getSwapList2: (state) => {
+    return state.pendingSwaps.concat(state.associatedTxs).map(swap => {
       return {
         time: swap.cryptoTx.time,
         ticker: swap.ticker,
