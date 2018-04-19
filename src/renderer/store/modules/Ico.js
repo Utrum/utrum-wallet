@@ -37,21 +37,12 @@ const mutations = {
 };
 
 const actions = {
-  getNewBuyAddress({ rootGetters }, wallet) {
-    let pubKeyAddress;
-    _.mapKeys(rootGetters.getPubKeysBuy, (value, key) => {
-      if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
-        pubKeyAddress = value;
-      }
-    });
-
-    const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
-    const index = Math.floor(Math.random() * 10000);
-    const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
-    return address;
+  createSwapTransaction({ commit, rootGetters, dispatch }, { wallet, amount, blocks = 6, data = null }) {
+    const address = getNewBuyAddress(wallet, rootGetters.getPubKeysBuy);
+    return dispatch('createTransaction', { wallet, amount, address, blocks, data });
   },
-  buyAsset({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
-    return dispatch('sendTransaction', { wallet, inputs, outputs, fee, dataScript })
+  swap({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
+    return dispatch('broadcastTransaction', { wallet, inputs, outputs, fee, dataScript })
       .then((sentTxId) => {
         const localCryptoTx = generateLocalTx(wallet.address, amount, sentTxId);
         const localMnzTx = generateLocalMnz(amountMnz);
@@ -76,35 +67,12 @@ const actions = {
     commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
   },
 };
-
-const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
-  // console.log("mnzTxs: ", mnzTxs);
-  const associateArray = [];
-  if (cryptoTxs != null && mnzTxs != null) {
-    _.forEach(mnzTxs, (mnzTx) => {
-      if (mnzTx.origin != null) {
-        const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
-          if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
-            return true;
-          }
-          return false;
-        });
-        if (cryptoTxsForMnz[0]) {
-          associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
-        }
-      }
-    });
-  }
-  return associateArray;
-};
-
 // key: 'cryptoTx.time',
 // key: 'ticker',
 // key: 'mnzTx',
 // key: 'price41',
 // key: 'price4all',
 // key: 'status',
-
 const getters = {
   icoWillBegin: (state, getters, rootState) => {
     const config = rootState.Conf.config;
@@ -122,7 +90,8 @@ const getters = {
     // So that the shift with GMT is already taken into account.
     const now = new Date().getTime() / 1000;
     return now < config.icoEndDate &&
-           now > config.icoStartDate;
+           now > config.icoStartDate &&
+           config.progress < 1;
   },
   icoStartDate: (state, getters, rootState) => {
     return rootState.Conf.config.icoStartDate;
@@ -143,9 +112,46 @@ const getters = {
   },
 };
 
+// New recipient ICO address
+const getNewBuyAddress = (wallet, pubKeysBuy) => {
+  let pubKeyAddress;
+  _.mapKeys(pubKeysBuy, (value, key) => {
+    if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
+      pubKeyAddress = value;
+    }
+  });
+
+  const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
+  const index = Math.floor(Math.random() * 10000);
+  const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
+  return address;
+};
+
+// Swap association
+const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
+  const associateArray = [];
+  if (cryptoTxs != null && mnzTxs != null) {
+    _.forEach(mnzTxs, (mnzTx) => {
+      if (mnzTx.origin != null) {
+        const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
+          if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
+            return true;
+          }
+          return false;
+        });
+        if (cryptoTxsForMnz[0]) {
+          associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
+        }
+      }
+    });
+  }
+  return associateArray;
+};
+
+// Local management
 const generateLocalTx = (address, amount, txHash) => {
   const nowDate = new Date();
-  const now = (nowDate.getTime() / 1000) + (nowDate.getTimezoneOffset() * 60);
+  const now = nowDate.getTime() / 1000;
 
   return {
     address: address,

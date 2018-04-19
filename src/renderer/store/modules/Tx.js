@@ -40,11 +40,9 @@ const actions = {
 };
 
 const filterExistingTransactions = (walletTxs, txs) => {
-  if (walletTxs.length === 0) {
-    return txs;
-  }
+  const transactions = _.filter(txs, (tx) => { return tx.height > 0; });
   return _
-    .filter(txs, (tx) => {
+    .filter(transactions, (tx) => {
       let found = false;
       _.forEach(walletTxs, (walletTx) => {
         if (walletTx.tx_hash === tx.tx_hash) {
@@ -67,7 +65,6 @@ const decodeTx = (wallet, tx, isTestMode) => {
       }
       return transaction;
     })
-    .catch(() => { })
   ;
 };
 

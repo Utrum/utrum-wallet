@@ -40,16 +40,32 @@ const mutations = {
 };
 
 const actions = {
-  updateConfig({ commit }) {
-    const endPointConfig
-    = 'http://51.15.203.171/icoClientConfiguration.json';
-    axios.get(endPointConfig, {
-    }).then(response => {
-      commit('SET_CONFIG', response.data);
-    });
+  startUpdateConfig({ commit, dispatch, rootGetters }) {
+    return pullConfiguration()
+      .then((config) => {
+        commit('SET_CONFIG', config);
+        setTimeout(() => {
+          dispatch('startUpdateConfig');
+        }, getRefreshRate(rootGetters.icoWillBegin));
+      })
+    ;
   },
 };
 
+const getRefreshRate = (icoWillBegin) => {
+  const min = icoWillBegin ? 20 : 30;
+  const max = icoWillBegin ? 50 : 30;
+  return Math.floor(Math.random() * (((max - min) + 1) + min)) * 1000;
+};
+
+const pullConfiguration = () => {
+  return axios
+    .get('http://51.15.203.171/icoClientConfiguration.json')
+    .then(response => {
+      return response.data;
+    })
+  ;
+};
 
 export default {
   state,

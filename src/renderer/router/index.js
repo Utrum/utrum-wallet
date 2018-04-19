@@ -24,6 +24,12 @@ import WalletView from '@/components/WalletViews/WalletView.vue';
 import Balance from '@/components/WalletViews/Balance/Balance.vue';
 import Withdraw from '@/components/WalletViews/Withdraw/Withdraw.vue';
 import About from '@/components/About/About.vue';
+import Version from '@/components/About/Version/Version.vue';
+import TermsAndConditions from '@/components/About/TermsAndConditions/TermsAndConditions.vue';
+import Disclamer from '@/components/About/Disclamer/Disclamer.vue';
+import Website from '@/components/About/Website/Website.vue';
+import Library from '@/components/About/Library/Library.vue';
+
 
 Vue.use(Router);
 
@@ -70,6 +76,33 @@ export default new Router({
     {
       path: '/about',
       component: About,
+      children: [
+        {
+          path: '/version',
+          name: 'version',
+          component: Version,
+        },
+        {
+          path: '/terms-and-conditions',
+          name: 'terms-and-conditions',
+          component: TermsAndConditions,
+        },
+        {
+          path: '/disclamer',
+          name: 'disclamer',
+          component: Disclamer,
+        },
+        {
+          path: '/website',
+          name: 'website',
+          component: Website,
+        },
+        {
+          path: '/library',
+          name: 'library',
+          component: Library,
+        },
+      ],
     },
     {
       path: '*',
