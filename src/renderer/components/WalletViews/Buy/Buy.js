@@ -92,12 +92,12 @@ export default {
       this.prepareTx();
     },
     incrementPackage() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy.minus(this.packageIncrement)) <= 0) {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy.minus(this.packageIncrement)) <= 0) {
         this.requestedNumberOfSatochisMnz = this.requestedNumberOfSatochisMnz.plus(this.packageIncrement);
       }
     },
     decrementPackage() {
-      if (this.getPackage.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) > 0) {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) > 0) {
         this.requestedNumberOfSatochisMnz = this.requestedNumberOfSatochisMnz.minus(this.packageIncrement);
       }
     },
