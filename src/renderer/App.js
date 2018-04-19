@@ -29,6 +29,7 @@ export default {
   name: 'vue-dico',
   mounted() {
     ipcRenderer.on('aboutView', () => {
+      this.$router.push('about');
     });
   },
   created() {
@@ -40,6 +41,11 @@ export default {
     };
   },
   computed: {
+    icoBannerActive() {
+      if ((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) {
+        return 'bannerMargin';
+      }
+    },
     isClientUpdated() {
       if (this.$store.getters.getConfig.client != null) {
         const version = this.$store.getters.getConfig.client.version === Number(pjson.version.split('.')[0]);
