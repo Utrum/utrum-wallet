@@ -36,7 +36,7 @@ const actions = {
       })
     ;
   },
-  buildSwapList({ commit, rootGetters }) {
+  buildSwapList({ commit, rootGetters }, transactionToDelete) {
     let cryptoTxs = [];
     let icoCoinTxs = [];
     _.map(rootGetters.enabledCoins, (coin) => {
@@ -47,7 +47,7 @@ const actions = {
       }
     });
 
-    const associations = associateTxsFromWallet(cryptoTxs, icoCoinTxs);
+    const associations = associateTxsFromWallet(commit, cryptoTxs, icoCoinTxs, transactionToDelete);
     commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
   },
 };
@@ -143,8 +143,9 @@ const getNewBuyAddress = (wallet, pubKeysBuy) => {
 };
 
 // Swap association
-const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
+const associateTxsFromWallet = (commit, cryptoTxs, mnzTxs, transactionToDelete) => {
   const associateArray = [];
+
   if (cryptoTxs != null && mnzTxs != null) {
     _.forEach(mnzTxs, (mnzTx) => {
       if (mnzTx.origin != null) {
@@ -154,7 +155,12 @@ const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
           }
           return false;
         });
-        if (cryptoTxsForMnz[0]) {
+        const minConfirmation = 1;
+
+        if (cryptoTxsForMnz[0]
+          && cryptoTxsForMnz[0].confirmations > minConfirmation
+          && mnzTx.confirmations > minConfirmation) {
+          commit('DELETE_PENDING_TX', transactionToDelete.tx_hash);
           associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
         }
       }

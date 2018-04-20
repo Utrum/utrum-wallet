@@ -9,11 +9,11 @@ const actions = {
       .then((transactionList) => filterExistingTransactions(wallet.txs, transactionList))
       .then(transactionList => {
         return bluebird.mapSeries(transactionList, transaction => {
-          commit('DELETE_PENDING_TX', transaction.tx_hash, { root: true });
           return decodeTx(wallet, transaction, rootGetters.isTestMode)
             .then((transactionDetail) => {
+              // commit('DELETE_PENDING_TX', transaction.tx_hash, { root: true });
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
-              dispatch('buildSwapList', { root: true });
+              dispatch('buildSwapList', { transactionToDelete: transaction }, { root: true });
             })
             .catch(() => { })
           ;
