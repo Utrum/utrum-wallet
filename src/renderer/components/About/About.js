@@ -26,8 +26,12 @@ export default {
   methods: {
     closeAbout() {
       // console.log(this.$router);
-      this.$router.go(-1);
-      // this.$router.push('/');
+      // this.$router.go(-1);
+      if (this.$store.state.User.loggedIn) {
+        this.$router.push('wallet');
+      } else {
+        this.$router.push('login');
+      }
     },
   },
   computed: {

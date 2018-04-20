@@ -1,0 +1,24 @@
+.vl {
+	border-left: 1px solid rgba(0,0,0,0.1);
+	height: 200px;
+	margin-top: 15px;
+}
+
+#current-version-content {
+  width: 100%;
+}
+
+#current-version-content h2 {
+  font-weight: 200;
+}
+
+#current-version-content p {
+  padding: 0;
+  margin: 0;
+  color: black;
+  font-weight: 400;
+}
+
+#version-content {
+  padding-top: 40px;
+}

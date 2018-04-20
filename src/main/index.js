@@ -60,9 +60,6 @@ function createWindow() {
     label: 'Monaize ICO App',
     submenu: [
         { label: 'About Monaize ICO App', click: function () { aboutView() } },
-        // { label: 'Terms and Conditions', click: function () { termsAndConditions() } },
-        // { label: 'Disclamer', click: function () { disclamer() } },
-        // { label: 'Monaize ICO WebSite', click: function () { shell.openExternal('https://monaize.com/#/uk/ico'); } },
         { type: 'separator' },
         { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); } },
     ] }, {
