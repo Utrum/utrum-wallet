@@ -5488,6 +5488,10 @@ json-loader@^0.5.4:
   version "0.5.7"
   resolved "http://mon-1:4873/json-loader/-/json-loader-0.5.7.tgz#dca14a70235ff82f0ac9a3abeb60d337a365185d"
 
+json-parse-better-errors@^1.0.1:
+  version "1.0.2"
+  resolved "http://mon-1:4873/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
+
 json-parse-helpfulerror@^1.0.2:
   version "1.0.3"
   resolved "http://mon-1:4873/json-parse-helpfulerror/-/json-parse-helpfulerror-1.0.3.tgz#13f14ce02eed4e981297b64eb9e3b932e2dd13dc"
@@ -5793,6 +5797,21 @@ libwallet-mnz@3.2.2:
     js-sha256 "^0.9.0"
     satoshi-bitcoin "^1.0.4"
     wif "^2.0.6"
+
+license-checker@^18.0.0:
+  version "18.0.0"
+  resolved "http://mon-1:4873/license-checker/-/license-checker-18.0.0.tgz#1c58ca91f54151460cdbce7f65af9e5934bdbdbf"
+  dependencies:
+    chalk "~0.5.1"
+    debug "^2.2.0"
+    mkdirp "^0.3.5"
+    nopt "^2.2.0"
+    read-installed "~4.0.3"
+    semver "^5.3.0"
+    spdx "^0.5.1"
+    spdx-correct "^2.0.3"
+    spdx-satisfies "^0.1.3"
+    treeify "^1.0.1"
 
 "license-checker@git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893":
   version "1.0.0"
@@ -6715,7 +6734,7 @@ normalize-package-data@^1.0.0:
     github-url-from-username-repo "^1.0.0"
     semver "2 || 3 || 4"
 
-normalize-package-data@^2.3.2, normalize-package-data@^2.3.4, normalize-package-data@^2.4.0:
+normalize-package-data@^2.0.0, normalize-package-data@^2.3.2, normalize-package-data@^2.3.4, normalize-package-data@^2.4.0:
   version "2.4.0"
   resolved "http://mon-1:4873/normalize-package-data/-/normalize-package-data-2.4.0.tgz#12f95a307d58352075a04907b84ac8be98ac012f"
   dependencies:
@@ -7796,6 +7815,19 @@ read-installed@~3.1.3:
   optionalDependencies:
     graceful-fs "2 || 3"
 
+read-installed@~4.0.3:
+  version "4.0.3"
+  resolved "http://mon-1:4873/read-installed/-/read-installed-4.0.3.tgz#ff9b8b67f187d1e4c29b9feb31f6b223acd19067"
+  dependencies:
+    debuglog "^1.0.1"
+    read-package-json "^2.0.0"
+    readdir-scoped-modules "^1.0.0"
+    semver "2 || 3 || 4 || 5"
+    slide "~1.1.3"
+    util-extend "^1.0.1"
+  optionalDependencies:
+    graceful-fs "^4.1.2"
+
 read-only-stream@^2.0.0:
   version "2.0.0"
   resolved "http://mon-1:4873/read-only-stream/-/read-only-stream-2.0.0.tgz#2724fd6a8113d73764ac288d4386270c1dbf17f0"
@@ -7811,6 +7843,17 @@ read-package-json@1:
     normalize-package-data "^1.0.0"
   optionalDependencies:
     graceful-fs "2 || 3"
+
+read-package-json@^2.0.0:
+  version "2.0.13"
+  resolved "http://mon-1:4873/read-package-json/-/read-package-json-2.0.13.tgz#2e82ebd9f613baa6d2ebe3aa72cefe3f68e41f4a"
+  dependencies:
+    glob "^7.1.1"
+    json-parse-better-errors "^1.0.1"
+    normalize-package-data "^2.0.0"
+    slash "^1.0.0"
+  optionalDependencies:
+    graceful-fs "^4.1.2"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
@@ -8781,6 +8824,20 @@ source-map@~0.2.0:
   dependencies:
     amdefine ">=0.0.4"
 
+spdx-compare@^0.1.2:
+  version "0.1.2"
+  resolved "http://mon-1:4873/spdx-compare/-/spdx-compare-0.1.2.tgz#b06af3ea34af7437d91a9f449eaf2d2e93c3c8fb"
+  dependencies:
+    spdx-expression-parse "^1.0.0"
+    spdx-ranges "^1.0.0"
+
+spdx-correct@^2.0.3:
+  version "2.0.4"
+  resolved "http://mon-1:4873/spdx-correct/-/spdx-correct-2.0.4.tgz#d1652ad2ebc516f656f66ea93398558065f1b4a4"
+  dependencies:
+    spdx-expression-parse "^2.0.1"
+    spdx-license-ids "^2.0.1"
+
 spdx-correct@^3.0.0:
   version "3.0.0"
   resolved "http://mon-1:4873/spdx-correct/-/spdx-correct-3.0.0.tgz#05a5b4d7153a195bc92c3c425b69f3b2a9524c82"
@@ -8788,9 +8845,24 @@ spdx-correct@^3.0.0:
     spdx-expression-parse "^3.0.0"
     spdx-license-ids "^3.0.0"
 
-spdx-exceptions@^2.1.0:
+spdx-exceptions@^1.0.0:
+  version "1.0.5"
+  resolved "http://mon-1:4873/spdx-exceptions/-/spdx-exceptions-1.0.5.tgz#9d21ac4da4bdb71d060fb74e5a67531d032cbba6"
+
+spdx-exceptions@^2.0.0, spdx-exceptions@^2.1.0:
   version "2.1.0"
   resolved "http://mon-1:4873/spdx-exceptions/-/spdx-exceptions-2.1.0.tgz#2c7ae61056c714a5b9b9b2b2af7d311ef5c78fe9"
+
+spdx-expression-parse@^1.0.0:
+  version "1.0.4"
+  resolved "http://mon-1:4873/spdx-expression-parse/-/spdx-expression-parse-1.0.4.tgz#9bdf2f20e1f40ed447fbe273266191fced51626c"
+
+spdx-expression-parse@^2.0.1:
+  version "2.0.2"
+  resolved "http://mon-1:4873/spdx-expression-parse/-/spdx-expression-parse-2.0.2.tgz#e2e0f229c057eac704c5a6d1c687eed66aca034b"
+  dependencies:
+    spdx-exceptions "^2.0.0"
+    spdx-license-ids "^2.0.1"
 
 spdx-expression-parse@^3.0.0:
   version "3.0.0"
@@ -8799,9 +8871,35 @@ spdx-expression-parse@^3.0.0:
     spdx-exceptions "^2.1.0"
     spdx-license-ids "^3.0.0"
 
+spdx-license-ids@^1.0.0:
+  version "1.2.2"
+  resolved "http://mon-1:4873/spdx-license-ids/-/spdx-license-ids-1.2.2.tgz#c9df7a3424594ade6bd11900d596696dc06bac57"
+
+spdx-license-ids@^2.0.1:
+  version "2.0.1"
+  resolved "http://mon-1:4873/spdx-license-ids/-/spdx-license-ids-2.0.1.tgz#02017bcc3534ee4ffef6d58d20e7d3e9a1c3c8ec"
+
 spdx-license-ids@^3.0.0:
   version "3.0.0"
   resolved "http://mon-1:4873/spdx-license-ids/-/spdx-license-ids-3.0.0.tgz#7a7cd28470cc6d3a1cfe6d66886f6bc430d3ac87"
+
+spdx-ranges@^1.0.0:
+  version "1.0.1"
+  resolved "http://mon-1:4873/spdx-ranges/-/spdx-ranges-1.0.1.tgz#0f4eec7b8ea48ed202e374bb8942e8d18dc0113e"
+
+spdx-satisfies@^0.1.3:
+  version "0.1.3"
+  resolved "http://mon-1:4873/spdx-satisfies/-/spdx-satisfies-0.1.3.tgz#67a1f274e6115d4aae28afe474db76164be10bdc"
+  dependencies:
+    spdx-compare "^0.1.2"
+    spdx-expression-parse "^1.0.0"
+
+spdx@^0.5.1:
+  version "0.5.1"
+  resolved "http://mon-1:4873/spdx/-/spdx-0.5.1.tgz#d36c275088b48d75a9046cd44a838ce4b5339998"
+  dependencies:
+    spdx-exceptions "^1.0.0"
+    spdx-license-ids "^1.0.0"
 
 spdy-transport@^2.0.18:
   version "2.1.0"
@@ -10216,3 +10314,7 @@ yauzl@2.4.1:
 yeast@0.1.2:
   version "0.1.2"
   resolved "http://mon-1:4873/yeast/-/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
+
+yui-lint@^0.2.0:
+  version "0.2.0"
+  resolved "http://mon-1:4873/yui-lint/-/yui-lint-0.2.0.tgz#e913da74faa064fb53c03771b2d31293865f0185"
