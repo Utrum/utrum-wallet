@@ -11,9 +11,8 @@ const actions = {
         return bluebird.mapSeries(transactionList, transaction => {
           return decodeTx(wallet, transaction, rootGetters.isTestMode)
             .then((transactionDetail) => {
-              // commit('DELETE_PENDING_TX', transaction.tx_hash, { root: true });
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
-              dispatch('buildSwapList', { transactionToDelete: transaction }, { root: true });
+              dispatch('buildSwapList', transaction, { root: true });
             })
             .catch(() => { })
           ;

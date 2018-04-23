@@ -157,10 +157,12 @@ const associateTxsFromWallet = (commit, cryptoTxs, mnzTxs, transactionToDelete) 
         });
         const minConfirmation = 1;
 
-        if (cryptoTxsForMnz[0]
-          && cryptoTxsForMnz[0].confirmations > minConfirmation
-          && mnzTx.confirmations > minConfirmation) {
-          commit('DELETE_PENDING_TX', transactionToDelete.tx_hash);
+        if (cryptoTxsForMnz[0] && mnzTx.confirmations
+          && cryptoTxsForMnz[0].confirmations >= minConfirmation
+          && mnzTx.confirmations >= minConfirmation) {
+          if (transactionToDelete && cryptoTxsForMnz[0].tx_hash === transactionToDelete.tx_hash) {
+            commit('DELETE_PENDING_TX', transactionToDelete.tx_hash);
+          }
           associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
         }
       }
