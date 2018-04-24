@@ -6,13 +6,14 @@ const actions = {
   buildTxHistory({ commit, dispatch, getters, rootGetters }, wallet) {
     return wallet.electrum
       .getTransactionHistory(wallet.address)
-      .then((transactionList) => filterExistingTransactions(wallet.txs, transactionList))
+      // .then((transactionList) => filterExistingTransactions(wallet.txs, transactionList))
       .then(transactionList => {
         return bluebird.mapSeries(transactionList, transaction => {
           return decodeTx(wallet, transaction, rootGetters.isTestMode)
             .then((transactionDetail) => {
+              console.log(`Tx: ${transactionDetail.tx_hash}, confirmations: ${transactionDetail.confirmations}`);
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
-              dispatch('buildSwapList', transaction, { root: true });
+              dispatch('buildSwapList', { root: true });
             })
             .catch(() => { })
           ;
@@ -22,21 +23,21 @@ const actions = {
   },
 };
 
-const filterExistingTransactions = (walletTxs, txs) => {
-  const transactions = _.filter(txs, (tx) => { return tx.height > 0; });
-  return _
-    .filter(transactions, (tx) => {
-      let found = false;
-      _.forEach(walletTxs, (walletTx) => {
-        if (walletTx.tx_hash === tx.tx_hash) {
-          found = true;
-          return false;
-        }
-      });
-      return !found;
-    })
-  ;
-};
+// const filterExistingTransactions = (walletTxs, txs) => {
+//   const transactions = _.filter(txs, (tx) => { return tx.height > 0; });
+//   return _
+//     .filter(transactions, (tx) => {
+//       let found = false;
+//       _.forEach(walletTxs, (walletTx) => {
+//         if (walletTx.tx_hash === tx.tx_hash) {
+//           found = true;
+//           return false;
+//         }
+//       });
+//       return !found;
+//     })
+//   ;
+// };
 
 const decodeTx = (wallet, tx, isTestMode) => {
   return wallet.electrum

@@ -36,19 +36,36 @@ const actions = {
       })
     ;
   },
-  buildSwapList({ commit, rootGetters }, transactionToDelete) {
+  buildSwapList({ commit, rootGetters }) {
     let cryptoTxs = [];
     let icoCoinTxs = [];
     _.map(rootGetters.enabledCoins, (coin) => {
+      const confirmedTxsForCoin = _.filter(rootGetters.getWalletByTicker(coin.ticker).txs, (tx) => {
+        if (tx.confirmations != null &&
+            tx.confirmations >= rootGetters.getMinConfirmations) {
+          return true;
+        }
+        return false;
+      });
       if (coin.ticker.indexOf('MNZ') < 0) {
-        cryptoTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
+        cryptoTxs = cryptoTxs.concat(confirmedTxsForCoin);
       } else {
-        icoCoinTxs = cryptoTxs.concat(rootGetters.getWalletByTicker(coin.ticker).txs);
+        icoCoinTxs = icoCoinTxs.concat(confirmedTxsForCoin);
       }
     });
 
-    const associations = associateTxsFromWallet(commit, cryptoTxs, icoCoinTxs, transactionToDelete);
-    commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
+    if (cryptoTxs != null && cryptoTxs.length > 0) {
+      // console.log(`==================================================================================`);
+      // console.log(`Inputs Cryptos:`, cryptoTxs);
+      // console.log(`inputs Mnz:`, icoCoinTxs);
+      const associations = associateTxsFromWallet(cryptoTxs, icoCoinTxs);
+      // console.log("Associations:", associations);
+      commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
+
+      _.forEach(getLocalTxsToDelete(cryptoTxs, icoCoinTxs, rootGetters.getMinConfirmations), (cryptoTxToDelete) => {
+        commit('DELETE_PENDING_TX', cryptoTxToDelete.tx_hash);
+      });
+    }
   },
 };
 
@@ -143,35 +160,51 @@ const getNewBuyAddress = (wallet, pubKeysBuy) => {
 };
 
 // Swap association
-const associateTxsFromWallet = (commit, cryptoTxs, mnzTxs, transactionToDelete) => {
+const associateTxsFromWallet = (cryptoTxs, mnzTxs) => {
   const associateArray = [];
+  iterateOverSwapsForTxs(cryptoTxs, mnzTxs, (cryptoTx, icoTx) => {
+    associateArray.push({ mnzTx: icoTx, cryptoTx: cryptoTx, ticker: icoTx.origin.ticker });
+  });
+  return associateArray;
+};
 
-  if (cryptoTxs != null && mnzTxs != null) {
-    _.forEach(mnzTxs, (mnzTx) => {
-      if (mnzTx.origin != null) {
-        const cryptoTxsForMnz = _.filter(cryptoTxs, (cryptoTx) => {
-          if (cryptoTx.tx_hash.substring(0, 9) === mnzTx.origin.txHash) {
-            return true;
-          }
-          return false;
-        });
-        const minConfirmation = 1;
+const getTxFromArrayForShortTxHash = (txs, sTxHash) => {
+  const txsForShash = _.filter(txs, (tx) => {
+    if (tx.tx_hash.substring(0, 9) === sTxHash) {
+      return true;
+    }
+    return false;
+  });
+  if (txsForShash != null && txsForShash.length > 0) {
+    return txsForShash[0];
+  }
+  return null;
+};
 
-        if (cryptoTxsForMnz[0] && mnzTx.confirmations
-          && cryptoTxsForMnz[0].confirmations >= minConfirmation
-          && mnzTx.confirmations >= minConfirmation) {
-          if (transactionToDelete && cryptoTxsForMnz[0].tx_hash === transactionToDelete.tx_hash) {
-            commit('DELETE_PENDING_TX', transactionToDelete.tx_hash);
-          }
-          associateArray.push({ mnzTx: mnzTx, cryptoTx: cryptoTxsForMnz[0], ticker: mnzTx.origin.ticker });
+const iterateOverSwapsForTxs = (cryptoTxs, icoTxs, callback) => {
+  if (cryptoTxs != null && icoTxs != null) {
+    _.forEach(icoTxs, (icoTx) => {
+      if (icoTx.origin != null) {
+        const cryptoTxForIco = getTxFromArrayForShortTxHash(cryptoTxs, icoTx.origin.txHash);
+        if (cryptoTxForIco != null && callback != null) {
+          callback(cryptoTxForIco, icoTx);
         }
       }
     });
   }
-  return associateArray;
 };
 
 // Local management
+const getLocalTxsToDelete = (cryptoTxs, icoTxs, configMinConfirmations) => {
+  const arrayOfLocalTxsToDelete = [];
+  iterateOverSwapsForTxs(cryptoTxs, icoTxs, (cryptoTx, icoTx) => {
+    if (cryptoTx.confirmations >= configMinConfirmations && icoTx.confirmations >= configMinConfirmations) {
+      arrayOfLocalTxsToDelete.push(cryptoTx);
+    }
+  });
+  return arrayOfLocalTxsToDelete;
+};
+
 const generateLocalTx = (address, amount, txHash) => {
   const nowDate = new Date();
   const now = nowDate.getTime() / 1000;
