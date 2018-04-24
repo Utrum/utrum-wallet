@@ -4,8 +4,8 @@
     <h2 id="coin-item">{{wallet.ticker}}</h2>
     <p id="us-dollar" class="col-header"><img src="~@/assets/icon-usdollar.svg"/> {{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
   </div>
-  <div class="row-content" :class="getQRCodeClass(wallet.balance_unconfirmed)">
-    <div v-if="wallet.balance_unconfirmed.comparedTo(0) !== 0">
+  <div class="row-content" :class="getQRCodeClass">
+    <div v-if="isBalanceUnconfirmedIsFilled">
       <img v-if="wallet.balance_unconfirmed.comparedTo(0) === -1" src="~@/assets/icon-in.svg" alt="icon-unconfirmed-balance">
       <img v-else src="~@/assets/icon-out.svg" alt="icon-unconfirmed-balance">
       <span :class="getUnconfirmedColor(wallet.balance_unconfirmed)"><span v-if="wallet.balance_unconfirmed.comparedTo(0) === 1">+</span>{{numberWithSpaces(wallet.balance_unconfirmed.toString())}}</span>
