@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as bluebird from 'bluebird';
 import getTxFromRawTx from '../../lib/txtools';
 
@@ -11,7 +10,7 @@ const actions = {
         return bluebird.mapSeries(transactionList, transaction => {
           return decodeTx(wallet, transaction, rootGetters.isTestMode)
             .then((transactionDetail) => {
-              console.log(`Tx: ${transactionDetail.tx_hash}, confirmations: ${transactionDetail.confirmations}`);
+              // console.log(`Tx: ${transactionDetail.tx_hash}, confirmations: ${transactionDetail.confirmations}`);
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
               dispatch('buildSwapList', { root: true });
             })
