@@ -1,0 +1,28 @@
+<div>
+  <h3>Library used</h3>
+
+  <div v-if="isLicensesFilled">
+    <ul id="list-licenses">
+        <li v-for="(license, index) in licenses">
+          <h5 v-b-toggle="`license-${index}`" id="title-license">{{ license.name }}</h5>
+          <b-collapse :id="`license-${index}`" class="mt-2">
+              <hr/>
+              <div v-if="getLicenses(license) !== ''">
+                  <h6>licenses: {{getLicenses(license)}}</h6>
+              </div>
+              <div v-if="getPublicher(license) !== ''">
+                  <h6>publicher: {{getPublicher(license)}} <span>{{formatEmail(license)}}</span></h6>
+              </div>
+              <div v-if="getRepository(license) !== ''">
+                <h6>repository: <a v-bind:href="getRepository(license)" @click.prevent="openLink">{{getRepository(license)}}</a></h6>
+              </div>
+              <p>{{license.licenseString}}</p>
+              <hr/>
+          </b-collapse>
+        </li>
+      </ul>
+  </div>
+  <div v-else class="d-flex align-items-center justify-content-center" id="loader">
+      <ball-scale-multiple-loader color="#000000"></ball-scale-multiple-loader>
+  </div>
+</div>

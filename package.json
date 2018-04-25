@@ -1,9 +1,9 @@
 {
-  "name": "vue-dico",
+  "name": "mnz-wallet",
   "version": "0.6.6",
-  "author": "Maxime Saddok <maxime@monaize.com>",
+  "author": "./LEGAL/AUTHORS",
   "description": "Monaize ICO Wallet",
-  "license": null,
+  "license": "GPL-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
     "eslint": "./node_modules/.bin/eslint src/",
@@ -20,7 +20,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "vue-dico",
+    "productName": "mnz-wallet",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
@@ -81,16 +81,20 @@
     "electron-spawn": "^5.0.0",
     "electrum-client": "https://github.com/Monaize/node-electrum-client.git#electrumx-persistence",
     "elliptic": "^6.4.0",
+    "eslint-plugin-header": "^1.2.0",
     "express": "^4.16.3",
+    "fs": "^0.0.1-security",
     "glyphicons": "^0.2.0",
     "jquery": "^3.3.1",
     "js-sha256": "^0.9.0",
     "less": "^3.0.1",
     "less-loader": "^4.0.5",
     "libwallet-mnz": "3.2.2",
+    "license-checker": "^18.0.0",
     "lodash": "^4.17.5",
     "moment": "^2.22.0",
     "moment-timezone": "^0.5.14",
+    "npm-license-crawler": "^0.1.8",
     "satoshi-bitcoin": "^1.0.4",
     "toml": "^2.3.3",
     "typeface-montserrat": "0.0.54",
@@ -98,12 +102,14 @@
     "vue": "^2.3.3",
     "vue-clipboard2": "0.0.8",
     "vue-electron": "^1.0.6",
+    "vue-loaders": "^2.0.0",
     "vue-qrcode-reader": "^0.7.2",
     "vue-qriously": "^1.1.1",
     "vue-router": "^2.5.3",
     "vue-toasted": "^1.1.24",
     "vuex": "^2.3.1",
-    "wif": "^2.0.6"
+    "wif": "^2.0.6",
+    "yui-lint": "^0.2.0"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.13",

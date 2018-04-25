@@ -1,4 +1,20 @@
-import { app, BrowserWindow, Menu } from 'electron';
+/** ***************************************************************************
+ * Copyright © 2018 Monaize Singapore PTE. LTD.                               *
+ *                                                                            *
+ * See the AUTHORS, and LICENSE files at the top-level directory of this      *
+ * distribution for the individual copyright holder information and the       *
+ * developer policies on copyright and licensing.                             *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Monaize Singapore PTE. LTD software, including this file may be copied,    *
+ * modified, propagated or distributed except according to the terms          *
+ * contained in the LICENSE file                                              *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/
+
+import { app, BrowserWindow, Menu, shell } from 'electron';
 import ElectrumManager from './electrumManager';
 
 const electrumManager = new ElectrumManager();
@@ -6,7 +22,9 @@ const electrumManager = new ElectrumManager();
 require('electron-debug')({ showDevTools: true });
 const path = require('path');
 const ipc = require('electron').ipcMain;
+const {ipcRenderer} = require('electron');
 const http = require('http');
+const pkg = require('../../package.json');
 
 /**
  * Set `__static` path to static files in production
@@ -20,6 +38,14 @@ let mainWindow;
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
+
+/**
+ * Create windows electron for open aboutView.
+ * @returns {null} None
+ */
+function aboutView() {
+  mainWindow.webContents.send('aboutView');
+}
 
 /**
  * Create windows electron with specifications.
@@ -44,11 +70,12 @@ function createWindow() {
       webSecurity: false,
     },
   });
+
   mainWindow.webContents.openDevTools();
   const template = [{
     label: 'Monaize ICO App',
     submenu: [
-        { label: 'About Monaize ICO App', selector: 'orderFrontStandardAboutPanel:' },
+        { label: 'About Monaize ICO App', click: function () { aboutView() } },
         { type: 'separator' },
         { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); } },
     ] }, {

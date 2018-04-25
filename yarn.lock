@@ -202,6 +202,10 @@ ansi-html@0.0.7:
   version "0.0.7"
   resolved "http://mon-1:4873/ansi-html/-/ansi-html-0.0.7.tgz#813584021962a9e9e6fd039f940d12f56ca7859e"
 
+ansi-regex@^0.2.0, ansi-regex@^0.2.1:
+  version "0.2.1"
+  resolved "http://mon-1:4873/ansi-regex/-/ansi-regex-0.2.1.tgz#0d8e946967a3d8143f93e24e298525fc1b2235f9"
+
 ansi-regex@^2.0.0:
   version "2.1.1"
   resolved "http://mon-1:4873/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
@@ -209,6 +213,10 @@ ansi-regex@^2.0.0:
 ansi-regex@^3.0.0:
   version "3.0.0"
   resolved "http://mon-1:4873/ansi-regex/-/ansi-regex-3.0.0.tgz#ed0317c322064f79466c02966bddb605ab37d998"
+
+ansi-styles@^1.1.0:
+  version "1.1.0"
+  resolved "http://mon-1:4873/ansi-styles/-/ansi-styles-1.1.0.tgz#eaecbf66cd706882760b2f4691582b8f55d7a7de"
 
 ansi-styles@^2.2.1:
   version "2.2.1"
@@ -354,7 +362,7 @@ arrify@^1.0.0, arrify@^1.0.1:
   version "1.0.1"
   resolved "http://mon-1:4873/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
-asap@~2.0.3:
+asap@^2.0.0, asap@~2.0.3:
   version "2.0.6"
   resolved "http://mon-1:4873/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
 
@@ -433,7 +441,7 @@ async@1.x, async@^1.4.0, async@^1.5.2:
   version "1.5.2"
   resolved "http://mon-1:4873/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
-async@^2.0.0, async@^2.1.2, async@^2.4.1:
+async@^2.0.0, async@^2.1.2, async@^2.4.1, async@^2.6.0:
   version "2.6.0"
   resolved "http://mon-1:4873/async/-/async-2.6.0.tgz#61a29abb6fcc026fea77e56d1c6ec53a795951f4"
   dependencies:
@@ -2063,6 +2071,16 @@ chalk@^2.0.1, chalk@^2.1.0, chalk@^2.3.0, chalk@^2.3.2:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
+chalk@~0.5.1:
+  version "0.5.1"
+  resolved "http://mon-1:4873/chalk/-/chalk-0.5.1.tgz#663b3a648b68b55d04690d49167aa837858f2174"
+  dependencies:
+    ansi-styles "^1.1.0"
+    escape-string-regexp "^1.0.0"
+    has-ansi "^0.1.0"
+    strip-ansi "^0.3.0"
+    supports-color "^0.2.0"
+
 change-case@3.0.x, change-case@^3.0.2:
   version "3.0.2"
   resolved "http://mon-1:4873/change-case/-/change-case-3.0.2.tgz#fd48746cce02f03f0a672577d1d3a8dc2eceb037"
@@ -2835,6 +2853,10 @@ debug@~2.2.0:
   dependencies:
     ms "0.7.1"
 
+debuglog@^1.0.1:
+  version "1.0.1"
+  resolved "http://mon-1:4873/debuglog/-/debuglog-1.0.1.tgz#aa24ffb9ac3df9a2351837cfb2d279360cd78492"
+
 decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
   resolved "http://mon-1:4873/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
@@ -2990,6 +3012,13 @@ devtron@^1.4.0:
     accessibility-developer-tools "^2.11.0"
     highlight.js "^9.3.0"
     humanize-plus "^1.8.1"
+
+dezalgo@^1.0.0:
+  version "1.0.3"
+  resolved "http://mon-1:4873/dezalgo/-/dezalgo-1.0.3.tgz#7f742de066fc748bc8db820569dddce49bf0d456"
+  dependencies:
+    asap "^2.0.0"
+    wrappy "1"
 
 di@^0.0.1:
   version "0.0.1"
@@ -3554,7 +3583,7 @@ escape-html@~1.0.3:
   version "1.0.3"
   resolved "http://mon-1:4873/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
 
-escape-string-regexp@1.0.5, escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
+escape-string-regexp@1.0.5, escape-string-regexp@^1.0.0, escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "http://mon-1:4873/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
 
@@ -3606,6 +3635,10 @@ eslint-module-utils@^2.2.0:
   dependencies:
     debug "^2.6.8"
     pkg-dir "^1.0.0"
+
+eslint-plugin-header@^1.2.0:
+  version "1.2.0"
+  resolved "http://mon-1:4873/eslint-plugin-header/-/eslint-plugin-header-1.2.0.tgz#f704779c6fbc7c668f180d835de1f462b0467c37"
 
 eslint-plugin-import@^2.2.0:
   version "2.11.0"
@@ -4198,6 +4231,10 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "http://mon-1:4873/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
 
+fs@^0.0.1-security:
+  version "0.0.1-security"
+  resolved "http://mon-1:4873/fs/-/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
+
 fsevents@^1.0.0, fsevents@^1.1.2:
   version "1.1.3"
   resolved "http://mon-1:4873/fsevents/-/fsevents-1.1.3.tgz#11f82318f5fe7bb2cd22965a108e9306208216d8"
@@ -4299,6 +4336,14 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+github-url-from-git@^1.3.0:
+  version "1.5.0"
+  resolved "http://mon-1:4873/github-url-from-git/-/github-url-from-git-1.5.0.tgz#f985fedcc0a9aa579dc88d7aff068d55cc6251a0"
+
+github-url-from-username-repo@^1.0.0:
+  version "1.0.2"
+  resolved "http://mon-1:4873/github-url-from-username-repo/-/github-url-from-username-repo-1.0.2.tgz#7dd79330d2abe69c10c2cef79714c97215791dfa"
+
 glob-base@^0.3.0:
   version "0.3.0"
   resolved "http://mon-1:4873/glob-base/-/glob-base-0.3.0.tgz#dbb164f6221b1c0b1ccf82aea328b497df0ea3c4"
@@ -4330,7 +4375,7 @@ glob@7.1.2, glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.0, glob@^7.1.1, glo
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^5.0.15:
+glob@^5.0.15, glob@^5.0.3:
   version "5.0.15"
   resolved "http://mon-1:4873/glob/-/glob-5.0.15.tgz#1bc936b9e02f4a603fcc222ecf7633d30b8b93b1"
   dependencies:
@@ -4426,6 +4471,12 @@ got@^6.7.1:
     unzip-response "^2.0.1"
     url-parse-lax "^1.0.0"
 
+"graceful-fs@2 || 3":
+  version "3.0.11"
+  resolved "http://mon-1:4873/graceful-fs/-/graceful-fs-3.0.11.tgz#7613c778a1afea62f25c630a086d7f3acbbdd818"
+  dependencies:
+    natives "^1.1.0"
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
   version "4.1.11"
   resolved "http://mon-1:4873/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
@@ -4482,6 +4533,12 @@ har-validator@~5.0.3:
   dependencies:
     ajv "^5.1.0"
     har-schema "^2.0.0"
+
+has-ansi@^0.1.0:
+  version "0.1.0"
+  resolved "http://mon-1:4873/has-ansi/-/has-ansi-0.1.0.tgz#84f265aae8c0e6a88a12d7022894b7568894c62e"
+  dependencies:
+    ansi-regex "^0.2.0"
 
 has-ansi@^2.0.0:
   version "2.0.0"
@@ -5373,9 +5430,17 @@ istanbul@^0.4.0:
     which "^1.1.1"
     wordwrap "^1.0.0"
 
+jju@^1.1.0:
+  version "1.3.0"
+  resolved "http://mon-1:4873/jju/-/jju-1.3.0.tgz#dadd9ef01924bc728b03f2f7979bdbd62f7a2aaa"
+
 jmespath@0.15.0:
   version "0.15.0"
   resolved "http://mon-1:4873/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
+
+jquery-extend@~2.0.3:
+  version "2.0.3"
+  resolved "http://mon-1:4873/jquery-extend/-/jquery-extend-2.0.3.tgz#6815cdb01a866ddba30e6f4d0fc5fb6679272735"
 
 jquery-mousewheel@~3.1.13:
   version "3.1.13"
@@ -5430,6 +5495,16 @@ jsesc@~0.5.0:
 json-loader@^0.5.4:
   version "0.5.7"
   resolved "http://mon-1:4873/json-loader/-/json-loader-0.5.7.tgz#dca14a70235ff82f0ac9a3abeb60d337a365185d"
+
+json-parse-better-errors@^1.0.1:
+  version "1.0.2"
+  resolved "http://mon-1:4873/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
+
+json-parse-helpfulerror@^1.0.2:
+  version "1.0.3"
+  resolved "http://mon-1:4873/json-parse-helpfulerror/-/json-parse-helpfulerror-1.0.3.tgz#13f14ce02eed4e981297b64eb9e3b932e2dd13dc"
+  dependencies:
+    jju "^1.1.0"
 
 json-schema-traverse@^0.3.0:
   version "0.3.1"
@@ -5730,6 +5805,31 @@ libwallet-mnz@3.2.2:
     js-sha256 "^0.9.0"
     satoshi-bitcoin "^1.0.4"
     wif "^2.0.6"
+
+license-checker@^18.0.0:
+  version "18.0.0"
+  resolved "http://mon-1:4873/license-checker/-/license-checker-18.0.0.tgz#1c58ca91f54151460cdbce7f65af9e5934bdbdbf"
+  dependencies:
+    chalk "~0.5.1"
+    debug "^2.2.0"
+    mkdirp "^0.3.5"
+    nopt "^2.2.0"
+    read-installed "~4.0.3"
+    semver "^5.3.0"
+    spdx "^0.5.1"
+    spdx-correct "^2.0.3"
+    spdx-satisfies "^0.1.3"
+    treeify "^1.0.1"
+
+"license-checker@git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893":
+  version "1.0.0"
+  resolved "git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893"
+  dependencies:
+    chalk "~0.5.1"
+    mkdirp "^0.3.5"
+    nopt "^2.2.0"
+    read-installed "~3.1.3"
+    treeify "^1.0.1"
 
 load-json-file@^1.0.0:
   version "1.1.0"
@@ -6297,6 +6397,10 @@ mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdi
   dependencies:
     minimist "0.0.8"
 
+mkdirp@^0.3.5:
+  version "0.3.5"
+  resolved "http://mon-1:4873/mkdirp/-/mkdirp-0.3.5.tgz#de3e5f8961c88c787ee1368df849ac4413eca8d7"
+
 mocha@^5.0.5:
   version "5.1.0"
   resolved "http://mon-1:4873/mocha/-/mocha-5.1.0.tgz#5ff11cc39c0bb65330ac6c41f9086634e3e3f686"
@@ -6412,6 +6516,10 @@ nanomatch@^1.2.9:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+natives@^1.1.0:
+  version "1.1.3"
+  resolved "http://mon-1:4873/natives/-/natives-1.1.3.tgz#44a579be64507ea2d6ed1ca04a9415915cf75558"
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -6599,9 +6707,23 @@ nodemailer@^2.5.0:
     nodemailer-smtp-transport "2.7.2"
     socks "1.1.9"
 
-"nopt@2 || 3", nopt@3.x:
+nopt-defaults@^0.0.1:
+  version "0.0.1"
+  resolved "http://mon-1:4873/nopt-defaults/-/nopt-defaults-0.0.1.tgz#f150fcc8882309cbfb76187e12e9bcb20694558b"
+
+nopt-usage@^0.1.0:
+  version "0.1.0"
+  resolved "http://mon-1:4873/nopt-usage/-/nopt-usage-0.1.0.tgz#b18b8c183e181047ca9e63b7cde7cfc702cca579"
+
+"nopt@2 || 3", nopt@3.x, nopt@^3.0.6:
   version "3.0.6"
   resolved "http://mon-1:4873/nopt/-/nopt-3.0.6.tgz#c6465dbf08abcd4db359317f79ac68a646b28ff9"
+  dependencies:
+    abbrev "1"
+
+nopt@^2.2.0:
+  version "2.2.1"
+  resolved "http://mon-1:4873/nopt/-/nopt-2.2.1.tgz#2aa09b7d1768487b3b89a9c5aa52335bff0baea7"
   dependencies:
     abbrev "1"
 
@@ -6612,7 +6734,15 @@ nopt@^4.0.1:
     abbrev "1"
     osenv "^0.1.4"
 
-normalize-package-data@^2.3.2, normalize-package-data@^2.3.4, normalize-package-data@^2.4.0:
+normalize-package-data@^1.0.0:
+  version "1.0.3"
+  resolved "http://mon-1:4873/normalize-package-data/-/normalize-package-data-1.0.3.tgz#8be955b8907af975f1a4584ea8bb9b41492312f5"
+  dependencies:
+    github-url-from-git "^1.3.0"
+    github-url-from-username-repo "^1.0.0"
+    semver "2 || 3 || 4"
+
+normalize-package-data@^2.0.0, normalize-package-data@^2.3.2, normalize-package-data@^2.3.4, normalize-package-data@^2.4.0:
   version "2.4.0"
   resolved "http://mon-1:4873/normalize-package-data/-/normalize-package-data-2.4.0.tgz#12f95a307d58352075a04907b84ac8be98ac012f"
   dependencies:
@@ -6648,6 +6778,19 @@ npm-execspawn@^1.2.0:
     execspawn "^1.0.0"
     shell-quote "^1.5.0"
     xtend "^3.0.0"
+
+npm-license-crawler@^0.1.8:
+  version "0.1.8"
+  resolved "http://mon-1:4873/npm-license-crawler/-/npm-license-crawler-0.1.8.tgz#df45a369a592b384ce36b09a7e8c99832ffb591c"
+  dependencies:
+    async "^2.6.0"
+    jquery-extend "~2.0.3"
+    license-checker "git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893"
+    mkdirp "^0.5.1"
+    nopt "^3.0.6"
+    nopt-defaults "^0.0.1"
+    nopt-usage "^0.1.0"
+    treeify "^1.1.0"
 
 npm-run-path@^2.0.0:
   version "2.0.2"
@@ -7667,11 +7810,58 @@ read-config-file@2.1.1:
     json5 "^0.5.1"
     lazy-val "^1.0.3"
 
+read-installed@~3.1.3:
+  version "3.1.5"
+  resolved "http://mon-1:4873/read-installed/-/read-installed-3.1.5.tgz#4ae36081afd3e2204dc2e279807aaa52c30c8c0c"
+  dependencies:
+    debuglog "^1.0.1"
+    read-package-json "1"
+    readdir-scoped-modules "^1.0.0"
+    semver "2 || 3 || 4"
+    slide "~1.1.3"
+    util-extend "^1.0.1"
+  optionalDependencies:
+    graceful-fs "2 || 3"
+
+read-installed@~4.0.3:
+  version "4.0.3"
+  resolved "http://mon-1:4873/read-installed/-/read-installed-4.0.3.tgz#ff9b8b67f187d1e4c29b9feb31f6b223acd19067"
+  dependencies:
+    debuglog "^1.0.1"
+    read-package-json "^2.0.0"
+    readdir-scoped-modules "^1.0.0"
+    semver "2 || 3 || 4 || 5"
+    slide "~1.1.3"
+    util-extend "^1.0.1"
+  optionalDependencies:
+    graceful-fs "^4.1.2"
+
 read-only-stream@^2.0.0:
   version "2.0.0"
   resolved "http://mon-1:4873/read-only-stream/-/read-only-stream-2.0.0.tgz#2724fd6a8113d73764ac288d4386270c1dbf17f0"
   dependencies:
     readable-stream "^2.0.2"
+
+read-package-json@1:
+  version "1.3.3"
+  resolved "http://mon-1:4873/read-package-json/-/read-package-json-1.3.3.tgz#ef79dfda46e165376ee8a57efbfedd4d1b029ba4"
+  dependencies:
+    glob "^5.0.3"
+    json-parse-helpfulerror "^1.0.2"
+    normalize-package-data "^1.0.0"
+  optionalDependencies:
+    graceful-fs "2 || 3"
+
+read-package-json@^2.0.0:
+  version "2.0.13"
+  resolved "http://mon-1:4873/read-package-json/-/read-package-json-2.0.13.tgz#2e82ebd9f613baa6d2ebe3aa72cefe3f68e41f4a"
+  dependencies:
+    glob "^7.1.1"
+    json-parse-better-errors "^1.0.1"
+    normalize-package-data "^2.0.0"
+    slash "^1.0.0"
+  optionalDependencies:
+    graceful-fs "^4.1.2"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
@@ -7743,6 +7933,15 @@ readable-stream@~2.0.0, readable-stream@~2.0.5:
     process-nextick-args "~1.0.6"
     string_decoder "~0.10.x"
     util-deprecate "~1.0.1"
+
+readdir-scoped-modules@^1.0.0:
+  version "1.0.2"
+  resolved "http://mon-1:4873/readdir-scoped-modules/-/readdir-scoped-modules-1.0.2.tgz#9fafa37d286be5d92cbaebdee030dc9b5f406747"
+  dependencies:
+    debuglog "^1.0.1"
+    dezalgo "^1.0.0"
+    graceful-fs "^4.1.2"
+    once "^1.3.0"
 
 readdirp@^2.0.0:
   version "2.1.0"
@@ -8259,6 +8458,10 @@ semver-diff@^2.0.0:
   dependencies:
     semver "^5.0.3"
 
+"semver@2 || 3 || 4":
+  version "4.3.6"
+  resolved "http://mon-1:4873/semver/-/semver-4.3.6.tgz#300bc6e0e86374f7ba61068b5b1ecd57fc6532da"
+
 "semver@2 || 3 || 4 || 5", semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.4.1, semver@^5.5.0:
   version "5.5.0"
   resolved "http://mon-1:4873/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
@@ -8431,6 +8634,10 @@ slash@^1.0.0:
 slice-ansi@0.0.4:
   version "0.0.4"
   resolved "http://mon-1:4873/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
+
+slide@~1.1.3:
+  version "1.1.6"
+  resolved "http://mon-1:4873/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
 
 smart-buffer@^1.0.13, smart-buffer@^1.0.4:
   version "1.1.15"
@@ -8625,6 +8832,20 @@ source-map@~0.2.0:
   dependencies:
     amdefine ">=0.0.4"
 
+spdx-compare@^0.1.2:
+  version "0.1.2"
+  resolved "http://mon-1:4873/spdx-compare/-/spdx-compare-0.1.2.tgz#b06af3ea34af7437d91a9f449eaf2d2e93c3c8fb"
+  dependencies:
+    spdx-expression-parse "^1.0.0"
+    spdx-ranges "^1.0.0"
+
+spdx-correct@^2.0.3:
+  version "2.0.4"
+  resolved "http://mon-1:4873/spdx-correct/-/spdx-correct-2.0.4.tgz#d1652ad2ebc516f656f66ea93398558065f1b4a4"
+  dependencies:
+    spdx-expression-parse "^2.0.1"
+    spdx-license-ids "^2.0.1"
+
 spdx-correct@^3.0.0:
   version "3.0.0"
   resolved "http://mon-1:4873/spdx-correct/-/spdx-correct-3.0.0.tgz#05a5b4d7153a195bc92c3c425b69f3b2a9524c82"
@@ -8632,9 +8853,24 @@ spdx-correct@^3.0.0:
     spdx-expression-parse "^3.0.0"
     spdx-license-ids "^3.0.0"
 
-spdx-exceptions@^2.1.0:
+spdx-exceptions@^1.0.0:
+  version "1.0.5"
+  resolved "http://mon-1:4873/spdx-exceptions/-/spdx-exceptions-1.0.5.tgz#9d21ac4da4bdb71d060fb74e5a67531d032cbba6"
+
+spdx-exceptions@^2.0.0, spdx-exceptions@^2.1.0:
   version "2.1.0"
   resolved "http://mon-1:4873/spdx-exceptions/-/spdx-exceptions-2.1.0.tgz#2c7ae61056c714a5b9b9b2b2af7d311ef5c78fe9"
+
+spdx-expression-parse@^1.0.0:
+  version "1.0.4"
+  resolved "http://mon-1:4873/spdx-expression-parse/-/spdx-expression-parse-1.0.4.tgz#9bdf2f20e1f40ed447fbe273266191fced51626c"
+
+spdx-expression-parse@^2.0.1:
+  version "2.0.2"
+  resolved "http://mon-1:4873/spdx-expression-parse/-/spdx-expression-parse-2.0.2.tgz#e2e0f229c057eac704c5a6d1c687eed66aca034b"
+  dependencies:
+    spdx-exceptions "^2.0.0"
+    spdx-license-ids "^2.0.1"
 
 spdx-expression-parse@^3.0.0:
   version "3.0.0"
@@ -8643,9 +8879,35 @@ spdx-expression-parse@^3.0.0:
     spdx-exceptions "^2.1.0"
     spdx-license-ids "^3.0.0"
 
+spdx-license-ids@^1.0.0:
+  version "1.2.2"
+  resolved "http://mon-1:4873/spdx-license-ids/-/spdx-license-ids-1.2.2.tgz#c9df7a3424594ade6bd11900d596696dc06bac57"
+
+spdx-license-ids@^2.0.1:
+  version "2.0.1"
+  resolved "http://mon-1:4873/spdx-license-ids/-/spdx-license-ids-2.0.1.tgz#02017bcc3534ee4ffef6d58d20e7d3e9a1c3c8ec"
+
 spdx-license-ids@^3.0.0:
   version "3.0.0"
   resolved "http://mon-1:4873/spdx-license-ids/-/spdx-license-ids-3.0.0.tgz#7a7cd28470cc6d3a1cfe6d66886f6bc430d3ac87"
+
+spdx-ranges@^1.0.0:
+  version "1.0.1"
+  resolved "http://mon-1:4873/spdx-ranges/-/spdx-ranges-1.0.1.tgz#0f4eec7b8ea48ed202e374bb8942e8d18dc0113e"
+
+spdx-satisfies@^0.1.3:
+  version "0.1.3"
+  resolved "http://mon-1:4873/spdx-satisfies/-/spdx-satisfies-0.1.3.tgz#67a1f274e6115d4aae28afe474db76164be10bdc"
+  dependencies:
+    spdx-compare "^0.1.2"
+    spdx-expression-parse "^1.0.0"
+
+spdx@^0.5.1:
+  version "0.5.1"
+  resolved "http://mon-1:4873/spdx/-/spdx-0.5.1.tgz#d36c275088b48d75a9046cd44a838ce4b5339998"
+  dependencies:
+    spdx-exceptions "^1.0.0"
+    spdx-license-ids "^1.0.0"
 
 spdy-transport@^2.0.18:
   version "2.1.0"
@@ -8823,6 +9085,12 @@ stringstream@~0.0.4, stringstream@~0.0.5:
   version "0.0.5"
   resolved "http://mon-1:4873/stringstream/-/stringstream-0.0.5.tgz#4e484cd4de5a0bbbee18e46307710a8a81621878"
 
+strip-ansi@^0.3.0:
+  version "0.3.0"
+  resolved "http://mon-1:4873/strip-ansi/-/strip-ansi-0.3.0.tgz#25f48ea22ca79187f3174a4db8759347bb126220"
+  dependencies:
+    ansi-regex "^0.2.1"
+
 strip-ansi@^3.0.0, strip-ansi@^3.0.1:
   version "3.0.1"
   resolved "http://mon-1:4873/strip-ansi/-/strip-ansi-3.0.1.tgz#6a385fb8853d952d5ff05d0e8aaf94278dc63dcf"
@@ -8890,6 +9158,10 @@ supports-color@4.4.0:
   resolved "http://mon-1:4873/supports-color/-/supports-color-4.4.0.tgz#883f7ddabc165142b2a61427f3352ded195d1a3e"
   dependencies:
     has-flag "^2.0.0"
+
+supports-color@^0.2.0:
+  version "0.2.0"
+  resolved "http://mon-1:4873/supports-color/-/supports-color-0.2.0.tgz#d92de2694eb3f67323973d7ae3d8b55b4c22190a"
 
 supports-color@^2.0.0:
   version "2.0.0"
@@ -9121,6 +9393,10 @@ tough-cookie@~2.3.0, tough-cookie@~2.3.3:
   resolved "http://mon-1:4873/tough-cookie/-/tough-cookie-2.3.4.tgz#ec60cee38ac675063ffc97a5c18970578ee83655"
   dependencies:
     punycode "^1.4.1"
+
+treeify@^1.0.1, treeify@^1.1.0:
+  version "1.1.0"
+  resolved "http://mon-1:4873/treeify/-/treeify-1.1.0.tgz#4e31c6a463accd0943879f30667c4fdaff411bb8"
 
 trim-newlines@^1.0.0:
   version "1.0.0"
@@ -9564,6 +9840,10 @@ vue-loader@^13.0.5:
     vue-hot-reload-api "^2.2.0"
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.6.0"
+
+vue-loaders@^2.0.0:
+  version "2.0.0"
+  resolved "http://mon-1:4873/vue-loaders/-/vue-loaders-2.0.0.tgz#f52a2b480f815d1cb874703a2b7dac0b121f142e"
 
 vue-material@^1.0.0-beta-7:
   version "1.0.0-beta-8"
@@ -10046,3 +10326,7 @@ yauzl@2.4.1:
 yeast@0.1.2:
   version "0.1.2"
   resolved "http://mon-1:4873/yeast/-/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
+
+yui-lint@^0.2.0:
+  version "0.2.0"
+  resolved "http://mon-1:4873/yui-lint/-/yui-lint-0.2.0.tgz#e913da74faa064fb53c03771b2d31293865f0185"

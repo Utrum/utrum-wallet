@@ -1,3 +1,19 @@
+/** ***************************************************************************
+ * Copyright © 2018 Monaize Singapore PTE. LTD.                               *
+ *                                                                            *
+ * See the AUTHORS, and LICENSE files at the top-level directory of this      *
+ * distribution for the individual copyright holder information and the       *
+ * developer policies on copyright and licensing.                             *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Monaize Singapore PTE. LTD software, including this file may be copied,    *
+ * modified, propagated or distributed except according to the terms          *
+ * contained in the LICENSE file                                              *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/
+
 import BootstrapVue from 'bootstrap-vue';
 import VueQriously from 'vue-qriously';
 import VueClipboard from 'vue-clipboard2';
@@ -6,6 +22,8 @@ import Vue from 'vue';
 import axios from 'axios';
 import Toasted from 'vue-toasted';
 import Vue2Filters from 'vue2-filters';
+import 'vue-loaders/dist/vue-loaders.css';
+import * as VueLoaders from 'vue-loaders';
 
 import App from './App.vue';
 import router from './router';
@@ -24,6 +42,7 @@ Vue.use(Toasted, {
   position: 'top-right',
   duration: 4000,
 });
+Vue.use(VueLoaders);
 
 if (!process.env.IS_WEB) Vue.use(vueElectron);
 
