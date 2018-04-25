@@ -20,6 +20,13 @@ const path = require('path');
 const fs = require('fs');
 const electron = require('electron');
 
+const checkValueExist = (value) => {
+  if (value) {
+    return value;
+  }
+  return '';
+};
+
 export default {
   name: 'library',
   data() {
@@ -28,11 +35,17 @@ export default {
     };
   },
   methods: {
-    getUrl(license) {
-      if (license.url) {
-        return license.url;
-      }
-      return '';
+    getLicenseString(license) {
+      return checkValueExist(license.licenceString);
+    },
+    getPublicher(license) {
+      return checkValueExist(license.publisher);
+    },
+    getLicenses(license) {
+      return checkValueExist(license.licenses);
+    },
+    getRepository(license) {
+      return checkValueExist(license.repository);
     },
     openLink: (event) => {
       event.preventDefault();
