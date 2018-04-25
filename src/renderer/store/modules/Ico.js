@@ -16,6 +16,7 @@
 
 import * as _ from 'lodash';
 import bitcoinjs from 'bitcoinjs-lib';
+import { BigNumber } from 'bignumber.js';
 
 const state = {
   associatedTxs: [],
@@ -52,7 +53,6 @@ const actions = {
     ;
   },
   buildSwapList({ commit, rootGetters }) {
-
     let cryptoTxs = [];
     let icoCoinTxs = [];
     _.map(rootGetters.enabledCoins, (coin) => {
@@ -67,40 +67,29 @@ const actions = {
     commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
   },
 };
-// key: 'cryptoTx.time',
-// key: 'ticker',
-// key: 'mnzTx',
-// key: 'price41',
-// key: 'price4all',
-// key: 'status',
+
 const getters = {
   icoWillBegin: (state, getters, rootState) => {
-    const config = rootState.Conf.config;
-    const nowDate = new Date();
-    const now = (nowDate.getTime() / 1000) + (nowDate.getTimezoneOffset() * 60);
-    if (now < config.icoStartDate) {
+    const now = new Date().getTime() / 1000;
+    if (now < rootState.Conf.config.icoStartDate) {
       return true;
     }
     return false;
   },
   icoIsRunning: (state, getters, rootState) => {
-    const config = rootState.Conf.config;
 
     // getTime() returns timestamp in the current local timezone.
     // So that the shift with GMT is already taken into account.
     const now = new Date().getTime() / 1000;
-    return now < config.icoEndDate &&
-           now > config.icoStartDate &&
-           config.progress < 1;
+    return now < rootState.Conf.config.icoEndDate &&
+           now > rootState.Conf.config.icoStartDate &&
+           rootState.Conf.config.progress < 1;
   },
   icoStartDate: (state, getters, rootState) => {
     return rootState.Conf.config.icoStartDate;
   },
-  getSwapList: (state) => {
-    return state.pendingSwaps.concat(state.associatedTxs);
-  },
-  getSwapList2: (state, getters) => {
-    return getters.getSwapList.map(swap => {
+  getSwapList2: (state) => {
+    return state.pendingSwaps.concat(state.associatedTxs).map(swap => {
       return {
         time: swap.cryptoTx.time,
         ticker: swap.ticker,
@@ -109,6 +98,48 @@ const getters = {
         mnzTxHash: swap.mnzTx.tx_hash,
       };
     });
+  },
+  getCurrentBonus: (state, getters, rootState) => (ticker) => {
+    let currentBonus = 0;
+    const date = new Date().getTime() / 1000;
+    const config = rootState.Conf.config;
+
+    const bonuses = config.bonuses;
+    let findDuration = true;
+
+    Object.keys(bonuses).forEach(k => {
+      if (ticker.toLowerCase().indexOf(k)) {
+        Object.keys(bonuses[k]).forEach(j => {
+          if (findDuration) {
+            const duration = bonuses[k][j].duration * 3600;
+            const value = bonuses[k][j].value;
+            const icoStart = config.icoStartDate;
+
+            if (icoStart < date && date < icoStart + duration) {
+              currentBonus = value / 100;
+              findDuration = false;
+            } else {
+              currentBonus = 0;
+            }
+          }
+        });
+      }
+    });
+    return currentBonus;
+  },
+  getTotalPrice: (state, getters, rootState) => (ticker) => {
+    const config = rootState.Conf.config;
+
+    let price = 0;
+    const priceMNZ = config.coinPrices.mnz;
+    const priceKMD = config.coinPrices.kmd;
+
+    if (ticker.indexOf('BTC') >= 0) {
+      price = BigNumber(priceMNZ).dividedBy(100000000);
+    } else if (ticker.indexOf('KMD') >= 0) {
+      price = BigNumber(priceMNZ).dividedBy(priceKMD);
+    }
+    return price;
   },
 };
 

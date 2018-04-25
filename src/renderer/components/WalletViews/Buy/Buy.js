@@ -17,8 +17,8 @@
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionBuyHistory from '@/components/TransactionBuyHistory/TransactionBuyHistory.vue';
+import { BigNumber } from 'bignumber.js';
 
-const sb = require('satoshi-bitcoin');
 const { clipboard } = require('electron');
 
 export default {
@@ -29,13 +29,12 @@ export default {
     'transaction-buy-history': TransactionBuyHistory,
   },
   data() {
+    const satoshiNb = 100000000;
     return {
+      satoshiNb,
       searchable: false,
-      currentBonus: 0,
       blocks: 36,
-      fee: 0,
       estimatedFee: 0,
-      preparedTx: {},
       feeSpeed: 'low',
       fees: [
         { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
@@ -44,8 +43,8 @@ export default {
       ],
       selectedFee: null,
       select: '',
-      packageMNZ: 100000000000,
-      packageIncrement: 50000000000,
+      requestedNumberOfSatochisMnz: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb),
+      packageIncrement: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb),
       coupon: '',
       timer: true,
     };
@@ -67,13 +66,17 @@ export default {
       const oldBlocks = this.blocks;
       this.blocks = data.blocks;
       this.feeSpeed = data.label;
-      this.prepareTx().then(() => {
-        if (!this.preparedTx.inputs && !this.preparedTx.ouputs) {
-          this.$refs.feeSelector.selectedLabel = oldLabel;
-          this.blocks = oldBlocks;
-          this.$toasted.error('You don\'t have enough funds to select this.');
-        }
-      });
+      this.prepareTx()
+        .then((tx) => {
+          if (tx != null &&
+            tx.outputs != null &&
+            tx.inputs != null) {
+            this.$refs.feeSelector.selectedLabel = oldLabel;
+            this.blocks = oldBlocks;
+            this.$toasted.error('You don\'t have enough funds to select this.');
+          }
+        })
+      ;
     },
     onShowBuyModal() {
       this.prepareTx()
@@ -82,58 +85,53 @@ export default {
             this.hideModal();
             this.$toasted.info("You don't have enough funds for buying (with fees included)");
           } else {
-            this.$refs.confirmBuy.show();
+            this.showModal();
           }
         })
       ;
     },
     hideModal() {
-      this.$refs.confirmBuy.hide();
+      if (this.$refs.confirmBuy != null) {
+        this.$refs.confirmBuy.hide();
+      }
+    },
+    showModal() {
+      if (this.$refs.confirmBuy != null) {
+        this.$refs.confirmBuy.show();
+      }
     },
     methodToRunOnSelect(payload) {
       this.object = payload;
-    },
-    totalPrice() {
-      const config = this.getConfig;
-
-      let price = 0;
-      const priceMNZ = config.coinPrices.mnz;
-      const priceKMD = config.coinPrices.kmd;
-      if (this.select.indexOf('BTC') >= 0) {
-        price = priceMNZ;
-      } else if (this.select.indexOf('KMD') >= 0) {
-        price = sb.toSatoshi(priceMNZ / priceKMD);
-      }
-      return sb.toBitcoin((sb.toBitcoin(this.packageMNZ) * price).toFixed(0));
     },
     valueChange(value) {
       this.select = value;
       this.prepareTx();
     },
     incrementPackage() {
-      if (this.packageMNZ <= this.getMaxBuy - this.packageIncrement) {
-        this.packageMNZ += this.packageIncrement;
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy.minus(this.packageIncrement)) <= 0) {
+        this.requestedNumberOfSatochisMnz = this.requestedNumberOfSatochisMnz.plus(this.packageIncrement);
       }
     },
     decrementPackage() {
-      if (this.packageMNZ > this.getMinBuy) {
-        this.packageMNZ -= this.packageIncrement;
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) > 0) {
+        this.requestedNumberOfSatochisMnz = this.requestedNumberOfSatochisMnz.minus(this.packageIncrement);
       }
     },
     prepareTx() {
+      // Number here because of bitcoinjs incapacity to use Big types.
+      const amount = Number(this.getTotalSatochisPrice.toFixed(0));
       const object = {
         wallet: this.wallet,
-        amount: sb.toSatoshi(this.getTotalPrice),
+        amount: amount,
         blocks: this.blocks,
         data: this.coupon,
       };
-
       return this.$store.dispatch('createSwapTransaction', object)
         .then((tx) => {
           if (tx != null &&
               tx.outputs != null &&
               tx.inputs != null) {
-            this.estimatedFee = sb.toBitcoin(tx.fee);
+            this.estimatedFee = BigNumber(tx.fee);
           }
           return tx;
         })
@@ -148,7 +146,7 @@ export default {
           const payload = {
             wallet: this.wallet,
             ...tx,
-            amountMnz: sb.toSatoshi(this.totalMnzWitBonus),
+            amountMnz: this.totalMnzWithBonus.multipliedBy(this.satoshiNb),
           };
           return this.$store.dispatch('swap', payload);
         })
@@ -161,18 +159,14 @@ export default {
         })
       ;
     },
-  },
-  watch: {
-    packageMNZ: (newValue) => {
-      const value = Number(newValue);
-
-      if (value <= this.getMaxBuy - this.packageIncrement) {
-        this.packageMNZ = value;
-      } else {
-        this.packageMNZ = this.getMaxBuy;
+    setInvisibleDecrement() {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) === 0) {
+        return 'invisible';
       }
-      if (value <= 0) {
-        this.packageMNZ = 0;
+    },
+    setInvisibleIncrement() {
+      if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy) === 0) {
+        return 'invisible';
       }
     },
   },
@@ -185,30 +179,36 @@ export default {
         .filter(coin => coin.ticker.indexOf('MNZ') < 0)
         .map(coin => coin.ticker);
     },
-    totalMnzWitBonus() {
-      return this.getPackage + (this.getPackage * this.currentBonus);
+    totalMnzWithBonus() {
+      return this.requestedNumberOfSatochisMnz
+        .plus(this.requestedNumberOfSatochisMnz.multipliedBy(this.getCurrentBonus)).dividedBy(this.satoshiNb);
     },
-    getPackage: {
+    package: {
       get: function () {
-        return sb.toBitcoin(this.packageMNZ);
+        return this.requestedNumberOfSatochisMnz.dividedBy(this.satoshiNb);
       },
       set: function (newValue) {
-        const value = sb.toSatoshi(newValue);
+        const value = BigNumber(newValue).multipliedBy(this.satoshiNb);
+        const maxBuy = this.getMaxBuy;
+        const minBuy = this.getMinBuy;
 
-        if (value >= this.getMaxBuy) {
-          this.packageMNZ = this.getMaxBuy;
-        } else if (value <= this.getMinBuy || value <= 0) {
-          this.packageMNZ = this.getMinBuy;
+        if (value.comparedTo(maxBuy) === 1) {
+          this.requestedNumberOfSatochisMnz = BigNumber(maxBuy);
+        } else if (value.comparedTo(minBuy) === -1) {
+          this.requestedNumberOfSatochisMnz = BigNumber(minBuy);
         } else {
-          this.packageMNZ = value;
+          this.requestedNumberOfSatochisMnz = value;
         }
       },
     },
+    getPlaceholder() {
+      return `Amount ${this.mnzTicker}...`;
+    },
     getMinBuy() {
-      return sb.toSatoshi(this.$store.getters.getConfig.minBuy);
+      return BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(this.satoshiNb);
     },
     getMaxBuy() {
-      return sb.toSatoshi(this.$store.getters.getConfig.maxBuy);
+      return BigNumber(this.$store.getters.getConfig.maxBuy).multipliedBy(this.satoshiNb);
     },
     getConfig() {
       return this.$store.getters.getConfig;
@@ -216,55 +216,32 @@ export default {
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
     },
-    walletMnz() {
-      return this.$store.getters.getWalletByTicker(this.mnzTicker);
-    },
-    getBalance() {
-      return this.$store.getters.getWalletByTicker(this.select).balance.toFixed(8);
-    },
     getMnzBalance() {
       return this.$store.getters.getWalletByTicker(this.mnzTicker).balance;
     },
     getStringTicket() {
       return this.$store.getters.getWalletByTicker(this.select).coin.name;
     },
+    getTotalSatochisPrice() {
+      const priceFor1Mnz = this.$store.getters.getTotalPrice(this.wallet.ticker); // Price for 1 MNZ in KMD or BTC.
+      return this.requestedNumberOfSatochisMnz.multipliedBy(priceFor1Mnz);
+    },
     getTotalPrice() {
-      return this.totalPrice();
+      const priceFor1Mnz = this.$store.getters.getTotalPrice(this.wallet.ticker);
+      return this.requestedNumberOfSatochisMnz.multipliedBy(priceFor1Mnz).dividedBy(this.satoshiNb);
     },
     getTotalPriceWithFee() {
-      return (this.getTotalPrice + this.estimatedFee).toFixed(8);
+      return this.getTotalSatochisPrice.plus(this.estimatedFee).dividedBy(this.satoshiNb);
+    },
+    getCurrentBonus() {
+      return this.$store.getters.getCurrentBonus(this.wallet.ticker);
     },
     isBonus() {
-      const date = new Date().getTime() / 1000;
-      const config = this.$store.getters.getConfig;
-      const bonuses = config.bonuses;
-      let findDuration = true;
-
-      Object.keys(bonuses).forEach(k => {
-        if (this.select.toLowerCase() === k) {
-          Object.keys(bonuses[k]).forEach(j => {
-            if (findDuration) {
-              const duration = bonuses[k][j].duration * 3600;
-              const value = bonuses[k][j].value;
-              const icoStart = config.icoStartDate;
-
-              if (icoStart < date && date < icoStart + duration) {
-                this.currentBonus = value / 100;
-                findDuration = false;
-              } else {
-                this.currentBonus = 0;
-              }
-            }
-          });
-        }
-      });
-
-      return this.currentBonus !== 0;
+      return this.getCurrentBonus !== 0;
     },
     canBuy() {
-      const mnzToBuy = this.packageMNZ;
-      const balance = this.wallet.balance - this.wallet.balance_unconfirmed;
-      return mnzToBuy <= 0 || this.totalPrice() > balance;
+      const balance = BigNumber(this.wallet.balance).minus(BigNumber(this.wallet.balance_unconfirmed));
+      return this.requestedNumberOfSatochisMnz.comparedTo(0) <= 0 || this.getTotalPrice.comparedTo(balance) === 1;
     },
   },
 };

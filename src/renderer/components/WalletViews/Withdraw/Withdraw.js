@@ -19,8 +19,8 @@ import { QrcodeReader } from 'vue-qrcode-reader';
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
+import { BigNumber } from 'bignumber.js';
 
-const sb = require('satoshi-bitcoin');
 const { clipboard } = require('electron');
 
 export default {
@@ -36,8 +36,9 @@ export default {
   },
   data() {
     return {
+      satoshiNb: 100000000,
       blocks: 1,
-      fee: 0,
+      estimatedFee: 0,
       feeSpeed: 'veryFast',
       fees: [
         { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
@@ -145,10 +146,13 @@ export default {
       this.select = value;
     },
     prepareTx() {
+      // Number here because of bitcoinjs incapacity to use Big types.
+      const amount = Number(this.withdraw.amount.toFixed(0));
+
       const object = {
         wallet: this.wallet,
         address: this.withdraw.address,
-        amount: sb.toSatoshi(this.withdraw.amount),
+        amount,
         blocks: this.blocks,
       };
 
@@ -157,7 +161,7 @@ export default {
           if (tx != null &&
               tx.outputs != null &&
               tx.inputs != null) {
-            this.estimatedFee = sb.toBitcoin(tx.fee);
+            this.estimatedFee = BigNumber(tx.fee);
           }
           return tx;
         })
@@ -181,6 +185,23 @@ export default {
     },
   },
   computed: {
+    amount: {
+      get: function () {
+        if (this.withdraw.amount != null) {
+          return this.withdraw.amount.dividedBy(this.satoshiNb).toString();
+        }
+        return this.withdraw.amount;
+      },
+      set: function (value) {
+        if (value !== '' && value[value.length - 1] !== '.') {
+          try {
+            this.withdraw.amount = BigNumber(BigNumber(value).toFixed(8)).multipliedBy(this.satoshiNb);
+          } catch (error) {
+            this.withdraw.amount = null;
+          }
+        }
+      },
+    },
     getConfig() {
       return this.$store.getters.getConfig;
     },
@@ -188,16 +209,26 @@ export default {
       return this.$store.getters.enabledCoins.map(coin => coin.ticker);
     },
     getTotalPriceWithFee() {
-      return (Number(this.withdraw.amount) + sb.toBitcoin(this.fee)).toFixed(8);
+      if (this.withdraw.amount != null && this.estimatedFee != null) {
+        return BigNumber(this.withdraw.amount).plus(this.estimatedFee).dividedBy(this.satoshiNb);
+      }
+      return BigNumber(0);
     },
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
     },
+    getSatoshisBalance() {
+      return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance).multipliedBy(this.satoshiNb);
+    },
     getBalance() {
-      return this.$store.getters.getWalletByTicker(this.select).balance;
+      return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance);
     },
     canWithdraw() {
-      return (this.withdraw.amount <= this.getBalance && this.withdraw.amount > 0 && this.addressIsValid);
+      if (this.withdraw.amount != null) {
+        return (this.withdraw.amount.comparedTo(this.getSatoshisBalance) <= 0 &&
+                this.withdraw.amount.comparedTo(0) === 1 && this.addressIsValid);
+      }
+      return false;
     },
     addressIsValid() {
       if (this.withdraw.address) {

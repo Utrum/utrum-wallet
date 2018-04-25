@@ -1,13 +1,24 @@
 <div>
   <h3>Library used</h3>
-  <ul>
-    <li v-for="(license, index) in licenses">
-      <p v-b-toggle="`license-${index}`">{{ index }}</p>
-      <b-collapse :id="`license-${index}`" class="mt-2">
-        <b-card>
-          <p class="card-text">Collapse contents Here</p>
-        </b-card>
-      </b-collapse>
-    </li>
-  </ul>
+
+  <div v-if="isLicensesFilled">
+    <ul id="list-licenses">
+        <li v-for="(license, index) in licenses">
+          <h5 v-b-toggle="`license-${index}`" id="title-license">{{ index }}</h5>
+          <b-collapse :id="`license-${index}`" class="mt-2">
+              <hr/>
+              <h6>licenses: {{license.licenses}}</h6>
+              <h6>publicher: {{license.publisher}} <span>{{formatEmail(license)}}</span></h6>
+              <div v-if="getUrl(license) !== ''">
+                <h6>repository: <a v-bind:href="getUrl(license)" @click.prevent="openLink">{{getUrl(license)}}</a></h6>
+              </div>
+              <p>{{license.licenceString}}</p>
+              <hr/>
+          </b-collapse>
+        </li>
+      </ul>
+  </div>
+  <div v-else class="d-flex align-items-center justify-content-center" id="loader">
+      <ball-scale-multiple-loader color="#000000"></ball-scale-multiple-loader>
+  </div>
 </div>

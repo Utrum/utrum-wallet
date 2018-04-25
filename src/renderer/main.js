@@ -22,6 +22,8 @@ import Vue from 'vue';
 import axios from 'axios';
 import Toasted from 'vue-toasted';
 import Vue2Filters from 'vue2-filters';
+import 'vue-loaders/dist/vue-loaders.css';
+import * as VueLoaders from 'vue-loaders';
 
 import App from './App.vue';
 import router from './router';
@@ -40,6 +42,7 @@ Vue.use(Toasted, {
   position: 'top-right',
   duration: 4000,
 });
+Vue.use(VueLoaders);
 
 if (!process.env.IS_WEB) Vue.use(vueElectron);
 

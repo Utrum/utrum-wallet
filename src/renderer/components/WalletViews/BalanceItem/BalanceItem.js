@@ -34,10 +34,9 @@ export default {
   },
   methods: {
     getUnconfirmedColor(amount) {
-      return (amount > 0) ? 'positiveColor' : 'negativeColor';
-    },
-    getQRCodeClass(amount) {
-      return amount === 0 ? 'row-custom' : '';
+      if (amount != null) {
+        return (amount.comparedTo(0) === 1) ? 'positiveColor' : 'negativeColor';
+      }
     },
     numberWithSpaces(x) {
       if (Number(x) > 0) {
@@ -53,6 +52,20 @@ export default {
       setTimeout(() => {
         self.isClipboard = false;
       }, 1000);
+    },
+  },
+  computed: {
+    getQRCodeClass() {
+      if (this.wallet.balance_unconfirmed == null) {
+        return 'row-custom';
+      }
+      return this.wallet.balance_unconfirmed.comparedTo(0) === 0 ? 'row-custom' : '';
+    },
+    isBalanceUnconfirmedIsFilled() {
+      if (this.wallet.balance_unconfirmed == null || this.wallet.balance_unconfirmed.comparedTo(0) === 0) {
+        return false;
+      }
+      return this.wallet.balance_unconfirmed.comparedTo(0) !== 0;
     },
   },
 };
