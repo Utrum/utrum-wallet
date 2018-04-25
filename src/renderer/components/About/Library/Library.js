@@ -31,12 +31,12 @@ export default {
   name: 'library',
   data() {
     return {
-      licenses: {},
+      licenses: [],
     };
   },
   methods: {
-    getLicenseString(license) {
-      return checkValueExist(license.licenceString);
+    getLicenseString(index) {
+      return this.licenses.indexOf(index).licenseString;
     },
     getPublicher(license) {
       return checkValueExist(license.publisher);
@@ -68,13 +68,14 @@ export default {
     checker.init({
       start: path.join(__dirname, '../../../../../'),
     }, (err, json) => {
-      this.licenses = json;
-      _.map(this.licenses, (item) => {
+      const result = Object.keys(json).map((key) => {
+        json[key].name = key;
+        return json[key];
+      });
+
+      this.licenses = _.forEach(result, (item) => {
         if (item.licenseFile) {
-          fs.readFile(item.licenseFile, 'utf8', (err, data) => {
-            if (err) throw err;
-            item.licenceString = data;
-          });
+          item.licenseString = fs.readFileSync(item.licenseFile, 'utf8');
         }
       });
     });

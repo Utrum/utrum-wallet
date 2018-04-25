@@ -4,7 +4,7 @@
   <div v-if="isLicensesFilled">
     <ul id="list-licenses">
         <li v-for="(license, index) in licenses">
-          <h5 v-b-toggle="`license-${index}`" id="title-license">{{ index }}</h5>
+          <h5 v-b-toggle="`license-${index}`" id="title-license">{{ license.name }}</h5>
           <b-collapse :id="`license-${index}`" class="mt-2">
               <hr/>
               <div v-if="getLicenses(license) !== ''">
@@ -16,9 +16,7 @@
               <div v-if="getRepository(license) !== ''">
                 <h6>repository: <a v-bind:href="getRepository(license)" @click.prevent="openLink">{{getRepository(license)}}</a></h6>
               </div>
-              <div v-if="getLicenseString(license) !== ''">
-                  <p>{{getLicenseString(license)}}</p>
-              </div>
+              <p>{{license.licenseString}}</p>
               <hr/>
           </b-collapse>
         </li>
