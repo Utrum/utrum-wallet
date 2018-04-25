@@ -1,3 +1,3 @@
-<template src="./WebSite.html"></template>
-<script src="./WebSite.js"></script>
-<style src="./WebSite.css"></style>
+<template src="./Website.html"></template>
+<script src="./Website.js"></script>
+<style src="./Website.css"></style>
