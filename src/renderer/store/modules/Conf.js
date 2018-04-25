@@ -17,6 +17,7 @@
 import axios from 'axios';
 
 const state = {
+  minConfirmations: 1,
   config: {},
   pubKeysBuy: {
     btc: 'tpubDAh8QLsBrBjfnHpLmz9gJKt4nhop1hTpQtM9Tr1N6ZAUGV22PFxtExzcWvi9nH9HytSNnJZQ7xmLQB7BxGjRQB7N5sp7fJz1Uka8PY58xc6',
@@ -25,6 +26,9 @@ const state = {
 };
 
 const getters = {
+  getMinConfirmations: (state) => {
+    return state.minConfirmations;
+  },
   getConfig: (state) => {
     return state.config;
   },

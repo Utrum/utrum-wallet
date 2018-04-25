@@ -92,16 +92,10 @@ const mutations = {
     state.isUpate = isUpdate;
   },
   ADD_TX(state, { ticker, newTx }) {
-    let found = false;
-    _.filter(state.wallets[ticker].txs, (tx) => {
-      if (tx.tx_hash === newTx.tx_hash) {
-        found = true;
-        return false;
-      }
+    _.remove(state.wallets[ticker].txs, (tx) => {
+      return tx.tx_hash === newTx.tx_hash;
     });
-    if (found === false) {
-      state.wallets[ticker].txs.unshift(newTx);
-    }
+    state.wallets[ticker].txs.unshift(newTx);
   },
   ADD_TXS(state, { ticker, txs }) {
     state.wallets[ticker].txs = txs;

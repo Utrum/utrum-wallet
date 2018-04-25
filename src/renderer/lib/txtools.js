@@ -60,6 +60,7 @@ export default (wallet, transaction, height, test) => {
     const decodedTx = {
       address: inputPubKey.getAddress(),
       height: height,
+      confirmations: transaction.confirmations,
       tx_hash: transaction.txid,
       fromMNZ: fromMNZ,
       time: time,
