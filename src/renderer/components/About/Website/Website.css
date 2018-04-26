@@ -35,6 +35,10 @@
   font-weight: 400;
 }
 
+#current-website-content a {
+  color: #b32581;
+}
+
 #website-content {
   padding-top: 40px;
 }
