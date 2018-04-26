@@ -152,13 +152,14 @@ const actions = {
         return getEstimatedFees(wallet, blocks);
       })
       .then((feeRate) => {
-        const { inputs, outputs, fee, dataScript } = wallet.prepareTx(utxos, address, amount,
-          BigNumber(feeRate).multipliedBy(satoshiNb), data);
-        return { inputs, outputs, fee, dataScript, amount };
+        const tx = wallet.prepareTx(utxos, address, amount,
+          Number(BigNumber(feeRate).multipliedBy(satoshiNb)), data);
+        return tx;
       })
     ;
   },
   broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
+
     const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
     const txId = buildedTx.getId();
 
