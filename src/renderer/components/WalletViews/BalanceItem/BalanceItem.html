@@ -1,6 +1,6 @@
 <div class="row-main-item">
   <div class="row-title">
-    <h2 id="balance-item">{{numberWithSpaces(wallet.balance)}}</h2>
+    <h2 id="balance-item">{{numberWithSpaces(wallet.balance).toString()}}</h2>
     <h2 id="coin-item">{{wallet.ticker}}</h2>
     <p id="us-dollar" class="col-header"><img src="~@/assets/icon-usdollar.svg"/> {{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
   </div>
