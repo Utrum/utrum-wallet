@@ -1,6 +1,8 @@
 <div id="app" class="d-flex flex-column">
-  <div v-if="!icoIsRunning && !icoWillBegin" id="icoEndedBanner">The Monaize ICO is now over. We would like to thank our loyal MNZ token holders for their participation.</div>
-  <div v-if="icoWillBegin" id="icoWillBeginBanner">The Monaize ICO will begin in {{icoStartDate}}.</div>
-  <router-view v-if="isClientUpdated" :class="icoBannerActive"></router-view>
+  <div v-if="!icoIsOver">
+      <div v-if="!icoIsRunning && !icoWillBegin" id="icoEndedBanner">The Monaize ICO is now over. We would like to thank our loyal MNZ token holders for their participation.</div>
+      <div v-if="icoWillBegin" id="icoWillBeginBanner">The Monaize ICO will begin in {{icoStartDate}}.</div>
+  </div>
+<router-view v-if="isClientUpdated" :class="icoBannerActive"></router-view>
   <version-update v-else></version-update>
 </div>
