@@ -33,6 +33,7 @@ export default {
       fields: [
         { key: 'time', label: 'Date / Hours', sortable: true },
         { key: 'height', label: 'Block Height', sortable: true },
+        { key: 'confirmations', label: 'Confirmations', sortable: true },
         { key: 'amount', label: `Amount (${this.coin.ticker})`, sortable: true },
         { key: 'address', label: 'Address', sortable: true },
       ],
@@ -42,6 +43,12 @@ export default {
     explorer: ExplorerLink,
   },
   methods: {
+    handlePending(value) {
+      if (value) {
+        return value;
+      }
+      return 0;
+    },
     myRowClickHandler() {
     },
     satoshiToBitcoin(amount) {
