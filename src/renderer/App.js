@@ -42,7 +42,7 @@ export default {
     };
   },
   computed: {
-    icoIsOver() {
+    hasPlannedIco() {
       if (this.$store.getters.getConfig.icoEndDate == null
         && this.$store.getters.getConfig.icoStartDate == null) {
         return true;
