@@ -1,6 +1,6 @@
 {
   "name": "mnz-wallet",
-  "version": "0.6.6",
+  "version": "0.7.0",
   "author": "./LEGAL/AUTHORS",
   "description": "Monaize ICO Wallet",
   "license": "GPL-2.0",
@@ -132,8 +132,8 @@
     "electron-devtools-installer": "^2.2.0",
     "eslint": "^3.16.1",
     "eslint-config-airbnb-base": "^10.0.1",
-    "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-header": "^1.2.0",
+    "eslint-plugin-import": "^2.2.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.30.1",
