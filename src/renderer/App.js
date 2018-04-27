@@ -42,8 +42,15 @@ export default {
     };
   },
   computed: {
+    hasPlannedIco() {
+      if (this.$store.getters.getConfig.icoEndDate == null
+        && this.$store.getters.getConfig.icoStartDate == null) {
+        return true;
+      }
+      return false;
+    },
     icoBannerActive() {
-      if ((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) {
+      if (((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) && !this.hasPlannedIco) {
         return 'bannerMargin';
       }
     },
