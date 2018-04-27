@@ -25,6 +25,9 @@
     <template slot="address" slot-scope="row">
         <span id="address">{{row.value}}</span>
     </template>
+    <template slot="confirmations" slot-scope="row">
+            <span id="confirmations">{{handlePending(row.value)}}</span>
+        </template>
   </b-table>
 
   <b-pagination align="center" :total-rows="txHistory.length" :per-page="perPage" v-model="currentPage" class="my-0" />
