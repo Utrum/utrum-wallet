@@ -153,7 +153,7 @@ const actions = {
       })
       .then((feeRate) => {
         const tx = wallet.prepareTx(utxos, address, amount,
-          Number(BigNumber(feeRate).multipliedBy(satoshiNb)), data);
+        BigNumber(feeRate).multipliedBy(satoshiNb).toNumber(), data);
         return tx;
       })
     ;
