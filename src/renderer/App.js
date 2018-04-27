@@ -50,7 +50,7 @@ export default {
       return false;
     },
     icoBannerActive() {
-      if (((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) && !this.icoIsOver) {
+      if (((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) && !this.hasPlannedIco) {
         return 'bannerMargin';
       }
     },
