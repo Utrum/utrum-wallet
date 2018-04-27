@@ -1,2 +1,2 @@
 <template src="./Disclamer.html"></template>
-<style src="./Disclamer.css"></style>
+<style scoped src="./Disclamer.css"></style>

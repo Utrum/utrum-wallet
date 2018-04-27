@@ -13,6 +13,7 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
+const electron = require('electron');
 
 export default {
   name: 'website',
@@ -20,5 +21,12 @@ export default {
     return {
 
     };
+  },
+  methods: {
+    openLink: (event) => {
+      event.preventDefault();
+      const link = event.target.href;
+      electron.shell.openExternal(link);
+    },
   },
 };
