@@ -64,7 +64,6 @@
     }
   },
   "dependencies": {
-    "@monaize/eslint-config-monaize": "0.0.3",
     "app-root-dir": "^1.0.2",
     "axios": "^0.16.1",
     "bignumber.js": "^6.0.0",
@@ -81,7 +80,6 @@
     "electron-spawn": "^5.0.0",
     "electrum-client": "https://github.com/Monaize/node-electrum-client.git#electrumx-persistence",
     "elliptic": "^6.4.0",
-    "eslint-plugin-header": "^1.2.0",
     "express": "^4.16.3",
     "fs": "^0.0.1-security",
     "glyphicons": "^0.2.0",
@@ -132,6 +130,10 @@
     "electron": "^1.8.4",
     "electron-builder": "^19.19.1",
     "electron-devtools-installer": "^2.2.0",
+    "eslint": "^3.16.1",
+    "eslint-config-airbnb-base": "^10.0.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-header": "^1.2.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.30.1",
