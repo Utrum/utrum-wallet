@@ -1,28 +1,30 @@
+image: timbru31/node-alpine-git:latest
+
 stages:
   - lint
-  - test
   - build
+  - publish
 
 cache:
   paths:
     - node_modules/
 
 before_script:
-  - yarn config set registry http://mon-1:4873
-  - echo $NPMRC | base64 -d > ~/.npmrc
-  - nvm use 8.9
   - yarn
 
-
 lint:
+  except:
+    - tags
   stage: lint
   script:
     - yarn eslint
 
-test:
-  stage: test
-  script:
-    - xvfb-run yarn test
+# test:
+#   except:
+#     - tags
+#   stage: test
+#   script:
+#     - yarn test
 
 
 # build for mac:
@@ -41,12 +43,26 @@ test:
 #       - build/*.dmg
 
 
-build for linux & windows:
+build:
   stage: build
   only:
-    - release
+    - tags
   script:
     - yarn run build -lwm
-    - scp -P 4242 build/*.exe mnzico@51.15.203.171:www/downloads
-    - scp -P 4242 build/*.AppImage mnzico@51.15.203.171:www/downloads
-    - scp -P 4242 build/*.zip mnzico@51.15.203.171:www/downloads
+  artifacts:
+    expire_in: '1 hour'
+    paths:
+      - build/mnz-wallet-$CI_BUILD_TAG-setup.exe
+      - build/mnz-wallet-$CI_BUILD_TAG-x86_64.AppImage
+      - build/mnz-wallet-$CI_BUILD_TAG-mac.zip
+
+publish:
+  image: inetprocess/gitlab-release
+  stage: publish
+  only:
+    - tags
+  script:
+    - gitlab-release --message 'MNZ Wallet $CI_BUILD_TAG Release'
+      build/mnz-wallet-$CI_BUILD_TAG-setup.exe
+      build/mnz-wallet-$CI_BUILD_TAG-x86_64.AppImage
+      build/mnz-wallet-$CI_BUILD_TAG-mac.zip
