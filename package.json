@@ -49,9 +49,7 @@
     },
     "win": {
       "icon": "build/icons/512x512.png",
-      "nsis": {
-        "artifactName": "${productName}-{$version}-setup.${ext}"
-      }
+      "artifactName": "${productName}-${version}-setup.${ext}"
     },
     "linux": {
       "icon": "build/icons"

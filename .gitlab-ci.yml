@@ -44,6 +44,7 @@ lint:
 
 
 build:
+  image: electronuserland/builder:wine
   stage: build
   only:
     - tags
