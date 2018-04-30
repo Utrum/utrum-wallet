@@ -71,7 +71,9 @@ export default {
       licences = joinPath(process.resourcesPath, '../Resources/licenses.json');
     }
 
-    $.getJSON(licences, (json) => {
+    fs.readFile(licences, (err, data) => {
+      if (err) throw err;
+      const json = JSON.parse(data.toString());
       const result = Object.keys(json).map((key) => {
         json[key].name = key;
         return json[key];
