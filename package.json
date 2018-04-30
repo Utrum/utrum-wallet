@@ -29,13 +29,10 @@
     "files": [
       "dist/electron/**/*"
     ],
-    "asarUnpack": [
-      "node_modules/marketmaker/*"
-    ],
     "extraFiles": [
       {
-        "from": "resources/${os}/marketmaker",
-        "to": "Resources/bin/marketmaker"
+        "from": "resources/licenses.json",
+        "to": "Resources/licenses.json"
       }
     ],
     "dmg": {

@@ -13,10 +13,9 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
+import { join as joinPath } from 'path';
 import * as _ from 'lodash';
 
-const checker = require('license-checker');
-const path = require('path');
 const fs = require('fs');
 const electron = require('electron');
 
@@ -65,9 +64,14 @@ export default {
     },
   },
   mounted() {
-    checker.init({
-      start: path.join(__dirname, '../../../../../'),
-    }, (err, json) => {
+    let licences = '';
+    if (process.env.NODE_ENV === 'development') {
+      licences = joinPath(__dirname, '../../../../../resources/licenses.json');
+    } else {
+      licences = joinPath(process.resourcesPath, '../Resources/licenses.json');
+    }
+
+    $.getJSON(licences, (json) => {
       const result = Object.keys(json).map((key) => {
         json[key].name = key;
         return json[key];
