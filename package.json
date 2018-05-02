@@ -21,7 +21,7 @@
   },
   "build": {
     "productName": "mnz-wallet",
-    "appId": "org.simulatedgreg.electron-vue",
+    "appId": "com.monaize.wallet",
     "directories": {
       "output": "build"
     },
@@ -54,7 +54,10 @@
       "icon": "build/icons/512x512.png"
     },
     "win": {
-      "icon": "build/icons/512x512.png"
+      "icon": "build/icons/512x512.png",
+      "nsis": {
+        "artifactName": "${productName}-{$version}-setup.${ext}"
+      }
     },
     "linux": {
       "icon": "build/icons"
