@@ -29,6 +29,12 @@
     "files": [
       "dist/electron/**/*"
     ],
+    "extraFiles": [
+      {
+        "from": "resources/licenses.json",
+        "to": "Resources/licenses.json"
+      }
+    ],
     "dmg": {
       "contents": [
         {
