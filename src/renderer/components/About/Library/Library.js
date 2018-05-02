@@ -68,8 +68,9 @@ export default {
     if (process.env.NODE_ENV === 'development') {
       licences = joinPath(__dirname, '../../../../../resources/licenses.json');
     } else {
-      licences = joinPath(process.resourcesPath, '../Resources/licenses.json');
+      licences = joinPath(process.resourcesPath, '/licenses.json');
     }
+
 
     fs.readFile(licences, (err, data) => {
       if (err) throw err;
