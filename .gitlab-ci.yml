@@ -5,18 +5,15 @@ stages:
   - build
   - publish
 
-cache:
-  paths:
-    - node_modules/
-
-before_script:
-  - yarn
-
 lint:
   except:
     - tags
   stage: lint
+  cache:
+    paths:
+      - node_modules/
   script:
+    - yarn  
     - yarn eslint
 
 # test:
@@ -46,16 +43,18 @@ lint:
 build:
   image: electronuserland/builder:wine
   stage: build
+  cache:
+    paths:
+      - node_modules
   only:
     - tags
   script:
+    - yarn
     - yarn run build -lwm
   artifacts:
     expire_in: '1 hour'
     paths:
-      - build/mnz-wallet-$CI_BUILD_TAG-setup.exe
-      - build/mnz-wallet-$CI_BUILD_TAG-x86_64.AppImage
-      - build/mnz-wallet-$CI_BUILD_TAG-mac.zip
+      - build/mnz-wallet-*.*
 
 publish:
   image: inetprocess/gitlab-release
