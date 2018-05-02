@@ -62,8 +62,10 @@ publish:
   only:
     - tags
   script:
-    - ls build/
-    - gitlab-release --message 'MNZ Wallet $CI_BUILD_TAG Release'
-      build/mnz-wallet-$CI_BUILD_TAG-setup.exe
-      build/mnz-wallet-$CI_BUILD_TAG-x86_64.AppImage
-      build/mnz-wallet-$CI_BUILD_TAG-mac.zip
+    - VERSION=$(echo $CI_BUILD_TAG | sed 's/v//'); gitlab-release --message 'MNZ Wallet $CI_BUILD_TAG Release'
+      build/mnz-wallet-$VERSION-setup.exe
+      build/mnz-wallet-$VERSION-x86_64.AppImage
+      build/mnz-wallet-$VERSION-mac.zip
+    - "curl -X POST -H 'Content-type: application/json' \
+      --data '{\\\"text\\\":\\\"New MNZ Release! Go to https://gitlab.com/monaize-mnz/mnz-wallet/tags/$CI_BUILD_TAG to download it ! \\\"}' \
+      <$SLACK_HOOK_URL> || true"
