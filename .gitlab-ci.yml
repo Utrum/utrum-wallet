@@ -54,7 +54,7 @@ build:
   artifacts:
     expire_in: '1 hour'
     paths:
-      - build/mnz-wallet-*.*
+      - build/mnz-wallet-*
 
 publish:
   image: inetprocess/gitlab-release
@@ -62,6 +62,7 @@ publish:
   only:
     - tags
   script:
+    - ls build/
     - gitlab-release --message 'MNZ Wallet $CI_BUILD_TAG Release'
       build/mnz-wallet-$CI_BUILD_TAG-setup.exe
       build/mnz-wallet-$CI_BUILD_TAG-x86_64.AppImage
