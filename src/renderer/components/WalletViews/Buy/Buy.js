@@ -73,6 +73,8 @@ export default {
             tx.inputs != null) {
             this.$refs.feeSelector.selectedLabel = oldLabel;
             this.blocks = oldBlocks;
+          } else if (tx.outputs == null ||
+            tx.inputs == null) {
             this.$toasted.error('You don\'t have enough funds to select this.');
           }
         })
