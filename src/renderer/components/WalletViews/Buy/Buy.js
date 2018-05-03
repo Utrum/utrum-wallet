@@ -121,7 +121,7 @@ export default {
     },
     prepareTx() {
       // Number here because of bitcoinjs incapacity to use Big types.
-      const amount = Number(this.getTotalSatochisPrice.toFixed(0));
+      const amount = Number(this.getTotalSatoshiPrice.toFixed(0));
       const object = {
         wallet: this.wallet,
         amount: amount,
@@ -148,6 +148,7 @@ export default {
           const payload = {
             wallet: this.wallet,
             ...tx,
+            amount: this.getTotalSatoshiPrice.toFixed(0),
             amountMnz: this.totalMnzWithBonus.multipliedBy(this.satoshiNb),
           };
           return this.$store.dispatch('swap', payload);
@@ -224,7 +225,7 @@ export default {
     getStringTicket() {
       return this.$store.getters.getWalletByTicker(this.select).coin.name;
     },
-    getTotalSatochisPrice() {
+    getTotalSatoshiPrice() {
       const priceFor1Mnz = this.$store.getters.getTotalPrice(this.wallet.ticker); // Price for 1 MNZ in KMD or BTC.
       return this.requestedNumberOfSatochisMnz.multipliedBy(priceFor1Mnz);
     },
@@ -233,7 +234,7 @@ export default {
       return this.requestedNumberOfSatochisMnz.multipliedBy(priceFor1Mnz).dividedBy(this.satoshiNb);
     },
     getTotalPriceWithFee() {
-      return this.getTotalSatochisPrice.plus(this.estimatedFee).dividedBy(this.satoshiNb);
+      return this.getTotalSatoshiPrice.plus(this.estimatedFee).dividedBy(this.satoshiNb);
     },
     getCurrentBonus() {
       return this.$store.getters.getCurrentBonus(this.wallet.ticker);
