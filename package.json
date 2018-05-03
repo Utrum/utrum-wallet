@@ -1,6 +1,6 @@
 {
   "name": "mnz-wallet",
-  "version": "0.7.0",
+  "version": "0.7.5",
   "author": "./LEGAL/AUTHORS",
   "description": "Monaize ICO Wallet",
   "license": "GPL-2.0",
@@ -55,9 +55,7 @@
     },
     "win": {
       "icon": "build/icons/512x512.png",
-      "nsis": {
-        "artifactName": "${productName}-{$version}-setup.${ext}"
-      }
+      "artifactName": "${productName}-${version}-setup.${ext}"
     },
     "linux": {
       "icon": "build/icons"

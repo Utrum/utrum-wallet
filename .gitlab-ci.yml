@@ -5,18 +5,15 @@ stages:
   - build
   - publish
 
-cache:
-  paths:
-    - node_modules/
-
-before_script:
-  - yarn
-
 lint:
   except:
     - tags
   stage: lint
+  cache:
+    paths:
+      - node_modules/
   script:
+    - yarn  
     - yarn eslint
 
 # test:
@@ -44,17 +41,20 @@ lint:
 
 
 build:
+  image: electronuserland/builder:wine
   stage: build
+  cache:
+    paths:
+      - node_modules
   only:
     - tags
   script:
+    - yarn
     - yarn run build -lwm
   artifacts:
     expire_in: '1 hour'
     paths:
-      - build/mnz-wallet-$CI_BUILD_TAG-setup.exe
-      - build/mnz-wallet-$CI_BUILD_TAG-x86_64.AppImage
-      - build/mnz-wallet-$CI_BUILD_TAG-mac.zip
+      - build/mnz-wallet-*
 
 publish:
   image: inetprocess/gitlab-release
@@ -62,7 +62,10 @@ publish:
   only:
     - tags
   script:
-    - gitlab-release --message 'MNZ Wallet $CI_BUILD_TAG Release'
-      build/mnz-wallet-$CI_BUILD_TAG-setup.exe
-      build/mnz-wallet-$CI_BUILD_TAG-x86_64.AppImage
-      build/mnz-wallet-$CI_BUILD_TAG-mac.zip
+    - VERSION=$(echo $CI_BUILD_TAG | sed 's/v//'); gitlab-release --message "MNZ Wallet $CI_BUILD_TAG Release"
+      build/mnz-wallet-$VERSION-setup.exe
+      build/mnz-wallet-$VERSION-x86_64.AppImage
+      build/mnz-wallet-$VERSION-mac.zip
+    - "curl -X POST -H 'Content-type: application/json' \
+      --data \"{\\\"text\\\":\\\"MNZ Wallet Release $CI_BUILD_TAG! Go <https://gitlab.com/monaize-mnz/mnz-wallet/tags/$CI_BUILD_TAG|here> to download it ! \\\"}\" \
+      $SLACK_HOOK_URL"
