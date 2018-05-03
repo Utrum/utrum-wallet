@@ -49,7 +49,7 @@ build:
   only:
     - tags
   script:
-    - yarn
+    - yarn --ignore-engines
     - yarn run build -lwm
   artifacts:
     expire_in: '1 hour'
