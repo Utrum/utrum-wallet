@@ -22,7 +22,7 @@
       <div class="vl">
       </div>
     </div>
-    <div @click="withdraw.amount = getBalance" id="card-current-balance" class="col-custom">
+    <div @click="onMaxSelected()" id="card-current-balance" class="col-custom">
       <div v-b-tooltip.html.left title="Click to withdraw all funds" class="row current-balance card">
         <span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span><span>{{select}}</span>
       </div>

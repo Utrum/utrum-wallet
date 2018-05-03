@@ -69,6 +69,9 @@ export default {
     };
   },
   methods: {
+    onMaxSelected() {
+      this.withdraw.amount = this.getBalance.multipliedBy(this.satoshiNb);
+    },
     onShowBuyModal() {
       return this.prepareTx()
         .then((tx) => {
