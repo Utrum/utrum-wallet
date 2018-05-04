@@ -32,10 +32,10 @@ export default {
       perPage: 10,
       fields: [
         { key: 'time', label: 'Date / Hours', sortable: true },
-        { key: 'height', label: 'Block Height', sortable: true },
-        { key: 'confirmations', label: 'Confirmations', sortable: true },
-        { key: 'amount', label: `Amount (${this.coin.ticker})`, sortable: true },
-        { key: 'address', label: 'Address', sortable: true },
+        { key: 'height', label: 'Block Height' },
+        { key: 'confirmations', label: 'Confirmations' },
+        { key: 'amount', label: `Amount (${this.coin.ticker})` },
+        { key: 'address', label: 'Address' },
       ],
     };
   },

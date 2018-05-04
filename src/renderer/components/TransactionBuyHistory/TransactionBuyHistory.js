@@ -34,11 +34,11 @@ export default {
       perPage: 10,
       fields: [
         { key: 'time', label: 'Date / Hours', sortable: true },
-        { key: 'ticker', label: 'Type', sortable: true },
-        { key: 'mnzAmount', label: 'MNZ', sortable: true },
-        { key: 'price41', label: 'Price - 1 MNZ', sortable: true },
-        { key: 'price4all', label: 'Total', sortable: true },
-        { key: 'status', label: 'Status', sortable: true },
+        { key: 'ticker', label: 'Type' },
+        { key: 'mnzAmount', label: 'MNZ' },
+        { key: 'price41', label: 'Price - 1 MNZ' },
+        { key: 'price4all', label: 'Total' },
+        { key: 'status', label: 'Status' },
       ],
     };
   },
