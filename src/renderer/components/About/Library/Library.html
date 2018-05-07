@@ -16,7 +16,9 @@
           <div v-if="getRepository(license) !== ''">
             <h6>repository: <a v-bind:href="getRepository(license)" @click.prevent="openLink">{{getRepository(license)}}</a></h6>
           </div>
-          <p>{{license.licenseString}}</p>
+          <div v-if="getVersion(license) !== ''">
+            <h6>version: {{getVersion(license)}}</h6>
+          </div>
           <hr/>
         </b-collapse>
       </li>

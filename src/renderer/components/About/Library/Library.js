@@ -38,13 +38,16 @@ export default {
       return this.licenses.indexOf(index).licenseString;
     },
     getPublicher(license) {
-      return checkValueExist(license.publisher);
+      return checkValueExist(license.github_owner);
     },
     getLicenses(license) {
-      return checkValueExist(license.licenses);
+      return checkValueExist(license.license);
     },
     getRepository(license) {
-      return checkValueExist(license.repository);
+      return checkValueExist(license.url);
+    },
+    getVersion(license) {
+      return checkValueExist(license.version);
     },
     openLink: (event) => {
       event.preventDefault();
@@ -71,20 +74,9 @@ export default {
       licences = joinPath(process.resourcesPath, '/licenses.json');
     }
 
-
     fs.readFile(licences, (err, data) => {
       if (err) throw err;
-      const json = JSON.parse(data.toString());
-      const result = Object.keys(json).map((key) => {
-        json[key].name = key;
-        return json[key];
-      });
-
-      this.licenses = _.forEach(result, (item) => {
-        if (item.licenseFile) {
-          item.licenseString = fs.readFileSync(item.licenseFile, 'utf8');
-        }
-      });
+      this.licenses  = JSON.parse(data.toString());
     });
   },
 };
