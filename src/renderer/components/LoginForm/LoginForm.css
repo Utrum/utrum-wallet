@@ -60,6 +60,7 @@
 #icon-login {
 	margin-top: 10px;
 	text-align: center;
+	max-height: 100px;
 }
 
 .content-login {
