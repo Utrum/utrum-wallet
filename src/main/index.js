@@ -75,7 +75,7 @@ function createWindow() {
   const template = [{
     label: 'Monaize ICO App',
     submenu: [
-        { label: 'About Monaize ICO App', click: function () { aboutView() } },
+        { label: 'About Monaize Wallet', click: function () { aboutView() } },
         { type: 'separator' },
         { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); } },
     ] }, {

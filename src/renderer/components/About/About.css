@@ -23,6 +23,10 @@
   background-color: white;
 }
 
+.header-about h5 {
+  cursor: pointer;
+}
+
 li { 
   line-height: 2.5em;
 }
