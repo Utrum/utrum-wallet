@@ -162,17 +162,24 @@ const getters = {
 };
 
 // New recipient ICO address
-const getNewBuyAddress = (wallet, pubKeysBuy) => {
-  let pubKeyAddress;
-  _.mapKeys(pubKeysBuy, (value, key) => {
+const getNewBuyAddress = (wallet, pubKeys) => {
+  let icoWalletPubKeys = [];
+  _.mapKeys(pubKeys, (value, key) => {
     if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
-      pubKeyAddress = value;
+      icoWalletPubKeys = value;
     }
   });
 
-  const xpub = bitcoinjs.HDNode.fromBase58(pubKeyAddress, wallet.coin.network);
-  const index = Math.floor(Math.random() * 10000);
-  const address = xpub.derivePath(`0/${index}`).keyPair.getAddress();
+  const index = Math.floor(Math.random() * 10);
+  const nodes = [];
+  icoWalletPubKeys.forEach(pubkey => {
+    nodes.push(bitcoinjs.HDNode.fromBase58(pubkey, wallet.coin.network).derivePath(`0/${index}`).getPublicKeyBuffer());
+  });
+
+  const redeemScript = bitcoinjs.script.multisig.output.encode(2, nodes); // 2 of pubKeys.length
+  const scriptPubKey = bitcoinjs.script.scriptHash.output.encode(bitcoinjs.crypto.hash160(redeemScript));
+  const address = bitcoinjs.address.fromOutputScript(scriptPubKey, wallet.coin.network);
+
   return address;
 };
 
