@@ -20,9 +20,18 @@ const state = {
   minConfirmations: 1,
   config: {},
   pubKeysBuy: {
-    btc: 'tpubDAh8QLsBrBjfnHpLmz9gJKt4nhop1hTpQtM9Tr1N6ZAUGV22PFxtExzcWvi9nH9HytSNnJZQ7xmLQB7BxGjRQB7N5sp7fJz1Uka8PY58xc6',
-    kmd: 'xpub6BRkm5Z8kjoCUceL1HWCVbtAFy7mth5sR7gPFr6zhPAboqFr45AyY5nwHMMS3RkNEiFCMucK8zhGUJxfYLqEE2cgWEubmHJGK9AFe2dJnFn',
+    btc: [
+      'tpubDD7KruZCG9VjhEudjUSsLbrNpUbXTHkvhEWfcntkzEDQoYNSFUSfS7N2StNvkNjMmPXRQtD5KykV8AS9WYR4bSHJafXLdqZJJT2PRE74DpW',
+      'tpubDCAwLShhpovb3NUGHZ6phv8J9V81fkCrFKeEtqLbpAKVuRo5HstyWaUxDnvFLJrWJT9mJ63EVPB927i5ffBxqW3F6jv3rd7QsGPcNxPKxHg',
+      'tpubDDsv5nbDxTA1oeTH5GBaTD5cSgW6tnsmCt6m6CUeFwLiQw2QvNMR42XpbRDU2Bb3HzNbH19gJduTdpvG3wMA4AZYnHsffcnBgk3fyvpvJks',
+    ],
+    kmd: [
+      'xpub6DN59DVPgRzka2D4xQfcD6XFQbeQ3dCuBSYQiGEXkACJULPWk6Zp6Tywj69zyvTN7JisyTPMzXWrsYfXYUiDQNHDig68CiF62G6twfj6jPf',
+      'xpub6BxcxfX7jNeeKFM2NEWRuuPThowH6Lc31a1cncjccbLu46PJchHCCUZKvWPES26hjoFN8NAKUdL5EpYhucsfnKQhotQBpfHnpfMoA9MdtpY',
+      'xpub6CLXAxR2HLZiWqryttxAjiCEXFMXeEYxW4hEigee5uNFJjmfUEbdwFv3puYeUJ8qLWe2QL1Ho7Hh8zH4SLnJXK4ZPaWrvJQEMz1Ua5NfdyT',
+    ],
   },
+
 };
 
 const getters = {
