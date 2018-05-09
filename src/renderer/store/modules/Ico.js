@@ -124,16 +124,17 @@ const getters = {
 
     const bonuses = config.bonuses;
     let findDuration = true;
+    let durationBonus = 0;
 
     Object.keys(bonuses).forEach(k => {
       if (ticker.toLowerCase().indexOf(k)) {
         Object.keys(bonuses[k]).forEach(j => {
           if (findDuration) {
-            const duration = bonuses[k][j].duration * 3600;
+            durationBonus += bonuses[k][j].duration * 3600;
             const value = bonuses[k][j].value;
             const icoStart = config.icoStartDate;
 
-            if (icoStart < date && date < icoStart + duration) {
+            if (icoStart < date && date < icoStart + durationBonus) {
               currentBonus = value / 100;
               findDuration = false;
             } else {
