@@ -57,7 +57,7 @@ build:
       - build/mnz-wallet-*
 
 publish:
-  image: inetprocess/gitlab-release
+  image: monaize/gitlab-release
   stage: publish
   only:
     - tags
