@@ -10,11 +10,12 @@
         BALANCES
       </router-link>
     </li>
-    <li v-on:click="buyMnzClicked" v-if="icoIsRunning">
+    <li v-on:click="buyMnzClicked">
       <router-link active-class="active" tag="a" to="buy">
         <img v-if="buyMnzState" id="icon-buy-mnz" src="~@/assets/icon-buy-mnz.svg" class="number-view" />
         <img v-else id="icon-buy-mnz" src="~@/assets/icon-buy-mnz-grey.svg" class="number-view" />
-        BUY MNZ
+        <span v-if="icoIsRunning">BUY MNZ</span>
+        <span else>ICO</span>
       </router-link>
     </li>
     <li v-on:click="withdrawalClicked">
