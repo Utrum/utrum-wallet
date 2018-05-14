@@ -72,11 +72,7 @@ const actions = {
     });
 
     if (cryptoTxs != null && cryptoTxs.length > 0) {
-      // console.log(`==================================================================================`);
-      // console.log(`Inputs Cryptos:`, cryptoTxs);
-      // console.log(`inputs Mnz:`, icoCoinTxs);
       const associations = associateTxsFromWallet(cryptoTxs, icoCoinTxs);
-      // console.log("Associations:", associations);
       commit('UPDATE_ASSOCIATED_TXS', associations, { root: true });
 
       _.forEach(getLocalTxsToDelete(cryptoTxs, icoCoinTxs, rootGetters.getMinConfirmations), (cryptoTxToDelete) => {
@@ -106,7 +102,7 @@ const getters = {
   icoStartDate: (state, getters, rootState) => {
     return rootState.Conf.config.icoStartDate;
   },
-  getSwapList2: (state) => {
+  getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs).map(swap => {
       return {
         time: swap.cryptoTx.time,

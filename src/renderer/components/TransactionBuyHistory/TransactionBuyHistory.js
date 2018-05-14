@@ -27,7 +27,7 @@ export default {
   props: ['coin'],
   data() {
     return {
-      totalRows: this.$store.getters.getSwapList2.length,
+      totalRows: this.$store.getters.getSwapList.length,
       sortBy: 'time',
       sortDesc: true,
       currentPage: 1,
@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     txHistory() {
-      return this.$store.getters.getSwapList2;
+      return this.$store.getters.getSwapList;
     },
   },
 };

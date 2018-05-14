@@ -20,7 +20,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "mnz-wallet",
+    "productName": "MNZ Wallet",
     "appId": "com.monaize.wallet",
     "directories": {
       "output": "build"
@@ -51,14 +51,16 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/512x512.png"
+      "icon": "build/icons/512x512.png",
+      "artifactName": "mnz-wallet-${version}-mac.${ext}"
     },
     "win": {
       "icon": "build/icons/512x512.png",
-      "artifactName": "${productName}-${version}-setup.${ext}"
+      "artifactName": "mnz-wallet-${version}-setup.${ext}"
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "build/icons",
+      "artifactName": "mnz-wallet-${version}-x86_64.${ext}"
     }
   },
   "dependencies": {

@@ -135,7 +135,7 @@ const actions = {
         .init()
         .then(() => {
           dispatch('buildTxHistory', wallet, { root: true });
-          dispatch('updateBalance', wallet);
+          // dispatch('updateBalance', wallet);
         })
       ;
     });
@@ -204,12 +204,12 @@ const actions = {
       })
     ;
   },
-  startUpdates({ dispatch }) { // todo: return promise
+  startUpdates({ dispatch }) {
     dispatch('setIsUpdate', true);
     dispatch('startUpdateBalances');
     dispatch('startUpdateHistory');
   },
-  startUpdateBalances({ dispatch, getters }) { // todo: return promise
+  startUpdateBalances({ dispatch, getters }) {
     const min = 20;
     const max = 50;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
@@ -222,19 +222,27 @@ const actions = {
       }
     }, rand * 1000);
   },
-  startUpdateHistory({ dispatch, getters }) { // todo: return promise
-    const min = 30;
-    const max = 60;
-    const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
-    setTimeout(() => {
-      Object.keys(getters.getWallets).forEach((ticker) => {
-        dispatch('buildTxHistory', getters.getWallets[ticker], { root: true });
-      });
+  startUpdateHistory({ dispatch, getters, rootGetters }) {
+    const delay = rootGetters.icoIsRunning === true ? 45 : 120;
+    const updateHistoryPromise = new Promise((resolve) => {
+      setTimeout(() => {
+        const promises = [];
 
-      if (getters.isUpdate) {
-        dispatch('startUpdateHistory');
-      }
-    }, rand * 1000);
+        Object.keys(getters.getWallets).forEach((ticker) => {
+          promises.push(dispatch('buildTxHistory', getters.getWallets[ticker], { root: true }));
+        });
+
+        Promise
+          .all(promises)
+          .then(() => {
+            if (getters.isUpdate) {
+              return dispatch('startUpdateHistory');
+            }
+          })
+          .then(() => resolve());
+      }, delay * 1000);
+    });
+    return updateHistoryPromise;
   },
 };
 
