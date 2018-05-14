@@ -18,6 +18,7 @@ import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionBuyHistory from '@/components/TransactionBuyHistory/TransactionBuyHistory.vue';
 import { BigNumber } from 'bignumber.js';
+import { mapGetters } from 'vuex';
 
 const { clipboard } = require('electron');
 
@@ -174,6 +175,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(['icoIsRunning']),
     mnzTicker() {
       return this.$store.getters.isTestMode ? 'TESTMNZ' : 'MNZ';
     },

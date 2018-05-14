@@ -70,6 +70,7 @@ input[type=number]::-webkit-outer-spin-button {
 .content-buyview {
 	padding-bottom: 15px;
 	color: rgb(151,151,151);
+	height: 100%;
 }
 
 .content-buyview h3 {
@@ -522,4 +523,18 @@ input[type=number]::-webkit-outer-spin-button {
 
 #package-value::-webkit-input-placeholder {
 	font-size: 0.6em;
+}
+
+#monaize-over {
+	text-align: center;
+	margin: auto;
+	width: 100%;
+	height: 100%;
+	font-size: 1.2em;
+	color: #180d39;
+}
+
+#title-monaize-over {
+	font-weight: 500;
+	color: #180d39;
 }
