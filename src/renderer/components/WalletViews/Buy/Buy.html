@@ -112,10 +112,9 @@
 	</div>
 
 	<div id="historyMnzBuy" v-if="$store.getters.getSwapList.length > 0">
-		<h3>TRANSACTIONS</h3>
 		<transaction-buy-history :coin="wallet.coin"></transaction-buy-history>
 	</div>
-	<div v-if="$store.getters.getSwapList2.length == 0" id="monaize-over" class="d-flex justify-content-center align-items-center">
+	<div v-if="$store.getters.getSwapList.length == 0" id="monaize-over" class="d-flex justify-content-center align-items-center">
 		<div class="d-flex flex-column">
 			<span id="title-monaize-over">THE MONAIZE ICO IS NOW OVER.</span>
 			<span>We would like to thank our loyal community for their participation.</span>

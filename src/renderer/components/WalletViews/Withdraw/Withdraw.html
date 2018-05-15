@@ -57,8 +57,7 @@
   </div>
 
   <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">
-      <h3 id="title">TRANSACTIONS</h3>
-      <transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
+    <transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
   </div>
 
   <b-modal size="sm" :hide-header="true" :hide-footer="true" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
