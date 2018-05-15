@@ -18,13 +18,16 @@ import ExplorerLink from '@/components/Utils/ExplorerLink/ExplorerLink.vue';
 
 const sb = require('satoshi-bitcoin');
 const moment = require('moment');
-
+const coins = require('libwallet-mnz').coins;
+const electron = require('electron');
+const { clipboard } = require('electron');
 
 export default {
   name: 'transaction-buy-history',
   props: ['coin'],
   data() {
     return {
+      detailTx: { explorerLink: '' },
       totalRows: this.$store.getters.getWalletTxs(this.coin.ticker).length,
       sortBy: 'time',
       sortDesc: true,
@@ -33,9 +36,10 @@ export default {
       fields: [
         { key: 'time', label: 'Date / Hours', sortable: true },
         { key: 'height', label: 'Block Height' },
-        { key: 'confirmations', label: 'Confirmations' },
+        { key: 'confirmations', label: 'Conf' },
         { key: 'amount', label: `Amount (${this.coin.ticker})` },
         { key: 'address', label: 'Address' },
+        { key: 'tx_hash', label: 'TxID' },
       ],
     };
   },
@@ -43,11 +47,25 @@ export default {
     explorer: ExplorerLink,
   },
   methods: {
+    openTxExplorer: (row) => {
+      coins.all.forEach(coin => {
+        if (row.item.ticker === coin.ticker) {
+          electron.shell.openExternal(`${coin.explorer}/tx/${row.item.tx_hash}`);
+        }
+      });
+    },
     handlePending(value) {
       if (value) {
         return value;
       }
       return 0;
+    },
+    copyToClipboard(row) {
+      clipboard.writeText(row.item.tx_hash);
+      this.$toasted.show('Copied !', {
+        duration: 1000,
+        icon: 'done',
+      });
     },
     myRowClickHandler() {
     },

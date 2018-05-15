@@ -66,6 +66,7 @@ export default (wallet, transaction, height, test) => {
       time: time,
       origin,
       amount: amount,
+      ticker: wallet.ticker,
     };
 
     return decodedTx;

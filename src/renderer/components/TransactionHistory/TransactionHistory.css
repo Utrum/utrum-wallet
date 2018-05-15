@@ -17,3 +17,52 @@
 #address {
   font-size: 0.8em;
 }
+
+.borderBottom {
+  border-bottom: 1px solid rgba(222, 226, 230, 0.5);
+}
+
+.table td, .table th {
+  border: none;
+  vertical-align: middle;
+}
+
+.btn-tx {
+ align-content: flex-end;
+}
+
+#btn-group-tx {
+  border-color: #7c398a;
+  width: 160px;
+}
+
+#btn-tx-id {
+  border-radius: 10px;
+  width: 100%; 
+}
+
+#btn-logo {
+  background-color: white;
+}
+
+.btn-tx {
+  background-color: #7c398a;
+  border-color: white;
+  color: white;
+}
+
+.btn-tx:hover {
+  background-color: rgba(124, 57, 138, 0.8); 
+  border-color: white;
+  transition: 0.5s;
+}
+
+.btn-tx:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-tx:target {
+  background-color: rgba(124, 57, 138, 0.8); 
+  box-shadow: none;
+}
