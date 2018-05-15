@@ -9,7 +9,7 @@
 
   <div class="row">
     <div id="selector-coin-buy" class="col-custom">
-      <div class="row-header" v-b-tooltip.html.right title="Click to select currency">
+      <div class="row-header">
         <div class="btn select-all">
           <p @click="$root.$emit('select2:open')" id="add-coin">+</p>
         </div>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div @click="onMaxSelected()" id="card-current-balance" class="col-custom">
-      <div v-b-tooltip.html.left title="Click to withdraw all funds" class="row current-balance card">
+      <div title="Click to withdraw all funds" class="row current-balance card">
         <span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span><span>{{select}}</span>
       </div>
     </div>

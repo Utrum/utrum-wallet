@@ -39,8 +39,5 @@ export default {
     href() {
       return `${this.explorers[this.ticker]}/${this.type}/${this.value}`;
     },
-    tooltipTitle() {
-      return `Click to see ${this.type} in explorer`;
-    },
   },
 };
