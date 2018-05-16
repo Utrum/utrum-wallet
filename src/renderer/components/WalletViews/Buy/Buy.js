@@ -32,6 +32,8 @@ export default {
   data() {
     const satoshiNb = 100000000;
     return {
+      progress: BigNumber(this.$store.getters.getConfig.progress).multipliedBy(100).toNumber(),
+      max: 100,
       satoshiNb,
       searchable: false,
       blocks: 36,
@@ -175,6 +177,27 @@ export default {
     },
   },
   computed: {
+    icoTimeLeft() {
+      if (this.$store.getters.getConfig.icoEndDate != null) {
+
+        const oneDay = 24 * 60 * 60 * 1000;
+        const firstDate = new Date();
+        const secondDate = new Date(this.$store.getters.getConfig.icoEndDate * 1000);
+        const timeLeft = new Date(secondDate.getTime() - firstDate.getTime());
+
+        const dayLeft = Math.round(Math.abs((timeLeft.getTime()) / (oneDay)));
+        if (dayLeft <= 1) {
+          const hoursLeft = timeLeft.getHours();
+          if (hoursLeft <= 0) {
+            const minuteLeft = timeLeft.getMinutes();
+            return `${minuteLeft} Minutes Left`;
+          }
+          return `${hoursLeft} Hours Left`;
+        }
+        return `${dayLeft} Days Left`;
+      }
+      return 0;
+    },
     ...mapGetters(['icoIsRunning']),
     mnzTicker() {
       return this.$store.getters.isTestMode ? 'TESTMNZ' : 'MNZ';
