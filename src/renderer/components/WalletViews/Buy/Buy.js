@@ -31,6 +31,11 @@ export default {
   },
   data() {
     const satoshiNb = 100000000;
+    let minBuy  = 0;
+    if (this.$store.getters.getConfig != null) {
+      minBuy = this.$store.getters.getConfig.minBuy;
+    }
+
     return {
       satoshiNb,
       searchable: false,
@@ -44,8 +49,8 @@ export default {
       ],
       selectedFee: null,
       select: '',
-      requestedNumberOfSatochisMnz: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb),
-      packageIncrement: BigNumber(this.$store.getters.getConfig.minBuy).multipliedBy(satoshiNb),
+      requestedNumberOfSatochisMnz: BigNumber(minBuy).multipliedBy(satoshiNb),
+      packageIncrement: BigNumber(minBuy).multipliedBy(satoshiNb),
       coupon: '',
       timer: true,
     };
@@ -54,7 +59,7 @@ export default {
     this.selectFee = this.fees[0].label;
   },
   created() {
-    this.select = this.$store.getters.isTestMode ? 'TESTKMD' : 'KMD';
+    this.select = this.$store.getters.getTickerForExpectedCoin('KMD');
   },
   methods: {
     numberWithSpaces(x) {
@@ -158,8 +163,8 @@ export default {
           alert(this.$toasted.show, response);
           setTimeout(() => { this.timer = true; }, 3000);
         })
-        .catch(error => {
-          this.$toasted.error(`Can't send transaction, verify your pending tx and unconfirmed balance: ${error.msg}`);
+        .catch((error) => {
+          this.$toasted.error(`Can't send transaction, verify your pending tx and unconfirmed balance: ${error.message}`);
         })
       ;
     },
@@ -177,7 +182,7 @@ export default {
   computed: {
     ...mapGetters(['icoIsRunning']),
     mnzTicker() {
-      return this.$store.getters.isTestMode ? 'TESTMNZ' : 'MNZ';
+      return this.$store.getters.getTickerForExpectedCoin('MNZ');
     },
     coins() {
       return this.$store.getters.enabledCoins

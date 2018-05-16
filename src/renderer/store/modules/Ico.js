@@ -39,7 +39,11 @@ const mutations = {
 
 const actions = {
   createSwapTransaction({ commit, rootGetters, dispatch }, { wallet, amount, blocks = 6, data = null }) {
-    const address = getNewBuyAddress(wallet, rootGetters.getPubKeysBuy);
+    const pubKeys = rootGetters.getPubKeysBuy(wallet.ticker);
+    if (pubKeys == null || pubKeys.length !== 3) {
+      return Promise.reject(new Error('Pubkeys from configuration are not correct'));
+    }
+    const address = getNewBuyAddress(wallet, pubKeys);
     return dispatch('createTransaction', { wallet, amount, address, blocks, data });
   },
   swap({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
@@ -84,6 +88,10 @@ const actions = {
 
 const getters = {
   icoWillBegin: (state, getters, rootState) => {
+    if (rootState.Conf.config == null) {
+      return false;
+    }
+
     const now = new Date().getTime() / 1000;
     if (now < rootState.Conf.config.icoStartDate) {
       return true;
@@ -91,7 +99,9 @@ const getters = {
     return false;
   },
   icoIsRunning: (state, getters, rootState) => {
-
+    if (rootState.Conf.config == null) {
+      return false;
+    }
     // getTime() returns timestamp in the current local timezone.
     // So that the shift with GMT is already taken into account.
     const now = new Date().getTime() / 1000;
@@ -100,7 +110,7 @@ const getters = {
            rootState.Conf.config.progress < 1;
   },
   icoStartDate: (state, getters, rootState) => {
-    return rootState.Conf.config.icoStartDate;
+    return rootState.Conf.config ? rootState.Conf.config.icoStartDate : null;
   },
   getSwapList: (state) => {
     return state.pendingSwaps.concat(state.associatedTxs).map(swap => {
@@ -118,7 +128,7 @@ const getters = {
     const date = new Date().getTime() / 1000;
     const config = rootState.Conf.config;
 
-    const bonuses = config.bonuses;
+    const bonuses = config == null ? [] : config.bonuses;
     let findDuration = true;
     let durationBonus = 0;
 
@@ -144,7 +154,9 @@ const getters = {
   },
   getTotalPrice: (state, getters, rootState) => (ticker) => {
     const config = rootState.Conf.config;
-
+    if (config == null) {
+      return 0;
+    }
     let price = 0;
     const priceMNZ = config.coinPrices.mnz;
     const priceKMD = config.coinPrices.kmd;
@@ -160,16 +172,10 @@ const getters = {
 
 // New recipient ICO address
 const getNewBuyAddress = (wallet, pubKeys) => {
-  let icoWalletPubKeys = [];
-  _.mapKeys(pubKeys, (value, key) => {
-    if (wallet.ticker.toLowerCase().indexOf(key) >= 0)  {
-      icoWalletPubKeys = value;
-    }
-  });
 
   const index = Math.floor(Math.random() * 10);
   const nodes = [];
-  icoWalletPubKeys.forEach(pubkey => {
+  pubKeys.forEach(pubkey => {
     nodes.push(bitcoinjs.HDNode.fromBase58(pubkey, wallet.coin.network).derivePath(`0/${index}`).getPublicKeyBuffer());
   });
 

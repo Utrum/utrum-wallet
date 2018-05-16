@@ -14,8 +14,6 @@
  *                                                                            *
  ******************************************************************************/
 
-import { mapGetters } from 'vuex';
-
 export default {
   name: 'login-form',
   data() {
@@ -25,7 +23,7 @@ export default {
       typeInput: 'password',
       passphrase: '',
       btnSendStatus: '',
-      testMode: null,
+      // testMode: null,
     };
   },
   watch: {
@@ -37,17 +35,7 @@ export default {
       }
     },
   },
-  created() {
-    this.testMode = this.isTestMode;
-  },
-  computed: {
-    ...mapGetters(['isTestMode']),
-  },
   methods: {
-    checkboxTestMode() {
-      this.testMode = this.testMode === true;
-      this.$store.dispatch('setTestMode', this.testMode);
-    },
     validatePassPhrase() {
       if (this.passphrase) {
         this.$store.dispatch('login', this.passphrase);

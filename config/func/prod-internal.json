@@ -1,0 +1,10 @@
+{
+  "minConfirmations": 2,
+  "enabledCoins": ["BTC", "KMD", "MNZ"],
+  "wallets": {
+    "btc": [
+    ],
+    "kmd": [
+    ]
+  }
+}
