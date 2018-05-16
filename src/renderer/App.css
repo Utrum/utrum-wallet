@@ -486,3 +486,7 @@ textarea {
 .modal-open {
   overflow: scroll;
 }
+
+.progress-bar {
+	background-color: #bcbaca !important;
+}

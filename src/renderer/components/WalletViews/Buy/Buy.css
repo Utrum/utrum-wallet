@@ -14,15 +14,49 @@
  *                                                                            *
  ******************************************************************************/
 
+.progress-active {
+	height: 6px;
+	border-radius: 1px;
+}
+
+#progress-live {
+	padding: 10px;
+	background-color: #b32581;
+	font-weight: 500;
+	color: white;
+	width: 140px;
+	height: 30px;
+	border-radius: 4px;
+}
+
+#progress-time-left {
+	color: #b32581;
+}
+
+#progress-indicator {
+	color: black;
+	padding-left: 50px;
+	font-weight: 500;
+}
+
+#progress-bar-indicator {
+	padding-top: 15px; 
+}
+
+#progress-bar {
+	padding: 50px;
+}
+
 .buy-monaize {
 	background-color: white;
 	padding: 50px;
+	margin-bottom: 25px;
 	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
 }
 
 #historyMnzBuy {
 	padding: 50px;
-	padding-top: 0px;
+	padding-top: 20px;
 }
 
 #historyMnzBuy h3 {
@@ -70,7 +104,6 @@ input[type=number]::-webkit-outer-spin-button {
 .content-buyview {
 	padding-bottom: 15px;
 	color: rgb(151,151,151);
-	height: 100%;
 }
 
 .content-buyview h3 {
