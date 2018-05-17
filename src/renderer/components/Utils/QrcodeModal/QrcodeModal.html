@@ -12,10 +12,8 @@
     <span id="qrcode-title">QR CODE {{wallet.ticker}}</span>
   </b-container>
   <div slot="modal-footer" class="w-100">
-    <explorer class="btn btn-copy-link btn-smartaddress" type="address" :ticker="wallet.ticker" :value="wallet.address">
-      <div :id="wallet.ticker" class="btn-inside-qrcode">
-        {{wallet.address}}
-      </div>
-    </explorer>
+    <div :id="wallet.ticker" class="btn-inside-qrcode">
+      {{wallet.address}}
+    </div>
   </div>
 </b-modal>

@@ -128,6 +128,7 @@ const getters = {
         mnzAmount: swap.mnzTx.amount,
         cryptoAmount: swap.cryptoTx.amount,
         mnzTxHash: swap.mnzTx.tx_hash,
+        cryptoHash: swap.cryptoTx.tx_hash,
       };
     });
   },

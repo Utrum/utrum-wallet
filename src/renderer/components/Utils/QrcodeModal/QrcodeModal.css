@@ -14,6 +14,10 @@
  *                                                                            *
  ******************************************************************************/
 
+ .btn-inside-qrcode {
+	font-size: 0.7em;
+}
+
 .modal-header a:hover {
 	opacity: 0.5;
 	-webkit-transition: all 1s ease;
