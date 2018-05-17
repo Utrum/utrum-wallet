@@ -48,8 +48,10 @@ build:
       - node_modules
   only:
     - tags
+    - master
   script:
     - yarn --ignore-engines
+    - export WALLET_ENV=$([[ "$CI_COMMIT_REF_NAME" == "develop" ]] && echo "staging" || echo "preprod")
     - yarn run build -lwm
   artifacts:
     expire_in: '1 hour'
@@ -61,11 +63,13 @@ publish:
   stage: publish
   only:
     - tags
+    - master
   script:
+    - export WALLET_ENV=$([[ "$CI_COMMIT_REF_NAME" == "develop" ]] && echo "staging" || echo "preprod")
     - VERSION=$(echo $CI_BUILD_TAG | sed 's/v//'); gitlab-release --message "MNZ Wallet $CI_BUILD_TAG Release"
-      build/mnz-wallet-$VERSION-setup.exe
-      build/mnz-wallet-$VERSION-x86_64.AppImage
-      build/mnz-wallet-$VERSION-mac.zip
+      build/mnz-wallet-$VERSION-$WALLET_ENV-setup.exe
+      build/mnz-wallet-$VERSION-$WALLET_ENV-x86_64.AppImage
+      build/mnz-wallet-$VERSION-$WALLET_ENV-mac.zip
     - "curl -X POST -H 'Content-type: application/json' \
       --data \"{\\\"text\\\":\\\"MNZ Wallet Release $CI_BUILD_TAG! Go <https://gitlab.com/monaize-mnz/mnz-wallet/tags/$CI_BUILD_TAG|here> to download it ! \\\"}\" \
       $SLACK_HOOK_URL"

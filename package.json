@@ -6,7 +6,16 @@
   "license": "GPL-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
-    "eslint": "./node_modules/.bin/eslint src/",
+    "start-staging": "WALLET_ENV=staging yarn dev",
+    "start-preprod": "WALLET_ENV=preprod yarn dev",
+    "start-prod-internal": "WALLET_ENV=prod-internal yarn dev",
+    "start-prod-preico": "WALLET_ENV=prod-preico yarn dev",
+    "start-prod-ico": "WALLET_ENV=prod-ico yarn dev",
+    "build-staging": "WALLET_ENV=staging yarn build",
+    "build-preprod": "WALLET_ENV=preprod yarn build",
+    "build-prod-internal": "WALLET_ENV=prod-internal yarn build",
+    "build-prod-preico": "WALLET_ENV=prod-preico yarn build",
+    "build-prod-ico": "WALLET_ENV=prod-ico yarn build",
     "build": "node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
@@ -17,7 +26,7 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "test": "npm run unit",
     "unit": "karma start test/unit/karma.conf.js --single-run",
-    "postinstall": ""
+    "eslint": "./node_modules/.bin/eslint src/"
   },
   "build": {
     "productName": "MNZ Wallet",
@@ -52,15 +61,15 @@
     },
     "mac": {
       "icon": "build/icons/512x512.png",
-      "artifactName": "mnz-wallet-${version}-mac.${ext}"
+      "artifactName": "mnz-wallet-${version}-${env.WALLET_ENV}-mac.${ext}"
     },
     "win": {
       "icon": "build/icons/512x512.png",
-      "artifactName": "mnz-wallet-${version}-setup.${ext}"
+      "artifactName": "mnz-wallet-${version}-${env.WALLET_ENV}-setup.${ext}"
     },
     "linux": {
       "icon": "build/icons",
-      "artifactName": "mnz-wallet-${version}-x86_64.${ext}"
+      "artifactName": "mnz-wallet-${version}-${env.WALLET_ENV}-x86_64.${ext}"
     }
   },
   "dependencies": {
