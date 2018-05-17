@@ -38,7 +38,6 @@ export default {
         { key: 'height', label: 'Block Height' },
         { key: 'confirmations', label: 'Conf' },
         { key: 'amount', label: `Amount (${this.coin.ticker})` },
-        { key: 'address', label: 'Address' },
         { key: 'tx_hash', label: 'TxID' },
       ],
     };
