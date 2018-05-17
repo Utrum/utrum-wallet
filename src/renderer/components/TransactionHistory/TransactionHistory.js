@@ -15,12 +15,14 @@
  ******************************************************************************/
 
 import ExplorerLink from '@/components/Utils/ExplorerLink/ExplorerLink.vue';
+import { BigNumber } from 'bignumber.js';
 
-const sb = require('satoshi-bitcoin');
 const moment = require('moment');
 const coins = require('libwallet-mnz').coins;
 const electron = require('electron');
 const { clipboard } = require('electron');
+
+const satoshiNb = 100000000;
 
 export default {
   name: 'transaction-buy-history',
@@ -69,7 +71,7 @@ export default {
     myRowClickHandler() {
     },
     satoshiToBitcoin(amount) {
-      return sb.toBitcoin(amount);
+      return BigNumber(amount).dividedBy(satoshiNb).toNumber();
     },
     getColorAmount(amount) {
       return (amount > 0) ? 'positiveColor' : 'negativeColor';
@@ -86,7 +88,7 @@ export default {
       return Number(Math.abs(row.item.cryptoAmount / row.item.mnzAmount).toFixed(8));
     },
     getTotalPrice(row) {
-      return sb.toBitcoin(Math.abs(row.item.cryptoAmount));
+      return BigNumber(Math.abs(row.item.cryptoAmount)).dividedBy(satoshiNb).toNumber();
     },
   },
   computed: {
