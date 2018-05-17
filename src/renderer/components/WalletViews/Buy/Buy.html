@@ -119,7 +119,7 @@
 			<div class="w-100 py-2">
 					<b-progress :value="progress" :max="max" class="progress-active"></b-progress>
 			</div>
-			<div id="progress-indicator" class="d-flex align-items-center ml-2">{{progress.toString()}}%</div>
+			<div id="progress-indicator" class="d-flex align-items-center ml-2">{{progress.toFixed(0)}}%</div>
 		</div>
 	</div>
 
