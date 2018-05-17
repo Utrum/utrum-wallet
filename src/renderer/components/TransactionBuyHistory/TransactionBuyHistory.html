@@ -5,6 +5,7 @@
               thead-tr-class="theadTrClass"
               tbody-tr-class="theadClass"
               thead-class="theadClass borderBottom"
+              @row-clicked="openSwapDetail"
               :sort-desc="sortDesc"
               :sort-by="sortBy"
               :fields="fields"
@@ -36,4 +37,17 @@
         </template>
     </b-table>
     <b-pagination align="center" :total-rows="txHistory.length" :per-page="perPage" v-model="currentPage" class="my-0" />
+
+    <b-modal centered id="swapDetailModal" :title="swapDetailTitle" ref="swapDetailModal" size="lg">
+        <h5 class="my-3">{{swapDetailData.ticker}}:</h5>
+        <ul>
+            <li>Amount: {{satoshiToBitcoin(swapDetailData.cryptoAmount)}} {{swapDetailData.ticker}}</li>
+            <li class="pointer" @click.prevent="openTxExplorer(swapDetailData.ticker, swapDetailData.cryptoHash)">TxID: {{swapDetailData.cryptoHash}}</li>
+        </ul>
+        <h5 class="my-3">{{$store.getters.getTickerForExpectedCoin('MNZ')}}:</h5>
+        <ul>
+            <li>Amount: {{satoshiToBitcoin(swapDetailData.mnzAmount)}} {{$store.getters.getTickerForExpectedCoin('MNZ')}}</li>
+            <li :class="swapDetailData.mnzTxHash != null ? 'pointer' : ''" @click.prevent="openTxExplorer($store.getters.getTickerForExpectedCoin('MNZ'), swapDetailData.mnzTxHash)">TxID: {{swapDetailData.mnzTxHash != null ? swapDetailData.mnzTxHash : 'Pending'}}</li>
+        </ul>
+    </b-modal>
 </div>

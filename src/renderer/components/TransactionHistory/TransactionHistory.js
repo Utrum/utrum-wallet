@@ -14,7 +14,6 @@
  *                                                                            *
  ******************************************************************************/
 
-import ExplorerLink from '@/components/Utils/ExplorerLink/ExplorerLink.vue';
 import { BigNumber } from 'bignumber.js';
 
 const moment = require('moment');
@@ -43,9 +42,6 @@ export default {
         { key: 'tx_hash', label: 'TxID' },
       ],
     };
-  },
-  components: {
-    explorer: ExplorerLink,
   },
   methods: {
     openTxExplorer: (row) => {

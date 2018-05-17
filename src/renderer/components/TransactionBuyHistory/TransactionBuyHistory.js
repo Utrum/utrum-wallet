@@ -14,9 +14,10 @@
  *                                                                            *
  ******************************************************************************/
 
-import ExplorerLink from '@/components/Utils/ExplorerLink/ExplorerLink.vue';
 import { BigNumber } from 'bignumber.js';
 
+const electron = require('electron');
+const coins = require('libwallet-mnz').coins;
 const moment = require('moment');
 
 const satoshiNb = 100000000;
@@ -27,6 +28,14 @@ export default {
   props: ['coin'],
   data() {
     return {
+      swapDetailData: {
+        time: 0,
+        ticker: '',
+        mnzAmount: 0,
+        cryptoAmount: 0,
+        mnzTxHash: '',
+        cryptoHash: '',
+      },
       totalRows: this.$store.getters.getSwapList.length,
       sortBy: 'time',
       sortDesc: true,
@@ -42,10 +51,20 @@ export default {
       ],
     };
   },
-  components: {
-    explorer: ExplorerLink,
-  },
   methods: {
+    openTxExplorer: (ticker, value) => {
+      if (value != null) {
+        coins.all.forEach(coin => {
+          if (ticker === coin.ticker) {
+            electron.shell.openExternal(`${coin.explorer}/tx/${value}`);
+          }
+        });
+      }
+    },
+    openSwapDetail(item) {
+      this.swapDetailData = item;
+      this.$refs.swapDetailModal.show();
+    },
     satoshiToBitcoin(amount) {
       return BigNumber(amount).dividedBy(satoshiNb).toNumber();
     },
@@ -68,6 +87,14 @@ export default {
     },
   },
   computed: {
+    swapDetailTitle() {
+      if (this.swapDetailData != null && this.swapDetailData.ticker != null) {
+        const dateSwap = moment.utc(this.swapDetailData.time * 1000);
+        const dateString = moment(dateSwap).local().format('hh:mm A DD/MM/YYYY');
+        return `Swap Detail: ${this.swapDetailData.ticker} <> ${this.$store.getters.getTickerForExpectedCoin('MNZ')} | ${dateString}`;
+      }
+      return '';
+    },
     txHistory() {
       return this.$store.getters.getSwapList;
     },

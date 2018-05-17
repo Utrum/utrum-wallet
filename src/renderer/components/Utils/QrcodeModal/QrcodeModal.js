@@ -14,13 +14,8 @@
  *                                                                            *
  ******************************************************************************/
 
-import ExplorerLink from '@/components/Utils/ExplorerLink/ExplorerLink.vue';
-
 export default {
   name: 'qrcode-modal',
-  components: {
-    explorer: ExplorerLink,
-  },
   props: {
     wallet: {
       type: Object,
