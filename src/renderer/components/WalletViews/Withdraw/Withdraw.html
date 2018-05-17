@@ -18,14 +18,8 @@
         </div>
       </div>
     </div>
-    <div id="separator" class="col-custom">
-      <div class="vl">
-      </div>
-    </div>
-    <div @click="onMaxSelected()" id="card-current-balance" class="col-custom">
-      <div title="Click to withdraw all funds" class="row current-balance card">
+    <div @click="onMaxSelected()" id="card-current-balance" class="d-flex justify-content-end align-items-center">
         <span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span><span>{{select}}</span>
-      </div>
     </div>
   </div>
 
