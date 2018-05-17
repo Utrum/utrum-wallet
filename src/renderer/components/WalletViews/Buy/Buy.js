@@ -32,12 +32,16 @@ export default {
   data() {
     const satoshiNb = 100000000;
     let minBuy  = 0;
-    if (this.$store.getters.getConfig != null) {
-      minBuy = this.$store.getters.getConfig.minBuy;
+    let progress = 0;
+    const config = this.$store.getters.getConfig;
+
+    if (config != null) {
+      minBuy = config.minBuy != null ? config.minBuy : 0;
+      progress = config.progress != null ? config.progress : 0;
     }
 
     return {
-      progress: BigNumber(this.$store.getters.getConfig.progress).multipliedBy(100).toNumber(),
+      progress: BigNumber(progress).multipliedBy(100).toNumber(),
       max: 100,
       satoshiNb,
       searchable: false,
@@ -64,6 +68,12 @@ export default {
     this.select = this.$store.getters.getTickerForExpectedCoin('KMD');
   },
   methods: {
+    icoIsNotRunningClass() {
+      if (!this.icoIsRunning) {
+        return 'h-100';
+      }
+      return '';
+    },
     numberWithSpaces(x) {
       const parts = x.toString().split('.');
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');

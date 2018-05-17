@@ -1,4 +1,4 @@
-<div class="d-flex flex-column content-buyview">
+<div class="d-flex flex-column content-buyview" :class="icoIsNotRunningClass()">
 	<div class="buy-monaize" v-if="icoIsRunning">
 		<div class="col-custom">
 			<div class="row">
@@ -126,7 +126,7 @@
 	<div id="historyMnzBuy" v-if="$store.getters.getSwapList.length > 0">
 		<transaction-buy-history :coin="wallet.coin"></transaction-buy-history>
 	</div>
-	<div v-if="$store.getters.getSwapList.length == 0" id="monaize-over" class="d-flex justify-content-center align-items-center">
+	<div v-if="$store.getters.getSwapList.length == 0 && !icoIsRunning" id="monaize-over" class="d-flex justify-content-center align-items-center">
 		<div class="d-flex flex-column">
 			<span id="title-monaize-over">MNZ SWAPS</span>
 			<span>If you buy any MNZ during the token sale they will appear right here</span>
