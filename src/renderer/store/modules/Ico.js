@@ -99,7 +99,7 @@ const getters = {
     return false;
   },
   icoIsRunning: (state, getters, rootState) => {
-    if (rootState.Conf.config == null) {
+    if (getters.hasPlannedIco === false) {
       return false;
     }
     // getTime() returns timestamp in the current local timezone.
@@ -108,6 +108,14 @@ const getters = {
     return now < rootState.Conf.config.icoEndDate &&
            now > rootState.Conf.config.icoStartDate &&
            rootState.Conf.config.progress < 1;
+  },
+  hasPlannedIco: (state, getters, rootState) => {
+    if (rootState.Conf.config == null ||
+        rootState.Conf.config.icoEndDate == null ||
+        rootState.Conf.config.icoStartDate == null) {
+      return false;
+    }
+    return true;
   },
   icoStartDate: (state, getters, rootState) => {
     return rootState.Conf.config ? rootState.Conf.config.icoStartDate : null;
