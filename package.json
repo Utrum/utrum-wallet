@@ -102,7 +102,6 @@
     "moment": "^2.22.0",
     "moment-timezone": "^0.5.14",
     "npm-license-crawler": "^0.1.8",
-    "satoshi-bitcoin": "^1.0.4",
     "toml": "^2.3.3",
     "typeface-montserrat": "0.0.54",
     "uglifyjs-webpack-plugin": "^1.2.4",
