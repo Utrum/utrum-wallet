@@ -16,17 +16,11 @@
 
 import bitcoinjs from 'bitcoinjs-lib';
 
-export default (wallet, transaction, height, test) => {
-  let network;
-  if (wallet.ticker === 'BTC' && test) {
-    network = bitcoinjs.networks.testnet;
-  } else if (wallet.ticker === 'BTC' && !test) {
-    network = bitcoinjs.networks.bitcoin;
-  } else network = wallet.coin.network;
-  const txb = bitcoinjs.TransactionBuilder.fromTransaction(bitcoinjs.Transaction.fromHex(transaction.hex), network);
+export default (wallet, transaction, height) => {
+  const txb = bitcoinjs.TransactionBuilder.fromTransaction(bitcoinjs.Transaction.fromHex(transaction.hex), wallet.coin.network);
 
   if (txb.inputs[0] != null && txb.inputs[0].pubKeys[0] != null) {
-    const inputPubKey = bitcoinjs.ECPair.fromPublicKeyBuffer(txb.inputs[0].pubKeys[0], network);
+    const inputPubKey = bitcoinjs.ECPair.fromPublicKeyBuffer(txb.inputs[0].pubKeys[0], wallet.coin.network);
     let amount = 0;
     let fromMNZ = false;
     let origin = '';
@@ -34,7 +28,7 @@ export default (wallet, transaction, height, test) => {
     // console.log("Txb: ", txb);
     txb.tx.outs.forEach(out => {
       if (out.value !== 0) {
-        const address = bitcoinjs.address.fromOutputScript(out.script, network);
+        const address = bitcoinjs.address.fromOutputScript(out.script, wallet.coin.network);
         if (address === wallet.address && inputPubKey.getAddress() !== wallet.address) {
           amount +=  out.value;
         } else if (address !== wallet.address && inputPubKey.getAddress() === wallet.address) {

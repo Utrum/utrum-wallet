@@ -17,15 +17,13 @@
 const { ipcRenderer } = require('electron');
 
 export default class ElectrumService {
-  constructor(store, ticker, test, electrumConfig) {
+  constructor(store, ticker, electrumConfig) {
     this.tag = 0;
     this.store = store;
     this.ticker = ticker;
-    this.test = test;
     this.electrumConfig = electrumConfig;
     this.payload = {
       ticker,
-      test,
     };
   }
 

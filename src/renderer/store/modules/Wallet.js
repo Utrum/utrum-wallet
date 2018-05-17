@@ -16,12 +16,15 @@
 
 import { Wallet, coins }  from 'libwallet-mnz';
 import { BigNumber } from 'bignumber.js';
+
 import * as _ from 'lodash';
 import Vue from 'vue';
 import store from '../../store';
 import ElectrumService from '../../lib/electrum';
 import getCmcData from '../../lib/coinmarketcap';
 import createPrivKey from '../../lib/createPrivKey';
+
+const config = require('../../config/config');
 
 const satoshiNb = 100000000;
 
@@ -43,7 +46,7 @@ const getters = {
     return state.isUpdate;
   },
   getHistoryBuy: (state, getters) => {
-    const mnzTicker = getters.isTestMode ? 'TESTMNZ' : 'MNZ';
+    const mnzTicker = getters.getTickerForExpectedCoin('MNZ');
     const history = getters.getWalletTxs(mnzTicker);
     Object.keys(coins).forEach((coin) => {
       const filteredHistory = history.filter(el => el.origin.ticker === coin);
@@ -75,6 +78,18 @@ const getters = {
   },
   getBalanceByTicker: (state) => (ticker) => {
     return state.wallets[ticker].balance;
+  },
+  enabledCoins: () => {
+    return config.func.enabledCoins.map(ticker => coins.get(ticker));
+  },
+  getTickerForExpectedCoin: () => (expectedCoinTicker) => {
+    let theTicker;
+    config.func.enabledCoins.forEach(ticker => {
+      if (ticker.indexOf(expectedCoinTicker) >= 0) {
+        theTicker = ticker;
+      }
+    });
+    return theTicker;
   },
 };
 
@@ -117,13 +132,13 @@ const actions = {
     dispatch('setPrivKey', createPrivKey(rootGetters.passphrase));
 
     const privateKey = rootGetters.privKey;
-    const isTestMode = rootGetters.isTestMode;
     const enabledCoins = rootGetters.enabledCoins;
 
     const promises = enabledCoins.map((coin) => {
       const ticker = coin.ticker;
+      const isTestMode = ticker.indexOf('TEST') >= 0;
       const wallet = new Wallet(privateKey, coin, isTestMode);
-      wallet.electrum = new ElectrumService(store, ticker, isTestMode, { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
+      wallet.electrum = new ElectrumService(store, ticker, { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
       wallet.ticker = ticker;
       wallet.balance = 0;
       wallet.balance_usd = 0;
@@ -135,7 +150,6 @@ const actions = {
         .init()
         .then(() => {
           dispatch('buildTxHistory', wallet, { root: true });
-          // dispatch('updateBalance', wallet);
         })
       ;
     });
@@ -170,6 +184,10 @@ const actions = {
           return broadcastedTx;
         }
         return Promise.reject(new Error(`Broadcasted tx ${broadcastedTx} is not the same as built tx ${txId}`));
+      })
+      .catch((error) => {
+        console.log('BROADCASTED TX ERROR:', error); // eslint-disable-line
+        return Promise.reject(error);
       })
     ;
   },

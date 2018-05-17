@@ -32,7 +32,7 @@ export default {
     QrcodeReader,
   },
   created() {
-    this.select = this.$store.getters.isTestMode ? 'TESTMNZ' : 'MNZ';
+    this.select = this.$store.getters.getTickerForExpectedCoin('MNZ');
   },
   data() {
     return {
@@ -110,10 +110,16 @@ export default {
     checkAddress(addr) {
       if (addr) {
         const checkResult = bitcoinjs.address.fromBase58Check(addr);
-        if (this.wallet.ticker === 'BTC') return checkResult.version === 0;
-        else if (this.wallet.ticker === 'KMD'
-          || this.wallet.ticker === 'MNZ') return checkResult.version === 60;
-      } else return false;
+        if (this.wallet.ticker.indexOf('BTC') >= 0) {
+
+          return checkResult.version === 0;
+        } else if (this.wallet.ticker.indexOf('KMD') >= 0 || this.wallet.ticker.indexOf('MNZ') >= 0) {
+
+          return checkResult.version === 60;
+        }
+      } else {
+        return false;
+      }
     },
     async onInit(promise) {
       this.loading = true;

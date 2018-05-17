@@ -23,7 +23,7 @@ const actions = {
       .getTransactionHistory(wallet.address)
       .then(transactionList => {
         return bluebird.mapSeries(transactionList, transaction => {
-          return decodeTx(wallet, transaction, rootGetters.isTestMode)
+          return decodeTx(wallet, transaction)
             .then((transactionDetail) => {
               // console.log(`Tx: ${transactionDetail.tx_hash}, confirmations: ${transactionDetail.confirmations}`);
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
@@ -37,10 +37,10 @@ const actions = {
   },
 };
 
-const decodeTx = (wallet, tx, isTestMode) => {
+const decodeTx = (wallet, tx) => {
   return wallet.electrum
     .getTransaction(tx.tx_hash, true)
-    .then(response => getTxFromRawTx(wallet, response, tx.height, isTestMode))
+    .then(response => getTxFromRawTx(wallet, response, tx.height))
     .then((transaction) => {
       if (transaction == null) {
         return Promise.reject(new Error(`Bad transaction, can't get details on ${JSON.stringify(tx)} with ${JSON.stringify(transaction)}`));

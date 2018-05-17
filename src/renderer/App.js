@@ -43,21 +43,21 @@ export default {
   },
   computed: {
     hasPlannedIco() {
-      if (this.$store.getters.getConfig.icoEndDate == null
-        && this.$store.getters.getConfig.icoStartDate == null) {
-        return true;
+      if (this.$store.getters.getConfig == null ||
+        (this.$store.getters.getConfig.icoEndDate == null &&
+          this.$store.getters.getConfig.icoStartDate == null)) {
+        return false;
       }
-      return false;
+      return true;
     },
     icoBannerActive() {
-      if (((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) && !this.hasPlannedIco) {
+      if (((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) && this.hasPlannedIco) {
         return 'bannerMargin';
       }
     },
     isClientUpdated() {
-      if (this.$store.getters.getConfig.client != null) {
-        const version = this.$store.getters.getConfig.client.version === Number(pjson.version.split('.')[0]);
-        return version;
+      if (this.$store.getters.getConfig != null && this.$store.getters.getConfig.client != null) {
+        return this.$store.getters.getConfig.client.version === Number(pjson.version.split('.')[0]);
       }
       return true;
     },
@@ -66,6 +66,9 @@ export default {
     },
     icoStartDate() {
       const startDate = this.$store.getters.icoStartDate;
+      if (startDate == null) {
+        return null;
+      }
       moment.locale('en_us');
       return moment.unix(startDate).toNow(true);
     },
