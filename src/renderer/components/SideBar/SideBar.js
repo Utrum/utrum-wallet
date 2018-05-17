@@ -43,6 +43,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['icoIsRunning']),
+    ...mapGetters(['icoIsRunning', 'hasPlannedIco']),
   },
 };

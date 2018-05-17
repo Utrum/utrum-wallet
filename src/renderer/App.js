@@ -43,12 +43,7 @@ export default {
   },
   computed: {
     hasPlannedIco() {
-      if (this.$store.getters.getConfig == null ||
-        (this.$store.getters.getConfig.icoEndDate == null &&
-          this.$store.getters.getConfig.icoStartDate == null)) {
-        return false;
-      }
-      return true;
+      return this.$store.getters.hasPlannedIco;
     },
     icoBannerActive() {
       if (((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) && this.hasPlannedIco) {
