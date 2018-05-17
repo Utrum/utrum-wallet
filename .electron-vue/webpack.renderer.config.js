@@ -102,6 +102,11 @@ let rendererConfig = {
     __filename: process.env.NODE_ENV !== 'production'
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'WALLET_ENV': JSON.stringify(process.env.WALLET_ENV),
+      }
+    }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery'
