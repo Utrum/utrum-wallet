@@ -19,6 +19,7 @@ import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import TransactionBuyHistory from '@/components/TransactionBuyHistory/TransactionBuyHistory.vue';
 import { BigNumber } from 'bignumber.js';
 import { mapGetters } from 'vuex';
+import * as _ from 'lodash';
 
 const { clipboard } = require('electron');
 
@@ -54,7 +55,7 @@ export default {
       select: '',
       requestedNumberOfSatochisMnz: BigNumber(minBuy).multipliedBy(satoshiNb),
       packageIncrement: BigNumber(minBuy).multipliedBy(satoshiNb),
-      coupon: '',
+      couponValue: '',
       timer: true,
     };
   },
@@ -154,6 +155,9 @@ export default {
         })
       ;
     },
+    debounceInput: _.debounce(function () {
+      this.prepareTx();
+    }, 1300),
     buyMnz() {
       this.timer = false;
       this.hideModal();
@@ -189,6 +193,19 @@ export default {
     },
   },
   computed: {
+    coupon: {
+      get: function () {
+        return this.couponValue;
+      },
+      set: function (newValue) {
+        this.couponValue = newValue;
+        if (!/^([0-9A-Fa-f]+)$/.test(newValue)) {
+          this.couponValue = newValue.substring(0, newValue.length - 1);
+        } else {
+          this.debounceInput();
+        }
+      },
+    },
     progress() {
       const config = this.$store.getters.getConfig;
       let progress = 0;
