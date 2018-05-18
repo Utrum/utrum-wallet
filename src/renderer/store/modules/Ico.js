@@ -142,7 +142,7 @@ const getters = {
     let durationBonus = 0;
 
     Object.keys(bonuses).forEach(k => {
-      if (ticker.toLowerCase().indexOf(k)) {
+      if (ticker.toLowerCase() === k) {
         Object.keys(bonuses[k]).forEach(j => {
           if (findDuration) {
             durationBonus += bonuses[k][j].duration * 3600;
