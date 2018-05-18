@@ -71,13 +71,12 @@ function createWindow() {
     },
   });
 
-  mainWindow.webContents.openDevTools();
   const template = [{
     label: 'Monaize ICO App',
     submenu: [
         { label: 'About Monaize Wallet', click: function () { aboutView() } },
         { type: 'separator' },
-        { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); } },
+        { label: 'Quit', accelerator: 'CmdOrCtrl+Q', click: function () { app.quit(); } },
     ] }, {
       label: 'Edit',
       submenu: [
@@ -88,6 +87,7 @@ function createWindow() {
           { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
           { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
           { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' },
+          { label: 'Open DevTools', accelerator: 'F12', click: function() { mainWindow.webContents.openDevTools(); } },
       ] },
   ];
 
@@ -102,7 +102,7 @@ function createWindow() {
     const args = [].slice.call(arguments, 2);
     ev.returnValue = [app[msg].apply(app, args)];
   });
-  
+
   ipc.on('electrum.init', (event, payload) => {
     electrumManager.initClient(payload.ticker, payload.electrumConfig)
       .then((response) => {
