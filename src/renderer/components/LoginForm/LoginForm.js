@@ -14,6 +14,8 @@
  *                                                                            *
  ******************************************************************************/
 
+const bip39 = require('bip39');
+
 export default {
   name: 'login-form',
   data() {
@@ -28,7 +30,7 @@ export default {
   },
   watch: {
     passphrase(passphrase) {
-      if (passphrase !== '') {
+      if (passphrase !== '' && bip39.validateMnemonic(this.passphrase)) {
         this.btnSendStatus = 'show-button';
       } else {
         this.btnSendStatus = '';
@@ -37,7 +39,7 @@ export default {
   },
   methods: {
     validatePassPhrase() {
-      if (this.passphrase) {
+      if (this.passphrase && bip39.validateMnemonic(this.passphrase)) {
         this.$store.dispatch('login', this.passphrase);
         this.$router.push('/wallet');
       }
