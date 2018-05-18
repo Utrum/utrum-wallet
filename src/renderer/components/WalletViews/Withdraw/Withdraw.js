@@ -171,6 +171,8 @@ export default {
               tx.outputs != null &&
               tx.inputs != null) {
             this.estimatedFee = BigNumber(tx.fee);
+          } else if (tx != null && tx.feeRate != null) {
+            this.estimatedFee = BigNumber(tx.feeRate);
           }
           return tx;
         })
@@ -181,6 +183,9 @@ export default {
       if (this.canWithdraw && this.addressIsValid) {
         return this.prepareTx()
           .then(tx => {
+            if (tx != null && tx.feeRate != null) {
+              return Promise.reject({ msg: 'Not enough balance including fees.' });
+            }
             return this.$store.dispatch('broadcastTransaction', { wallet: this.wallet, ...tx });
           })
           .then((response) => {
