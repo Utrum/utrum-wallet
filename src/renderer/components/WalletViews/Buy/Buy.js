@@ -32,16 +32,13 @@ export default {
   data() {
     const satoshiNb = 100000000;
     let minBuy  = 0;
-    let progress = 0;
     const config = this.$store.getters.getConfig;
 
     if (config != null) {
       minBuy = config.minBuy != null ? config.minBuy : 0;
-      progress = config.progress != null ? config.progress : 0;
     }
 
     return {
-      progress: BigNumber(progress).multipliedBy(100).toNumber(),
       max: 100,
       satoshiNb,
       searchable: false,
@@ -192,6 +189,14 @@ export default {
     },
   },
   computed: {
+    progress() {
+      const config = this.$store.getters.getConfig;
+      let progress = 0;
+      if (config != null) {
+        progress = config.progress != null ? config.progress : 0;
+      }
+      return BigNumber(progress).multipliedBy(100).toNumber();
+    },
     icoTimeLeft() {
       if (this.$store.getters.getConfig.icoEndDate != null) {
 
