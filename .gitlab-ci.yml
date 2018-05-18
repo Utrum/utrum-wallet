@@ -79,9 +79,10 @@ staging release:
     - echo "${SSH_PRIVKEY_STAGING}" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan -p ${SSH_PORT_STAGING} -H ${SSH_HOST_STAGING} >> ~/.ssh/known_hosts
+    - ssh-keyscan ${SSH_HOST_STAGING} >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
+    - export VERSION=$(echo ${CI_BUILD_TAG} | sed 's/v//');
     - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-setup.exe ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
     - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
     - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
