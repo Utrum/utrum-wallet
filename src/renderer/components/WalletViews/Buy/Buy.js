@@ -289,11 +289,12 @@ export default {
     },
     getTotalSatoshiPrice() {
       const priceFor1Mnz = this.$store.getters.getTotalPrice(this.wallet.ticker); // Price for 1 MNZ in KMD or BTC.
-      return this.requestedNumberOfSatochisMnz.multipliedBy(priceFor1Mnz);
+      const priceTransaction = this.requestedNumberOfSatochisMnz.multipliedBy(priceFor1Mnz);
+      const roundedPriceTransaction = priceTransaction.integerValue(BigNumber.ROUND_UP);
+      return roundedPriceTransaction;
     },
     getTotalPrice() {
-      const priceFor1Mnz = this.$store.getters.getTotalPrice(this.wallet.ticker);
-      return this.requestedNumberOfSatochisMnz.multipliedBy(priceFor1Mnz).dividedBy(this.satoshiNb);
+      return this.getTotalSatoshiPrice.dividedBy(this.satoshiNb);
     },
     getTotalPriceWithFee() {
       return this.getTotalSatoshiPrice.plus(this.estimatedFee).dividedBy(this.satoshiNb);
