@@ -13,7 +13,6 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
-
 export default {
   name: 'login-form',
   data() {
@@ -36,6 +35,9 @@ export default {
     },
   },
   methods: {
+    handleChange(e) {
+      this.passphrase = e.target.value;
+    },
     validatePassPhrase() {
       if (this.passphrase) {
         this.$store.dispatch('login', this.passphrase);
@@ -48,11 +50,9 @@ export default {
     changeTypeInputPassphrase() {
       if (this.typeInput === 'password') {
         this.passphraseId = 'passphrase-hide';
-        this.iconMdpId = 'icon-mdp-hide';
         this.typeInput = 'text';
       } else {
         this.passphraseId = 'passphrase-show';
-        this.iconMdpId = 'icon-mdp-show';
         this.typeInput = 'password';
       }
     },

@@ -16,13 +16,31 @@
 
 @import '~typeface-montserrat';
 
-#login-background {
+#login {
+	height: 60px;
+}
+
+#create-passphrase {
+	width: 250px;
+}
+
+#img-background {
 	width: 100%;
 	bottom: 0;
 	position: absolute;
 	bottom:0px;
 	z-index: -1;
 	padding: 0px;
+}
+
+.content-login {
+	height: 100vh;
+}
+
+#info-passphrase {
+	font-size: 1em;
+	color: #9b2a87;
+	font-weight: 500;
 }
 
 .input-login .row {
@@ -39,7 +57,7 @@
 	border: none !important;
 	outline: none;
 	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
-	height: 100%;
+	height: 50px;
 	margin-top: auto;
 	margin-bottom: auto;
 	opacity: 0.5;
@@ -58,15 +76,7 @@
 }
 
 #icon-login {
-	margin-top: 10px;
-	text-align: center;
-	max-height: 100px;
-}
-
-.content-login {
-	align-items: center;
-	text-align: center;
-	height: 60vh;
+	height: 65px;
 }
 
 .input-login .row-main-item {
@@ -74,16 +84,15 @@
 }
 
 .content-login span {
-	margin-top: 35px;
 	color: #180d39;
 	font-size: 1.5em;
 }
 
 .input-login {
 	border: 1px solid rgba(24,13,57,0.1);
-	border-radius: 4px;
-	background-color: rgb(250,250,250);
-	margin-bottom: 35px;
+	border-radius: 3px;
+	background-color: white;
+	margin-bottom: 15px;
 	padding: 15px;
 }
 
@@ -99,7 +108,7 @@
 	border: none !important;
 	outline: none;
 	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
-	height: 100%;
+	height: 50px;
 	margin-top: auto;
 	margin-bottom: auto;
 
@@ -187,14 +196,6 @@ textarea {
 
 .btn-round-light  {
 	outline: none;
-}
-
-#icon-mdp-show {
-	opacity: 0.5;
-}
-
-#icon-mdp-hide {
-	opacity: 1;
 }
 
 .icon-mdp {
