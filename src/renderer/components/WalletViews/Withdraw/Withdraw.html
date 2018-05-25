@@ -26,7 +26,7 @@
   <div id="select-amount" class="row">
     <span class="title-content">AMOUNT</span>
       <div class="col-custom input-field row">
-        <input v-model="amount" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46' id="amount" type="text" class="col-custom input-field" placeholder="0.0">
+        <input type="number" id="amount" v-model.number="amount" class="col-custom input-field" placeholder="Amount">
         <span id="current-coin"> {{select}}</span>
     </div>
   </div>
@@ -94,7 +94,7 @@
         </div>
         <div id="amountTotal" class="col-custom row">
           <div class="row">
-            <span id="totalAmount">{{getTotalPriceWithFee.toString()}}</span>
+            <span id="totalAmount">{{getTotalPriceWithFee}}</span>
             <span id="totalAmountCoin">{{select}}</span>
           </div>
         </div>
