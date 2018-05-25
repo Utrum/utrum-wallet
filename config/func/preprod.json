@@ -1,4 +1,5 @@
 {
+  "updateLink" : "https://gitlab.com/monaize-mnz/mnz-wallet/tags",
   "minConfirmations": 1,
   "enabledCoins": ["TESTBTC", "TESTKMD", "TESTMNZ"],
   "wallets": {

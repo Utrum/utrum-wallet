@@ -27,6 +27,9 @@ const getters = {
   getMinConfirmations: () => {
     return config.func.minConfirmations;
   },
+  getUpdateLink: () => {
+    return config.func.updateLink;
+  },
   getConfig: (state) => {
     return state.config;
   },
@@ -46,6 +49,7 @@ const mutations = {
     state.config = config;
     if (config != null) {
       state.config.maxBuy -= state.config.minBuy;
+      state.config.client.version = 42;
     }
   },
 };
