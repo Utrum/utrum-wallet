@@ -43,7 +43,7 @@ export default {
       fees: [
         { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
         { id: 1, label: 'Fast', blocks: 6, value: 'fast' },
-        { id: 2, label: 'Low', blocks: 36, value: 'low' },
+        { id: 2, label: 'Low', blocks: 10, value: 'low' },
       ],
       videoConstraints: {
         width: {
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     onMaxSelected() {
-      this.withdraw.amount = this.getBalance.multipliedBy(this.satoshiNb);
+      this.withdraw.amount = this.getBalance;
     },
     onShowBuyModal() {
       return this.prepareTx()
@@ -184,7 +184,7 @@ export default {
         return this.prepareTx()
           .then(tx => {
             if (tx != null && tx.feeRate != null) {
-              return Promise.reject({ msg: 'Not enough balance including fees.' });
+              return Promise.reject({ message: 'Not enough balance including fees.' });
             }
             return this.$store.dispatch('broadcastTransaction', { wallet: this.wallet, ...tx });
           })
@@ -194,7 +194,7 @@ export default {
             alert(this, response);
           })
           .catch(error => {
-            this.$toasted.error(`Can't send transaction: ${error.msg}`);
+            this.$toasted.error(`Can't send transaction: ${error.message}`);
           })
         ;
       }

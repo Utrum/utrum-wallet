@@ -25,6 +25,7 @@ import getCmcData from '../../lib/coinmarketcap';
 import createPrivKey from '../../lib/createPrivKey';
 
 const config = require('../../config/config');
+const coinSelect = require('coinselect');
 
 const satoshiNb = 100000000;
 
@@ -166,11 +167,21 @@ const actions = {
         return getEstimatedFees(wallet, blocks);
       })
       .then((feeRate) => {
+
+        const targets = [
+          {
+            address,
+            value: amount,
+          },
+        ];
+
+        const { fee } = coinSelect(utxos, targets, BigNumber(feeRate).multipliedBy(satoshiNb).toNumber());
+
         let tx = wallet.prepareTx(utxos, address, amount,
         BigNumber(feeRate).multipliedBy(satoshiNb).toNumber(), data);
         if (tx == null) {
           tx = {
-            feeRate: BigNumber(feeRate).multipliedBy(satoshiNb).toNumber(),
+            feeRate: fee,
           };
         }
         return tx;

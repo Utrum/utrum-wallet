@@ -49,7 +49,6 @@ const mutations = {
     state.config = config;
     if (config != null) {
       state.config.maxBuy -= state.config.minBuy;
-      state.config.client.version = 42;
     }
   },
 };
