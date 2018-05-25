@@ -189,7 +189,7 @@ export default {
             return this.$store.dispatch('broadcastTransaction', { wallet: this.wallet, ...tx });
           })
           .then((response) => {
-            alert(this.$toasted.show, response);
+            alert(this, response);
           })
           .catch(error => {
             this.$toasted.error(`Can't send transaction: ${error.msg}`);
@@ -256,13 +256,13 @@ export default {
   },
 };
 
-const alert = (alertFunction, message) => {
+const alert = (context, message) => {
   if (message.error) {
-    alertFunction('Transaction not sent !', { text: message.error });
+    context.$toasted.show('Transaction not sent !', { text: message.error });
     return;
   }
 
-  alertFunction('Transaction sent !', {
+  context.$toasted.show('Transaction sent !', {
     icon: 'done',
     action: [
       {
@@ -277,7 +277,7 @@ const alert = (alertFunction, message) => {
           toastObject.goAway(0);
           clipboard.writeText(message);
           setTimeout(() => {
-            this.$toasted.show('Copied !', {
+            context.$toasted.show('Copied !', {
               duration: 1000,
               icon: 'done',
             });
