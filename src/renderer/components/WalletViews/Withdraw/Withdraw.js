@@ -156,7 +156,7 @@ export default {
     },
     prepareTx() {
       // Number here because of bitcoinjs incapacity to use Big types.
-      const amount = Number(this.withdraw.amount.toFixed(0));
+      const amount = this.getAmountInSatoshis.toNumber();
 
       const object = {
         wallet: this.wallet,
@@ -180,7 +180,7 @@ export default {
     },
     withdrawFunds() {
       this.hideModal();
-      if (this.canWithdraw && this.addressIsValid) {
+      if (this.canWithdraw === true && this.addressIsValid === true) {
         return this.prepareTx()
           .then(tx => {
             if (tx != null && tx.feeRate != null) {
@@ -189,6 +189,8 @@ export default {
             return this.$store.dispatch('broadcastTransaction', { wallet: this.wallet, ...tx });
           })
           .then((response) => {
+            this.withdraw.amount = null;
+            this.withdraw.address = '';
             alert(this, response);
           })
           .catch(error => {
@@ -202,19 +204,24 @@ export default {
     amount: {
       get: function () {
         if (this.withdraw.amount != null) {
-          return this.withdraw.amount.dividedBy(this.satoshiNb).toString();
+          return decimalsCount(BigNumber(this.withdraw.amount));
         }
-        return this.withdraw.amount;
+        return null;
       },
       set: function (value) {
-        if (value !== '' && value[value.length - 1] !== '.') {
-          try {
-            this.withdraw.amount = BigNumber(BigNumber(value).toFixed(8)).multipliedBy(this.satoshiNb);
-          } catch (error) {
-            this.withdraw.amount = null;
-          }
+        if (value !== '') {
+          this.withdraw.amount = BigNumber(value).toFixed(8);
+        } else {
+          this.withdraw.amount = null;
         }
       },
+    },
+    getAmountInSatoshis() {
+      if (this.amount != null) {
+        const amountInSatoshis = BigNumber(this.amount).multipliedBy(this.satoshiNb);
+        return amountInSatoshis;
+      }
+      return BigNumber(0);
     },
     getConfig() {
       return this.$store.getters.getConfig;
@@ -223,10 +230,10 @@ export default {
       return this.$store.getters.enabledCoins.map(coin => coin.ticker);
     },
     getTotalPriceWithFee() {
-      if (this.withdraw.amount != null && this.estimatedFee != null) {
-        return BigNumber(this.withdraw.amount).plus(this.estimatedFee).dividedBy(this.satoshiNb);
+      if (this.getAmountInSatoshis != null && this.estimatedFee != null) {
+        return decimalsCount(this.getAmountInSatoshis.plus(this.estimatedFee).dividedBy(this.satoshiNb));
       }
-      return BigNumber(0);
+      return '';
     },
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
@@ -239,8 +246,8 @@ export default {
     },
     canWithdraw() {
       if (this.withdraw.amount != null) {
-        return (this.withdraw.amount.comparedTo(this.getSatoshisBalance) <= 0 &&
-                this.withdraw.amount.comparedTo(0) === 1 && this.addressIsValid);
+        return (this.getAmountInSatoshis.comparedTo(this.getSatoshisBalance) <= 0 &&
+          this.getAmountInSatoshis.comparedTo(0) === 1 && this.addressIsValid);
       }
       return false;
     },
@@ -254,6 +261,16 @@ export default {
       }
     },
   },
+};
+
+const decimalsCount = (value) => {
+  if (value != null) {
+    if (value.isInteger()) {
+      return value.toFixed(0);
+    }
+    return value.toFixed(value.decimalPlaces());
+  }
+  return null;
 };
 
 const alert = (context, message) => {
