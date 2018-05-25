@@ -1,4 +1,5 @@
 {
+  "updateLink" : "http://mnz.monaize.com/downloads/",
   "minConfirmations": 1,
   "enabledCoins": ["TESTBTC", "TESTKMD", "TESTMNZ"],
   "wallets": {

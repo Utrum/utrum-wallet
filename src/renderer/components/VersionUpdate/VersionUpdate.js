@@ -32,5 +32,8 @@ export default {
     },
   },
   computed: {
+    getUpdateLink() {
+      return this.$store.getters.getUpdateLink;
+    },
   },
 };

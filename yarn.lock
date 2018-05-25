@@ -5616,9 +5616,9 @@ libqp@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/libqp/-/libqp-1.1.0.tgz#f5e6e06ad74b794fb5b5b66988bf728ef1dedbe8"
 
-libwallet-mnz@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/libwallet-mnz/-/libwallet-mnz-3.3.0.tgz#31bef5eb0f57458209cebf96f9141f983678de89"
+libwallet-mnz@3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/libwallet-mnz/-/libwallet-mnz-3.4.0.tgz#57c6fccab2567437808525c2e072fa804c2f4e9b"
   dependencies:
     bitcoinjs-lib "^3.3.2"
     coinselect "^3.1.11"
