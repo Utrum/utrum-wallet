@@ -1,21 +1,29 @@
-<div class="content-login row-main-item">
-  <img id="icon-login" src="~@/assets/icon-login-monaize.svg" height="60" class="col">
-  <span id="title" class="col">Monaize Wallet</span>
-  <div class="col">
-    <div class="row align-items-center justify-content-start">
-      <div class="col-1 offset-2">
-        <img :id="iconMdpId" class="icon-mdp" src="~@/assets/icon-mdp.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
-      </div>
-      <div class="col-6">
-        <div class="row input-login">
-          <form id="login" class="row login" method="POST" enctype="multipart/form-data">
-            <input :type="typeInput" class="col" @keydown.enter.stop.prevent="validatePassPhrase()" v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" :id="passphraseId">
-            <button @click.prevent="validatePassPhrase()" :class="btnSendStatus" class="btn-send-enabled"><img src="~@/assets/icon-send-login.svg"></button>
-          </form>
-        </div>
+<div class="content-login d-flex flex-column text-center">
+  <div class="mt-4">
+      <img id="icon-login" src="~@/assets/icon-login-monaize.svg" height="60" class="col">
+  </div>
+  <div class="h-100 d-flex flex-column justify-content-center">
+    <div class="d-flex align-items-center justify-content-center">
+      <div class="d-flex flex-row input-login col-6">
+        <form id="login" class="row login" method="POST" enctype="multipart/form-data">
+          <img v-if="typeInput === 'password'" class="icon-mdp" src="~@/assets/icon-mdp-hide.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
+          <img v-if="typeInput === 'text'" class="icon-mdp" src="~@/assets/icon-mdp.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
+          <input :type="typeInput" class="col" @keydown.enter.stop.prevent="validatePassPhrase()" v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" :id="passphraseId">
+          <button @click.prevent="validatePassPhrase()" :class="btnSendStatus" class="btn-send-enabled"><img src="~@/assets/icon-send-login.svg"></button>
+        </form>
       </div>
     </div>
+    <div class="mt-2 d-flex align-items-center justify-content-center">
+      <div class="d-flex flex-row col-6">
+        <span id="info-passphrase">For obvious security reasons, we strongly recommend you use at least a 12 words passphrase as enforced by the BIP39 protocol</span>
+      </div>
+    </div>
+    <div class="w-100 mt-4">
+      <button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Generate Passphrase</button>
+    </div>
   </div>
-  <button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Don't have a passphrase?</button>
-  <img class="col" id="login-background" src="~@/assets/img-login.svg">
+  <div class="mb-4">
+      <img class="h-100" src="~@/assets/img-login.svg">
+  </div>
+  <img id="img-background" src="~@/assets/img-login_background.svg">
 </div>
