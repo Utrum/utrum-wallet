@@ -4,8 +4,14 @@
   "enabledCoins": ["BTC", "KMD", "MNZ"],
   "wallets": {
     "btc": [
+      "xpub6CBYhEzRrzYRwH83xT2ckhw76Xwhn63EM7rFotE87jVkLRFsprgrTzsmqGyK3BjgQxvxyM5DtLdhD8nd3AQsBoz6wwP5QfQFoy682NJotPx",
+      "xpub6BztaP99PmBKynvDzb4xLKR1qhEFXTJ1qCTk6pFbP29ZBVay2CipkzzDaubPWqAE12ENvXDiw9hvHUEDGK1QcWrGi2qCJWMk4GtRC2JzwHP",
+      "xpub6BkekfUchUMh1NmQiXshxCKQEcpv6CLXfeQSFMo9zSQZvAMiSL87UhfGa4Y7gUCi2VymrR7u2QT9DzoSWRGmzusa1k8kMoETweNZMeTmCFD"
     ],
     "kmd": [
+      "xpub6D1LGxhBoFkkSkeVX5FqmiYpA1zuZY1vpAmgWGQXNvNjhsVkx4A4hofCvCb6RYeSYpwKdauQpCpy8GyocjP2Y8bcu3BXEKtTrtuavrFBFfj",
+      "xpub6CLErikrA4nFVFUz7gAb9eMn2ap79tiLb8ebJDyb9pGP9HQ7koe2yVjBZgKMJW1eu4BSYHPE8QEypmk9xmdMkxM4PNLmoR6bshKZp82Qf27",
+      "xpub6D2r7QnGsw5JdnrrwnH1jdaAfVoWAZ2rDPsxT7p7grFKJ6vr3QiTuAg8vTw6BwH69UCpXa9JrDTzj2E5BTJesjqn4et3FGDQTd3oPbiU4ky"
     ]
   }
 }
