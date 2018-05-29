@@ -53,8 +53,8 @@
 					<div class="sub-title">
 						YOUR CURRENCY {{wallet.coin.name.toUpperCase()}} BALANCES
 					</div>
-					<div id="balance-value">
-						{{wallet.balance.toString()}}<span id="balance-coin"> {{select}}</span>
+					<div id="balance-value" :class="getCanBuyClass()">
+						{{wallet.balance.toString()}}<span id="balance-coin" :class="getCanBuyClass()"> {{select}}</span>
 					</div>
 				</div>
 			</div>
@@ -75,25 +75,36 @@
 				</div>
 			</div>
 		</div>
+		<div class="sub-title">ORDER DETAILS</div>
 		<div class="col-custom">
 			<hr/>
 		</div>
-		<div class="row">
-			<div class="col-custom center-horizontal">
-				<h5 id="detail-order-title">YOUR ORDER<br/>DETAILS</h5>
-			</div>
-			<div class="col-custom center-horizontal">
-				<div class="row-main center-text">
-					<div class="title-value">
-						Total {{getStringTicket}}
-					</div>
-					<div class="value">
-						{{getTotalPrice.toFixed(8)}}
-					</div>
+		<div class="d-flex flex-row justify-content-between align-items-center mt-3">
+
+			<div class="d-flex flex-column w-100">
+				<div class="w-100">
+					<select-awesome ref='feeSelector' @change="onFeeChange" :value="selectedFee" :fees="fees" class="col-custom"></select-awesome>
+				</div>
+				<div class="value">
+						{{getEstimatedFee}}
 				</div>
 			</div>
-			<div class="col-custom center-horizontal">
-				<div class="row-main center-text">
+
+			<div class="d-flex flex-row w-100">
+					<div class="border-left"></div>
+					<div class="d-flex flex-column pl-2">
+						<div class="title-value">
+							Total {{getStringTicket}}
+						</div>
+						<div class="value">
+							{{getTotalPrice.toFixed(8)}}
+						</div>
+					</div>
+			</div>
+
+			<div class="d-flex flex-row w-100">
+				<div class="border-left"></div>
+				<div class="d-flex flex-column pl-2">
 					<div class="title-value">
 						{{mnzTicker}}
 					</div>
@@ -103,10 +114,23 @@
 				</div>
 			</div>
 
-			<button @click="onShowBuyModal()" :disabled="!timer || canBuy"  id="buycoins" class="btn sendcoins" type="button">
-				BUY
-			</button>
+			<div class="d-flex flex-row w-100">
+				<div class="border-left"></div>
+				<div class="d-flex flex-column pl-2">
+					<div class="title-value">
+						Total Purchase
+					</div>
+					<div class="value" :class="getCanBuyClass()">
+						{{getTotalPriceWithFee.toFixed(8)}}
+					</div>
+				</div>
+			</div>
 
+			<div class="d-flex align-items-center">
+				<button @click="onShowBuyModal()" :disabled="!timer || canBuy"  id="buycoins" class="btn sendcoins" type="button">
+						BUY
+				</button>
+			</div>
 		</div>
 	</div>
 
@@ -156,14 +180,14 @@
 				<div class="row">
 					<span class="subTitle">Price</span>
 					<div class="col-custom row-main-item">
-						<span class="col-custom"><span class="selectAmount">{{getTotalPrice.toFixed(8)}}</span>{{select}}</span>
+						<span class="col-custom"><span class="selectAmount">{{getTotalPrice.toFixed(8)}} </span>{{select}}</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
 				<div class="row" v-if="wallet.coin.ticker.indexOf('BTC') >= 0">
 					<span class="subTitle">Transaction fees</span>
 					<div class="col-custom row-main-item">
-						<select-awesome ref='feeSelector' @change="onFeeChange" :value="fees[2].label" :fees="fees" class="col-custom"></select-awesome>
+						<span class="col-custom"><span class="selectAmount">{{getEstimatedFee}} </span>{{select}}</span>
 						<div class="col-custom"><hr></div>
 					</div>
 				</div>
