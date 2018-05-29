@@ -38,19 +38,20 @@ export default {
     if (config != null) {
       minBuy = config.minBuy != null ? config.minBuy : 0;
     }
+    const fees = [
+      { id: 0, label: 'Very fast', blocks: 2, value: 'veryFast' },
+      { id: 1, label: 'Fast', blocks: 6, value: 'fast' },
+      { id: 2, label: 'Low', blocks: 36, value: 'low' },
+    ];
 
     return {
       max: 100,
       satoshiNb,
       searchable: false,
-      blocks: 36,
+      blocks: fees[2].blocks,
       estimatedFee: 0,
       feeSpeed: 'low',
-      fees: [
-        { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
-        { id: 1, label: 'Fast', blocks: 6, value: 'fast' },
-        { id: 2, label: 'Low', blocks: 36, value: 'low' },
-      ],
+      fees: fees,
       selectedFee: null,
       select: '',
       requestedNumberOfSatochisMnz: BigNumber(minBuy).multipliedBy(satoshiNb),
