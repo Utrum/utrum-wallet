@@ -45,6 +45,7 @@ export default {
     ];
 
     return {
+      resetFees: false,
       max: 100,
       satoshiNb,
       searchable: false,
@@ -111,8 +112,6 @@ export default {
     },
     valueChange(value) {
       this.select = value;
-      this.selectedFee = this.fees[2].label;
-      this.$refs.feeSelector.selectedLabel = this.selectedFee;
       this.prepareTx();
     },
     incrementPackage() {
