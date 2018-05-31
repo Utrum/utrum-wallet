@@ -107,7 +107,9 @@ let rendererConfig = {
     new webpack.DefinePlugin({
       "process.env": {
         WALLET_ENV: JSON.stringify(process.env.WALLET_ENV),
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+        NODE_ENV: JSON.stringify(
+          process.env.NODE_ENV !== "production" ? "development" : "production"
+        )
       }
     }),
     new webpack.ProvidePlugin({
