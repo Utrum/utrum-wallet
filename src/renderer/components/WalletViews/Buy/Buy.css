@@ -14,6 +14,26 @@
  *                                                                            *
  ******************************************************************************/
 
+#fees-fix {
+	height: 24px;
+}
+
+.border-left {
+	margin-top: auto;
+	margin-bottom: auto;
+	height: 3em;
+	border-left: 2px solid rgba(124,57,138, 0.05)!important;
+}
+
+.toHighPurchase {
+	color: #b32581 !important;
+}
+
+hr {
+	margin-top: 2px !important;
+	margin-bottom: 2px !important;
+}
+
 .progress-active {
 	height: 6px;
 	border-radius: 1px;
@@ -120,15 +140,6 @@ input[type=number]::-webkit-outer-spin-button {
 	vertical-align: text-top;
 }
 
-.title-buy-mnz {
-	margin: auto;
-}
-
-.sub-title {
-	font-weight: 300;
-	color: #180d39;
-}
-
 .col {
 	flex-grow: 0;
 }
@@ -158,7 +169,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 #total-mnz {
 	color: black;
-	font-weight: 200;
+	font-weight: 300;
 	font-size: 2.5em;
 }
 
@@ -226,7 +237,7 @@ input[type=number]::-webkit-outer-spin-button {
 	margin-left: auto;
 	width: 300px;
 	height: 40px;
-	border: 1px solid rgba(0,0,0, 0.1);
+	border: 2px solid rgba(124,57,138, 0.05);
 	border-radius: 4px;
 	line-height: 40px;
 	margin-top: 10px;
@@ -260,20 +271,20 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .value {
-	font-size: 1.5em;
+	font-size: 1.3em;
 	font-weight: 400;
 	color: #180d39;
 }
 
 #balance-value {
 	font-size: 1.5em;
-	font-weight: 200;
+	font-weight: 300;
 	color: #687078;
 	margin-top: 10px;
 }
 
 #balance-coin {
-	font-weight: 300;
+	font-weight: 200;
 	color: #687078;
 }
 
@@ -319,9 +330,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .title-value {
-	font-weight: 400;
-	color: #7c398a;
-	font-size: 0.8em;
+	font-weight: 500;
+	color: rgba(0, 0, 0, 0.6);
+	font-size: 0.9em;
 }
 
 .content-swapview {
@@ -334,7 +345,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .sub-title {
-	font-weight: 300;
+	font-weight: 500;
 	color: #180d39 !important;
 }
 
