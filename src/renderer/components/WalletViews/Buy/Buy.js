@@ -38,20 +38,22 @@ export default {
     if (config != null) {
       minBuy = config.minBuy != null ? config.minBuy : 0;
     }
+    const fees = [
+      { id: 0, label: 'High Fees', blocks: 2, value: 'veryFast' },
+      { id: 1, label: 'Medium Fees', blocks: 6, value: 'fast' },
+      { id: 2, label: 'Low Fees', blocks: 36, value: 'low' },
+    ];
 
     return {
+      resetFees: false,
       max: 100,
       satoshiNb,
       searchable: false,
-      blocks: 36,
+      blocks: fees[2].blocks,
       estimatedFee: 0,
       feeSpeed: 'low',
-      fees: [
-        { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
-        { id: 1, label: 'Fast', blocks: 6, value: 'fast' },
-        { id: 2, label: 'Low', blocks: 36, value: 'low' },
-      ],
-      selectedFee: null,
+      fees: fees,
+      selectedFee: fees[2].label,
       select: '',
       requestedNumberOfSatochisMnz: BigNumber(minBuy).multipliedBy(satoshiNb),
       packageIncrement: BigNumber(minBuy).multipliedBy(satoshiNb),
@@ -60,7 +62,8 @@ export default {
     };
   },
   mounted() {
-    this.selectFee = this.fees[0].label;
+    this.selectedFee = this.fees[2].label;
+    this.prepareTx();
   },
   created() {
     this.select = this.$store.getters.getTickerForExpectedCoin('KMD');
@@ -78,23 +81,9 @@ export default {
       return parts.join('.');
     },
     onFeeChange(data) {
-      const oldLabel = this.feeSpeed;
-      const oldBlocks = this.blocks;
       this.blocks = data.blocks;
       this.feeSpeed = data.label;
-      this.prepareTx()
-        .then((tx) => {
-          if (tx != null &&
-            tx.outputs != null &&
-            tx.inputs != null) {
-            this.$refs.feeSelector.selectedLabel = oldLabel;
-            this.blocks = oldBlocks;
-          } else if (tx.outputs == null ||
-            tx.inputs == null) {
-            this.$toasted.error('You don\'t have enough funds to select this.');
-          }
-        })
-      ;
+      this.prepareTx();
     },
     onShowBuyModal() {
       this.prepareTx()
@@ -145,6 +134,7 @@ export default {
         blocks: this.blocks,
         data: this.coupon,
       };
+
       return this.$store.dispatch('createSwapTransaction', object)
         .then((tx) => {
           if (tx != null &&
@@ -191,6 +181,12 @@ export default {
       if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMaxBuy) === 0) {
         return 'invisible';
       }
+    },
+    getCanBuyClass() {
+      if (this.canBuy === true) {
+        return 'toHighPurchase';
+      }
+      return '';
     },
   },
   computed: {
@@ -297,6 +293,9 @@ export default {
     getTotalPrice() {
       return this.getTotalSatoshiPrice.dividedBy(this.satoshiNb);
     },
+    getEstimatedFee() {
+      return BigNumber(this.estimatedFee).dividedBy(this.satoshiNb).toString();
+    },
     getTotalPriceWithFee() {
       return this.getTotalSatoshiPrice.plus(this.estimatedFee).dividedBy(this.satoshiNb);
     },
@@ -311,7 +310,7 @@ export default {
       if (this.wallet.balance != null) {
         balance = BigNumber(this.wallet.balance);
       }
-      return this.requestedNumberOfSatochisMnz.comparedTo(0) <= 0 || this.getTotalPrice.comparedTo(balance) === 1;
+      return this.requestedNumberOfSatochisMnz.comparedTo(0) <= 0 || this.getTotalPriceWithFee.comparedTo(balance) === 1;
     },
   },
 };

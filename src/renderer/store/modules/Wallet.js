@@ -175,10 +175,12 @@ const actions = {
           },
         ];
 
-        const { fee } = coinSelect(utxos, targets, BigNumber(feeRate).multipliedBy(satoshiNb).toNumber());
+        // satoshis per byte
+        const feeRateInSatoshis = Math.round(BigNumber(feeRate).dividedBy(1000).multipliedBy(satoshiNb).toNumber());
 
-        let tx = wallet.prepareTx(utxos, address, amount,
-        BigNumber(feeRate).multipliedBy(satoshiNb).toNumber(), data);
+        const { fee } = coinSelect(utxos, targets, feeRateInSatoshis);
+
+        let tx = wallet.prepareTx(utxos, address, amount, feeRateInSatoshis, data);
         if (tx == null) {
           tx = {
             feeRate: fee,
