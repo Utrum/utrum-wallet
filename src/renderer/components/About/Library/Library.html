@@ -4,7 +4,7 @@
   <div v-if="isLicensesFilled">
     <ul id="list-licenses">
       <li v-for="(license, index) in licenses">
-        <h5 v-b-toggle="`license-${index}`" id="title-license">{{ license.name }}</h5>
+        <h5 v-b-toggle="`license-${index}`" id="title-license" class="pointer">{{ license.name }}</h5>
         <b-collapse :id="`license-${index}`" class="mt-2">
           <hr/>
           <div v-if="getLicenses(license) !== ''">
