@@ -30,7 +30,7 @@ export default {
     return {
       swapDetailData: {
         time: 0,
-        ticker: '',
+        ticker: 'mnz',
         mnzAmount: 0,
         cryptoAmount: 0,
         mnzTxHash: '',
@@ -52,6 +52,9 @@ export default {
     };
   },
   methods: {
+    closeModal() {
+      this.$refs.swapDetailModal.hide();
+    },
     openTxExplorer: (ticker, value) => {
       if (value != null) {
         coins.all.forEach(coin => {
@@ -79,6 +82,9 @@ export default {
     getIconFromTicker(value) {
       return require(`@/assets/icon-${value}.svg`); // eslint-disable-line
     },
+    getIconWhiteFromTicker(value) {
+      return require(`@/assets/icon-${value.toLowerCase()}-white.svg`); // eslint-disable-line
+    },
     getPrice(row) {
       return Number(Math.abs(row.item.cryptoAmount / row.item.mnzAmount).toFixed(8));
     },
@@ -91,7 +97,8 @@ export default {
       if (this.swapDetailData != null && this.swapDetailData.ticker != null) {
         const dateSwap = moment.utc(this.swapDetailData.time * 1000);
         const dateString = moment(dateSwap).local().format('hh:mm A DD/MM/YYYY');
-        return `Swap Detail: ${this.swapDetailData.ticker} <> ${this.$store.getters.getTickerForExpectedCoin('MNZ')} | ${dateString}`;
+        // ${this.swapDetailData.ticker} <> ${this.$store.getters.getTickerForExpectedCoin('MNZ')}
+        return `SWAP DETAIL - ${dateString}`;
       }
       return '';
     },
