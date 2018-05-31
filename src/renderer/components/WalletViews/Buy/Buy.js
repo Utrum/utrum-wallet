@@ -110,6 +110,7 @@ export default {
     },
     hideModal() {
       if (this.$refs.confirmBuy != null) {
+        this.couponValue = '';
         this.$refs.confirmBuy.hide();
       }
     },
