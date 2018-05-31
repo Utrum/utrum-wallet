@@ -38,16 +38,84 @@
     </b-table>
     <b-pagination align="center" :total-rows="txHistory.length" :per-page="perPage" v-model="currentPage" class="my-0" />
 
-    <b-modal centered id="swapDetailModal" :title="swapDetailTitle" ref="swapDetailModal" size="lg">
-        <h5 class="my-3">{{swapDetailData.ticker}}:</h5>
-        <ul>
-            <li>Amount: {{satoshiToBitcoin(swapDetailData.cryptoAmount)}} {{swapDetailData.ticker}}</li>
-            <li class="pointer" @click.prevent="openTxExplorer(swapDetailData.ticker, swapDetailData.cryptoHash)">TxID: {{swapDetailData.cryptoHash}}</li>
-        </ul>
-        <h5 class="my-3">{{$store.getters.getTickerForExpectedCoin('MNZ')}}:</h5>
-        <ul>
-            <li>Amount: {{satoshiToBitcoin(swapDetailData.mnzAmount)}} {{$store.getters.getTickerForExpectedCoin('MNZ')}}</li>
-            <li :class="swapDetailData.mnzTxHash != null ? 'pointer' : ''" @click.prevent="openTxExplorer($store.getters.getTickerForExpectedCoin('MNZ'), swapDetailData.mnzTxHash)">TxID: {{swapDetailData.mnzTxHash != null ? swapDetailData.mnzTxHash : 'Pending'}}</li>
-        </ul>
+    <b-modal size="740" hide-header hide-footer centered id="swapDetailModal" :title="swapDetailTitle" ref="swapDetailModal">
+        <img v-on:click="closeModal" id="close-button" src="~@/assets/icon-close-white.svg" alt="icon-close">
+        <div class="d-flex flex-column">
+            <div id="header-modal" class="text-center d-flex flex-column">
+                <div>
+                    {{swapDetailTitle}}
+                </div>
+                <div class="d-flex flex-row justify-content-center mt-4 mb-4">
+                    <div class="d-flex flex-column">
+                        <div>
+                            <img class="icon-swap" :src="getIconWhiteFromTicker(swapDetailData.ticker)" alt="icon-swap-crypto">
+                        </div>
+                        <div class="swap-ticker">
+                            {{swapDetailData.ticker}}
+                        </div>
+                    </div>
+                    <div class="d-flex align-middle icon-swap-arrow mr-4 ml-4">
+                        <img id="icon-swap-arrow" src="~@/assets/icon-swap-arrow-detail.svg" alt="icon-swap-crypto">
+                    </div>
+                    <div class="d-flex flex-column">
+                            <div>
+                                <img class="icon-swap" :src="getIconWhiteFromTicker($store.getters.getTickerForExpectedCoin('MNZ'))" alt="icon-swap-crypto">
+                            </div>
+                            <div class="swap-ticker">
+                                {{$store.getters.getTickerForExpectedCoin('MNZ')}}
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="swap-crypto d-flex flex-column p-4">
+                <div class="d-flex flex-row ticker-title">
+                    <div class="w-100 amount-swap">
+                        {{swapDetailData.ticker}}
+                    </div>
+                    <div class="w-100 text-right">
+                        Amount: <span class="amount-swap">{{satoshiToBitcoin(swapDetailData.cryptoAmount)}}</span> {{swapDetailData.ticker}}
+                    </div>
+                </div>
+                <div class="d-flex flex-row pt-3">
+                    <div class="d-flex align-items-center tx-swap-icon">
+                        TX
+                    </div>
+                    <div class="d-flex flex-column ml-2">
+                        <div class="id-tx">
+                            ID
+                        </div>
+                        <div class="pointer cryptohash" @click.prevent="openTxExplorer(swapDetailData.ticker, swapDetailData.cryptoHash)">
+                            {{swapDetailData.cryptoHash}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <hr/>
+            </div>
+            <div id="footer-modal" class="swap-crypto d-flex flex-column p-4">
+                <div class="d-flex flex-row ticker-title">
+                    <div class="w-100 amount-swap">
+                        {{$store.getters.getTickerForExpectedCoin('MNZ')}}
+                    </div>
+                    <div class="w-100 text-right">
+                        Amount: <span class="amount-swap">{{satoshiToBitcoin(swapDetailData.mnzAmount)}}</span> {{$store.getters.getTickerForExpectedCoin('MNZ')}}
+                    </div>
+                </div>
+                <div class="d-flex flex-row pt-3">
+                    <div class="d-flex align-items-center tx-swap-icon">
+                        TX
+                    </div>
+                    <div class="d-flex flex-column ml-2">
+                        <div class="id-tx">
+                            ID
+                        </div>
+                        <div :class="swapDetailData.mnzTxHash != null ? 'pointer' : ''" class="pointer cryptohash" @click.prevent="openTxExplorer($store.getters.getTickerForExpectedCoin('MNZ'), swapDetailData.mnzTxHash)">
+                            {{swapDetailData.mnzTxHash != null ? swapDetailData.mnzTxHash : 'Pending'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </b-modal>
 </div>
