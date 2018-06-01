@@ -4,14 +4,14 @@
   "enabledCoins": ["BTC", "KMD", "MNZ"],
   "wallets": {
     "btc": [
-      "xpub6CBYhEzRrzYRwH83xT2ckhw76Xwhn63EM7rFotE87jVkLRFsprgrTzsmqGyK3BjgQxvxyM5DtLdhD8nd3AQsBoz6wwP5QfQFoy682NJotPx",
-      "xpub6BztaP99PmBKynvDzb4xLKR1qhEFXTJ1qCTk6pFbP29ZBVay2CipkzzDaubPWqAE12ENvXDiw9hvHUEDGK1QcWrGi2qCJWMk4GtRC2JzwHP",
-      "xpub6BkekfUchUMh1NmQiXshxCKQEcpv6CLXfeQSFMo9zSQZvAMiSL87UhfGa4Y7gUCi2VymrR7u2QT9DzoSWRGmzusa1k8kMoETweNZMeTmCFD"
+      "xpub6CsZ33s4DCnYr7gFy1LERUgfWajQcy6dcfneWWurNC3rFBoAPVqmeZYt527ucWEY8UKZCGQG6fWZHZSUiyY2nvvs39Jgn5GN2kkVfdneC6G",
+      "xpub6DQM5zARihn1onUdQJHQV3NLeFtdvhZhHhDGFrGYTvaNLhE6FLUp8g8m2vRSyF4hHTkURTzSzZsA4WGrCeHAqDzFCBvwNrsr83Y8oThjaHn",
+      "xpub6BuR8F3sxFnGxFDfmGqhzJpw4ipRefcepwK4Sm5HxFSXbpap2UwBmNu1GfvCx6ikcgkq6hTitq4wYZpVq2qx8i4sMqoDF5E43E7X3ohi3zw"
     ],
     "kmd": [
-      "xpub6D1LGxhBoFkkSkeVX5FqmiYpA1zuZY1vpAmgWGQXNvNjhsVkx4A4hofCvCb6RYeSYpwKdauQpCpy8GyocjP2Y8bcu3BXEKtTrtuavrFBFfj",
-      "xpub6CLErikrA4nFVFUz7gAb9eMn2ap79tiLb8ebJDyb9pGP9HQ7koe2yVjBZgKMJW1eu4BSYHPE8QEypmk9xmdMkxM4PNLmoR6bshKZp82Qf27",
-      "xpub6D2r7QnGsw5JdnrrwnH1jdaAfVoWAZ2rDPsxT7p7grFKJ6vr3QiTuAg8vTw6BwH69UCpXa9JrDTzj2E5BTJesjqn4et3FGDQTd3oPbiU4ky"
+      "xpub6DP2JN4f7Ua1fxXRQquj2KdAQHAMTibLNagwiDfh1Mz3ZU24HghsjNhkRpGzfKiStPc16vnLL11N1QYj2tr68MsmmiqNR5h31UxGJDkNXTe",
+      "xpub6D9nXDLyGshH3Z5E1m9fWNWduyZePfLtZyNFWBCrYegXYSnDzXSJtUHHi2vtmgRxD7KJAo7vrNxgg87i3D2wTfbTuugHiQSXrK5LZAJnxGU",
+      "xpub6BevzHM27W12B5TpCwLhMU7DRaJbYTVPMbAd762TNNK7aQ9DTnxN7aiH1tMbwZQ8MpFfzjrnWh4R2WpC9F9jHWzhFjT4LywoU89F7QWaQoV"
     ]
   }
 }
