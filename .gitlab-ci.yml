@@ -67,6 +67,16 @@ build_preprod:
   <<: *build_definition
 
 
+build_prod-internal:
+  variables:
+    WALLET_ENV: prod-internal
+  <<: *build_definition
+
+build_prod-preico:
+  variables:
+    WALLET_ENV: prod-preico
+  <<: *build_definition
+
 .private_release: &private_release
   image: alpine
   stage: publish
