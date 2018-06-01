@@ -1,6 +1,6 @@
 {
   "updateLink" : "http://mnz.monaize.com/downloads/",
-  "minConfirmations": 2,
+  "minConfirmations": 3,
   "enabledCoins": ["BTC", "KMD", "MNZ"],
   "wallets": {
     "btc": [
