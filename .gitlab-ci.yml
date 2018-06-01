@@ -66,11 +66,10 @@ build_preprod:
     WALLET_ENV: preprod
   <<: *build_definition
 
-staging release:
+
+.private_release: &private_release
   image: alpine
   stage: publish
-  variables:
-    WALLET_ENV: staging
   only:
     - tags
   before_script:
@@ -87,12 +86,27 @@ staging release:
     - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
     - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
     - "curl -X POST -H 'Content-type: application/json' \
-      --data \"{\\\"text\\\":\\\"MNZ Wallet ${WALLET_ENV} Release ${CI_BUILD_TAG}! \
-http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-setup.exe \
-http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage \
-http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip \
+      --data \"{\\\"text\\\":\\\"MNZ Wallet ${WALLET_ENV} Release ${CI_BUILD_TAG}!\n \
+http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-setup.exe \n \
+http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage \n \
+http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip \n \
       \\\"}\" \
       ${SLACK_HOOK_URL}"
+
+staging release:
+  variables:
+    WALLET_ENV: staging
+  <<: *private_release
+
+prod-internal release:
+  variables:
+    WALLET_ENV: prod-internal
+  <<: *private_release
+
+prod-preico release:
+  variables:
+    WALLET_ENV: prod-preico
+  <<: *private_release
 
 preprod release:
   image: monaize/gitlab-release
