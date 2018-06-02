@@ -28,7 +28,8 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "test": "npm run unit",
     "unit": "karma start test/unit/karma.conf.js --single-run",
-    "eslint": "./node_modules/.bin/eslint src/"
+    "eslint": "./node_modules/.bin/eslint src/",
+    "postinstall": ""
   },
   "build": {
     "productName": "MNZ Wallet",

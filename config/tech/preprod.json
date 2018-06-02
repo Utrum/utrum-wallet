@@ -1,3 +1,5 @@
 {
-  
+  "electrum": {
+    "persistenceMaxRetry": 3
+  }
 }
