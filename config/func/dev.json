@@ -1,0 +1,17 @@
+{
+  "updateLink" : "http://mnz.monaize.com/downloads/",
+  "minConfirmations": 1,
+  "enabledCoins": ["TESTBTC", "TESTKMD", "TESTMNZ"],
+  "wallets": {
+    "testbtc": [
+      "tpubDD7KruZCG9VjhEudjUSsLbrNpUbXTHkvhEWfcntkzEDQoYNSFUSfS7N2StNvkNjMmPXRQtD5KykV8AS9WYR4bSHJafXLdqZJJT2PRE74DpW",
+      "tpubDCAwLShhpovb3NUGHZ6phv8J9V81fkCrFKeEtqLbpAKVuRo5HstyWaUxDnvFLJrWJT9mJ63EVPB927i5ffBxqW3F6jv3rd7QsGPcNxPKxHg",
+      "tpubDDsv5nbDxTA1oeTH5GBaTD5cSgW6tnsmCt6m6CUeFwLiQw2QvNMR42XpbRDU2Bb3HzNbH19gJduTdpvG3wMA4AZYnHsffcnBgk3fyvpvJks"
+    ],
+    "testkmd": [
+      "xpub6DN59DVPgRzka2D4xQfcD6XFQbeQ3dCuBSYQiGEXkACJULPWk6Zp6Tywj69zyvTN7JisyTPMzXWrsYfXYUiDQNHDig68CiF62G6twfj6jPf",
+      "xpub6BxcxfX7jNeeKFM2NEWRuuPThowH6Lc31a1cncjccbLu46PJchHCCUZKvWPES26hjoFN8NAKUdL5EpYhucsfnKQhotQBpfHnpfMoA9MdtpY",
+      "xpub6CLXAxR2HLZiWqryttxAjiCEXFMXeEYxW4hEigee5uNFJjmfUEbdwFv3puYeUJ8qLWe2QL1Ho7Hh8zH4SLnJXK4ZPaWrvJQEMz1Ua5NfdyT"
+    ]
+  }
+}
