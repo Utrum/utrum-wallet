@@ -6,11 +6,13 @@
   "license": "GPL-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
+    "start-dev": "WALLET_ENV=dev yarn dev",
     "start-staging": "WALLET_ENV=staging yarn dev",
     "start-preprod": "WALLET_ENV=preprod yarn dev",
     "start-prod-internal": "WALLET_ENV=prod-internal yarn dev",
     "start-prod-preico": "WALLET_ENV=prod-preico yarn dev",
     "start-prod-ico": "WALLET_ENV=prod-ico yarn dev",
+    "build-dev": "WALLET_ENV=dev yarn build",
     "build-staging": "WALLET_ENV=staging yarn build",
     "build-preprod": "WALLET_ENV=preprod yarn build",
     "build-prod-internal": "WALLET_ENV=prod-internal yarn build",

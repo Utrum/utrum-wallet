@@ -137,7 +137,7 @@ const getters = {
     const date = new Date().getTime() / 1000;
     const config = rootState.Conf.config;
 
-    const bonuses = config == null ? [] : config.bonuses;
+    const bonuses = config == null || config.bonuses == null ? [] : config.bonuses;
     let findDuration = true;
     let durationBonus = 0;
 

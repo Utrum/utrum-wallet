@@ -16,7 +16,7 @@
 
 const _        = require('lodash');
 
-const env      = process.env.WALLET_ENV || 'staging';
+const env      = process.env.WALLET_ENV || 'dev';
 
 const techBase = require('../../../config/tech/base');
 const funcBase = require('../../../config/func/base');
