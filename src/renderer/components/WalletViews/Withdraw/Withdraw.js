@@ -20,6 +20,7 @@ import Select2 from '@/components/Utils/Select2/Select2.vue';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
+import _ from 'lodash';
 
 const { clipboard } = require('electron');
 
@@ -111,10 +112,8 @@ export default {
       if (addr) {
         const checkResult = bitcoinjs.address.fromBase58Check(addr);
         if (this.wallet.ticker.indexOf('BTC') >= 0) {
-
           return checkResult.version === 0;
         } else if (this.wallet.ticker.indexOf('KMD') >= 0 || this.wallet.ticker.indexOf('MNZ') >= 0) {
-
           return checkResult.version === 60;
         }
       } else {
@@ -178,6 +177,9 @@ export default {
         })
       ;
     },
+    debounceInfo: _.debounce(function () {
+      this.$toasted.info('The address is not valid.');
+    }, 500),
     withdrawFunds() {
       this.hideModal();
       if (this.canWithdraw === true && this.addressIsValid === true) {
@@ -246,6 +248,9 @@ export default {
     },
     canWithdraw() {
       if (this.withdraw.amount != null) {
+        if (this.addressIsValid === false && this.withdraw.address.length === 34) {
+          this.debounceInfo();
+        }
         return (this.getAmountInSatoshis.comparedTo(this.getSatoshisBalance) <= 0 &&
           this.getAmountInSatoshis.comparedTo(0) === 1 && this.addressIsValid);
       }
@@ -254,7 +259,14 @@ export default {
     addressIsValid() {
       if (this.withdraw.address) {
         try {
-          return bitcoinjs.address.fromBase58Check(this.withdraw.address).version > 0;
+          const versionBase58 = bitcoinjs.address.fromBase58Check(this.withdraw.address).version;
+          if (this.select === this.$store.getters.getTickerForExpectedCoin('BTC')) {
+            return versionBase58 === 111 || versionBase58 === 0;
+          } else if (this.select === this.$store.getters.getTickerForExpectedCoin('KMD')
+          || this.select === this.$store.getters.getTickerForExpectedCoin('MNZ')) {
+            return versionBase58 === 60;
+          }
+          return false;
         } catch (error) {
           return false;
         }
