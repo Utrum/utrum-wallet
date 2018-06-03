@@ -27,9 +27,9 @@ const getters = {
   passphrase: (state) => {
     return state.passphrase;
   },
-  privKey: (state) => {
-    return state.privKey;
-  },
+  // privKey: (state) => {
+  //   return state.privKey;
+  // },
 };
 
 const mutations = {
@@ -42,15 +42,15 @@ const mutations = {
   SET_PASSPHRASE(state, passphrase) {
     state.passphrase = passphrase;
   },
-  SET_PRIVKEY(state, privKey) {
-    state.privKey = privKey;
-  },
+  // SET_PRIVKEY(state, privKey) {
+  //   state.privKey = privKey;
+  // },
 };
 
 const actions = {
-  setPrivKey({ commit }, privKey) {
-    commit('SET_PRIVKEY', privKey);
-  },
+  // setPrivKey({ commit }, privKey) {
+  //   commit('SET_PRIVKEY', privKey);
+  // },
   login({ commit, dispatch }, passphrase) {
     dispatch('startUpdates');
     commit('SET_PASSPHRASE', passphrase);

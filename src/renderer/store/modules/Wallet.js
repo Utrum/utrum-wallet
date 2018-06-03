@@ -14,7 +14,7 @@
  *                                                                            *
  ******************************************************************************/
 
-import { Wallet, coins }  from 'libwallet-mnz';
+import { Wallet, coins, komodoLib, transactionLib }  from 'libwallet-mnz';
 import { BigNumber } from 'bignumber.js';
 
 import * as _ from 'lodash';
@@ -22,7 +22,6 @@ import Vue from 'vue';
 import store from '../../store';
 import ElectrumService from '../../lib/electrum';
 import getCmcData from '../../lib/coinmarketcap';
-import createPrivKey from '../../lib/createPrivKey';
 
 const config = require('../../config/config');
 const coinSelect = require('coinselect');
@@ -130,21 +129,20 @@ const actions = {
       dispatch('destroyWallets');
     }
 
-    dispatch('setPrivKey', createPrivKey(rootGetters.passphrase));
+    // dispatch('setPrivKey', createPrivKey(rootGetters.passphrase));
 
-    const privateKey = rootGetters.privKey;
+    const privateKey = komodoLib.passphraseToPrivateKey(rootGetters.passphrase);
     const enabledCoins = rootGetters.enabledCoins;
 
     const promises = enabledCoins.map((coin) => {
       const ticker = coin.ticker;
-      const isTestMode = ticker.indexOf('TEST') >= 0;
-      const wallet = new Wallet(privateKey, coin, isTestMode);
+      const wallet = new Wallet(privateKey, coin);
       wallet.electrum = new ElectrumService(store, ticker, { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
-      wallet.ticker = ticker;
-      wallet.balance = 0;
-      wallet.balance_usd = 0;
-      wallet.txs = [];
-      wallet.privKey = privateKey;
+      // wallet.ticker = ticker;
+      // wallet.balance = 0;
+      // wallet.balance_usd = 0;
+      // wallet.txs = [];
+      // wallet.privKey = privateKey;
       commit('ADD_WALLET', wallet);
 
       return wallet.electrum
@@ -178,12 +176,10 @@ const actions = {
         // satoshis per byte
         const feeRateInSatoshis = Math.round(BigNumber(feeRate).dividedBy(1000).multipliedBy(satoshiNb).toNumber());
 
-        const { fee } = coinSelect(utxos, targets, feeRateInSatoshis);
-
-        let tx = wallet.prepareTx(utxos, address, amount, feeRateInSatoshis, data);
+        let tx = transactionLib.prepareTx(utxos, address, amount, feeRateInSatoshis, data, wallet.coin.fee);
         if (tx == null) {
           tx = {
-            feeRate: fee,
+            feeRate: coinSelect(utxos, targets, feeRateInSatoshis).fee,
           };
         }
         return tx;
@@ -191,7 +187,7 @@ const actions = {
     ;
   },
   broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
-    const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
+    const buildedTx = transactionLib.buildTx(wallet.coin.ticker, wallet.coin.network, wallet.address, wallet.privateKey, inputs, outputs, fee, dataScript);
     const txId = buildedTx.getId();
 
     return wallet.electrum

@@ -33,6 +33,12 @@ export default {
     numberWithSpaces(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
+    openKeyModal() {
+      this.$refs.keyModal.show();
+    },
+    closeModal() {
+      this.$refs.keyModal.hide();
+    },
   },
   computed: {
     wallets() {
@@ -40,6 +46,9 @@ export default {
     },
     totalBalance() {
       return this.numberWithSpaces(this.$store.getters.getTotalBalance.toFixed(2));
+    },
+    wif() {
+      return this.$store.getters.getWalletByTicker(this.$store.getters.getTickerForExpectedCoin('MNZ')).wif;
     },
   },
 };

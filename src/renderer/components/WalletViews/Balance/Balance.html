@@ -11,4 +11,15 @@
   <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
     <balance-item :wallet="wallet"/>
   </div>
+  <div class="row">
+      <b-button @click="openKeyModal">Reveal key details</b-button>    
+  </div>
+  <b-modal size="lg" hide-header hide-footer centered title="Wallet details" ref="keyModal">
+    <div class="d-block text-center">
+      <h4>Wif:</h4>
+      <p>{{wif}}</p>
+    </div>
+    <b-btn class="mt-3" variant="outline-danger" block @click="closeModal">Close Me</b-btn>  
+  </b-modal>
+
 </div>
