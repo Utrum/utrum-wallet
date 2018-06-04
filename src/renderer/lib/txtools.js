@@ -25,7 +25,6 @@ export default (wallet, transaction, height) => {
     let fromMNZ = false;
     let origin = '';
 
-    // console.log("Txb: ", txb);
     txb.tx.outs.forEach(out => {
       if (out.value !== 0) {
         const address = bitcoinjs.address.fromOutputScript(out.script, wallet.coin.network);

@@ -45,6 +45,7 @@ export default {
     ];
 
     return {
+      buttonIsClicked: false,
       resetFees: false,
       max: 100,
       satoshiNb,
@@ -99,7 +100,6 @@ export default {
     },
     hideModal() {
       if (this.$refs.confirmBuy != null) {
-        this.couponValue = '';
         this.$refs.confirmBuy.hide();
       }
     },
@@ -153,7 +153,9 @@ export default {
       this.timer = false;
       this.hideModal();
 
-      return this.prepareTx()
+      if (this.buttonIsClicked === false) {
+        this.buttonIsClicked = true;
+        return this.prepareTx()
         .then((tx) => {
           const payload = {
             wallet: this.wallet,
@@ -169,8 +171,11 @@ export default {
         })
         .catch((error) => {
           this.$toasted.error(`Can't send transaction, verify your pending tx and unconfirmed balance: ${error.message}`);
-        })
-      ;
+        }).then(() => {
+          this.couponValue = '';
+          this.buttonIsClicked = false;
+        });
+      }
     },
     setInvisibleDecrement() {
       if (this.package.multipliedBy(this.satoshiNb).comparedTo(this.getMinBuy) === 0) {
