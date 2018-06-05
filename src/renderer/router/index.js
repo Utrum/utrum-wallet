@@ -29,7 +29,7 @@ import TermsAndConditions from '@/components/About/TermsAndConditions/TermsAndCo
 import Disclamer from '@/components/About/Disclamer/Disclamer.vue';
 import Website from '@/components/About/Website/Website.vue';
 import Library from '@/components/About/Library/Library.vue';
-
+import Social from '@/components/About/Social/Social.vue';
 
 Vue.use(Router);
 
@@ -70,6 +70,11 @@ export default new Router({
           path: '/withdraw',
           name: 'withdraw',
           component: Withdraw,
+        },
+        {
+          path: '/social',
+          name: 'social',
+          component: Social,
         },
       ],
     },

@@ -13,46 +13,26 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
-
-import { mapGetters } from 'vuex';
+const electron = require('electron');
 
 export default {
-  name: 'sidebar',
+  name: 'social',
   data() {
     return {
-      balanceState: true,
-      buyMnzState: false,
-      withdrawalState: false,
-      socialState: false,
+      mnzTelegramUrl: 'https://t.me/MonaizeOfficial',
+      mnzSlackUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScre9X8loy1Q5zhelpqVfCib65m4PKc2kWUKKYgDIE67Mx9Pg/viewform',
     };
   },
+  mounted() {
+  },
   methods: {
-    balanceClicked() {
-      this.balanceState = true;
-      this.buyMnzState = false;
-      this.withdrawalState = false;
-      this.socialState = false;
+    openMnzTelegram() {
+      electron.shell.openExternal(this.mnzTelegramUrl);
     },
-    buyMnzClicked() {
-      this.balanceState = false;
-      this.buyMnzState = true;
-      this.withdrawalState = false;
-      this.socialState = false;
-    },
-    withdrawalClicked() {
-      this.balanceState = false;
-      this.buyMnzState = false;
-      this.withdrawalState = true;
-      this.socialState = false;
-    },
-    socialClicked() {
-      this.balanceState = false;
-      this.buyMnzState = false;
-      this.withdrawalState = false;
-      this.socialState = true;
+    openMnzSlack() {
+      electron.shell.openExternal(this.mnzSlackUrl);
     },
   },
   computed: {
-    ...mapGetters(['icoIsRunning', 'hasPlannedIco']),
   },
 };

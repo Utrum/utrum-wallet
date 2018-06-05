@@ -99,11 +99,6 @@ hr {
   border-top-right-radius: .3rem;
 }
 
-.modal-body {
-  padding: 0;
-  border-radius: .3rem;
-}
-
 #close-button {
   height: 25px;
   color: white;
