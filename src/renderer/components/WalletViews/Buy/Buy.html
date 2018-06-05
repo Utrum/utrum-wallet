@@ -220,7 +220,7 @@
 		</div>
 		<div slot="modal-footer" class="row footerBuyModal">
 			<button @click="hideModal" slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
-			<button @click="buyMnz()" slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
+			<button :disabled="buttonIsClicked" @click="buyMnz()" slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
 		</div>
 	</b-modal>
 </div>
