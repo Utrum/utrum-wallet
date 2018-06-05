@@ -40,11 +40,11 @@ export default {
       satoshiNb: 100000000,
       blocks: 1,
       estimatedFee: 0,
-      feeSpeed: 'veryFast',
+      feeSpeed: 'fast',
       fees: [
-        { id: 0, label: 'Very fast', blocks: 1, value: 'veryFast' },
-        { id: 1, label: 'Fast', blocks: 6, value: 'fast' },
-        { id: 2, label: 'Low', blocks: 10, value: 'low' },
+        { id: 0, label: 'Very fast', speed: 'fast', value: 'veryFast' },
+        { id: 1, label: 'Fast', speed: 'medium', value: 'fast' },
+        { id: 2, label: 'Low', speed: 'slow', value: 'low' },
       ],
       videoConstraints: {
         width: {
@@ -83,13 +83,13 @@ export default {
             this.$refs.confirmBuy.show();
           }
         })
-      ;
+        ;
     },
     onChange() {
       this.prepareTx();
     },
     onFeeChange(data) {
-      this.blocks = data.blocks;
+      this.speed = data.speed;
       this.prepareTx();
     },
     onConfirmWithdrawModal() {
@@ -126,20 +126,20 @@ export default {
       try {
         await promise;
 
-          // successfully initialized
+        // successfully initialized
       } catch (error) {
         if (error.name === 'NotAllowedError') {
-            // user denied camera access permisson
+          // user denied camera access permisson
         } else if (error.name === 'NotFoundError') {
-            // no suitable camera device installed
+          // no suitable camera device installed
         } else if (error.name === 'NotSupportedError') {
-            // page is not served over HTTPS (or localhost)
+          // page is not served over HTTPS (or localhost)
         } else if (error.name === 'NotReadableError') {
-            // maybe camera is already in use
+          // maybe camera is already in use
         } else if (error.name === 'OverconstrainedError') {
-            // passed constraints don't match any camera. Did you requested the front camera although there is none?
+          // passed constraints don't match any camera. Did you requested the front camera although there is none?
         } else {
-            // browser is probably lacking features (WebRTC, Canvas)
+          // browser is probably lacking features (WebRTC, Canvas)
         }
       } finally {
         this.loading = false;
@@ -161,21 +161,21 @@ export default {
         wallet: this.wallet,
         address: this.withdraw.address,
         amount,
-        blocks: this.blocks,
+        speed: this.speed,
       };
 
       return this.$store.dispatch('createTransaction', object)
         .then((tx) => {
           if (tx != null &&
-              tx.outputs != null &&
-              tx.inputs != null) {
+            tx.outputs != null &&
+            tx.inputs != null) {
             this.estimatedFee = BigNumber(tx.fee);
           } else if (tx != null && tx.feeRate != null) {
             this.estimatedFee = BigNumber(tx.feeRate);
           }
           return tx;
         })
-      ;
+        ;
     },
     debounceInfo: _.debounce(function () {
       this.$toasted.info('The address is not valid.');
@@ -202,7 +202,7 @@ export default {
               this.$toasted.error(`Can't send transaction: ${error.message}`);
             }
           })
-        ;
+          ;
       }
     },
   },
@@ -267,7 +267,7 @@ export default {
           if (this.select === this.$store.getters.getTickerForExpectedCoin('BTC')) {
             return versionBase58 === 111 || versionBase58 === 0;
           } else if (this.select === this.$store.getters.getTickerForExpectedCoin('KMD')
-          || this.select === this.$store.getters.getTickerForExpectedCoin('MNZ')) {
+            || this.select === this.$store.getters.getTickerForExpectedCoin('MNZ')) {
             return versionBase58 === 60;
           }
           return false;

@@ -14,7 +14,7 @@
  *                                                                            *
  ******************************************************************************/
 
-import { Wallet, coins }  from 'libwallet-mnz';
+import { Wallet, coins, fees } from 'libwallet-mnz';
 import { BigNumber } from 'bignumber.js';
 
 import * as _ from 'lodash';
@@ -152,19 +152,19 @@ const actions = {
         .then(() => {
           dispatch('buildTxHistory', wallet, { root: true });
         })
-      ;
+        ;
     });
     return Promise.all(promises)
-      .catch(() => {})
-    ;
+      .catch(() => { })
+      ;
   },
-  createTransaction({ commit, rootGetters }, { wallet, amount, address, blocks = 6, data = null }) {
+  createTransaction({ commit, rootGetters }, { wallet, amount, address, speed = 'slow', data = null }) {
     let utxos;
 
     return wallet.electrum.listUnspent(wallet.address)
       .then((_utxos) => {
         utxos = _utxos;
-        return getEstimatedFees(wallet, blocks);
+        return getEstimatedFees(wallet, speed);
       })
       .then((feeRate) => {
 
@@ -174,9 +174,8 @@ const actions = {
             value: amount,
           },
         ];
-
         // satoshis per byte
-        const feeRateInSatoshis = Math.round(BigNumber(feeRate).dividedBy(1000).multipliedBy(satoshiNb).toNumber());
+        const feeRateInSatoshis = Math.round(BigNumber(feeRate).multipliedBy(satoshiNb).toNumber());
 
         const { fee } = coinSelect(utxos, targets, feeRateInSatoshis);
 
@@ -188,7 +187,7 @@ const actions = {
         }
         return tx;
       })
-    ;
+      ;
   },
   broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
     const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
@@ -206,7 +205,7 @@ const actions = {
         console.log('BROADCASTED TX ERROR:', error); // eslint-disable-line
         return Promise.reject(error);
       })
-    ;
+      ;
   },
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');
@@ -226,7 +225,7 @@ const actions = {
             .then(response => {
               wallet.balance_usd = wallet.balance.multipliedBy(BigNumber(response.data[0].price_usd).dividedBy(15000));
             })
-          ;
+            ;
         } else {
           getCmcData(wallet.coin.name)
             .then(response => {
@@ -234,10 +233,10 @@ const actions = {
                 wallet.balance_usd = wallet.balance.multipliedBy(cmcCoin.price_usd);
               });
             })
-          ;
+            ;
         }
       })
-    ;
+      ;
   },
   startUpdates({ dispatch }) {
     dispatch('setIsUpdate', true);
@@ -281,11 +280,14 @@ const actions = {
   },
 };
 
-const getEstimatedFees = (wallet, blocks) => {
+const getEstimatedFees = (wallet, speed) => {
   if (wallet.ticker.indexOf('KMD') >= 0) {
     return 0.0001;
   }
-  return wallet.electrum.getEstimateFee(blocks);
+  return fees.getCurrentEstimate().then(estimation => {
+    const result = BigNumber(estimation[speed]).dividedBy(100000000);
+    return result;
+  });
 };
 
 export default {
