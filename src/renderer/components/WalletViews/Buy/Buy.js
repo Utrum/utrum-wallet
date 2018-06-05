@@ -32,16 +32,16 @@ export default {
   },
   data() {
     const satoshiNb = 100000000;
-    let minBuy  = 0;
+    let minBuy = 0;
     const config = this.$store.getters.getConfig;
 
     if (config != null) {
       minBuy = config.minBuy != null ? config.minBuy : 0;
     }
     const fees = [
-      { id: 0, label: 'High Fees', blocks: 2, value: 'veryFast' },
-      { id: 1, label: 'Medium Fees', blocks: 6, value: 'fast' },
-      { id: 2, label: 'Low Fees', blocks: 36, value: 'low' },
+      { id: 0, label: 'High Fees', speed: 'fast', value: 'veryFast' },
+      { id: 1, label: 'Medium Fees', speed: 'medium', value: 'fast' },
+      { id: 2, label: 'Low Fees', speed: 'slow', value: 'low' },
     ];
 
     return {
@@ -50,7 +50,7 @@ export default {
       max: 100,
       satoshiNb,
       searchable: false,
-      blocks: fees[2].blocks,
+      speed: fees[2].speed,
       estimatedFee: 0,
       feeSpeed: 'low',
       fees: fees,
@@ -82,7 +82,7 @@ export default {
       return parts.join('.');
     },
     onFeeChange(data) {
-      this.blocks = data.blocks;
+      this.speed = data.speed;
       this.feeSpeed = data.label;
       this.prepareTx();
     },
@@ -96,7 +96,7 @@ export default {
             this.showModal();
           }
         })
-      ;
+        ;
     },
     hideModal() {
       if (this.$refs.confirmBuy != null) {
@@ -131,20 +131,20 @@ export default {
       const object = {
         wallet: this.wallet,
         amount: amount,
-        blocks: this.blocks,
+        speed: this.speed,
         data: this.coupon,
       };
 
       return this.$store.dispatch('createSwapTransaction', object)
         .then((tx) => {
           if (tx != null &&
-              tx.outputs != null &&
-              tx.inputs != null) {
+            tx.outputs != null &&
+            tx.inputs != null) {
             this.estimatedFee = BigNumber(tx.fee);
           }
           return tx;
         })
-      ;
+        ;
     },
     debounceInput: _.debounce(function () {
       this.prepareTx();
@@ -156,25 +156,25 @@ export default {
       if (this.buttonIsClicked === false) {
         this.buttonIsClicked = true;
         return this.prepareTx()
-        .then((tx) => {
-          const payload = {
-            wallet: this.wallet,
-            ...tx,
-            amount: this.getTotalSatoshiPrice.toFixed(0),
-            amountMnz: this.totalMnzWithBonus.multipliedBy(this.satoshiNb),
-          };
-          return this.$store.dispatch('swap', payload);
-        })
-        .then((response) => {
-          alert(this, response);
-          setTimeout(() => { this.timer = true; }, 3000);
-        })
-        .catch((error) => {
-          this.$toasted.error(`Can't send transaction, verify your pending tx and unconfirmed balance: ${error.message}`);
-        }).then(() => {
-          this.couponValue = '';
-          this.buttonIsClicked = false;
-        });
+          .then((tx) => {
+            const payload = {
+              wallet: this.wallet,
+              ...tx,
+              amount: this.getTotalSatoshiPrice.toFixed(0),
+              amountMnz: this.totalMnzWithBonus.multipliedBy(this.satoshiNb),
+            };
+            return this.$store.dispatch('swap', payload);
+          })
+          .then((response) => {
+            alert(this, response);
+            setTimeout(() => { this.timer = true; }, 3000);
+          })
+          .catch((error) => {
+            this.$toasted.error(`Can't send transaction, verify your pending tx and unconfirmed balance: ${error.message}`);
+          }).then(() => {
+            this.couponValue = '';
+            this.buttonIsClicked = false;
+          });
       }
     },
     setInvisibleDecrement() {
