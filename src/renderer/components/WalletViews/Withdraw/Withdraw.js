@@ -196,7 +196,11 @@ export default {
             alert(this, response);
           })
           .catch(error => {
-            this.$toasted.error(`Can't send transaction: ${error.message}`);
+            if (error.__type !== null && BigNumber(this.withdraw.amount).comparedTo(21000000) === 1) {
+              this.$toasted.info("You can't send more than 21 million at once");
+            } else {
+              this.$toasted.error(`Can't send transaction: ${error.message}`);
+            }
           })
         ;
       }
