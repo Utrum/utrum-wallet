@@ -33,6 +33,9 @@ export default {
     };
   },
   methods: {
+    shouldShowUnconfirmed() {
+      return this.wallet.balance_unconfirmed != null && this.wallet.balance_unconfirmed.comparedTo(0) !== 0;
+    },
     getUnconfirmedColor(amount) {
       if (amount != null) {
         return (amount.comparedTo(0) === 1) ? 'positiveColor' : 'negativeColor';
@@ -60,12 +63,6 @@ export default {
         return 'row-custom';
       }
       return this.wallet.balance_unconfirmed.comparedTo(0) === 0 ? 'row-custom' : '';
-    },
-    isBalanceUnconfirmedIsFilled() {
-      if (this.wallet.balance_unconfirmed == null || this.wallet.balance_unconfirmed.comparedTo(0) === 0) {
-        return false;
-      }
-      return this.wallet.balance_unconfirmed.comparedTo(0) !== 0;
     },
   },
 };

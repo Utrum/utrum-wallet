@@ -220,7 +220,7 @@ const actions = {
       })
       .then(response => {
         wallet.balance = BigNumber(response.confirmed).dividedBy(satoshiNb);
-        wallet.balance_unconfirmed = BigNumber(response.unconfirmed).dividedBy(satoshiNb);
+        wallet.balance_unconfirmed = new BigNumber(response.unconfirmed).dividedBy(satoshiNb);
         if (wallet.coin.name === 'monaize') {
           getCmcData('bitcoin')
             .then(response => {
