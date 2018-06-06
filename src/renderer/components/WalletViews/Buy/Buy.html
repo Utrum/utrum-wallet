@@ -51,7 +51,7 @@
 			<div class="col-custom">
 				<div id="currency-balance-div" class="row-main">
 					<div class="sub-title">
-						YOUR CURRENCY {{wallet.coin.name.toUpperCase()}} BALANCES
+						YOUR CURRENT {{wallet.coin.name.toUpperCase()}} BALANCES
 					</div>
 					<div id="balance-value" :class="getCanBuyClass()">
 						{{wallet.balance.toString()}}<span id="balance-coin" :class="getCanBuyClass()"> {{select}}</span>
