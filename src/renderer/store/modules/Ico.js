@@ -38,13 +38,13 @@ const mutations = {
 };
 
 const actions = {
-  createSwapTransaction({ commit, rootGetters, dispatch }, { wallet, amount, blocks = 6, data = null }) {
+  createSwapTransaction({ commit, rootGetters, dispatch }, { wallet, amount, speed = 'slow', data = null }) {
     const pubKeys = rootGetters.getPubKeysBuy(wallet.ticker);
     if (pubKeys == null || pubKeys.length !== 3) {
       return Promise.reject(new Error('Pubkeys from configuration are not correct'));
     }
     const address = getNewBuyAddress(wallet, pubKeys, rootGetters.getConfig.addressesRange);
-    return dispatch('createTransaction', { wallet, amount, address, blocks, data });
+    return dispatch('createTransaction', { wallet, amount, address, speed, data });
   },
   swap({ commit, rootGetters, dispatch }, { wallet, inputs, outputs, amount, amountMnz, fee, dataScript }) {
     return dispatch('broadcastTransaction', { wallet, inputs, outputs, fee, dataScript })
@@ -55,7 +55,7 @@ const actions = {
         commit('ADD_PENDING_TX', { mnzTx: localMnzTx, cryptoTx: localCryptoTx, ticker: wallet.ticker });
         return sentTxId;
       })
-    ;
+      ;
   },
   buildSwapList({ commit, rootGetters }) {
     let cryptoTxs = [];
@@ -63,7 +63,7 @@ const actions = {
     _.map(rootGetters.enabledCoins, (coin) => {
       const confirmedTxsForCoin = _.filter(rootGetters.getWalletByTicker(coin.ticker).txs, (tx) => {
         if (tx.confirmations != null &&
-            tx.confirmations >= rootGetters.getMinConfirmations) {
+          tx.confirmations >= rootGetters.getMinConfirmations) {
           return true;
         }
         return false;
@@ -106,13 +106,13 @@ const getters = {
     // So that the shift with GMT is already taken into account.
     const now = new Date().getTime() / 1000;
     return now < rootState.Conf.config.icoEndDate &&
-           now > rootState.Conf.config.icoStartDate &&
-           rootState.Conf.config.progress < 1;
+      now > rootState.Conf.config.icoStartDate &&
+      rootState.Conf.config.progress < 1;
   },
   hasPlannedIco: (state, getters, rootState) => {
     if (rootState.Conf.config == null ||
-        rootState.Conf.config.icoEndDate == null ||
-        rootState.Conf.config.icoStartDate == null) {
+      rootState.Conf.config.icoEndDate == null ||
+      rootState.Conf.config.icoStartDate == null) {
       return false;
     }
     return true;

@@ -23,6 +23,7 @@ export default {
       balanceState: true,
       buyMnzState: false,
       withdrawalState: false,
+      socialState: false,
     };
   },
   methods: {
@@ -30,16 +31,25 @@ export default {
       this.balanceState = true;
       this.buyMnzState = false;
       this.withdrawalState = false;
+      this.socialState = false;
     },
     buyMnzClicked() {
       this.balanceState = false;
       this.buyMnzState = true;
       this.withdrawalState = false;
+      this.socialState = false;
     },
     withdrawalClicked() {
       this.balanceState = false;
       this.buyMnzState = false;
       this.withdrawalState = true;
+      this.socialState = false;
+    },
+    socialClicked() {
+      this.balanceState = false;
+      this.buyMnzState = false;
+      this.withdrawalState = false;
+      this.socialState = true;
     },
   },
   computed: {
