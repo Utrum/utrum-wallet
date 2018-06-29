@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       mnzTelegramUrl: 'https://t.me/MonaizeOfficial',
-      mnzSlackUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScre9X8loy1Q5zhelpqVfCib65m4PKc2kWUKKYgDIE67Mx9Pg/viewform',
+      mnzDiscordUrl: 'https://discord.gg/Kjp9EV2',
     };
   },
   mounted() {
@@ -29,8 +29,8 @@ export default {
     openMnzTelegram() {
       electron.shell.openExternal(this.mnzTelegramUrl);
     },
-    openMnzSlack() {
-      electron.shell.openExternal(this.mnzSlackUrl);
+    openMnzDiscord() {
+      electron.shell.openExternal(this.mnzDiscordUrl);
     },
   },
   computed: {
