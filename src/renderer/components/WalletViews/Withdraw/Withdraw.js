@@ -33,7 +33,7 @@ export default {
     QrcodeReader,
   },
   created() {
-    this.select = this.$store.getters.getTickerForExpectedCoin('MNZ');
+    this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
   },
   data() {
     return {
@@ -64,7 +64,7 @@ export default {
       withdraw: {
         amount: null,
         address: '',
-        coin: 'MNZ',
+        coin: 'OOT',
       },
       history: [],
     };
@@ -113,7 +113,7 @@ export default {
         const checkResult = bitcoinjs.address.fromBase58Check(addr);
         if (this.wallet.ticker.indexOf('BTC') >= 0) {
           return checkResult.version === 0;
-        } else if (this.wallet.ticker.indexOf('KMD') >= 0 || this.wallet.ticker.indexOf('MNZ') >= 0) {
+        } else if (this.wallet.ticker.indexOf('KMD') >= 0 || this.wallet.ticker.indexOf('OOT') >= 0) {
           return checkResult.version === 60;
         }
       } else {
@@ -267,7 +267,7 @@ export default {
           if (this.select === this.$store.getters.getTickerForExpectedCoin('BTC')) {
             return versionBase58 === 111 || versionBase58 === 0;
           } else if (this.select === this.$store.getters.getTickerForExpectedCoin('KMD')
-            || this.select === this.$store.getters.getTickerForExpectedCoin('MNZ')) {
+            || this.select === this.$store.getters.getTickerForExpectedCoin('OOT')) {
             return versionBase58 === 60;
           }
           return false;

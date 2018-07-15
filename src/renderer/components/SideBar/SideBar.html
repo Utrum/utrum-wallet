@@ -7,22 +7,22 @@
       <router-link  active-class="active" tag="a" to="balance">
         <img v-if="balanceState" id="icon-balances" src="~@/assets/icon-balances.svg" class="number-view" />
         <img v-else id="icon-balances" src="~@/assets/icon-balances-grey.svg" class="number-view" />
-        BALANCES
+        RECEIVE
       </router-link>
     </li>
-    <li v-on:click="buyMnzClicked" v-if="hasPlannedIco">
+    <!-- <li v-on:click="buyMnzClicked" v-if="hasPlannedIco">
       <router-link active-class="active" tag="a" to="buy">
         <img v-if="buyMnzState" id="icon-buy-mnz" src="~@/assets/icon-buy-mnz.svg" class="number-view" />
         <img v-else id="icon-buy-mnz" src="~@/assets/icon-buy-mnz-grey.svg" class="number-view" />
         <span v-if="icoIsRunning">BUY MNZ</span>
         <span else>ICO</span>
       </router-link>
-    </li>
+    </li> -->
     <li v-on:click="withdrawalClicked">
       <router-link  active-class="active" tag="a" to="withdraw">
         <img v-if="withdrawalState" id="icon-withdrawal" src="~@/assets/icon-withdrawal.svg" class="number-view" />
         <img v-else id="icon-withdrawal" src="~@/assets/icon-withdrawal-grey.svg" class="number-view" />
-        WITHDRAWAL
+        SEND
       </router-link>
     </li>
     <li v-on:click="socialClicked">

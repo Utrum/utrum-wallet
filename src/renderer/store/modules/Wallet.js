@@ -47,7 +47,7 @@ const getters = {
     return state.isUpdate;
   },
   getHistoryBuy: (state, getters) => {
-    const mnzTicker = getters.getTickerForExpectedCoin('MNZ');
+    const mnzTicker = getters.getTickerForExpectedCoin('OOT');
     const history = getters.getWalletTxs(mnzTicker);
     Object.keys(coins).forEach((coin) => {
       const filteredHistory = history.filter(el => el.origin.ticker === coin);

@@ -33,12 +33,14 @@ export default {
       this.withdrawalState = false;
       this.socialState = false;
     },
+/*
     buyMnzClicked() {
       this.balanceState = false;
       this.buyMnzState = true;
       this.withdrawalState = false;
       this.socialState = false;
     },
+*/
     withdrawalClicked() {
       this.balanceState = false;
       this.buyMnzState = false;
