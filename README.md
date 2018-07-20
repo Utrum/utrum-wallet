@@ -1,8 +1,8 @@
-# MNZ Wallet
+# Utrum Wallet
 
-Official "MNZ Wallet" based on Electrum.
-BTC / KMD / MNZ wallet with basic features: balances, withdrawals & history.
-This lightweight client will be used for the MNZ ICO with special features: couponing, multisig ...
+Official "Utrum Wallet" based on Electrum.
+BTC / KMD / OOT wallet with basic features: balances, withdrawals & history.
+This wallet is based on the work of the MNZ team, with special features: couponing, multisig ...
 
 #### Build Setup
 
