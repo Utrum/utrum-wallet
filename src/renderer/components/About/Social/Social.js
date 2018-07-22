@@ -19,8 +19,8 @@ export default {
   name: 'social',
   data() {
     return {
-      mnzTelegramUrl: 'https://t.me/MonaizeOfficial',
-      mnzDiscordUrl: 'https://discord.gg/Kjp9EV2',
+      mnzTelegramUrl: 'https://t.me/utrumdotio',
+      mnzDiscordUrl: 'https://discord.gg/tyf8Mqx',
     };
   },
   mounted() {
