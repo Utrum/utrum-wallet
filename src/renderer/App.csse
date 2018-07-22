@@ -60,7 +60,7 @@ hr {
 
 .headerModalBuy h2 {
 	margin-top: 10px;
-	color: #0C6AA8;
+	color: #7c398a;
 	font-weight: 400;
 	font-size: 1.5em;
 }
@@ -72,7 +72,7 @@ hr {
 
 .footerBuyModal #confirm {
 	border: none;
-	background-color: #0C6AA8;
+	background-color: #7c398a;
 	color: white;
 	margin-right: 20px;
 	min-height: 40px;
@@ -348,16 +348,16 @@ ul ul a {
 }
 
 .btn-primary {
-  border: 1px solid #0C6AA8;
+  border: 1px solid #7c398a;
   border-radius: 4px !important;
   background-color: transparent;
-  color: #0C6AA8;
+  color: #7c398a;
   outline: none;
 }
 
 .btn-primary:hover {
-  background-color: #0C6AA8;
-  border: 1px solid #0C6AA8;
+  background-color: #7c398a;
+  border: 1px solid #7c398a;
 }
 
 .card {
@@ -409,7 +409,7 @@ textarea {
 
 #icoEndedBanner,
 #icoWillBeginBanner {
-  background-color: #0C6AA8;
+  background-color: #7c398a;
   text-align: center;
   padding-bottom: 5px;
   padding-top: 5px;
@@ -467,17 +467,17 @@ textarea {
 }
 
 .page-item.active .page-link {
-  background-color: #0C6AA8;
-  border-color: #0C6AA8;
+  background-color: #7c398a;
+  border-color: #7c398a;
 }
 
 .page-link {
-  color: #0C6AA8;
+  color: #7c398a;
 }
 
 .page-link:active {
   color: white !important;
-  background-color: #0C6AA8 !important;
+  background-color: #7c398a !important;
 }
 
 .bannerMargin {

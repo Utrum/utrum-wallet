@@ -14,55 +14,95 @@
  *                                                                            *
  ******************************************************************************/
 
-@import "~select2/dist/css/select2.min.css";
-.content .select2-selection:focus {
-	outline: none;
-	box-shadow: none;
+div.modal .modal-dialog.modal-740 {
+  width: 740px !important;
+  max-width: 740px !important;
 }
 
-.select2-selection {
-	width: 215px !important;
+#footer-modal {
+  border-bottom-left-radius: .3rem;
+  border-bottom-right-radius: .3rem;
 }
 
-.select2-container--open .select2-dropdown--below {
-  width: 239px !important;
-  margin-left: -24px !important;
+hr {
+  margin: 0;
 }
 
-.select2-selection__rendered {
-  line-height: 75px !important;
-  text-align: center;
-  color: #0C6AA8 !important;
-  font-weight: 200;
-}
-
-.select2-selection {
-  height: 75px !important;
-  width: 126px;
-  border-color: #0C6AA8 !important;
-  font-size: 1.8em;
+.cryptohash {
+  font-size: 1.1em;
   font-weight: 300;
-  border-top-left-radius: 0px 0px !important;
-  border-bottom-left-radius: 0px 0px !important;
 }
 
-.select2-selection__rendered {
-  padding: 0px !important;
+.amount-swap {
+  font-weight: 500;
 }
 
-.select2-selection__arrow {
-  display: none;
+.ticker-title {
+  font-size: 1.1em;
+  color: black;
+  font-weight: 300;
 }
 
-.select2-search__field {
-  outline: none;
+.swap-ticker {
+  margin-top: 5px;
+  font-size: 0.8em;
+  font-weight: 500;
 }
 
-.select2-selection {
-  outline: none;
-}
-
-.select2-container--default .select2-results__option--highlighted[aria-selected] {
-	background-color:#0C6AA8;
+.tx-swap-icon {
+  margin-bottom: 13px;
+  margin-top: 4px;
+  padding-right: 6px;
+  padding-left: 6px;
+  padding-top: 0px;
+  padding-bottom: 0px;
   color: white;
+  background-color: #7c398a;
+  border-radius: 3px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.id-tx {
+  font-size: 0.8em;
+  font-weight: 600;
+  color: #7c398a;
+}
+
+.icon-swap-arrow {
+  margin-top: 25px;
+  margin-bottom: auto;
+}
+
+#icon-swap-arrow {
+  height: 25px;
+}
+
+.icon-swap {
+  height: 70px;
+}
+
+.swap-crypto {
+  background-color: white;
+}
+
+.swap-mnz {
+  background-color: white;
+}
+
+#header-modal {
+  padding-top: 15px;
+  font-size: 1.3em;
+  color: white;
+  background-color: #7c398a;
+  border-top-left-radius: .3rem;
+  border-top-right-radius: .3rem;
+}
+
+#close-button {
+  height: 25px;
+  color: white;
+  position: absolute;
+  top: 15px;
+  right: 15px;
 }

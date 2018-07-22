@@ -57,7 +57,7 @@ hr {
   padding-top: 0px;
   padding-bottom: 0px;
   color: white;
-  background-color: #7c398a;
+  background-color: #0C6AA8;
   border-radius: 3px;
   font-size: 0.9em;
   text-align: center;
@@ -66,7 +66,7 @@ hr {
 .id-tx {
   font-size: 0.8em;
   font-weight: 600;
-  color: #7c398a;
+  color: #0C6AA8;
 }
 
 .icon-swap-arrow {
@@ -94,7 +94,7 @@ hr {
   padding-top: 15px;
   font-size: 1.3em;
   color: white;
-  background-color: #7c398a;
+  background-color: #0C6AA8;
   border-top-left-radius: .3rem;
   border-top-right-radius: .3rem;
 }

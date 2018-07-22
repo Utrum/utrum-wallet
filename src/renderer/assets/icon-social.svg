@@ -9,8 +9,8 @@
 	.st3{fill:#FFFFFF;}
 	.st4{fill:none;stroke:#DFE2EC;stroke-width:2.7111;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 	.st5{fill:none;stroke:#DFE2EC;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st6{fill:#7C328A;}
-	.st7{fill:#7C328A;stroke:#7C348B;stroke-width:0.25;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st6{fill:#1EB0DC;}
+	.st7{fill:#1EB0DC;stroke:#7C348B;stroke-width:0.25;stroke-linejoin:round;stroke-miterlimit:10;}
 </style>
 <g>
 	<g class="st0">
@@ -34,7 +34,7 @@
 	<g>
 		<polygon class="st3" points="2.9,46 2,50.2 41.5,69.8 99.6,26 97.4,22.1 60.5,2.2 17.1,34.3 6.5,32.7 8.5,40.4 		"/>
 		<polygon class="st3" points="49,70.2 49.6,74.2 80.1,89.1 91.2,80.8 103.4,71.8 102.9,68.1 71.7,53.3 		"/>
-		<polygon class="st3" points="78.2,52.2 153.4,88.3 182.2,64.1 180.8,60.1 171.8,56.2 170.2,47.2 157.2,50.1 108.3,26.3 79.6,47.7 
+		<polygon class="st3" points="78.2,52.2 153.4,88.3 182.2,64.1 180.8,60.1 171.8,56.2 170.2,47.2 157.2,50.1 108.3,26.3 79.6,47.7
 					"/>
 		<g>
 			<polyline class="st4" points="17.5,34.3 60.5,2.2 99,22.1 40.3,65.9 1.8,46 8.1,41.3 			"/>
