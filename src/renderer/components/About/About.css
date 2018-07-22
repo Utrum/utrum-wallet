@@ -27,7 +27,7 @@
   cursor: pointer;
 }
 
-li { 
+li {
   line-height: 2.5em;
 }
 
@@ -38,7 +38,7 @@ li a {
 
 li a:hover {
   color: white;
-  background-color: #6e2b90;
+  background-color: #1EB0DC;
   padding: 4px;
 	border-radius: 20px;
 }
@@ -70,7 +70,7 @@ hr {
 
 .active {
   color: white;
-  background-color: #6e2b90;
+  background-color: #1EB0DC;
   padding: 4px;
 	border-radius: 20px;
 }

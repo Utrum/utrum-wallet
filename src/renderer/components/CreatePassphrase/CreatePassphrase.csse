@@ -83,7 +83,7 @@
 	outline: none;
 	border: none;
 	color: white;
-	background-color: #0C6AA8;
+	background-color: #7c398a;
 	border-radius: 50px;
 	padding: 10px;
 	padding-right: 15px;
@@ -150,7 +150,7 @@
 }
 
 #back-arrow p {
-	color: #0C6AA8;
+	color: #7c398a;
 	font-weight: 400;
 	margin-top: auto;
 	margin-bottom: auto;
