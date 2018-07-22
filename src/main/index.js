@@ -72,9 +72,9 @@ function createWindow() {
   });
 
   const template = [{
-    label: 'Monaize ICO App',
+    label: 'Utrum Wallet App',
     submenu: [
-        { label: 'About Monaize Wallet', click: function () { aboutView() } },
+        { label: 'About Utrum Wallet', click: function () { aboutView() } },
         { type: 'separator' },
         { label: 'Quit', accelerator: 'CmdOrCtrl+Q', click: function () { app.quit(); } },
     ] }, {
