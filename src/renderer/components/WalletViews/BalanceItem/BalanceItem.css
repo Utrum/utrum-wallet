@@ -55,13 +55,13 @@
   margin: 0;
   margin-right: 5px;
   font-weight: 300;
-  color: #180d39;
+  color: #0C6AA8;
 }
 
 #coin-item{
   margin: 0;
   font-weight: 200;
-  color: #180d39;
+  color: #0C6AA8;
 }
 
 .row-content {
@@ -73,7 +73,7 @@
 }
 
 .row-content .btn:hover{
-  color: #7c398a;
+  color: #1EB0DC;
 }
 
 .row-footer {
@@ -93,11 +93,11 @@
 }
 
 .row-footer button:hover{
-  background-color: #7c398a;
-} 
+  background-color: #1EB0DC;
+}
 
 .row-footer button:active{
-  background-color: #7c398a;
+  background-color: #1EB0DC;
 }
 
 .btn-inside-qrcode {
@@ -119,7 +119,7 @@
 }
 
 .btn-inside-qrcode:hover {
-  color: #7c398a;
+  color: #1EB0DC;
 }
 
 .balance {
@@ -137,7 +137,7 @@
 
 .qrcode {
   background-color: transparent;
-  color: #7c398a;
+  color: #1EB0DC;
   font-weight: 400;
   text-align: right;
 }
