@@ -30,7 +30,7 @@
 
 .content h3 {
   font-weight: 300;
-  color: #180d39;
+  color: #0D0032;
 }
 
 .content h5 {
@@ -61,7 +61,7 @@
 
 .buttonactived {
   color: white;
-  background-color: #7e3589;
+  background-color: #1EA2F0;
 }
 
 .buttondesactived {
@@ -71,7 +71,7 @@
 
 .btn-success-mnz{
   color:#fff;
-  background-color: #532c67;
+  background-color: #1EA2F0;
   border-color: #430961;
 }
 
@@ -85,13 +85,13 @@
 
 .btn-success-mnz:hover {
   color: #fff;
-  background-color: #6e2b90;
+  background-color: #1EA2F0;
   border-color: #430961;
 }
 
 .btn-success-mnz:focus {
   color: #fff;
-  background-color: #6e2b90;
+  background-color: #1EA2F0;
   border-color: #430961;
 }
 
@@ -183,13 +183,13 @@ footer {
   -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
   -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  background-color: #532c67;
+  background-color: #1EA2F0;
   border-color: #430961;
   color:#fff;
 }
 
 .buy:hover{
-  background-color: #6e2b90;
+  background-color: #1EA2F0;
   border-color: #430961;
 }
 
@@ -212,5 +212,5 @@ footer {
 
 .row-footer p {
   font-weight: 300;
-  color: #180d39;
+  color: #0D0032;
 }
