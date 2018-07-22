@@ -1,8 +1,8 @@
 {
-  "name": "mnz-wallet",
+  "name": "utrum-wallet",
   "version": "2.0.0",
   "author": "./LEGAL/AUTHORS",
-  "description": "Monaize ICO Wallet",
+  "description": "Utrum Wallet",
   "license": "GPL-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -31,8 +31,8 @@
     "eslint": "./node_modules/.bin/eslint src/"
   },
   "build": {
-    "productName": "MNZ Wallet",
-    "appId": "com.monaize.wallet",
+    "productName": "Utrum Wallet",
+    "appId": "com.utrum.wallet",
     "directories": {
       "output": "build"
     },
@@ -100,7 +100,7 @@
     "js-sha256": "^0.9.0",
     "less": "^3.0.1",
     "less-loader": "^4.0.5",
-    "libwallet-mnz": "3.5.0",
+    "libwallet-mnz": "^3.6.0",
     "lodash": "^4.17.5",
     "moment": "^2.22.0",
     "moment-timezone": "^0.5.14",
