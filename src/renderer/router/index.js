@@ -17,6 +17,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Buy from '@/components/WalletViews/Buy/Buy.vue';
+import Hodl from '@/components/WalletViews/Hodl/Hodl.vue';
 import LoginForm from '@/components/LoginForm/LoginForm.vue';
 import Home from '@/components/Home/Home.vue';
 import CreatePassphrase from '@/components/CreatePassphrase/CreatePassphrase.vue';
@@ -65,6 +66,11 @@ export default new Router({
           path: '/buy',
           name: 'buy',
           component: Buy,
+        },
+        {
+          path: '/hodl',
+          name: 'hodl',
+          component: Hodl,
         },
         {
           path: '/withdraw',
