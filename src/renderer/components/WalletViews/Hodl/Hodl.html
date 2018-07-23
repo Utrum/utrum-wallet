@@ -1,0 +1,226 @@
+<div class="d-flex flex-column content-buyview" :class="icoIsNotRunningClass()">
+	<div class="buy-monaize" v-if="icoIsRunning">
+		<div class="col-custom">
+			<div class="row">
+				<div class="col-custom title-buy-mnz">
+					<h3>BUY MONAIZE</h3>
+				</div>
+				<div class="col-custom">
+					<div class="row-main div-total-mnz">
+						<h5 class="col-custom">TOTAL</h5>
+						<div id="total-mnz" class="col-custom">
+							{{getMnzBalance.toString()}} {{mnzTicker}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="crypto-title-line" class="col-custom">
+			<div class="row">
+				<div class="col-custom sub-title title-buy-mnz">
+					CHOOSE YOUR CRYPTO
+				</div>
+				<hr class="col-custom" id="line-cut"/>
+			</div>
+		</div>
+
+		<div class="col-custom">
+			<div class="row-custom">
+				<div class="col-custom">
+					<div class="row-custom">
+						<div class="col-custom select-all">
+							<p @click="$root.$emit('select2:open')" id="add-coin">+</p>
+						</div>
+						<div class="col-custom">
+							<select2 :options="coins" :value="select" @input="valueChange"></select2>
+						</div>
+					</div>
+				</div>
+				<div class="col-custom arrow-buy">
+					<img src="~@/assets/icon-swap-arrow.svg"/>
+				</div>
+				<div class="col-custom">
+					<div id="buy-mnz-box" class="card">
+						<span>{{mnzTicker}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="choose-coin" class="row">
+			<div class="col-custom">
+				<div id="currency-balance-div" class="row-main">
+					<div class="sub-title">
+						YOUR CURRENT {{wallet.coin.name.toUpperCase()}} BALANCES
+					</div>
+					<div id="balance-value" :class="getCanBuyClass()">
+						{{wallet.balance.toString()}}<span id="balance-coin" :class="getCanBuyClass()"> {{select}}</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-custom">
+				<div id="choose-mnz" class="row-main">
+					<div class="sub-title">
+						CHOOSE HOW MANY {{mnzTicker}} YOU WANT TO BUY
+					</div>
+					<div id="package-mnz" class="row">
+						<a v-on:click="decrementPackage" id="less-mnz" href="#" class="col-center">
+							<img :class="setInvisibleDecrement()" src="~@/assets/icon-less.svg"/>
+						</a>
+						<input id="package-value" class="col-center" v-model.number.lazy="package" :placeholder="getPlaceholder" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
+						<a v-on:click="incrementPackage" id="more-mnz" href="#" class="col-center">
+							<img :class="setInvisibleIncrement()" src="~@/assets/icon-more.svg"/>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="sub-title">ORDER DETAILS</div>
+		<div class="col-custom">
+			<hr/>
+		</div>
+		<div class="d-flex flex-row justify-content-between align-items-center mt-3">
+
+			<div class="d-flex flex-column w-100">
+				<div v-if="wallet.coin.ticker.indexOf('BTC') >= 0">
+						<select-awesome ref='feeSelector' @change="onFeeChange" :value="selectedFee" :fees="fees" class="col-custom"></select-awesome>
+				</div>
+				<div v-else class="title-value d-flex align-items-center" id="fees-fix">
+						Fixed Fees
+				</div>
+				<div class="value">
+						{{getEstimatedFee}}
+				</div>
+			</div>
+
+			<div class="d-flex flex-row w-100">
+					<div class="border-left"></div>
+					<div class="d-flex flex-column pl-2">
+						<div class="title-value">
+							Total {{getStringTicket}}
+						</div>
+						<div class="value">
+							{{getTotalPrice.toFixed(8)}}
+						</div>
+					</div>
+			</div>
+
+			<div class="d-flex flex-row w-100">
+				<div class="border-left"></div>
+				<div class="d-flex flex-column pl-2">
+					<div class="title-value">
+						{{mnzTicker}}
+					</div>
+					<div class="value">
+						{{package.toString()}}
+					</div>
+				</div>
+			</div>
+
+			<div class="d-flex flex-row w-100">
+				<div class="border-left"></div>
+				<div class="d-flex flex-column pl-2">
+					<div class="title-value">
+						Total Purchase
+					</div>
+					<div class="value" :class="getCanBuyClass()">
+						{{getTotalPriceWithFee.toFixed(8)}}
+					</div>
+				</div>
+			</div>
+
+			<div class="d-flex align-items-center">
+				<button @click="onShowBuyModal()" :disabled="!timer || canBuy"  id="buycoins" class="btn sendcoins" type="button">
+						BUY
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="progress-bar" class="d-flex flex-column" v-if="icoIsRunning">
+		<div class="d-flex flex-row">
+			<div id="progress-live" class="d-flex align-items-center text-center"><span class="w-100 text-center">LIVE</span></div>
+			<div id="progress-time-left" class="w-100 text-right">{{icoTimeLeft}}</div>
+		</div>
+		<div id="progress-bar-indicator" class="d-flex flex-row">
+			<div class="w-100 py-2">
+					<b-progress :value="progress" :max="max" class="progress-active"></b-progress>
+			</div>
+			<div id="progress-indicator" class="d-flex align-items-center ml-2">{{progress.toFixed(0)}}%</div>
+		</div>
+	</div>
+
+	<div id="historyMnzBuy" v-if="$store.getters.getSwapList.length > 0">
+		<transaction-buy-history :coin="wallet.coin"></transaction-buy-history>
+	</div>
+	<div v-if="$store.getters.getSwapList.length == 0 && !icoIsRunning" id="monaize-over" class="d-flex justify-content-center align-items-center">
+		<div class="d-flex flex-column">
+			<span id="title-monaize-over">MNZ SWAPS</span>
+			<span>If you buy any MNZ during the token sale they will appear right here</span>
+		</div>
+	</div>
+
+	<b-modal ref="confirmBuy" id="confirmBuy" centered>
+		<div slot="modal-header" class="headerModalBuy">
+			<h2>YOUR ORDER</h2>
+		</div>
+		<div class="contentModalBuy">
+			<div class="row-main-item">
+				<div class="row">
+					<span class="subTitle">Amount to buy</span>
+					<div class="col-custom row-main-item">
+						<span class="col-custom"><span class="selectAmount">{{package.toString()}} </span>{{mnzTicker}}</span>
+						<div class="col-custom"><hr></div>
+					</div>
+				</div>
+				<div class="row" v-if="isBonus">
+					<span class="subTitle">Plus ({{getCurrentBonus*100}}%) bonus</span>
+					<div class="col-custom row-main-item">
+						<span class="col-custom"><span class="selectAmount">{{totalMnzWithBonus.toString()}} </span>{{mnzTicker}}</span>
+						<div class="col-custom"><hr></div>
+					</div>
+				</div>
+				<div class="row">
+					<span class="subTitle">Price</span>
+					<div class="col-custom row-main-item">
+						<span class="col-custom"><span class="selectAmount">{{getTotalPrice.toFixed(8)}} </span>{{select}}</span>
+						<div class="col-custom"><hr></div>
+					</div>
+				</div>
+				<div class="row">
+					<span class="subTitle">Transaction fees</span>
+					<div class="col-custom row-main-item">
+						<span class="col-custom"><span class="selectAmount">{{getEstimatedFee}} </span>{{select}}</span>
+						<div class="col-custom"><hr></div>
+					</div>
+				</div>
+				<div class="row">
+					<span class="subTitle">Coupon</span>
+					<input v-model="coupon" id="coupon" maxlength="8">
+				</div>
+			</div>
+
+			<hr id="horizontalLine">
+			<div class="row-total-amount">
+				<div class="col-custom row">
+					<img src="~@/assets/icon-shop.svg" alt="icon-shop">
+					<h2 class="col-custom">TOTAL AMOUNT</h2>
+				</div>
+				<div id="amountTotal" class="col-custom row">
+					<div class="row">
+						<span id="totalAmount">{{getTotalPriceWithFee.toFixed(8)}}</span>
+						<span id="totalAmountCoin">{{select}}</span>
+					</div>
+				</div>
+				<div class="col-custom row">
+					<img id="warningIcon" src="~@/assets/icon-warning.svg" alt="icon-warning">
+					<p id="warningInfo" class="col">Please be aware that once a coin swap has been initiated it cannot be cancelled.</p>
+				</div>
+			</div>
+		</div>
+		<div slot="modal-footer" class="row footerBuyModal">
+			<button @click="hideModal" slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
+			<button :disabled="buttonIsClicked" @click="buyMnz()" slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
+		</div>
+	</b-modal>
+</div>
