@@ -1,9 +1,9 @@
 <div class="d-flex flex-column content-buyview" :class="icoIsNotRunningClass()">
-	<div class="buy-monaize" v-if="icoIsRunning">
+	<div class="buy-monaize" > <!-- v-if="icoIsRunning"> -->
 		<div class="col-custom">
 			<div class="row">
 				<div class="col-custom title-buy-mnz">
-					<h3>BUY MONAIZE</h3>
+					<h3>BUY OOT - this is not working, just experimenting</h3>
 				</div>
 				<div class="col-custom">
 					<div class="row-main div-total-mnz">
@@ -155,8 +155,8 @@
 	</div>
 	<div v-if="$store.getters.getSwapList.length == 0 && !icoIsRunning" id="monaize-over" class="d-flex justify-content-center align-items-center">
 		<div class="d-flex flex-column">
-			<span id="title-monaize-over">MNZ SWAPS</span>
-			<span>If you buy any MNZ during the token sale they will appear right here</span>
+			<span id="title-monaize-over">OOT SWAPS</span>
+			<span>buys appear here</span>
 		</div>
 	</div>
 
