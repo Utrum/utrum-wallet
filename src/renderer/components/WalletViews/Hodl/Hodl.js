@@ -239,11 +239,11 @@ export default {
     },
     ...mapGetters(['icoIsRunning']),
     mnzTicker() {
-      return this.$store.getters.getTickerForExpectedCoin('MNZ');
+      return this.$store.getters.getTickerForExpectedCoin('OOT');
     },
     coins() {
       return this.$store.getters.enabledCoins
-        .filter(coin => coin.ticker.indexOf('MNZ') < 0)
+        .filter(coin => coin.ticker.indexOf('OOT') < 0)
         .map(coin => coin.ticker);
     },
     totalMnzWithBonus() {
@@ -290,7 +290,7 @@ export default {
       return this.$store.getters.getWalletByTicker(this.select).coin.name;
     },
     getTotalSatoshiPrice() {
-      const priceFor1Mnz = this.$store.getters.getTotalPrice(this.wallet.ticker); // Price for 1 MNZ in KMD or BTC.
+      const priceFor1Mnz = this.$store.getters.getTotalPrice(this.wallet.ticker); // Price for 1 OOT in KMD or BTC.
       const priceTransaction = this.requestedNumberOfSatochisMnz.multipliedBy(priceFor1Mnz);
       const roundedPriceTransaction = priceTransaction.integerValue(BigNumber.ROUND_UP);
       return roundedPriceTransaction;
