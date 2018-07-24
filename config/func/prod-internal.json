@@ -1,5 +1,5 @@
 {
   "updateLink" : "http://mnz.monaize.com/downloads/",
   "minConfirmations": 3,
-  "enabledCoins": ["BTC", "KMD", "OOT"]
+  "enabledCoins": ["OOT", "KMD", "BTC"]
 }
