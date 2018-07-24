@@ -25,12 +25,12 @@
       </router-link>
     </li>
     <li v-on:click="socialClicked">
-        <router-link  active-class="active" tag="a" to="social">
-          <img v-if="socialState" id="icon-social" src="~@/assets/icon-social_2.svg" class="number-view" />
-          <img v-else id="icon-social" src="~@/assets/icon-social_2-grey.svg" class="number-view" />
-          SOCIAL
-        </router-link>
-      </li>
+      <router-link  active-class="active" tag="a" to="social">
+        <img v-if="socialState" id="icon-social" src="~@/assets/icon-social_2.svg" class="number-view" />
+        <img v-else id="icon-social" src="~@/assets/icon-social_2-grey.svg" class="number-view" />
+        SOCIAL
+      </router-link>
+    </li>
   </ul>
   <a href="" id="logout" @click="$store.dispatch('logout')">
     <p><img id="icon-logout" src="~@/assets/icon-logout.svg"/>Log out</p>
