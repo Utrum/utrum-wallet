@@ -199,3 +199,18 @@ hr {
             transform: scale3D(0, 0, 1);
   }
 }
+
+.date-selectors {
+    width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.date-selectors a {
+    padding: 10px;
+}
+
+.date-selectors a:hover {
+    cursor: pointer;
+}

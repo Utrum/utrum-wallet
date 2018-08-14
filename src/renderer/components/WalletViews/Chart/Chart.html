@@ -9,6 +9,11 @@
   <div class="Chart__container" v-if="loaded" style="width:95%">
     <div class="Chart__content">
       <line-chart chart-id="line-daily" v-if="loaded" :chart-data="prices" :chart-labels="labels" @generate="setLinePng"/>
+      <div class="date-selectors">
+        <a v-on:click="requestData(24)">Today</a>
+        <a v-on:click="requestData(168)">This Week</a>
+        <a v-on:click="requestData(720)">This Month</a>
+      </div>
     </div>
   </div>
   </div>

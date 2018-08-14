@@ -41,10 +41,13 @@ export default {
       var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + min + ':' + sec + sec
       return time
     },
-    requestData () {
+    requestData (days) {
       this.resetState()
       this.loading = true
-      axios.get(`https://thingproxy.freeboard.io/fetch/https://min-api.cryptocompare.com/data/histohour?fsym=OOT&tsym=USD&limit=100`)
+      if (days == null) {
+        days = 25
+      }
+      axios.get(`https://thingproxy.freeboard.io/fetch/https://min-api.cryptocompare.com/data/histohour?fsym=OOT&tsym=USD&limit=` + days)
         .then(response => {
           this.prices = response.data.Data.map(entry => entry.close)
           this.labels = response.data.Data.map(entry => this.fixTime(entry.time))
