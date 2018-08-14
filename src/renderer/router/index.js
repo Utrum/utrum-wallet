@@ -18,6 +18,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Buy from '@/components/WalletViews/Buy/Buy.vue';
 import Hodl from '@/components/WalletViews/Hodl/Hodl.vue';
+import Chart from '@/components/WalletViews/Chart/Chart.vue';
 import LoginForm from '@/components/LoginForm/LoginForm.vue';
 import Home from '@/components/Home/Home.vue';
 import CreatePassphrase from '@/components/CreatePassphrase/CreatePassphrase.vue';
@@ -81,6 +82,11 @@ export default new Router({
           path: '/social',
           name: 'social',
           component: Social,
+        },
+        {
+          path: '/chart',
+          name: 'chart',
+          component: Chart,
         },
       ],
     },

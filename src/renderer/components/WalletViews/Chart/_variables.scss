@@ -1,0 +1,111 @@
+
+body {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: color(text-color);
+  font-family: $base-font-family;
+  font-feature-settings: "kern", "liga", "pnum";
+  font-size: $base-font-size;
+  line-height: $base-line-height;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  background: color(ghost-white);
+}
+
+h1, h2, h3, h4 {
+  font-family: $heading-font-family;
+}
+
+@mixin container() {
+  max-width: $base-container-width;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@mixin fill-parent() {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+@mixin unselectable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+@mixin unclickable {
+  @include unselectable;
+  pointer-events: none;
+}
+
+@mixin hover-active-states() {
+  &:hover, &:focus, &:active {
+    @content;
+  }
+}
+
+@mixin center-vertically() {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@mixin center-horizontally() {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@mixin center() {
+  @include center-vertically();
+  @include center-horizontally();
+  transform: translateX(-50%) translateY(-50%);
+}
+
+@mixin unstyled-list() {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+$colors: (
+  ghost-white: #FAFBFE,
+  fjord: #4F5566,
+  robin-egg-blue: #00C4C9,
+  solitude: #E8E9ED,
+  background-primary: color(ghost-white),
+  background-secondary: color(fjord),
+  text-color: color(fjord),
+  highlight-color: color(robin-egg-blue),
+  dark-gray: color(solitude)
+);
+
+@function color($name) {
+  @if map-has-key(getColors(), $name) {
+    @return map-get(getColors(), $name);
+  } @else {
+    @warn "Color not found: #{$name}";
+    @return #000;
+  }
+}
+
+@function getColors() {
+  @return $colors;
+}
+
+$base-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$heading-font-family: $base-font-family;
+$base-font-size: rem(16);
+$base-line-height: 1.3;
+$base-border-radius: rem(4);
+$base-container-width: rem(1440);

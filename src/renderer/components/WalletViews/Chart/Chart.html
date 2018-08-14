@@ -1,0 +1,15 @@
+<div class="content">
+  <div class="error-message" v-if="showError">
+   {{ errorMessage }}
+  </div>
+  <div v-if="loading" class="loading">
+    🔧  Building Charts ...
+  </div>
+
+  <div class="Chart__container" v-if="loaded" style="width:95%">
+    <div class="Chart__content">
+      <line-chart chart-id="line-daily" v-if="loaded" :chart-data="prices" :chart-labels="labels" @generate="setLinePng"/>
+    </div>
+  </div>
+  </div>
+</div>
