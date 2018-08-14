@@ -16,6 +16,9 @@ export default {
       errorMessage: 'Please enter a time frame',
       periodStart: '',
       periodEnd: new Date(),
+      day: 'none',
+      week: 'none',
+      month: 'none',
       rawData: '',
       linePng: null
     }
@@ -41,13 +44,16 @@ export default {
       var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + min + ':' + sec + sec
       return time
     },
-    requestData (days) {
+    requestData (ticks) {
       this.resetState()
       this.loading = true
-      if (days == null) {
-        days = 25
+      if (ticks == null) {
+        ticks = 24
       }
-      axios.get(`https://thingproxy.freeboard.io/fetch/https://min-api.cryptocompare.com/data/histohour?fsym=OOT&tsym=USD&limit=` + days)
+      this.day = (ticks == 24) ? 'underline !important' : 'none'
+      this.week = (ticks == 168) ? 'underline !important' : 'none'
+      this.month = (ticks == 720) ? 'underline !important' : 'none'
+      axios.get(`https://thingproxy.freeboard.io/fetch/https://min-api.cryptocompare.com/data/histohour?fsym=OOT&tsym=USD&limit=` + ticks)
         .then(response => {
           this.prices = response.data.Data.map(entry => entry.close)
           this.labels = response.data.Data.map(entry => this.fixTime(entry.time))
