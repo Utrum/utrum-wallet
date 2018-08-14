@@ -85,6 +85,7 @@
     "bootstrap": "^4.0.0",
     "bootstrap-sass": "^3.3.7",
     "bootstrap-vue": "^2.0.0-rc.6",
+    "chart.js": "^2.7.2",
     "coinselect": "^3.1.11",
     "crypto-js": "^3.1.9-1",
     "electron-debug": "^1.4.0",
@@ -109,6 +110,7 @@
     "typeface-montserrat": "0.0.54",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "vue": "^2.3.3",
+    "vue-chartjs": "^3.4.0",
     "vue-clipboard2": "0.0.8",
     "vue-electron": "^1.0.6",
     "vue-loaders": "^2.0.0",
@@ -119,6 +121,7 @@
     "vue-toasted": "^1.1.24",
     "vuex": "^2.3.1",
     "wif": "^2.0.6",
+    "yarn": "^1.9.4",
     "yui-lint": "^0.2.0"
   },
   "devDependencies": {
