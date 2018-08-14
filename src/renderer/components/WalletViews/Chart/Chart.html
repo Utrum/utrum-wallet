@@ -1,0 +1,20 @@
+<div class="content">
+  <h3>OOT Price Chart</h3>
+  <div class="error-message" v-if="showError">
+   {{ errorMessage }}
+  </div>
+  <div v-if="loading" class="loading">
+    🔧  Building Charts ...
+  </div>
+  <div class="Chart__container" v-if="loaded" style="width:95%">
+    <div class="Chart__content">
+      <div class="date-selectors">
+        <a v-bind:style="{'text-decoration': day}" v-on:click="requestData(24)">Today</a>
+        <a v-bind:style="{'text-decoration': week}" v-on:click="requestData(168)">This Week</a>
+        <a v-bind:style="{'text-decoration': month}" v-on:click="requestData(720)">This Month</a>
+      </div>
+      <line-chart chart-id="line-daily" v-if="loaded" :chart-data="prices" :chart-labels="labels" @generate="setLinePng"/>
+    </div>
+  </div>
+  </div>
+</div>

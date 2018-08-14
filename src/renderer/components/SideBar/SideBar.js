@@ -24,6 +24,7 @@ export default {
       hodlState: false,
       withdrawalState: false,
       socialState: false,
+      chartState: false,
     };
   },
   methods: {
@@ -32,24 +33,35 @@ export default {
       this.hodlState = false;
       this.withdrawalState = false;
       this.socialState = false;
+      this.chartState = false;
     },
     hodlClicked() {
       this.balanceState = false;
       this.hodlState = true;
       this.withdrawalState = false;
       this.socialState = false;
+      this.chartState = false;
     },
     withdrawalClicked() {
       this.balanceState = false;
       this.hodlState = false;
       this.withdrawalState = true;
       this.socialState = false;
+      this.chartState = false;
     },
     socialClicked() {
       this.balanceState = false;
       this.hodlState = false;
       this.withdrawalState = false;
       this.socialState = true;
+      this.chartState = false;
+    },
+    chartClicked() {
+      this.balanceState = false;
+      this.hodlState = false;
+      this.withdrawalState = false;
+      this.socialState = false;
+      this.chartState = true;
     },
   },
   computed: {
