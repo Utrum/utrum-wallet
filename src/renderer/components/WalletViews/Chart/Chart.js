@@ -33,7 +33,7 @@ export default {
       this.showError = false
     },
     fixTime (unix) {
-      var a = new Date(unix * 1000)
+      var a = new Date(unix)
       var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
       var year = a.getFullYear()
       var month = months[a.getMonth()]
@@ -41,22 +41,22 @@ export default {
       var hour = a.getHours()
       var min = a.getMinutes()
       var sec = a.getSeconds()
-      var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + min + ':' + sec + sec
+      var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec
       return time
     },
-    requestData (ticks) {
+    requestData (days) {
       this.resetState()
       this.loading = true
-      if (ticks == null) {
-        ticks = 24
+      if (days == null) {
+        days = 1
       }
-      this.day = (ticks == 24) ? 'underline !important' : 'none'
-      this.week = (ticks == 168) ? 'underline !important' : 'none'
-      this.month = (ticks == 720) ? 'underline !important' : 'none'
-      axios.get(`https://thingproxy.freeboard.io/fetch/https://min-api.cryptocompare.com/data/histohour?fsym=OOT&tsym=USD&limit=` + ticks)
+      this.day = (days == 1) ? 'underline !important' : 'none'
+      this.week = (days == 7) ? 'underline !important' : 'none'
+      this.month = (days == 30) ? 'underline !important' : 'none'
+      axios.get(`https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days=` + days)
         .then(response => {
-          this.prices = response.data.Data.map(entry => entry.close)
-          this.labels = response.data.Data.map(entry => this.fixTime(entry.time))
+          this.prices = response.data.prices.map(entry => entry[1])
+          this.labels = response.data.prices.map(entry => this.fixTime(entry[0]))
           this.loaded = true
           this.loading = false
         })
