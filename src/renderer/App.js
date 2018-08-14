@@ -51,9 +51,9 @@ export default {
       }
     },
     isClientUpdated() {
-      if (this.$store.getters.getConfig != null && this.$store.getters.getConfig.client != null) {
-        return this.$store.getters.getConfig.client.version === Number(pjson.version.split('.')[0]);
-      }
+      //if (this.$store.getters.getConfig != null && this.$store.getters.getConfig.client != null) {
+        //return this.$store.getters.getConfig.client.version === Number(pjson.version.split('.')[0]);
+      //}
       return true;
     },
     userLoggedIn() {
