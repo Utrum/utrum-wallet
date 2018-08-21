@@ -2,8 +2,7 @@
 
 Official "Utrum Wallet" based on Electrum.
 OOT/ KMD / BTC wallet with basic features: balances, withdrawals & history.
-HODL feature for earning rewards of OOT coin
-This wallet is based on the work of the Monaize team.
+HODL feature for earning rewards of OOT coin.
 
 #### Build Setup
 
@@ -25,8 +24,9 @@ yarn test
 ```
 #### Contributions
 
-If you find a bug or you want to propose a feature, you should create a issue on our Github repo. (example: ```fix|feat(scope): Issue```)
+This wallet is based on the work of the Monaize team.
 
+If you find a bug or you want to propose a feature, you should create an [issue](https://github.com/Utrum/utrum-wallet/issues/new) on Github.
 
 #### Software license
 
