@@ -1,7 +1,9 @@
 # Utrum Wallet
 
 Official "Utrum Wallet" based on Electrum.
+
 OOT/ KMD / BTC wallet with basic features: balances, withdrawals & history.
+
 HODL feature for earning rewards of OOT coin.
 
 #### Build Setup
