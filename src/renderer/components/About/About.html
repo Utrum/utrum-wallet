@@ -1,0 +1,32 @@
+<div class="content">
+  <div class="header-about">
+    <div class="d-flex justify-content-center">
+      <h5 @click="closeAbout">About <img src="~@/assets/icon-close.svg" alt="close"></h5>
+    </div>
+    <hr/>
+  </div>
+  <div class="container-about">
+    <div class="d-flex flex-row">
+      <ul class="list-unstyled side-bar">
+        <li>
+          <router-link active-class="active" tag="a" to="version">Version</router-link>
+        </li>
+        <li>
+          <router-link active-class="active" tag="a" to="terms-and-conditions">Terms & Conditions</router-link>
+        </li>
+        <li>
+          <router-link active-class="active" tag="a" to="disclamer">Ico Disclamer</router-link>
+        </li>
+        <li>
+          <router-link active-class="active" tag="a" to="website">Website</router-link>
+        </li>
+        <li>
+          <router-link active-class="active" tag="a" to="library">Library</router-link>
+        </li>
+      </ul>
+      <router-view id="content-about"></router-view>
+    </div>
+  </div>
+
+
+</div>

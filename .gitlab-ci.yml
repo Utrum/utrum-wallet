@@ -1,0 +1,136 @@
+image: timbru31/node-alpine-git:latest
+
+stages:
+  - lint
+  - build
+  - publish
+
+lint:
+  except:
+    - tags
+  stage: lint
+  cache:
+    paths:
+      - node_modules/
+  script:
+    - yarn
+    - yarn eslint
+
+# test:
+#   except:
+#     - tags
+#   stage: test
+#   script:
+#     - yarn test
+
+
+# build for mac:
+#   stage: build installer
+#   tags:
+#     - osx
+#     - shell
+#   # only: master
+#   script:
+#     - nvm install 8.9
+#     - yarn run build -m
+#     - ls build/*.zip && ls build/*.dmg
+#   artifacts:
+#     paths:
+#       - build/*.zip
+#       - build/*.dmg
+
+
+.build: &build_definition
+  image: electronuserland/builder:wine
+  stage: build
+  only:
+    - tags
+  cache:
+    paths:
+      - node_modules
+  script:
+    - yarn --ignore-engines
+    - yarn run build -lwm
+  artifacts:
+    expire_in: '1 hour'
+    paths:
+      - build/mnz-wallet-*
+
+build_staging:
+  <<: *build_definition
+  variables:
+    WALLET_ENV: staging
+
+build_preprod:
+  variables:
+    WALLET_ENV: preprod
+  <<: *build_definition
+
+
+build_prod-internal:
+  variables:
+    WALLET_ENV: prod-internal
+  <<: *build_definition
+
+build_prod-preico:
+  variables:
+    WALLET_ENV: prod-preico
+  <<: *build_definition
+
+.private_release: &private_release
+  image: alpine
+  stage: publish
+  only:
+    - tags
+  before_script:
+    - apk add --no-cache openssh-client curl
+    - eval $(ssh-agent -s)
+    - echo "${SSH_PRIVKEY_STAGING}" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -p ${SSH_PORT_STAGING} -H ${SSH_HOST_STAGING} >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - export VERSION=$(echo ${CI_BUILD_TAG} | sed 's/v//');
+    - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-setup.exe ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
+    - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
+    - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
+    - "curl -X POST -H 'Content-type: application/json' \
+      --data \"{\\\"text\\\":\\\"MNZ Wallet ${WALLET_ENV} Release ${CI_BUILD_TAG}!\n \
+http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-setup.exe \n \
+http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage \n \
+http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip \n \
+      \\\"}\" \
+      ${SLACK_HOOK_URL}"
+
+staging release:
+  variables:
+    WALLET_ENV: staging
+  <<: *private_release
+
+prod-internal release:
+  variables:
+    WALLET_ENV: prod-internal
+  <<: *private_release
+
+prod-preico release:
+  variables:
+    WALLET_ENV: prod-preico
+  <<: *private_release
+
+preprod release:
+  image: monaize/gitlab-release
+  stage: publish
+  variables:
+    WALLET_ENV: preprod
+  only:
+    - tags
+  script:
+    - VERSION=$(echo ${CI_BUILD_TAG} | sed 's/v//'); gitlab-release --message "MNZ Wallet ${WALLET_ENV} ${CI_BUILD_TAG} Release"
+      build/mnz-wallet-${VERSION}-${WALLET_ENV}-setup.exe
+      build/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage
+      build/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip
+    - "curl -X POST -H 'Content-type: application/json' \
+      --data \"{\\\"text\\\":\\\"MNZ Wallet ${WALLET_ENV} Release ${CI_BUILD_TAG}! Go <https://gitlab.com/monaize-mnz/mnz-wallet/tags/${CI_BUILD_TAG}|here> to download it ! \\\"}\" \
+      ${SLACK_HOOK_URL}"
+

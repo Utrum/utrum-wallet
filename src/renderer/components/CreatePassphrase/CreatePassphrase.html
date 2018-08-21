@@ -1,0 +1,56 @@
+<div>
+  <div class="content-createpassphrase row-main-item">
+    <div v-on:click="backArrow" v-if="(step2 || step3)" id="back-arrow" class="row-custom">
+      <img src="~@/assets/icon-back.svg">
+      <p>Back</p>
+    </div>
+
+    <img id="icon-login" src="~@/assets/icon-login-monaize.svg" height="60" class="col-custom">
+    <h3 class="col-custom">CREATE PASSPHRASE</h3>
+    <div v-if="step1" class="col-custom">
+      <p>
+        Your Backup Phrase is used to gain access to and restore funds in your Monaize ICO Platform wallet.
+      </p>
+      <p>
+        On the next screen, you will see a set of 24 random words which you will need to write down using a pen and paper. Please keep this Backup Phrase in a secure location and do not share it with anyone who sould not be authorized to access your funds.
+      </p>
+      <p>
+      By creating your Backup phrase you acknowledge that Monaize Pte. Ltd. Singapore is not responsible for transferring, safeguarding, or maintaining the Backup Phrase and/or Digital Currency associated with the Wallet.</p>	
+    </div>
+    <div v-if="step2" class="col-custom">
+      <p>
+        Please write down the set of words below in the exact sequence. You will be asked to re-enter your Backup Phrase on the next screen in order to ensure accuracy.
+      </p>
+      <div class="passphrase-generated">
+        {{getRandomPassphrase()}}
+      </div>
+    </div>
+    <div v-if="step3" class="row-main-item">
+      <p class="col-custom">Please enter your 24-word Backup Phrase to ensure you have written it down correctly. 
+      </p>
+      <textarea v-on:keyup="checkPassphrase" v-model="passphraseValue" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="create-passphrase-input" class="col-custom" type="text" onPaste="return false" name="input-login" onDrag="return false" onDrop="return false" autocomplete=off
+      ></textarea>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="row-custom">
+      <div v-if="step1">
+        <button v-on:click="cancelCreate" id="btn-not-now" class="col-custom btn-round-light">
+          Not now
+        </button>
+        <button v-on:click="generatePassphrase" id="generate-passphrase" class="col-custom btn-round-purple">
+          Generate passphrase
+        </button>
+      </div>
+      <button v-on:click="continueCreate" v-if="step2" id="btn-continue" class="col-custom btn-round-light">
+        <div class="row-custom">
+          <p class="col-custom">Continue</p>
+          <img class="col-custom" src="~@/assets/icon-continue.svg">
+        </div>
+      </button>
+      <button :class="disabledBtn" v-if="step3" @click.prevent="validatePassPhrase()" id="btn-confirm" class="col-custom btn-round-light" type="button">
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>

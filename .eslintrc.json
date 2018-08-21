@@ -1,0 +1,50 @@
+{
+  "extends": "airbnb-base",
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "header"
+  ],
+  "rules": {
+    "header/header": [2, "LEGAL/HEADER_FILE"],
+    "import/no-unresolved": ["off"],
+    "no-shadow": ["off"],
+    "no-param-reassign": ["off"],
+    "no-bitwise": ["off"],
+    "import/no-extraneous-dependencies": [
+      "error", {
+        "devDependencies": true
+      }
+    ],
+    "no-multi-spaces": ["off"],
+    "indent": ["error", 2, {"SwitchCase": 1}],
+    "max-len": ["error", {"code": 140, "ignoreComments": true}],
+    "padded-blocks": ["off"],
+    "consistent-return": ["off"],
+    "arrow-parens": ["off"],
+    "object-shorthand": ["off"],
+    "no-use-before-define": ["off"],
+    "no-console": ["error"],
+    "valid-jsdoc": ["error"],
+    "require-jsdoc": ["error"],
+    "strict": ["error", "global"],
+    "semi": ["error", "always"],
+    "key-spacing": ["error", {"beforeColon": false, "afterColon": true, "mode": "minimum"}],
+    "new-cap": ["error", {"newIsCap": true, "capIsNew": false}],
+    "vars-on-top": ["off"],
+    "func-names": ["off"],
+    "newline-per-chained-call": ["off"],
+    "no-underscore-dangle": ["off"],
+    "arrow-body-style": ["off"],
+    "import/no-dynamic-require": ["off"],
+    "max-params": ["error", 6],
+    "prefer-arrow-callback": 1
+  },
+  "globals": {
+    "$": true,
+    "jQuery": true
+  }
+}
+

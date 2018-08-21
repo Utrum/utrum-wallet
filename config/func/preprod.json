@@ -1,0 +1,17 @@
+{
+  "updateLink" : "https://gitlab.com/monaize-mnz/mnz-wallet/tags",
+  "minConfirmations": 1,
+  "enabledCoins": ["TESTBTC", "TESTKMD", "TESTMNZ"],
+  "wallets": {
+    "testbtc": [
+      "tpubDCXPt5sazzbdHqJ6aBMiZAcoy9st3MproF7vZm2GRsTvvJEZUehLTgqYLuLBEEo9pxT394REZLNpXXkZXinaqKBsKPAj1osKoa33N7VJEgw",
+      "tpubDC4AzbnQ9UrJFNPH1h6UDP1VT2EVtDQmfiwXCcRQjQWgoh9uvr6k8cg8qV5uvNa4dpX8ffxDAgMk8XwTD81h56m8rEz2UxsKFVfWFkXkRzm",
+      "tpubDDhcNJc7x7hqUKmxy24QcRXKDnDu6KjwALVN1H2iCyosvwVEf1p32whrU2MjQUpxcTESxrR5TprBtEfzYHnwKL76hfAncqrzHjnrHYKiMMm"
+    ],
+    "testkmd": [
+      "xpub6C7xyKfDzion6FMDvqGhGNu82LbFnuwqTZEt2LG8bMuBTeCF6A6yACGFEY9duRD8y3vNUB3WDPrnv8RAqJ3NuR4Vos23PW6qZripLENW3Ga",
+      "xpub6CVzhMzBrTr1TsqJwKg3xGnxp2Qkh71wzKbxqvMbEya3acUFPg9dZQ445mfR6MBd9NGSRmcm6zEEuKAkx5EtevEPyCpYzz8TDdsr7omNrvq",
+      "xpub6DQpb26p5LKHPQGfu1grXYkeNkTRgHr563hVb7Xk3z4LoNG2r1hPSK1djxvRHixR1VTWDkv9jdfY25gxg9b1KsYi1EtVNvRzm9mkJv5a4gq"
+    ]
+  }
+}

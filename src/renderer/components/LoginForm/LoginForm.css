@@ -1,0 +1,204 @@
+/** ***************************************************************************
+ * Copyright © 2018 Monaize Singapore PTE. LTD.                               *
+ *                                                                            *
+ * See the AUTHORS, and LICENSE files at the top-level directory of this      *
+ * distribution for the individual copyright holder information and the       *
+ * developer policies on copyright and licensing.                             *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Monaize Singapore PTE. LTD software, including this file may be copied,    *
+ * modified, propagated or distributed except according to the terms          *
+ * contained in the LICENSE file                                              *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/
+
+@import '~typeface-montserrat';
+
+#login {
+	height: 60px;
+}
+
+#create-passphrase {
+	width: 250px;
+}
+
+#img-background {
+	width: 100%;
+	bottom: 0;
+	position: absolute;
+	bottom:0px;
+	z-index: -1;
+	padding: 0px;
+}
+
+.content-login {
+	height: 100vh;
+}
+
+#info-passphrase {
+	font-size: 1em;
+	color: #9b2a87;
+	font-weight: 500;
+}
+
+.input-login .row {
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.btn-send-enabled {
+	padding: 10px;
+	margin-right: 30px;
+	background-color: white;
+	border-radius: 100%;
+	border: none !important;
+	outline: none;
+	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+	height: 50px;
+	margin-top: auto;
+	margin-bottom: auto;
+	opacity: 0.5;
+	transition: 0.5s;
+}
+
+.show-button {
+	opacity: 1;
+	transition: 0.5s;
+}
+
+.btn-send-enabled img {
+	vertical-align: top;
+	opacity: 1;
+	transition: opacity 0.5s;
+}
+
+#icon-login {
+	height: 65px;
+}
+
+.input-login .row-main-item {
+	margin: none;
+}
+
+.content-login span {
+	color: #180d39;
+	font-size: 1.5em;
+}
+
+.input-login {
+	border: 1px solid rgba(24,13,57,0.1);
+	border-radius: 3px;
+	background-color: white;
+	margin-bottom: 15px;
+	padding: 15px;
+}
+
+.middle {
+	vertical-align: middle;
+}
+
+.btn-send-enabled {
+	padding: 10px;
+	margin-right: 30px;
+	background-color: white;
+	border-radius: 100%;
+	border: none !important;
+	outline: none;
+	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+	height: 50px;
+	margin-top: auto;
+	margin-bottom: auto;
+
+}
+
+.btn-send-enabled img {
+	vertical-align: top;
+	opacity: 1;
+	transition: opacity 0.5s;
+}
+
+.btn-send-disabled {
+	padding: 10px;
+	margin-right: 30px;
+	background-color: white;
+	border-radius: 100%;
+	border: none !important;
+	outline: none;
+	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+	height: 100%;
+	margin-top: auto;
+	margin-bottom: auto;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.btn-send-disabled img {
+	vertical-align: top;
+	opacity: 0.1;
+	transition: opacity 0.5s;
+}
+
+#passphrase-show {
+	width: 100%;
+	text-align: center;
+	border: none !important;
+	outline: none;
+	background-color: transparent;
+	font-size: 1.5em;
+}
+
+#passphrase-hide {
+	width: 100%;
+	text-align: center;
+	border: none !important;
+	outline: none;
+	background-color: transparent;
+	font-size: 1em;
+}
+
+#passphrase-hide::-webkit-input-placeholder {
+	text-align: center;
+	font-weight: 400;
+	font-size: 1.2em;
+	color: rgba(0,0,0,0.5);
+}
+
+#passphrase-show::-webkit-input-placeholder {
+	text-align: center;
+	font-weight: 400;
+	font-size: 0.8em;
+	color: rgba(0,0,0,0.5);
+}
+
+textarea {
+	resize: none;
+}
+
+.row-main-item {
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.col {
+	flex-grow: 1;
+}
+
+.row {
+	margin: 0px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.btn-round-light  {
+	outline: none;
+}
+
+.icon-mdp {
+	margin-left: 20px;
+	margin-right: 20px;
+}

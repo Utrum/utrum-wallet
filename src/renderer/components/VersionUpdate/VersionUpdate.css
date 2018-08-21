@@ -1,0 +1,45 @@
+/** ***************************************************************************
+ * Copyright © 2018 Monaize Singapore PTE. LTD.                               *
+ *                                                                            *
+ * See the AUTHORS, and LICENSE files at the top-level directory of this      *
+ * distribution for the individual copyright holder information and the       *
+ * developer policies on copyright and licensing.                             *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Monaize Singapore PTE. LTD software, including this file may be copied,    *
+ * modified, propagated or distributed except according to the terms          *
+ * contained in the LICENSE file                                              *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/
+
+.row-main-item {
+  text-align: center;
+}
+
+h3 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-weight: 400;
+  font-size: 1.5em;
+}
+
+p {
+  width: 400px;
+  color: black;
+  font-weight: 400;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #7c398a;
+}
+
+.flex-center-vertically {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 90vh;
+}

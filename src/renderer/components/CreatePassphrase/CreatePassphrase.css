@@ -1,0 +1,185 @@
+/** ***************************************************************************
+ * Copyright © 2018 Monaize Singapore PTE. LTD.                               *
+ *                                                                            *
+ * See the AUTHORS, and LICENSE files at the top-level directory of this      *
+ * distribution for the individual copyright holder information and the       *
+ * developer policies on copyright and licensing.                             *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Monaize Singapore PTE. LTD software, including this file may be copied,    *
+ * modified, propagated or distributed except according to the terms          *
+ * contained in the LICENSE file                                              *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/
+
+.content-createpassphrase {
+	align-items: center;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+.input-createpassphrase .row-main-item {
+	margin: none;
+}
+
+.content-createpassphrase span {
+	margin-top: 35px;
+	color: #180d39;
+	font-size: 1.5em;
+}
+
+.content-createpassphrase h3 {
+	text-align: center;
+	margin-bottom: 40px;
+	margin-top: 40px;
+}
+
+.content-createpassphrase p {
+	text-align: center;
+	margin:auto;
+	width:80%;
+	padding-bottom: 20px;
+	-ms-text-align-last: center;
+	-moz-text-align-last: center;
+	text-align-last: center;
+}
+
+.content-createpassphrase p:last-child {
+	-ms-text-align-last: center;
+	-moz-text-align-last: center;
+	text-align-last: center;
+}
+
+.footer {
+	position: fixed;
+	background-color: white;
+	padding: 70px;
+	padding-left: 100px;
+	padding-right: 100px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.footer .row {
+	justify-content: center;
+}
+
+#btn-not-now {
+	margin-right: 20px;
+}
+
+#generate-passphrase {
+	margin-left: 20px;
+}
+
+.btn-round-purple {
+	min-height: 50px;
+	min-width: 210px;
+	width: 210px;
+	font-weight: 500;
+	outline: none;
+	border: none;
+	color: white;
+	background-color: #7c398a;
+	border-radius: 50px;
+	padding: 10px;
+	padding-right: 15px;
+	padding-left: 15px;
+	cursor: pointer;
+}
+
+.passphrase-generated {
+	border: 2px solid rgba(24,13,57,0.1);
+	font-size: 1.2em;
+	text-align: center;
+	border-radius: 4px;
+	font-weight: 400;
+	color: #687078;
+	padding: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	user-select: none;          /* Likely future */   
+}
+
+#btn-continue {
+	min-height: 50px;
+	max-height: 50px;
+	padding: 0px;
+}
+
+#btn-continue p {
+	font-weight: 400;
+	color: #180d39;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 45px;
+}
+
+#create-passphrase-input {
+	border: 2px solid rgba(24,13,57,0.1);
+	font-size: 1.2em;
+	outline: none;
+	text-align: center;
+	border-radius: 4px;
+	font-weight: 400;
+	color: #687078;
+	padding: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
+
+.disabledBtn {
+	cursor: not-allowed;
+	color: rgba(0,0,0,0.1);
+	border: 2px solid rgba(24,13,57,0.1);
+}
+
+#back-arrow {
+	position: fixed;
+	top: 40px;
+	left: 140px;
+	cursor: pointer;
+}
+
+#back-arrow p {
+	color: #7c398a;
+	font-weight: 400;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 15px;
+	padding-bottom: 5px;
+}
+
+#back-arrow img {
+	align-self: flex-start;
+}
+
+.row-main-item {
+	flex-direction: column;
+	justify-content: center;
+}
+
+.row-custom { 
+	margin: 0px;
+	display: flex;
+	justify-content: center;
+}
+
+.col-custom {
+	flex-grow: 1;
+}
+
+.btn-round-light {
+	min-width: 210px;
+	max-width: 210px;
+	width: 210px;
+	outline: none;
+}

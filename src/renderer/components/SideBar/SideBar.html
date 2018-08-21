@@ -1,0 +1,39 @@
+<nav id="sidebar">
+  <div class="logo">
+    <img src="~@/assets/icon-logo-monaize.svg" />
+  </div>
+  <ul class="list-unstyled">
+    <li v-on:click="balanceClicked">
+      <router-link  active-class="active" tag="a" to="balance">
+        <img v-if="balanceState" id="icon-balances" src="~@/assets/icon-balances.svg" class="number-view" />
+        <img v-else id="icon-balances" src="~@/assets/icon-balances-grey.svg" class="number-view" />
+        RECEIVE
+      </router-link>
+    </li>
+    <!-- <li v-on:click="buyMnzClicked" v-if="hasPlannedIco">
+      <router-link active-class="active" tag="a" to="buy">
+        <img v-if="buyMnzState" id="icon-buy-mnz" src="~@/assets/icon-buy-mnz.svg" class="number-view" />
+        <img v-else id="icon-buy-mnz" src="~@/assets/icon-buy-mnz-grey.svg" class="number-view" />
+        <span v-if="icoIsRunning">BUY MNZ</span>
+        <span else>ICO</span>
+      </router-link>
+    </li> -->
+    <li v-on:click="withdrawalClicked">
+      <router-link  active-class="active" tag="a" to="withdraw">
+        <img v-if="withdrawalState" id="icon-withdrawal" src="~@/assets/icon-withdrawal.svg" class="number-view" />
+        <img v-else id="icon-withdrawal" src="~@/assets/icon-withdrawal-grey.svg" class="number-view" />
+        SEND
+      </router-link>
+    </li>
+    <li v-on:click="socialClicked">
+        <router-link  active-class="active" tag="a" to="social">
+          <img v-if="socialState" id="icon-social" src="~@/assets/icon-social_2.svg" class="number-view" />
+          <img v-else id="icon-social" src="~@/assets/icon-social_2-grey.svg" class="number-view" />
+          SOCIAL
+        </router-link>
+      </li>
+  </ul>
+  <a href="" id="logout" @click="$store.dispatch('logout')">
+    <p><img id="icon-logout" src="~@/assets/icon-logout.svg"/>Log out</p>
+  </a>
+</nav>
