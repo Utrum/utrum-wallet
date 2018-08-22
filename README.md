@@ -12,7 +12,7 @@ HODL feature for earning rewards of OOT coin.
 ## (npm and yarn friendly)
 
 # install dependencies
-yarn install
+cd utrum-wallet && yarn install
 
 # serve with hot reload at localhost:9080
 yarn run start-prod-internal
