@@ -14,14 +14,34 @@
  *                                                                            *
  ******************************************************************************/
 
+import bitcoinjs from 'bitcoinjs-lib';
 import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
 import store from '../../../store';
 import ElectrumService from '../../../lib/electrum';
+import { BigNumber } from 'bignumber.js';
 
 export default {
   name: 'balance',
   components: {
     'balance-item': BalanceItem,
+  },
+  data() {
+    return {
+      satoshiNb: 100000000,
+      blocks: 1,
+      estimatedFee: 0,
+      feeSpeed: 'fast',
+      fees: [
+        { id: 0, label: 'Very fast', speed: 'fast', value: 'veryFast' },
+        { id: 1, label: 'Fast', speed: 'medium', value: 'fast' },
+        { id: 2, label: 'Low', speed: 'slow', value: 'low' },
+      ],
+      withdraw: {
+        amount: null,
+        address: '',
+        coin: 'KMD',
+      },
+    };
   },
   mounted() {
     Object.keys(this.wallets).forEach((ticker) => {
@@ -35,18 +55,59 @@ export default {
     numberWithSpaces(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
-    claimRewards() {
+    prepareTx() {
       wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
-      const amount = wallet.electrum.getBalance(this.$store.getters.getWalletByTicker('KMD').address);
+      const amountpromise = wallet.electrum.getBalance(this.$store.getters.getWalletByTicker('KMD').address);
+      const kmdwallet = this.wallets.KMD;
+      var amount;
+      amountpromise.then(function(confirmed) {
+        amount = confirmed.confirmed;
 
-      const object = {
-        wallet: this.wallet,
-        address: this.$store.getters.getWalletByTicker('KMD').address,
-        amount,
-        speed: this.speed,
-      };
+        const object = {
+          wallet: kmdwallet,
+          address: this.$store.getters.getWalletByTicker('KMD').address,
+          amount,
+          speed: 'Fast',
+        };
 
-      console.log(object);
+        return this.$store.dispatch('createTransaction', object)
+          .then((tx) => {
+            if (tx != null &&
+              tx.outputs != null &&
+              tx.inputs != null) {
+              this.estimatedFee = BigNumber(tx.fee);
+            } else if (tx != null && tx.feeRate != null) {
+              this.estimatedFee = BigNumber(tx.feeRate);
+            }
+            return tx;
+          })
+          ;
+      });
+    },
+    claimRewards() {
+      // if (this.canWithdraw === true && this.addressIsValid === true) {
+      if (true) {
+        return this.prepareTx()
+          .then(tx => {
+            if (tx != null && tx.feeRate != null) {
+              return Promise.reject({ message: 'Not enough balance including fees.' });
+            }
+            console.log("WORKS");
+            // return this.$store.dispatch('broadcastTransaction', { wallet: this.wallet, ...tx });
+          })
+          .then((response) => {
+            this.withdraw.amount = null;
+            this.withdraw.address = '';
+            alert(this, response);
+          })
+          .catch(error => {
+            if (error.__type !== null && BigNumber(this.withdraw.amount).comparedTo(21000000) === 1) {
+              this.$toasted.info("You can't send more than 21 million at once");
+            } else {
+              this.$toasted.error(`Can't send transaction: ${error.message}`);
+            }
+          });
+      }
     },
   },
   computed: {
