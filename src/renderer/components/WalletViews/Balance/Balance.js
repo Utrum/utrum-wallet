@@ -15,6 +15,8 @@
  ******************************************************************************/
 
 import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
+import store from '../../../store';
+import ElectrumService from '../../../lib/electrum';
 
 export default {
   name: 'balance',
@@ -32,6 +34,19 @@ export default {
   methods: {
     numberWithSpaces(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
+    claimRewards() {
+      wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
+      const amount = wallet.electrum.getBalance(this.$store.getters.getWalletByTicker('KMD').address);
+
+      const object = {
+        wallet: this.wallet,
+        address: this.$store.getters.getWalletByTicker('KMD').address,
+        amount,
+        speed: this.speed,
+      };
+
+      console.log(object);
     },
   },
   computed: {

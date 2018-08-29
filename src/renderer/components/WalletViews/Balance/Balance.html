@@ -9,6 +9,7 @@
     </div>
   </div>
   <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
+    <button v-if="wallet.ticker === 'KMD'" class="btn btn-tx pointer" id="btn" v-on:click="claimRewards()">Claim</button>
     <balance-item :wallet="wallet"/>
   </div>
 </div>
