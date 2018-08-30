@@ -54,7 +54,7 @@ lint:
   artifacts:
     expire_in: '1 hour'
     paths:
-      - build/mnz-wallet-*
+      - build/utrum-wallet-*
 
 build_staging:
   <<: *build_definition
@@ -92,14 +92,14 @@ build_prod-preico:
     - chmod 644 ~/.ssh/known_hosts
   script:
     - export VERSION=$(echo ${CI_BUILD_TAG} | sed 's/v//');
-    - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-setup.exe ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
-    - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
-    - scp -P ${SSH_PORT_STAGING} build/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
+    - scp -P ${SSH_PORT_STAGING} build/utrum-wallet-${VERSION}-${WALLET_ENV}-setup.exe ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
+    - scp -P ${SSH_PORT_STAGING} build/utrum-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
+    - scp -P ${SSH_PORT_STAGING} build/utrum-wallet-${VERSION}-${WALLET_ENV}-mac.zip ${SSH_USER_STAGING}@${SSH_HOST_STAGING}:www/downloads
     - "curl -X POST -H 'Content-type: application/json' \
       --data \"{\\\"text\\\":\\\"MNZ Wallet ${WALLET_ENV} Release ${CI_BUILD_TAG}!\n \
-http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-setup.exe \n \
-http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage \n \
-http://${SSH_HOST_STAGING}/downloads/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip \n \
+http://${SSH_HOST_STAGING}/downloads/utrum-wallet-${VERSION}-${WALLET_ENV}-setup.exe \n \
+http://${SSH_HOST_STAGING}/downloads/utrum-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage \n \
+http://${SSH_HOST_STAGING}/downloads/utrum-wallet-${VERSION}-${WALLET_ENV}-mac.zip \n \
       \\\"}\" \
       ${SLACK_HOOK_URL}"
 
@@ -127,10 +127,10 @@ preprod release:
     - tags
   script:
     - VERSION=$(echo ${CI_BUILD_TAG} | sed 's/v//'); gitlab-release --message "MNZ Wallet ${WALLET_ENV} ${CI_BUILD_TAG} Release"
-      build/mnz-wallet-${VERSION}-${WALLET_ENV}-setup.exe
-      build/mnz-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage
-      build/mnz-wallet-${VERSION}-${WALLET_ENV}-mac.zip
+      build/utrum-wallet-${VERSION}-${WALLET_ENV}-setup.exe
+      build/utrum-wallet-${VERSION}-${WALLET_ENV}-x86_64.AppImage
+      build/utrum-wallet-${VERSION}-${WALLET_ENV}-mac.zip
     - "curl -X POST -H 'Content-type: application/json' \
-      --data \"{\\\"text\\\":\\\"MNZ Wallet ${WALLET_ENV} Release ${CI_BUILD_TAG}! Go <https://gitlab.com/monaize-mnz/mnz-wallet/tags/${CI_BUILD_TAG}|here> to download it ! \\\"}\" \
+      --data \"{\\\"text\\\":\\\"Utrum Wallet ${WALLET_ENV} Release ${CI_BUILD_TAG}! Go <https://gitlab.com/Utrum/utrum-wallet/tags/${CI_BUILD_TAG}|here> to download it ! \\\"}\" \
       ${SLACK_HOOK_URL}"
 

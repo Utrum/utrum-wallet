@@ -1088,8 +1088,8 @@
   {
     "license": "GPL-2.0",
     "source": "package.json",
-    "id": "mnz-wallet@0.7.7",
-    "name": "mnz-wallet",
+    "id": "utrum-wallet@0.7.7",
+    "name": "utrum-wallet",
     "version": "0.7.7"
   },
   {
