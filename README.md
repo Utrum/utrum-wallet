@@ -47,4 +47,4 @@ If you find a bug or you want to propose a feature, you should create an [issue]
 
 #### Software license
 
-The Utrum Wallet repository is licensed under the GNU General Public License v3.0, also included in our repository in the [COPYING](https://gitlab.com/Utrum/utrum-wallet/blob/master/LEGAL/COPYING) file.
+The Utrum Wallet repository is licensed under the GNU General Public License v3.0, also included in our repository in the [COPYING](https://github.com/Utrum/utrum-wallet/blob/develop/LEGAL/COPYING) file.
