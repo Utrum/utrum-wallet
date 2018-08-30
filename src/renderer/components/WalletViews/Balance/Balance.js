@@ -59,8 +59,9 @@ export default {
       wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
       const amountpromise = wallet.electrum.getBalance(this.$store.getters.getWalletByTicker('KMD').address);
       const t = this;
-      amountpromise.then(function(confirmed) {
+      return amountpromise.then(function(confirmed) {
         const amount = confirmed.confirmed;
+        t.withdraw.amount = amount;
 
         const object = {
           wallet: t.wallets.KMD,
@@ -78,21 +79,20 @@ export default {
             } else if (tx != null && tx.feeRate != null) {
               t.estimatedFee = BigNumber(tx.feeRate);
             }
-            console.log(tx);
             return tx;
           });
       });
     },
     claimRewards() {
       // if (this.canWithdraw === true && this.addressIsValid === true) {
+      const kmdwallet = this.wallets.KMD;
       if (true) {
         return this.prepareTx()
           .then(tx => {
             if (tx != null && tx.feeRate != null) {
               return Promise.reject({ message: 'Not enough balance including fees.' });
             }
-            console.log("WORKS");
-            // return this.$store.dispatch('broadcastTransaction', { wallet: this.wallet, ...tx });
+            return this.$store.dispatch('broadcastTransaction', { wallet: kmdwallet, ...tx });
           })
           .then((response) => {
             this.withdraw.amount = null;
