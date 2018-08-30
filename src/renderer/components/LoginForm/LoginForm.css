@@ -92,8 +92,8 @@
 	border: 1px solid rgba(24,13,57,0.1);
 	border-radius: 3px;
 	background-color: white;
-	margin-bottom: 15px;
-	padding: 15px;
+	/*margin-bottom: 15px;
+	padding: 15px;*/
 }
 
 .middle {
@@ -102,7 +102,7 @@
 
 .btn-send-enabled {
 	padding: 10px;
-	margin-right: 30px;
+	margin-right: 5px;
 	background-color: white;
 	border-radius: 100%;
 	border: none !important;
@@ -199,6 +199,6 @@ textarea {
 }
 
 .icon-mdp {
-	margin-left: 20px;
+	margin-left: 5px;
 	margin-right: 20px;
 }
