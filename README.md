@@ -24,20 +24,6 @@ yarn run build-prod-internal
 yarn test
 
 ```
-#### Troubleshooting
-
-Error in Ubuntu while running build-prod-internal "ERROR: [Errno 2] No such file or directory: 'install'"
-
-To solve this, do the following commands:
-
-``` bash
-sudo apt remove cmdtest
-sudo apt remove yarn
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-sudo apt-get update && sudo apt-get install yarn
-
-```
 
 #### Contributions
 
