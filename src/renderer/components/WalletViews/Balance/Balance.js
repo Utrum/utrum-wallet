@@ -58,30 +58,29 @@ export default {
     prepareTx() {
       wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
       const amountpromise = wallet.electrum.getBalance(this.$store.getters.getWalletByTicker('KMD').address);
-      const kmdwallet = this.wallets.KMD;
-      var amount;
+      const t = this;
       amountpromise.then(function(confirmed) {
-        amount = confirmed.confirmed;
+        const amount = confirmed.confirmed;
 
         const object = {
-          wallet: kmdwallet,
-          address: this.$store.getters.getWalletByTicker('KMD').address,
+          wallet: t.wallets.KMD,
+          address: t.$store.getters.getWalletByTicker('KMD').address,
           amount,
           speed: 'Fast',
         };
 
-        return this.$store.dispatch('createTransaction', object)
+        return t.$store.dispatch('createTransaction', object)
           .then((tx) => {
             if (tx != null &&
               tx.outputs != null &&
               tx.inputs != null) {
-              this.estimatedFee = BigNumber(tx.fee);
+              t.estimatedFee = BigNumber(tx.fee);
             } else if (tx != null && tx.feeRate != null) {
-              this.estimatedFee = BigNumber(tx.feeRate);
+              t.estimatedFee = BigNumber(tx.feeRate);
             }
+            console.log(tx);
             return tx;
-          })
-          ;
+          });
       });
     },
     claimRewards() {
