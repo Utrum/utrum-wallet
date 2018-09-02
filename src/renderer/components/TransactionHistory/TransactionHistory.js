@@ -35,8 +35,8 @@ export default {
       currentPage: 1,
       perPage: 10,
       fields: [
-        { key: 'time', label: 'Date / Hours', sortable: true },
-        { key: 'height', label: 'Block Height' },
+        { key: 'time', label: 'Time Stamp', sortable: true },
+        { key: 'address', label: 'Address' },
         { key: 'confirmations', label: 'Conf' },
         { key: 'amount', label: `Amount (${this.coin.ticker})` },
         { key: 'tx_hash', label: 'TxID' },
@@ -74,7 +74,7 @@ export default {
     },
     dateFormat(time) {
       const blockchainDateUtc = moment.utc(time * 1000);
-      const dateString = moment(blockchainDateUtc).local().format('hh:mm A DD/MM/YYYY');
+      const dateString = moment(blockchainDateUtc).local().format('YYYY-MM-DD hh:mm A');
       return dateString;
     },
     getIconFromTicker(value) {
