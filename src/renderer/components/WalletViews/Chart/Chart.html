@@ -6,9 +6,11 @@
     🔧  Building Charts ...
   </div>
   <div class="Chart__container" v-if="loaded" style="width:95%">
-    <h3 v-bind:style="{'text-decoration': oot}" v-on:click="changeCoin('oot')">OOT Price Chart</h3>
-    <h3 v-bind:style="{'text-decoration': kmd}" v-on:click="changeCoin('kmd')">KMD Price Chart</h3>
-    <h3 v-bind:style="{'text-decoration': btc}" v-on:click="changeCoin('btc')">BTC Price Chart</h3>
+    <div class="titleHold">
+      <h3 v-bind:style="{'text-decoration': oot}" v-on:click="changeCoin('oot')">OOT Price Chart</h3>
+      <h3 v-bind:style="{'text-decoration': kmd}" v-on:click="changeCoin('kmd')">KMD Price Chart</h3>
+      <h3 v-bind:style="{'text-decoration': btc}" v-on:click="changeCoin('btc')">BTC Price Chart</h3>
+    </div>
     <div class="Chart__content">
       <div class="date-selectors">
         <a v-bind:style="{'text-decoration': day}" v-on:click="requestData(1)">Today</a>

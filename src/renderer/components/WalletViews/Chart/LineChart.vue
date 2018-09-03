@@ -107,19 +107,23 @@
     },
     methods: {
       formatNumber (num) {
-        let numString = Math.round(num).toString()
-        let numberFormatMapping = [[6, 'm'], [3, 'k']]
-        for (let [numberOfDigits, replacement] of numberFormatMapping) {
-          if (numString.length > numberOfDigits) {
-            let decimal = ''
-            if (numString[numString.length - numberOfDigits] !== '0') {
-              decimal = '.' + numString[numString.length - numberOfDigits]
+        if (num > 999) {
+          let numString = Math.round(num).toString()
+          let numberFormatMapping = [[6, 'm'], [3, 'k']]
+          for (let [numberOfDigits, replacement] of numberFormatMapping) {
+            if (numString.length > numberOfDigits) {
+              let decimal = ''
+              if (numString[numString.length - numberOfDigits] !== '0') {
+                decimal = '.' + numString[numString.length - numberOfDigits]
+              }
+              numString = numString.substr(0, numString.length - numberOfDigits) + decimal + replacement
+              break
             }
-            numString = numString.substr(0, numString.length - numberOfDigits) + decimal + replacement
-            break
           }
+          return numString
+        } else {
+          return num
         }
-        return numString
       }
     }
   }
