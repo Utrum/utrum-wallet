@@ -38,7 +38,7 @@ export default {
         { key: 'time', label: 'Date / Hours', sortable: true },
         { key: 'height', label: 'Block Height' },
         { key: 'confirmations', label: 'Conf' },
-        { key: 'amount', label: `Amount (${this.coin.ticker})` },
+        { key: 'amount', label: `Amount` },
         { key: 'tx_hash', label: 'TxID' },
       ],
     };
