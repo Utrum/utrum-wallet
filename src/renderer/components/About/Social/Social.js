@@ -13,6 +13,7 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
+import { Tweet, Timeline } from 'vue-tweet-embed'
 const electron = require('electron');
 
 export default {
@@ -23,6 +24,10 @@ export default {
       mnzDiscordUrl: 'https://discord.gg/tyf8Mqx',
     };
   },
+  components: {
+      // component-view is available in the parents scope
+      'component-view': Timeline
+    },
   mounted() {
   },
   methods: {

@@ -40,6 +40,13 @@
         CHART
       </router-link>
     </li>
+    <li v-on:click="aboutClicked">
+      <router-link  active-class="active" tag="a" to="about">
+        <img v-if="aboutState" id="icon-social" src="~@/assets/icon-infos-id.svg" class="number-view" />
+        <img v-else id="icon-social" src="~@/assets/icon-infos-id.svg" class="number-view" />
+        ABOUT
+      </router-link>
+    </li>
   </ul>
   <a href="" id="logout" @click="$store.dispatch('logout')">
     <p><img id="icon-logout" src="~@/assets/icon-logout.svg"/>Log out</p>
