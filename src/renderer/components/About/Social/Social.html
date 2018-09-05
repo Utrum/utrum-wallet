@@ -1,18 +1,23 @@
 <div class="d-flex flex-row justify-content-center h-100">
   <!-- <div class="vl"></div> -->
-  <div class="d-flex flex-column align-items-center w-100 mt-auto mb-auto">
-    <div>
-        <img src="~@/assets/icon-social.svg" alt="icon-social">
-    </div>
-    <div class="d-flex flex-row justify-content-center mt-4">
-      <button @click="openMnzTelegram" class="btn btn-light">Join our Telegram</button>
-      <button @click="openMnzDiscord" class="btn btn-light ml-4">Join our Discord</button>
-    </div>
-    <div class="mt-4">
-      <span class="color-purple">Email: </span><a class="link" href="mailto:contact@utrum.io">contact@utrum.io</a>
-    </div>
-    <div class="mt-1">
-        <span class="color-purple">Issue tracker: </span><a class="link" href="mailto:support@utrum.io">support@utrum.io</a>
+  <!-- <div class="d-flex flex-column align-items-center w-100 mt-auto mb-auto"> -->
+    <div style="float: left;margin-top: 100px;margin-right: 20px;">
+      <div>
+          <img src="~@/assets/icon-social.svg" alt="icon-social">
       </div>
-  </div>
+      <div class="d-flex flex-row justify-content-center mt-4">
+        <button @click="openMnzTelegram" class="btn btn-light">Join our Telegram</button>
+        <button @click="openMnzDiscord" class="btn btn-light ml-4">Join our Discord</button>
+      </div>
+      <div class="mt-4">
+        <span class="color-purple">Email: </span><a class="link" href="mailto:contact@utrum.io">contact@utrum.io</a>
+      </div>
+      <div class="mt-1">
+          <span class="color-purple">Issue tracker: </span><a class="link" href="mailto:support@utrum.io">support@utrum.io</a>
+        </div>
+    </div>
+    <div style="float: right;margin-top: 50px;margin-left: 20px;">
+      <component-view :id="'utrumdotio'" :sourceType="'profile'" :options="{ tweetLimit: '3' }"/>
+    </div>
+  <!-- </div> -->
 </div>

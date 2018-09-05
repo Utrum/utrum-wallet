@@ -119,6 +119,7 @@
     "vue-qriously": "^1.1.1",
     "vue-router": "^2.5.3",
     "vue-toasted": "^1.1.24",
+    "vue-tweet-embed": "^2.1.2",
     "vuex": "^2.3.1",
     "wif": "^2.0.6",
     "yarn": "^1.9.4",
