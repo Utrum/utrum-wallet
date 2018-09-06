@@ -21,6 +21,12 @@ export default {
     return {
       mnzTelegramUrl: 'https://t.me/utrumdotio',
       mnzDiscordUrl: 'https://discord.gg/tyf8Mqx',
+<<<<<<< HEAD
+=======
+      ootTwitterUrl: 'https://twitter.com/utrumdotio',
+      ootFacebookUrl: 'https://www.facebook.com/utrumdotio',
+      ootRedditUrl: 'https://www.reddit.com/r/Utrumdotio/',
+>>>>>>> 4fcd8d9... added reddit and facebook buttons
     };
   },
   mounted() {
@@ -32,6 +38,18 @@ export default {
     openMnzDiscord() {
       electron.shell.openExternal(this.mnzDiscordUrl);
     },
+<<<<<<< HEAD
+=======
+    openOOTTwitter() {
+      electron.shell.openExternal(this.ootTwitterUrl);
+    },
+    openOOTFacebook() {
+      electron.shell.openExternal(this.ootFacebookUrl);
+    },
+    openOOTReddit() {
+      electron.shell.openExternal(this.ootRedditUrl);
+    },
+>>>>>>> 4fcd8d9... added reddit and facebook buttons
   },
   computed: {
   },
