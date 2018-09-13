@@ -19,6 +19,7 @@ import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
 import store from '../../../store';
 import ElectrumService from '../../../lib/electrum';
 import { BigNumber } from 'bignumber.js';
+import komodoInterest from './komodo-interest.js';
 
 export default {
   name: 'balance',
@@ -41,6 +42,7 @@ export default {
         address: '',
         coin: 'KMD',
       },
+      table: [],
     };
   },
   mounted() {
@@ -50,10 +52,53 @@ export default {
         .catch(() => { })
       ;
     }, this);
+    var getJSON = function(url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.responseType = 'json';
+      xhr.onload = function() {
+        var status = xhr.status;
+        if (status === 200) {
+          callback(null, xhr.response);
+        } else {
+          callback(status, xhr.response);
+        }
+      };
+      xhr.send();
+    };
+    var self = this;
+    wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
+    wallet.electrum.listUnspent(this.$store.getters.getWalletByTicker('KMD').address)
+      .then((_utxos) => {
+        _utxos.forEach(utxo => {
+          var explorerurl = 'https://kmdexplorer.ru/insight-api-komodo/tx/' + utxo.tx_hash;
+          var tarr = getJSON(explorerurl, function(err, data) {
+            if (err !== null) {
+              console.log('Something went wrong: ' + err);
+            } else {
+              const d = {
+                locktime: data.locktime,
+                address: data.vin[0].addr
+              }
+              let interest = komodoInterest(d.locktime,utxo.value,utxo.height);
+              const row = {
+                address: d.address,
+                amount: utxo.value,
+                interest: interest
+              }
+              self.table.push(row);
+            }
+          });
+        })
+      });
   },
   methods: {
     numberWithSpaces(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
+    satoshiToBitcoin(amount) {
+      const satoshiNb = 100000000;
+      return BigNumber(amount).dividedBy(satoshiNb).toNumber();
     },
     prepareTx() {
       wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
@@ -86,13 +131,15 @@ export default {
     claimRewards() {
       // if (this.canWithdraw === true && this.addressIsValid === true) {
       const kmdwallet = this.wallets.KMD;
+      this.calcInterest();
       if (true) {
         return this.prepareTx()
           .then(tx => {
             if (tx != null && tx.feeRate != null) {
               return Promise.reject({ message: 'Not enough balance including fees.' });
             }
-            return this.$store.dispatch('broadcastTransaction', { wallet: kmdwallet, ...tx });
+            return 0;
+            // return this.$store.dispatch('broadcastTransaction', { wallet: kmdwallet, ...tx });
           })
           .then((response) => {
             this.withdraw.amount = null;
