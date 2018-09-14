@@ -131,20 +131,17 @@ export default {
     claimRewards() {
       // if (this.canWithdraw === true && this.addressIsValid === true) {
       const kmdwallet = this.wallets.KMD;
-      this.calcInterest();
       if (true) {
         return this.prepareTx()
           .then(tx => {
             if (tx != null && tx.feeRate != null) {
               return Promise.reject({ message: 'Not enough balance including fees.' });
             }
-            return 0;
-            // return this.$store.dispatch('broadcastTransaction', { wallet: kmdwallet, ...tx });
+            return this.$store.dispatch('broadcastTransaction', { wallet: kmdwallet, ...tx });
           })
           .then((response) => {
             this.withdraw.amount = null;
             this.withdraw.address = '';
-            alert(this, response);
           })
           .catch(error => {
             if (error.__type !== null && BigNumber(this.withdraw.amount).comparedTo(21000000) === 1) {
