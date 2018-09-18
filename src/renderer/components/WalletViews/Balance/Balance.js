@@ -29,6 +29,8 @@ export default {
   data() {
     return {
       satoshiNb: 100000000,
+      satoshiConvert: 0.00000001,
+      displayInterest: false,
       blocks: 1,
       estimatedFee: 0,
       feeSpeed: 'fast',
@@ -71,24 +73,28 @@ export default {
     wallet.electrum.listUnspent(this.$store.getters.getWalletByTicker('KMD').address)
       .then((_utxos) => {
         _utxos.forEach(utxo => {
-          var explorerurl = 'https://kmdexplorer.ru/insight-api-komodo/tx/' + utxo.tx_hash;
-          var tarr = getJSON(explorerurl, function(err, data) {
-            if (err !== null) {
-              console.log('Something went wrong: ' + err);
-            } else {
-              const d = {
-                locktime: data.locktime,
-                address: data.vin[0].addr
+          if (utxo.value * self.satoshiConvert > 10) {
+            self.displayInterest = true;
+            var explorerurl = 'https://kmdexplorer.ru/insight-api-komodo/tx/' + utxo.tx_hash;
+            var tarr = getJSON(explorerurl, function(err, data) {
+              if (err !== null) {
+                console.log('Something went wrong: ' + err);
+              } else {
+                const d = {
+                  locktime: data.locktime,
+                  address: data.vin[0].addr
+                }
+                let interest = komodoInterest(d.locktime,utxo.value,utxo.height);
+                const row = {
+                  address: d.address,
+                  amount: utxo.value,
+                  interest: interest
+                }
+                self.table.push(row);
               }
-              let interest = komodoInterest(d.locktime,utxo.value,utxo.height);
-              const row = {
-                address: d.address,
-                amount: utxo.value,
-                interest: interest
-              }
-              self.table.push(row);
-            }
-          });
+            });
+          }
+
         })
       });
   },

@@ -10,7 +10,7 @@
   </div>
   <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
     <balance-item :wallet="wallet"/>
-    <table class="greyGridTable" v-if="wallet.ticker === 'KMD'">
+    <table class="greyGridTable" v-if="wallet.ticker === 'KMD' && displayInterest">
       <thead>
         <tr>
           <th>Address</th>
@@ -24,6 +24,6 @@
         <td>{{row.interest}}</td>
       </tr>
     </table>
-    <button v-if="wallet.ticker === 'KMD'" class="btn btn-tx pointer" id="btn" v-on:click="claimRewards()">Claim</button>
+    <button v-if="wallet.ticker === 'KMD' && displayInterest" class="btn btn-tx pointer" id="btn" v-on:click="claimRewards()">Claim</button>
   </div>
 </div>
