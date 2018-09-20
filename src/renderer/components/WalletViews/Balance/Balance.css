@@ -214,27 +214,3 @@ footer {
   font-weight: 300;
   color: #0D0032;
 }
-
-table.greyGridTable {
-  border: 2px solid #FFFFFF;
-  width: 100%;
-  text-align: center;
-  border-collapse: collapse;
-}
-table.greyGridTable td, table.greyGridTable th {
-  border: 1px solid #FFFFFF;
-  padding: 3px 4px;
-}
-table.greyGridTable tbody td {
-  font-size: 13px;
-}
-table.greyGridTable thead {
-  background: #FFFFFF;
-  border-bottom: 2px solid #333333;
-}
-table.greyGridTable thead th {
-  font-size: 15px;
-  font-weight: normal;
-  color: #333333;
-  text-align: center;
-}
