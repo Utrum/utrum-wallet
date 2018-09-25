@@ -250,6 +250,9 @@ export default {
     getBalance() {
       return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance);
     },
+    getUSDAmount() {
+      return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance_usd.toFixed(2));
+    },
     canWithdraw() {
       if (this.withdraw.amount != null) {
         if (this.addressIsValid === false && this.withdraw.address.length === 34) {
