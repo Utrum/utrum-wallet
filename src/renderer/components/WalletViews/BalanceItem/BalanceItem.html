@@ -15,13 +15,13 @@
     </div>
   </div>
   <div class="row-footer">
-    <p class="col-header">Your deposit {{wallet.coin.name}} address :</p>
+    <p class="col-header">Your {{wallet.coin.name}} deposit address :</p>
     <div class="card">
       <button
       v-clipboard:copy="wallet.address"
       v-clipboard:success="onCopy"
-      type="button" 
-      class="btn btn-copy-link btn-smartaddress" 
+      type="button"
+      class="btn btn-copy-link btn-smartaddress"
       :data-clipboard-text="wallet.address">
       <div :id="wallet.ticker" class="btn-inside-qrcode">
         <span v-if="isClipboard" >Copied to the clipboard</span>
