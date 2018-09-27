@@ -31,6 +31,7 @@ export default {
       satoshiNb: 100000000,
       satoshiConvert: 0.00000001,
       displayInterest: false,
+      rewards: 0,
       blocks: 1,
       estimatedFee: 0,
       feeSpeed: 'fast',
@@ -68,35 +69,16 @@ export default {
       };
       xhr.send();
     };
-    var self = this;
-    wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
-    wallet.electrum.listUnspent(this.$store.getters.getWalletByTicker('KMD').address)
-      .then((_utxos) => {
-        _utxos.forEach(utxo => {
-          if (utxo.value * self.satoshiConvert > 10) {
-            self.displayInterest = true;
-            var explorerurl = 'https://kmdexplorer.ru/insight-api-komodo/tx/' + utxo.tx_hash;
-            var tarr = getJSON(explorerurl, function(err, data) {
-              if (err !== null) {
-                console.log('Something went wrong: ' + err);
-              } else {
-                const d = {
-                  locktime: data.locktime,
-                  address: data.vin[0].addr
-                }
-                let interest = komodoInterest(d.locktime,utxo.value,utxo.height);
-                const row = {
-                  address: d.address,
-                  amount: utxo.value,
-                  interest: interest
-                }
-                self.table.push(row);
-              }
-            });
-          }
-
-        })
-      });
+    var context = this;
+    var address = this.$store.getters.getWalletByTicker('KMD').address;
+    var url = "https://dexstats.info/api/rewards.php?address=" + address;
+    var utxos = getJSON(url, function(err, data) {
+      if (err !== null) {
+        console.log('Something went wrong: ' + err);
+      } else {
+        context.rewards = data.rewards;
+      }
+    });
   },
   methods: {
     numberWithSpaces(x) {
@@ -135,9 +117,8 @@ export default {
       });
     },
     claimRewards() {
-      // if (this.canWithdraw === true && this.addressIsValid === true) {
       const kmdwallet = this.wallets.KMD;
-      if (true) {
+      if (this.displayInterest && this.rewards != 0) {
         return this.prepareTx()
           .then(tx => {
             if (tx != null && tx.feeRate != null) {
