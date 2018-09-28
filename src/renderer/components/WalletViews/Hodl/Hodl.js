@@ -21,6 +21,7 @@ import TransactionBuyHistory from '@/components/TransactionBuyHistory/Transactio
 import { BigNumber } from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import * as _ from 'lodash';
+import bitcore from 'bitcore';
 
 const { clipboard } = require('electron');
 
@@ -30,26 +31,63 @@ export default {
     select2: Select2,
     'select-awesome': SelectAwesome
   },
-  props: {
-    wallet: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
   created() {
     this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
   },
   data() {
     return {
-      hodl: {
+      hodl_input: {
         address: '',
         amount: '',
-        block: '',
-      }
-    }
+        block: ''
+      },
+      satoshiNb: 100000000,
+      blocks: 1,
+      estimatedFee: 0,
+      feeSpeed: 'fast',
+      fees: [
+        { id: 0, label: 'Very fast', speed: 'fast', value: 'veryFast' },
+        { id: 1, label: 'Fast', speed: 'medium', value: 'fast' },
+        { id: 2, label: 'Low', speed: 'slow', value: 'low' },
+      ],
+      videoConstraints: {
+        width: {
+          min: 265,
+          ideal: 265,
+          max: 265,
+        },
+        height: {
+          min: 250,
+          ideal: 250,
+          max: 250,
+        },
+      },
+      paused: false,
+      readingQRCode: false,
+      select: '',
+      withdraw: {
+        amount: null,
+        address: '',
+        coin: 'OOT',
+      },
+      history: [],
+    };
   },
   methods: {
   },
   computed: {
-  },
+    wallet() {
+      return this.$store.getters.getWalletByTicker(this.select);
+    },
+    this_wallet: function () {
+      var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'))
+      console.log("privateKey: " + privateKey);
+      var publicKey = new bitcore.PublicKey(privateKey);
+      console.log("publicKey: " + publicKey)
+      console.log("address: " + publicKey.toAddress().toString())
+      return publicKey.toString()
+    },
+    ECPair_test: function () {
+    }
+  }
 }

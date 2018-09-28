@@ -1,4 +1,4 @@
-<div class="d-flex flex-column content-buyview"">
+<div class="d-flex flex-column content-buyview">
   <div class="buy-monaize" >
 		<div class="col-custom">
 			<div class="row">
@@ -9,13 +9,13 @@
 
 			<div class="row">
 		    <span class="title-content">{{select}} ADDRESS</span>
-		    <input v-model="hodl.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter hodl address">
+		    <input v-model="hodl_input.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter hodl address">
 		  </div>
 
 			<div id="select-amount" class="row">
 		    <span class="title-content">AMOUNT</span>
 		      <div class="col-custom input-field row">
-		        <input type="number" id="amount" v-model.number="hodl.amount" class="col-custom input-field" placeholder="Amount">
+		        <input type="number" id="amount" v-model.number="hodl_input.amount" class="col-custom input-field" placeholder="Amount">
 		        <span id="current-coin"> {{select}}</span>
 		    </div>
 		  </div>
@@ -23,7 +23,14 @@
 			<div id="select-block" class="row">
 		    <span class="title-content">BLOCK HEIGHT</span>
 		      <div class="col-custom input-field row">
-		        <input type="number" id="amount" v-model.number="hodl.block" class="col-custom input-field" placeholder="Block">
+		        <input type="number" id="amount" v-model.number="hodl_input.block" class="col-custom input-field" placeholder="Block">
+		    </div>
+		  </div>
+
+      <div id="select-block" class="row">
+		    <span class="title-content">Public Key: </span>
+		      <div class="col-custom input-field row">
+		        <span id="this_wallet"> {{ this_wallet }} </span>
 		    </div>
 		  </div>
 
