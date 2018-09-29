@@ -6,7 +6,7 @@ OOT/ KMD / BTC wallet with basic features: balances, withdrawals & history.
 
 HODL feature for earning rewards of OOT coin.
 
-#### Quick start
+#### Quick start.
 
 ``` bash
 ## (npm and yarn friendly)
