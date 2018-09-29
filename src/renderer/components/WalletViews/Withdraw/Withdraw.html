@@ -47,7 +47,7 @@
   </div>
 
   <div class="btn-center">
-    <button @click="onConfirmWithdrawModal" :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
+    <button @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
   </div>
 
   <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">
