@@ -74,14 +74,28 @@ export default {
     };
   },
   methods: {
+    getJSON (url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.responseType = 'json';
+      xhr.onload = function() {
+        var status = xhr.status;
+        if (status === 200) {
+          callback(null, xhr.response);
+        } else {
+          callback(status, xhr.response);
+        }
+      };
+      xhr.send();
+    },
     hodl_create() {
-      var url_create = "https://explorer.utrum.io/hodl-api/create/"
-
-      var redeem_script = getJSON(url, function(err, data) {
+      var url = "https://explorer.utrum.io/hodl-api/create/"
+      var redeem_script = this.getJSON(url, function(err, data) {
         if (err !== null) {
           console.log('Something went wrong: ' + err);
         } else {
-          // ;
+          console.log(url_create);
+          console.log(hodl_wallet())
         }
       });
     }
