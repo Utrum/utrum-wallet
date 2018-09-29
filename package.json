@@ -82,7 +82,6 @@
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-lib-zcash": "^3.3.2",
-    "bitcore-lib": "^0.15.0",
     "bluebird": "^3.5.1",
     "bootstrap": "^4.0.0",
     "bootstrap-sass": "^3.3.7",
