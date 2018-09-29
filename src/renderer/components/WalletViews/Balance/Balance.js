@@ -14,12 +14,7 @@
  *                                                                            *
  ******************************************************************************/
 
-import bitcoinjs from 'bitcoinjs-lib';
 import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
-import store from '../../../store';
-import ElectrumService from '../../../lib/electrum';
-import { BigNumber } from 'bignumber.js';
-import komodoInterest from './komodo-interest.js';
 
 export default {
   name: 'balance',
