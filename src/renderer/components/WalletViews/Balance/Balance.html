@@ -10,11 +10,12 @@
   </div>
   <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
     <balance-item :wallet="wallet"/>
-    <div v-if="wallet.ticker === 'KMD' && rewards > 0">
+    <div v-if="wallet.ticker === 'KMD'">
       <h3>Unclaimed KMD Rewards</h3>
-      <p>{{rewards}}</p>
-      <button class="btn btn-tx pointer" id="btn" v-on:click="claimRewards()">Claim</button>
+      <span v-if="rewards == 0"> You have no rewards to claim</span>
+      <p v-if="rewards > 0">{{rewards}}</p>
+      <button v-if="rewards > 0.01" class="btn btn-tx pointer" id="btn" v-on:click="claimRewards()">Claim</button>
     </div>
-    <hr v-if="wallet.ticker === 'KMD' && rewards > 0">
+    <hr v-if="wallet.ticker === 'KMD'">
   </div>
 </div>
