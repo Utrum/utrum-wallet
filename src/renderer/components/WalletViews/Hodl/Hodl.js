@@ -74,20 +74,38 @@ export default {
     };
   },
   methods: {
+    hodl_create() {
+      var url_create = "https://explorer.utrum.io/hodl-api/create/"
+
+      var redeem_script = getJSON(url, function(err, data) {
+        if (err !== null) {
+          console.log('Something went wrong: ' + err);
+        } else {
+          // ;
+        }
+      });
+    }
   },
   computed: {
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
     },
-    this_wallet: function () {
-      var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'))
-      console.log("privateKey: " + privateKey);
+    hodl_wallet () {
+      var hodl_wallet = {};
+
+      var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'));
+      hodl_wallet["privateKey"] = privateKey.toString();
+      console.log("privateKey: " + hodl_wallet["privateKey"]);
+
       var publicKey = new bitcore.PublicKey(privateKey);
-      console.log("publicKey: " + publicKey)
-      console.log("address: " + publicKey.toAddress().toString())
-      return publicKey.toString()
-    },
-    ECPair_test: function () {
+      hodl_wallet["publicKey"] = publicKey.toString();
+      console.log("publicKey: " + hodl_wallet["publicKey"]);
+
+      var address = publicKey.toAddress();
+      hodl_wallet["address"] = address.toString();
+      console.log("address: " + hodl_wallet["address"]);
+
+      return hodl_wallet;
     }
   }
 }
