@@ -21,7 +21,7 @@ import TransactionBuyHistory from '@/components/TransactionBuyHistory/Transactio
 import { BigNumber } from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import * as _ from 'lodash';
-import bitcore from 'bitcore';
+import bitcore from 'bitcore-lib';
 
 const { clipboard } = require('electron');
 
