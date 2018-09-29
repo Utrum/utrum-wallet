@@ -10,5 +10,11 @@
   </div>
   <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
     <balance-item :wallet="wallet"/>
+    <div v-if="wallet.ticker === 'KMD' && rewards > 0">
+      <h3>Unclaimed KMD Rewards</h3>
+      <p>{{rewards}}</p>
+      <button class="btn btn-tx pointer" id="btn" v-on:click="claimRewards()">Claim</button>
+    </div>
+    <hr v-if="wallet.ticker === 'KMD' && rewards > 0">
   </div>
 </div>
