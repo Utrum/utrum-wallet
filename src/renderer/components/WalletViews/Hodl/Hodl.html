@@ -22,9 +22,18 @@
               class="col-custom input-field" placeholder="Block Height or Unix Epoch">
 		    </div>
 		  </div>
+
       <br>
+
       <div id="select-block" class="row">
-		    <span class="title-content">HODL address:</span>
+		    <span class="title-content">Unlock Time:</span>
+		      <div class="col-custom input-field row">
+		        <span id="coinsUnlockTime">&nbsp;{{ coinsUnlockTime }}</span>
+		    </div>
+		  </div>
+
+      <div id="select-block" class="row">
+		    <span class="title-content">Hodl Address:</span>
         <div class="col-custom input-field row">
           <span id="hodl_wallet">&nbsp;{{ scriptAddress }}</span>
         </div>

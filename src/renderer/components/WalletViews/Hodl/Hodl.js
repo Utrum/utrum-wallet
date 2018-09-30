@@ -25,6 +25,7 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 
 const { clipboard } = require('electron');
+const moment = require('moment');
 
 export default {
   name: 'hodl',
@@ -36,9 +37,11 @@ export default {
     this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
   },
   mounted () {
+    // initialize hodl wallet
     this.hodl_wallet = this.fill_hodl_wallet()
     // default vesting period to two months
     this.hodl_input.height = (Date.now() / 1000 | 0) + 5184000
+    this.coinsUnlockTime = this.dateFormat(this.hodl_input.height)
   },
   data () {
     return {
@@ -53,6 +56,7 @@ export default {
         redeemScript: ''
       },
       scriptAddress: 'Please specify a height and press "Enter".',
+      coinsUnlockTime: '',
       satoshiNb: 100000000,
       blocks: 1,
       estimatedFee: 0,
@@ -90,6 +94,7 @@ export default {
     getScript(url) {
       var vm = this
       vm.scriptAddress = "Loading..."
+      vm.coinsUnlockTime = ""
       vm.hodl_input.height = ""
       axios
         .get(url)
@@ -97,6 +102,7 @@ export default {
           vm.hodl_wallet["redeemScript"] = response.data["redeemScript"]
           vm.hodl_wallet["scriptAddress"] = response.data["address"]
           vm.scriptAddress = response.data["address"]
+          vm.coinsUnlockTime = vm.dateFormat(vm.hodl_wallet.height)
         })
         .catch(e => {
           console.log(e)
@@ -128,6 +134,11 @@ export default {
       dict["address"] = address.toString();
 
       return dict;
+    },
+    dateFormat(time) {
+      const blockchainDateUtc = moment.utc(time * 1000);
+      const dateString = moment(blockchainDateUtc).local().format('hh:mm A DD/MM/YYYY');
+      return dateString;
     }
   },
   computed: {
