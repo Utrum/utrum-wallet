@@ -37,6 +37,8 @@ export default {
   },
   mounted () {
     this.hodl_wallet = this.fill_hodl_wallet()
+    // default vesting period to two months
+    this.hodl_input.height = (Date.now() / 1000 | 0) + 5184000
   },
   data () {
     return {
