@@ -38,19 +38,19 @@ export default {
   },
   mounted () {
     // initialize hodl wallet
-    this.hodl_wallet = this.fill_hodl_wallet()
+    this.hodlData = this.fillHodlData()
     // default vesting period to two months
-    this.hodl_input.height = (Date.now() / 1000 | 0) + 5184000
-    this.coinsUnlockTime = this.dateFormat(this.hodl_input.height)
+    this.hodlInput.height = (Date.now() / 1000 | 0) + 5184000
+    this.coinsUnlockTime = this.dateFormat(this.hodlInput.height)
   },
   data () {
     return {
-      hodl_input: {
+      hodlInput: {
         address: '',
         amount: '',
         height: ''
       },
-      hodl_wallet: {
+      hodlData: {
         height: '',
         scriptAddress: '',
         redeemScript: ''
@@ -95,33 +95,33 @@ export default {
       var vm = this
       vm.scriptAddress = "Loading..."
       vm.coinsUnlockTime = ""
-      vm.hodl_input.height = ""
+      vm.hodlInput.height = ""
       axios
         .get(url)
         .then(response => {
-          vm.hodl_wallet["redeemScript"] = response.data["redeemScript"]
-          vm.hodl_wallet["scriptAddress"] = response.data["address"]
+          vm.hodlData["redeemScript"] = response.data["redeemScript"]
+          vm.hodlData["scriptAddress"] = response.data["address"]
           vm.scriptAddress = response.data["address"]
-          vm.coinsUnlockTime = vm.dateFormat(vm.hodl_wallet.height)
+          vm.coinsUnlockTime = vm.dateFormat(vm.hodlData.height)
         })
         .catch(e => {
           console.log(e)
         });
     },
     // hodl script creation
-    hodl_create() {
+    hodlCreate() {
       var vm = this
-      vm.hodl_wallet["scriptAddress"] = ''
-      vm.hodl_wallet["redeemScript"] = ''
-      vm.hodl_wallet["height"] = vm.hodl_input.height
+      vm.hodlData["scriptAddress"] = ''
+      vm.hodlData["redeemScript"] = ''
+      vm.hodlData["height"] = vm.hodlInput.height
 
       var url = "https://explorer.utrum.io/hodl-api/create/"
-      url += vm.hodl_wallet.publicKey
-      url += "/" + vm.hodl_input.height
+      url += vm.hodlData.publicKey
+      url += "/" + vm.hodlInput.height
       vm.getScript(url)
     },
     // here we store hodl related data
-    fill_hodl_wallet () {
+    fillHodlData () {
       var dict = {};
 
       var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'));
