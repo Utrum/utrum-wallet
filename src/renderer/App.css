@@ -276,13 +276,14 @@ a, a:hover, a:focus {
 }
 
 #content {
-  margin-left: 240px;
+  margin-left: 190px;
   height: 100vh;
 }
 
 .number-view {
   padding-right: 20px;
   fill: red;
+  width: 38px;
 }
 
 #sidebar .sidebar-header {

@@ -202,3 +202,16 @@ textarea {
 	margin-left: 20px;
 	margin-right: 20px;
 }
+
+.flex{
+	display: flex;
+}
+.margin-auto{
+	margin: auto;
+}
+.icon-wrapper{
+	height: 30vh;
+}
+.form-wrapper{
+	height: 70vh;
+}

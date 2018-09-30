@@ -1,9 +1,11 @@
 <div class="content-login d-flex flex-column text-center">
-  <div class="mt-4">
+  <div class="flex icon-wrapper">
       <!-- <img id="icon-login" src="~@/assets/icon-login-utrum.png" height="60" class="col"> -->
-      <img id="icon-login" src="~@/assets/icon-login-utrum.png">
+      <div class="margin-auto">
+        <img id="icon-login" class="margin-auto" src="~@/assets/icon-login-utrum.png">
+      </div>
   </div>
-  <div class="h-100 d-flex flex-column justify-content-center">
+  <div class="d-flex flex-column justify-content-center form-wrapper">
     <div class="d-flex align-items-center justify-content-center">
       <div class="d-flex flex-row input-login col-6">
         <form id="login" class="row login" method="POST" enctype="multipart/form-data">
@@ -23,8 +25,8 @@
       <button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Generate Passphrase</button>
     </div>
   </div>
-  <div class="mb-4">
+  <!-- <div class="mb-4">
       <img class="h-100" src="~@/assets/img-login.svg">
-  </div>
+  </div> -->
   <img id="img-background" src="~@/assets/img-login_background.svg">
 </div>
