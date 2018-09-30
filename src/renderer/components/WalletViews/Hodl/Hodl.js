@@ -88,6 +88,7 @@ export default {
     getScript(url) {
       var vm = this
       vm.scriptAddress = "Loading..."
+      vm.hodl_input.height = ""
       axios
         .get(url)
         .then(response => {
