@@ -4,13 +4,13 @@
 
 			<!-- <div class="row">
 		    <span class="title-content">{{select}} ADDRESS</span>
-		    <input v-model="hodl_input.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter hodl address">
+		    <input v-model="hodlInput.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter hodl address">
 		  </div> -->
 
 			<div id="select-amount" class="row">
 		    <span class="title-content">AMOUNT</span>
 		      <div class="col-custom input-field row">
-		        <input type="number" id="amount" v-model.number="hodl_input.amount" class="col-custom input-field" placeholder="Amount">
+		        <input type="number" id="amount" v-model.number="hodlInput.amount" class="col-custom input-field" placeholder="Amount">
 		        <span id="current-coin">&nbsp;{{select}}</span>
 		    </div>
 		  </div>
@@ -18,7 +18,7 @@
 			<div id="select-block" class="row">
 		    <span class="title-content">HEIGHT</span>
 		      <div class="col-custom input-field row">
-		        <input v-on:keypress.enter="hodl_create" type="number" id="amount" v-model.number="hodl_input.height"
+		        <input v-on:keypress.enter="hodlCreate" type="number" id="amount" v-model.number="hodlInput.height"
               class="col-custom input-field" placeholder="Block Height or Unix Epoch">
 		    </div>
 		  </div>
@@ -27,15 +27,15 @@
 
       <div id="select-block" class="row">
 		    <span class="title-content">Unlock Time:</span>
-		      <div class="col-custom input-field row">
-		        <span id="coinsUnlockTime">&nbsp;{{ coinsUnlockTime }}</span>
+		    <div class="col-custom input-field row">
+		      <span id="coinsUnlockTime">&nbsp;{{ coinsUnlockTime }}</span>
 		    </div>
 		  </div>
 
       <div id="select-block" class="row">
 		    <span class="title-content">Hodl Address:</span>
         <div class="col-custom input-field row">
-          <span id="hodl_wallet">&nbsp;{{ scriptAddress }}</span>
+          <span id="hodlData">&nbsp;{{ scriptAddress }}</span>
         </div>
 		  </div>
 
