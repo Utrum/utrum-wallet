@@ -17,11 +17,12 @@
 import bitcoinjs from 'bitcoinjs-lib';
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
-import TransactionBuyHistory from '@/components/TransactionBuyHistory/TransactionBuyHistory.vue';
+// import TransactionBuyHistory from '@/components/TransactionBuyHistory/TransactionBuyHistory.vue';
 import { BigNumber } from 'bignumber.js';
-import { mapGetters } from 'vuex';
-import * as _ from 'lodash';
+// import { mapGetters } from 'vuex';
+// import * as _ from 'lodash';
 import bitcore from 'bitcore-lib';
+import axios from 'axios';
 
 const { clipboard } = require('electron');
 
@@ -31,16 +32,25 @@ export default {
     select2: Select2,
     'select-awesome': SelectAwesome
   },
-  created() {
+  created () {
     this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
   },
-  data() {
+  mounted () {
+    this.hodl_wallet = this.fill_hodl_wallet()
+  },
+  data () {
     return {
       hodl_input: {
         address: '',
         amount: '',
-        block: ''
+        height: ''
       },
+      hodl_wallet: {
+        height: '',
+        scriptAddress: '',
+        redeemScript: ''
+      },
+      scriptAddress: 'Please specify a height and press "Enter".',
       satoshiNb: 100000000,
       blocks: 1,
       estimatedFee: 0,
@@ -74,52 +84,53 @@ export default {
     };
   },
   methods: {
-    getJSON (url, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.responseType = 'json';
-      xhr.onload = function() {
-        var status = xhr.status;
-        if (status === 200) {
-          callback(null, xhr.response);
-        } else {
-          callback(status, xhr.response);
-        }
-      };
-      xhr.send();
+    // method to retrieve hodl script from the hodl api
+    getScript(url) {
+      var vm = this
+      vm.scriptAddress = "Loading..."
+      axios
+        .get(url)
+        .then(response => {
+          vm.hodl_wallet["redeemScript"] = response.data["redeemScript"]
+          vm.hodl_wallet["scriptAddress"] = response.data["address"]
+          vm.scriptAddress = response.data["address"]
+        })
+        .catch(e => {
+          console.log(e)
+        });
     },
+    // hodl script creation
     hodl_create() {
+      var vm = this
+      vm.hodl_wallet["scriptAddress"] = ''
+      vm.hodl_wallet["redeemScript"] = ''
+      vm.hodl_wallet["height"] = vm.hodl_input.height
+
       var url = "https://explorer.utrum.io/hodl-api/create/"
-      var redeem_script = this.getJSON(url, function(err, data) {
-        if (err !== null) {
-          console.log('Something went wrong: ' + err);
-        } else {
-          console.log(url_create);
-          console.log(hodl_wallet())
-        }
-      });
+      url += vm.hodl_wallet.publicKey
+      url += "/" + vm.hodl_input.height
+      vm.getScript(url)
+    },
+    // here we store hodl related data
+    fill_hodl_wallet () {
+      var dict = {};
+
+      var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'));
+      dict["privateKey"] = privateKey.toString();
+
+      var publicKey = new bitcore.PublicKey(privateKey);
+      dict["publicKey"] = publicKey.toString();
+
+      var address = publicKey.toAddress();
+      dict["address"] = address.toString();
+
+      return dict;
     }
   },
   computed: {
+    // get bitcoinjs-lib wallet
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
-    },
-    hodl_wallet () {
-      var hodl_wallet = {};
-
-      var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'));
-      hodl_wallet["privateKey"] = privateKey.toString();
-      console.log("privateKey: " + hodl_wallet["privateKey"]);
-
-      var publicKey = new bitcore.PublicKey(privateKey);
-      hodl_wallet["publicKey"] = publicKey.toString();
-      console.log("publicKey: " + hodl_wallet["publicKey"]);
-
-      var address = publicKey.toAddress();
-      hodl_wallet["address"] = address.toString();
-      console.log("address: " + hodl_wallet["address"]);
-
-      return hodl_wallet;
     }
   }
 }

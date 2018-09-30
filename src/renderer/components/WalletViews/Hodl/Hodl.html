@@ -2,31 +2,32 @@
   <div class="buy-monaize" >
 		<div class="col-custom">
 
-			<div class="row">
+			<!-- <div class="row">
 		    <span class="title-content">{{select}} ADDRESS</span>
 		    <input v-model="hodl_input.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter hodl address">
-		  </div>
+		  </div> -->
 
 			<div id="select-amount" class="row">
 		    <span class="title-content">AMOUNT</span>
 		      <div class="col-custom input-field row">
 		        <input type="number" id="amount" v-model.number="hodl_input.amount" class="col-custom input-field" placeholder="Amount">
-		        <span id="current-coin"> {{select}}</span>
+		        <span id="current-coin">&nbsp;{{select}}</span>
 		    </div>
 		  </div>
 
 			<div id="select-block" class="row">
-		    <span class="title-content">BLOCK HEIGHT</span>
+		    <span class="title-content">HEIGHT</span>
 		      <div class="col-custom input-field row">
-		        <input type="number" id="amount" v-model.number="hodl_input.block" class="col-custom input-field" placeholder="Block">
+		        <input v-on:keypress.enter="hodl_create" type="number" id="amount" v-model.number="hodl_input.height"
+              class="col-custom input-field" placeholder="Block Height or Unix Epoch">
 		    </div>
 		  </div>
-
-      <div @click="hodl_create" id="select-block" class="row">
-		    <span class="title-content">HODL wallet: </span>
-		      <div class="col-custom input-field row">
-		        <span id="hodl_wallet"> {{ hodl_wallet }} </span>
-		    </div>
+      <br>
+      <div id="select-block" class="row">
+		    <span class="title-content">HODL address:</span>
+        <div class="col-custom input-field row">
+          <span id="hodl_wallet">&nbsp;{{ scriptAddress }}</span>
+        </div>
 		  </div>
 
 		</div>
