@@ -30,12 +30,6 @@ hr {
   color: color(fjord);
 }
 
-.titleHold {
-  width: 92%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .container {
   @include container();
 }
@@ -214,19 +208,4 @@ hr {
     -webkit-transform: scale3D(0, 0, 1);
             transform: scale3D(0, 0, 1);
   }
-}
-
-.date-selectors {
-    width: 278px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 20px;
-}
-
-.date-selectors a {
-    padding: 10px;
-}
-
-.date-selectors a:hover {
-    cursor: pointer;
 }

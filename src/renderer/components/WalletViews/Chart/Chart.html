@@ -5,19 +5,19 @@
   <div v-if="loading" class="loading">
     🔧  Building Charts ...
   </div>
-  <div class="Chart__container" v-if="loaded" style="width:95%">
-    <div class="titleHold">
-      <h3 v-bind:style="{'text-decoration': oot}" v-on:click="changeCoin('oot')">OOT Price Chart</h3>
-      <h3 v-bind:style="{'text-decoration': kmd}" v-on:click="changeCoin('kmd')">KMD Price Chart</h3>
-      <h3 v-bind:style="{'text-decoration': btc}" v-on:click="changeCoin('btc')">BTC Price Chart</h3>
-    </div>
-    <div class="Chart__content">
-      <div class="date-selectors">
-        <a v-bind:style="{'text-decoration': day}" v-on:click="requestData(1)">Today</a>
-        <a v-bind:style="{'text-decoration': week}" v-on:click="requestData(7)">This Week</a>
-        <a v-bind:style="{'text-decoration': month}" v-on:click="requestData(30)">This Month</a>
-      </div>
-      <line-chart chart-id="line-daily" v-if="loaded" :chart-data="prices" :chart-labels="labels" @generate="setLinePng"/>
+  <div class="Chart__container" style="width:95%" v-show="loaded">
+    <b-container class="mb-3" >
+          <b-row>
+              <b-col>
+                  <b-form-select v-model="selCoin" :options="coins" @change.native="changeCoin($event.target.value)"/>
+              </b-col>
+              <b-col>
+                  <b-form-select v-model="selTime" :options="timeList"  @change.native="requestData($event.target.value)"/>
+              </b-col>
+          </b-row>
+    </b-container>
+    <div class="Chart__content" v-if="loaded">
+      <line-chart chart-id="line-daily" :chart-data="prices" :chart-labels="labels" @generate="setLinePng"/>
     </div>
   </div>
   </div>

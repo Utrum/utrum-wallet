@@ -1,9 +1,11 @@
 import axios from 'axios'
 import LineChart from '@/components/WalletViews/Chart/LineChart'
-
+import vSelect from 'vue-select'
+import moment from 'moment'
 export default {
   components: {
     LineChart,
+    'v-select': vSelect
   },
   data () {
     return {
@@ -16,20 +18,27 @@ export default {
       errorMessage: 'Please enter a time frame',
       periodStart: '',
       periodEnd: new Date(),
-      day: 'none',
-      week: 'none',
-      month: 'none',
-      oot: 'underline !important',
-      kmd: 'none',
-      btc: 'none',
       rawData: '',
       linePng: null,
-      url: 'https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days='
+      url: 'https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days=',
+      selTime: null,
+      selCoin: null,
+      coins: [
+        {text: 'OOT Price Chart', value: 'oot'}, 
+        {text: 'KMD Price Chart', value: 'kmd'}, 
+        {text: 'BTC Price Chart', value: 'btc'}
+      ],
+      timeList: [
+        {text: 'Today', value: 1}, 
+        {text: 'This Week', value: 7}, 
+        {text: 'This Month', value: 30}
+      ]
     }
   },
-
   mounted () {
     this.requestData()
+    this.selCoin = this.coins.length > 0 ? this.coins[0]['value'] : null
+    this.selTime = this.timeList.length > 0 ? this.timeList[0]['value'] : null
   },
   methods: {
     resetState () {
@@ -56,9 +65,6 @@ export default {
       } else if (coin == "btc") {
         this.url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days='
       }
-      this.oot = (coin == 'oot') ? 'underline !important' : 'none'
-      this.kmd = (coin == 'kmd') ? 'underline !important' : 'none'
-      this.btc = (coin == 'btc') ? 'underline !important' : 'none'
       this.requestData(1)
     },
     requestData (days) {
