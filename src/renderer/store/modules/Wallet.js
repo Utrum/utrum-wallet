@@ -133,6 +133,7 @@ const actions = {
     dispatch('setPrivKey', createPrivKey(rootGetters.passphrase));
 
     const privateKey = rootGetters.privKey;
+    console.log(privateKey);
     const enabledCoins = rootGetters.enabledCoins;
 
     const promises = enabledCoins.map((coin) => {

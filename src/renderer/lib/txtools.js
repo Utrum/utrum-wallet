@@ -20,6 +20,7 @@ export default (wallet, transaction, height) => {
   const txb = bitcoinjs.TransactionBuilder.fromTransaction(bitcoinjs.Transaction.fromHex(transaction.hex), wallet.coin.network);
 
   if (txb.inputs[0] != null && txb.inputs[0].pubKeys[0] != null) {
+    //console.log(txb.inputs[0].pubKeys[0]);
     const inputPubKey = bitcoinjs.ECPair.fromPublicKeyBuffer(txb.inputs[0].pubKeys[0], wallet.coin.network);
     let amount = 0;
     let fromMNZ = false;
