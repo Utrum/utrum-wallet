@@ -2,11 +2,6 @@
   <div class="buy-monaize" >
 		<div class="col-custom">
 
-			<!-- <div class="row">
-		    <span class="title-content">{{select}} ADDRESS</span>
-		    <input v-model="hodlInput.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter hodl address">
-		  </div> -->
-
 			<div id="select-amount" class="row">
 		    <span class="title-content">AMOUNT</span>
 		      <div class="col-custom input-field row">
@@ -15,27 +10,38 @@
 		    </div>
 		  </div>
 
-			<div id="select-block" class="row">
-		    <span class="title-content">HEIGHT</span>
-		      <div class="col-custom input-field row">
-		        <input v-on:keypress.enter="hodlCreate" type="number" id="amount" v-model.number="hodlInput.height"
-              class="col-custom input-field" placeholder="Block Height or Unix Epoch">
-		    </div>
-		  </div>
+      <div class="btn-center">
+        <button v-on:click="hodlCreate" id="sendcoins" class="btn sendcoins" type="button">Get Hodl Address</button>
+      </div>
 
       <br>
-
-      <div id="select-block" class="row">
-		    <span class="title-content">Unlock Time:</span>
-		    <div class="col-custom input-field row">
-		      <span id="coinsUnlockTime">&nbsp;{{ coinsUnlockTime }}</span>
-		    </div>
-		  </div>
 
       <div id="select-block" class="row">
 		    <span class="title-content">Hodl Address:</span>
         <div class="col-custom input-field row">
           <span id="hodlData">&nbsp;{{ scriptAddress }}</span>
+        </div>
+		  </div>
+
+      <div id="select-block" class="row">
+		    <span class="title-content">My Address:</span>
+        <div class="col-custom input-field row">
+          <span v-if="hodlData.redeemScript" id="myaddress">&nbsp;{{ hodlData.address }}</span>
+        </div>
+		  </div>
+
+      <div id="select-block" class="row">
+        <span class="title-content">Unlock Time:</span>
+        <div class="col-custom input-field row">
+          <span id="coinsUnlockTime">&nbsp;{{ coinsUnlockTime }}</span>
+        </div>
+      </div>
+
+      <div v-if="hodlData.redeemScript" id="select-block" class="row">
+        <div class="col-custom input-field row">
+          <span @click="openValidator" id="validator">
+            <a href="#" style="color:#0C6AA8;font-size:small;"><i>Validation link (third party).</i></a>
+          </span>
         </div>
 		  </div>
 
