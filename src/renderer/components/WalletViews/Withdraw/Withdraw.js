@@ -203,6 +203,8 @@ export default {
             }
           })
           ;
+      } else if (this.canWithdraw === false){
+        this.$toasted.error('Not enought balance including fees.');
       }
     },
   },
@@ -249,6 +251,9 @@ export default {
     },
     getBalance() {
       return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance);
+    },
+    getUSDAmount() {
+      return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance_usd.toFixed(2));
     },
     canWithdraw() {
       if (this.withdraw.amount != null) {

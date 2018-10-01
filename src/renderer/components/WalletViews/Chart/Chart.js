@@ -19,8 +19,12 @@ export default {
       day: 'none',
       week: 'none',
       month: 'none',
+      oot: 'underline !important',
+      kmd: 'none',
+      btc: 'none',
       rawData: '',
-      linePng: null
+      linePng: null,
+      url: 'https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days='
     }
   },
 
@@ -44,6 +48,19 @@ export default {
       var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec
       return time
     },
+    changeCoin (coin) {
+      if (coin == "oot") {
+        this.url = 'https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days='
+      } else if (coin == "kmd") {
+        this.url = 'https://api.coingecko.com/api/v3/coins/komodo/market_chart?vs_currency=usd&days='
+      } else if (coin == "btc") {
+        this.url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days='
+      }
+      this.oot = (coin == 'oot') ? 'underline !important' : 'none'
+      this.kmd = (coin == 'kmd') ? 'underline !important' : 'none'
+      this.btc = (coin == 'btc') ? 'underline !important' : 'none'
+      this.requestData(1)
+    },
     requestData (days) {
       this.resetState()
       this.loading = true
@@ -53,7 +70,7 @@ export default {
       this.day = (days == 1) ? 'underline !important' : 'none'
       this.week = (days == 7) ? 'underline !important' : 'none'
       this.month = (days == 30) ? 'underline !important' : 'none'
-      axios.get(`https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days=` + days)
+      axios.get(this.url + days)
         .then(response => {
           this.prices = response.data.prices.map(entry => entry[1])
           this.labels = response.data.prices.map(entry => this.fixTime(entry[0]))

@@ -25,6 +25,7 @@ export default {
       withdrawalState: false,
       socialState: false,
       chartState: false,
+      aboutState: false,
     };
   },
   methods: {
@@ -34,6 +35,7 @@ export default {
       this.withdrawalState = false;
       this.socialState = false;
       this.chartState = false;
+      this.aboutState = false;
     },
     hodlClicked() {
       this.balanceState = false;
@@ -41,6 +43,7 @@ export default {
       this.withdrawalState = false;
       this.socialState = false;
       this.chartState = false;
+      this.aboutState = false;
     },
     withdrawalClicked() {
       this.balanceState = false;
@@ -48,6 +51,7 @@ export default {
       this.withdrawalState = true;
       this.socialState = false;
       this.chartState = false;
+      this.aboutState = false;
     },
     socialClicked() {
       this.balanceState = false;
@@ -55,6 +59,7 @@ export default {
       this.withdrawalState = false;
       this.socialState = true;
       this.chartState = false;
+      this.aboutState = false;
     },
     chartClicked() {
       this.balanceState = false;
@@ -62,6 +67,15 @@ export default {
       this.withdrawalState = false;
       this.socialState = false;
       this.chartState = true;
+      this.aboutState = false;
+    },
+    aboutClicked() {
+      this.balanceState = false;
+      this.hodlState = false;
+      this.withdrawalState = false;
+      this.socialState = false;
+      this.chartState = false;
+      this.aboutState = true;
     },
   },
   computed: {
