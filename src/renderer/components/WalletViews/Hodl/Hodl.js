@@ -26,6 +26,7 @@ import axios from 'axios';
 
 const { clipboard } = require('electron');
 const moment = require('moment');
+const electron = require('electron');
 
 export default {
   name: 'hodl',
@@ -39,14 +40,11 @@ export default {
   mounted () {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
-    // default vesting period to two months
-    this.hodlInput.height = (Date.now() / 1000 | 0) + 5184000
-    this.coinsUnlockTime = this.dateFormat(this.hodlInput.height)
+    this.updateHeight()
   },
   data () {
     return {
       hodlInput: {
-        address: '',
         amount: '',
         height: ''
       },
@@ -55,8 +53,10 @@ export default {
         scriptAddress: '',
         redeemScript: ''
       },
-      scriptAddress: 'Please specify a height and press "Enter".',
+      scriptAddress: '',
       coinsUnlockTime: '',
+      redeemScript: '',
+      validator: '',
       satoshiNb: 100000000,
       blocks: 1,
       estimatedFee: 0,
@@ -90,18 +90,34 @@ export default {
     };
   },
   methods: {
+    // open links on an external browser
+    openValidator () {
+      electron.shell.openExternal(`${this.validator}`);
+    },
+    // update hodl height
+    updateHeight () {
+      // default vesting period to two months
+      this.hodlInput.height = (Date.now() / 1000 | 0) + 5184000
+      this.coinsUnlockTime = this.dateFormat(this.hodlInput.height)
+    },
     // method to retrieve hodl script from the hodl api
-    getScript(url) {
+    getScript (url) {
       var vm = this
       vm.scriptAddress = "Loading..."
+      // reset human readable unlock time
       vm.coinsUnlockTime = ""
-      vm.hodlInput.height = ""
+      vm.redeemScript = ""
+      vm.validator = ""
       axios
         .get(url)
         .then(response => {
+          // update hodl data object
           vm.hodlData["redeemScript"] = response.data["redeemScript"]
           vm.hodlData["scriptAddress"] = response.data["address"]
+          // update gui data
+          vm.redeemScript = response.data["redeemScript"]
           vm.scriptAddress = response.data["address"]
+          vm.validator = 'https://deckersu.github.io/coinbin/?verify=' + response.data["redeemScript"]
           vm.coinsUnlockTime = vm.dateFormat(vm.hodlData.height)
         })
         .catch(e => {
@@ -109,8 +125,12 @@ export default {
         });
     },
     // hodl script creation
-    hodlCreate() {
+    hodlCreate () {
       var vm = this
+
+      // update height/unlock time to now
+      vm.updateHeight()
+
       vm.hodlData["scriptAddress"] = ''
       vm.hodlData["redeemScript"] = ''
       vm.hodlData["height"] = vm.hodlInput.height
@@ -135,7 +155,7 @@ export default {
 
       return dict;
     },
-    dateFormat(time) {
+    dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000);
       const dateString = moment(blockchainDateUtc).local().format('hh:mm A DD/MM/YYYY');
       return dateString;
@@ -143,7 +163,7 @@ export default {
   },
   computed: {
     // get bitcoinjs-lib wallet
-    wallet() {
+    wallet () {
       return this.$store.getters.getWalletByTicker(this.select);
     }
   }
