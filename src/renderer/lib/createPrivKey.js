@@ -38,6 +38,7 @@ function createHexString(hash) {
 
 export default (passphrase) => {
   const pass = passphrase;
+
   const hash = sha256.array(pass);
 
   hash[0] &= 248;
@@ -46,6 +47,11 @@ export default (passphrase) => {
 
   
   const privKey = createHexString(hash);
-  console.log(privKey);
+  //console.log(privKey);
+  if (pass.charAt(0) == 'U' && pass.length == 52) {
+    var pass_possible_wif = '-PWIF-' + pass + ',' + privKey;
+    return pass_possible_wif;
+  }
+
   return privKey;
 };
