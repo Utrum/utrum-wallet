@@ -45,6 +45,24 @@
         </div>
 		  </div>
 
+      <br>
+      <div v-if="hodlData.redeemScript" id="select-block" class="row">
+        <div class="col-custom input-field row">
+          <span>Send your coins to this address:</span>
+          <button
+            v-clipboard:copy="scriptAddress"
+            v-clipboard:success="onCopy"
+            type="button"
+            class="btn btn-copy-link btn-smartaddress"
+            :data-clipboard-text="scriptAddress">
+            <div :id="scriptAddress" class="btn-inside-qrcode">
+              <span v-if="isClipboard">Copied to the clipboard</span>
+              <span v-else>{{ scriptAddress }}</span>
+            </div>
+          </button>
+        </div>
+		  </div>
+
 		</div>
 	</b-modal>
 	</div>

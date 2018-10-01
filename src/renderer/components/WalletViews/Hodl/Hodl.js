@@ -57,6 +57,7 @@ export default {
       coinsUnlockTime: '',
       redeemScript: '',
       validator: '',
+      isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
       estimatedFee: 0,
@@ -90,6 +91,14 @@ export default {
     };
   },
   methods: {
+    // for the hodl address copy button
+    onCopy() {
+      const self = this;
+      this.isClipboard = true;
+      setTimeout(() => {
+        self.isClipboard = false;
+      }, 1000);
+    },
     // open links on an external browser
     openValidator () {
       electron.shell.openExternal(`${this.validator}`);
