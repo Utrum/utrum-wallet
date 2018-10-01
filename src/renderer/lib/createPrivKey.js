@@ -15,6 +15,7 @@
  ******************************************************************************/
 
 const sha256 = require('js-sha256');
+const zcashLib = require('bitcoinjs-lib-zcash');
 
 /**
 * It returns a string from HEX array.
@@ -43,6 +44,8 @@ export default (passphrase) => {
   hash[31] &= 127;
   hash[31] |= 64;
 
+  
   const privKey = createHexString(hash);
+  console.log(privKey);
   return privKey;
 };
