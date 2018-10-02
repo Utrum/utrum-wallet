@@ -54,7 +54,8 @@ export default {
       var hour = a.getHours()
       var min = a.getMinutes()
       var sec = a.getSeconds()
-      var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec
+      let localDt = new Date(`${year}/${a.getMonth()}/${date} ${hour}:${min}:${sec}`)
+      let time = `${localDt}`
       return time
     },
     changeCoin (coin) {
@@ -65,7 +66,7 @@ export default {
       } else if (coin == "btc") {
         this.url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days='
       }
-      this.requestData(1)
+      this.requestData(this.selTime)
     },
     requestData (days) {
       this.resetState()
@@ -73,13 +74,57 @@ export default {
       if (days == null) {
         days = 1
       }
-      this.day = (days == 1) ? 'underline !important' : 'none'
-      this.week = (days == 7) ? 'underline !important' : 'none'
-      this.month = (days == 30) ? 'underline !important' : 'none'
       axios.get(this.url + days)
         .then(response => {
           this.prices = response.data.prices.map(entry => entry[1])
-          this.labels = response.data.prices.map(entry => this.fixTime(entry[0]))
+          let tempLabes = response.data.prices.map(entry => this.fixTime(entry[0]))
+          
+          this.labels = []
+          let prevDt = null;
+          let maxDt = new Date(tempLabes[tempLabes.length -1])
+          var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+          for(let val of tempLabes){
+            let curIdxDt = new Date(val)
+            let tempFormat = moment(curIdxDt).format('DD MMM YYYY HH:mm')
+
+            switch(this.selTime){
+              case 1:{
+                if(!prevDt){
+                  prevDt = curIdxDt
+                  val = `${tempFormat};${moment(curIdxDt).format('HH:mm')}`
+                }
+                else if(curIdxDt.getDate() != prevDt.getDate()){
+                  val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
+                  prevDt = curIdxDt
+                }
+                else if(curIdxDt.getHours() != prevDt.getHours()){
+                  val = `${tempFormat};${moment(curIdxDt).format('HH:mm')}`
+                  prevDt = curIdxDt
+                }
+                else{
+                  val = `${tempFormat};`
+                }
+                break;
+              }
+              default:{
+                if(!prevDt){
+                  prevDt = curIdxDt
+                  val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
+                }
+                else if(curIdxDt.getDate() != prevDt.getDate()){
+                  val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
+                  prevDt = curIdxDt
+                }
+                else{
+                  val = `${tempFormat};`
+                }
+                break;
+              }
+            }
+            this.labels.push(val)
+          }
+          
           this.loaded = true
           this.loading = false
         })

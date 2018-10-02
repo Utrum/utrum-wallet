@@ -33,10 +33,38 @@
               }
             }],
             xAxes: [ {
+              id:'xAxis1',
+              display: false,
               gridLines: {
                 display: true,
                 color: '#EEF0F4',
                 borderDash: [5, 15]
+              },
+              ticks:{
+                callback:function(value){
+                  return value.split(";")[0]
+                }
+              }
+            },
+            {
+              id:'xAxis2',
+              type:"category",
+               gridLines: {
+                display: true,
+                drawOnChartArea: false, // only want the grid lines for one axis to show up
+                borderDash: [5, 15]
+              },
+              ticks:{
+                autoSkip:false,
+                callback:function(value){
+                  let tempArrr = value.split(";")
+                  if(tempArrr.length >= 2){
+                    return tempArrr[1]
+                  }
+                  else{ 
+                    return value
+                  }
+                }
               }
             }]
           },
@@ -100,7 +128,8 @@
             pointHoverBorderWidth: 1,
             borderWidth: 1,
             backgroundColor: this.gradient,
-            data: this.chartData
+            data: this.chartData,
+            xAxisID:'xAxis1'
           }
         ]
       }, this.options)
