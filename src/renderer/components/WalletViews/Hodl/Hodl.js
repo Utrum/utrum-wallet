@@ -28,6 +28,7 @@ const { clipboard } = require('electron');
 const moment = require('moment');
 const electron = require('electron');
 
+
 export default {
   name: 'hodl',
   components: {
@@ -41,6 +42,7 @@ export default {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
     this.updateHeight()
+    this.getUtxos()
   },
   data () {
     return {
@@ -51,12 +53,14 @@ export default {
       hodlData: {
         height: '',
         scriptAddress: '',
-        redeemScript: ''
+        redeemScript: '',
+        myUtxos: []
       },
       scriptAddress: '',
       coinsUnlockTime: '',
       redeemScript: '',
       validator: '',
+      explorer: 'https://explorer.utrum.io/',
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
@@ -133,6 +137,44 @@ export default {
           console.log(e)
         });
     },
+    getUtxos () {
+      var vm = this
+      var url = vm.explorer + "insight-api-komodo/addr/" + vm.hodlData.address + "/utxo"
+      console.log(url)
+      axios
+        .get(url)
+        .then(response => {
+          vm.hodlData.myUtxos = response.data
+        })
+        .catch(e => {
+          console.log(e)
+        });
+    },
+    buildTx () {
+      console.log('building transaction...')
+
+      var vm = this
+      var utxos = vm.hodlData.myUtxos
+      var toAddress = this.hodlData.scriptAddress
+      var myAddress = vm.hodlData.address
+      var amount = vm.hodlInput["amount"] * vm.satoshiNb
+      vm.hodlInput["amount"] = ''
+      var op_return = "REDEEM SCRIPT " + vm.hodlData.redeemScript
+      var privateKey = vm.hodlData.privateKey
+
+      console.log(toAddress, amount, myAddress, op_return)
+
+      var opts = { // https://bitcore.io/api/lib/transaction#serialization-checks
+        disableDustOutputs: true
+      }
+      var transaction = new bitcore.Transaction()
+        .from(utxos)
+        .to(toAddress, amount)
+        .change(myAddress)
+        .addData(op_return)
+        .sign(privateKey)
+      console.log(transaction.serialize(opts))
+    },
     // hodl script creation
     hodlCreate () {
       var vm = this
@@ -144,7 +186,7 @@ export default {
       vm.hodlData["redeemScript"] = ''
       vm.hodlData["height"] = vm.hodlInput.height
 
-      var url = "https://explorer.utrum.io/hodl-api/create/"
+      var url = vm.explorer + "hodl-api/create/"
       url += vm.hodlData.publicKey
       url += "/" + vm.hodlInput.height
       vm.getScript(url)
