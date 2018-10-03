@@ -152,7 +152,6 @@ export default {
     },
     buildTx () {
       console.log('building transaction...')
-
       var vm = this
       var utxos = vm.hodlData.myUtxos
       var toAddress = this.hodlData.scriptAddress
@@ -161,8 +160,6 @@ export default {
       vm.hodlInput["amount"] = ''
       var op_return = "REDEEM SCRIPT " + vm.hodlData.redeemScript
       var privateKey = vm.hodlData.privateKey
-
-      console.log(toAddress, amount, myAddress, op_return)
 
       var opts = { // https://bitcore.io/api/lib/transaction#serialization-checks
         disableDustOutputs: true
@@ -174,6 +171,7 @@ export default {
         .addData(op_return)
         .sign(privateKey)
       console.log(transaction.serialize(opts))
+      return transaction
     },
     // hodl script creation
     hodlCreate () {
