@@ -15,6 +15,7 @@
  ******************************************************************************/
 
 const sha256 = require('js-sha256');
+var wif = require('wif');
 
 /**
 * It returns a string from HEX array.
@@ -45,9 +46,13 @@ export default (passphrase) => {
     hash[31] |= 64;
 
     const privKey = createHexString(hash);
-    if (pass.charAt(0) == 'U' && pass.length == 52) {
-      var obj = wif.decode(pass);
-      return obj.privateKey.toString('hex');
+    if (pass.length == 52) {
+      try {
+        var obj = wif.decode(pass);
+        return obj.privateKey.toString('hex');
+      } catch (err) {
+        console.log("incorrect WIF, using input passphrase");
+      }
     }
     return privKey;
   }
