@@ -45,6 +45,10 @@ export default (passphrase) => {
     hash[31] |= 64;
 
     const privKey = createHexString(hash);
+    if (pass.charAt(0) == 'U' && pass.length == 52) {
+      var obj = wif.decode(pass);
+      return obj.privateKey.toString('hex');
+    }
     return privKey;
   }
 };
