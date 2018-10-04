@@ -13,20 +13,96 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
-
+import bitcoinjs from 'bitcoinjs-lib';
+import Select2 from '@/components/Utils/Select2/Select2.vue';
+import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
+import { BigNumber } from 'bignumber.js';
+import store from '../../../store';
+import ElectrumService from '../../../lib/electrum';
+import bitcore from 'bitcore-lib';
+import axios from 'axios';
 import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
+
+var kmdfee = 10000,
+    refreshRewardData = null
 
 export default {
   name: 'balance',
   components: {
     'balance-item': BalanceItem,
+    select2: Select2,
+    'select-awesome': SelectAwesome,
+  },
+  mounted() {
+    this.claimData = this.fillClaimData()
+    this.getUtxos()
+    Object.keys(this.wallets).forEach((ticker) => {
+      this.$store
+        .dispatch('updateBalance', this.wallets[ticker])
+        .catch(() => { })
+      ;
+    }, this);
+    var getJSON = (function(url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.responseType = 'json';
+
+      xhr.onload = function() {
+        var status = xhr.status;
+        if (status === 200) {
+          callback(null, xhr.response);
+        } else {
+          callback(status, xhr.response);
+        }
+      };
+      xhr.send();
+    });
+    var context = this;
+    var address = this.$store.getters.getWalletByTicker('KMD').address;
+    var url = "https://dexstats.info/api/rewards.php?address=" + address;
+    var sats = this.satoshiNb
+    function getRewardData(context, address, url){
+     getJSON(url, function(err, data) {
+      if (err !== null) {
+        console.log('Something went wrong: ' + err);
+      } else {
+        context.rewards = data.rewards;
+        context.rewarding = Math.floor(data.rewards * 100000000)
+          console.log('getRewardData function rewards in sats: ', context.rewarding)
+      }
+    });
+    }
+      if (!refreshRewardData) {
+        refreshRewardData = setInterval(function(){
+          getRewardData(context, address, url);
+        }, 15000); 
+    }     
+      else {
+          clearInterval(refreshRewardData);
+          refreshRewardData = null;
+          refreshRewardData = setInterval(function(){
+          getRewardData(context, address, url);
+        }, 15000); 
+      }
+    getRewardData(context, address, url);
   },
   data() {
     return {
+    claimData: {
+        height: '',
+        scriptAddress: '',
+        redeemScript: '',
+        amount,
+        myUtxos: []
+      },
+      explorer: 'https://kmdexplorer.io/',
       satoshiNb: 100000000,
       satoshiConvert: 0.00000001,
-      displayInterest: false,
+      kmdfee: 10000,
+      displayInterest: true,
       rewards: 0,
+      rewarding: 0,
+      unixtime: Math.round(new Date().getTime()/1000),    
       blocks: 1,
       estimatedFee: 0,
       feeSpeed: 'fast',
@@ -43,39 +119,9 @@ export default {
       table: [],
     };
   },
-  mounted() {
-    Object.keys(this.wallets).forEach((ticker) => {
-      this.$store
-        .dispatch('updateBalance', this.wallets[ticker])
-        .catch(() => { })
-      ;
-    }, this);
-    var getJSON = function(url, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.responseType = 'json';
-      xhr.onload = function() {
-        var status = xhr.status;
-        if (status === 200) {
-          callback(null, xhr.response);
-        } else {
-          callback(status, xhr.response);
-        }
-      };
-      xhr.send();
-    };
-    var context = this;
-    var address = this.$store.getters.getWalletByTicker('KMD').address;
-    var url = "https://dexstats.info/api/rewards.php?address=" + address;
-    var utxos = getJSON(url, function(err, data) {
-      if (err !== null) {
-        console.log('Something went wrong: ' + err);
-      } else {
-        context.rewards = data.rewards;
-      }
-    });
-  },
   methods: {
+    
+
     numberWithSpaces(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
@@ -83,59 +129,83 @@ export default {
       const satoshiNb = 100000000;
       return BigNumber(amount).dividedBy(satoshiNb).toNumber();
     },
-    prepareTx() {
-      wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
-      const amountpromise = wallet.electrum.getBalance(this.$store.getters.getWalletByTicker('KMD').address);
-      const t = this;
-      return amountpromise.then(function(confirmed) {
-        const amount = confirmed.confirmed;
-        t.withdraw.amount = amount;
-
-        const object = {
-          wallet: t.wallets.KMD,
-          address: t.$store.getters.getWalletByTicker('KMD').address,
-          amount,
-          speed: 'Fast',
-        };
-
-        return t.$store.dispatch('createTransaction', object)
-          .then((tx) => {
-            if (tx != null &&
-              tx.outputs != null &&
-              tx.inputs != null) {
-              t.estimatedFee = BigNumber(tx.fee);
-            } else if (tx != null && tx.feeRate != null) {
-              t.estimatedFee = BigNumber(tx.feeRate);
-            }
-            return tx;
-          });
-      });
+    onConfirmWithdrawModal() {
+        return this.buildTx();
+    },
+    hideModal() {
+      this.$refs.confirmWithdraw.hide();
+    },  
+    getUtxos () {
+      var vm = this
+      var addr = this.$store.getters.getWalletByTicker('KMD').address
+      var url = vm.explorer + "insight-api-komodo/addr/" + addr + "/utxo"
+      console.log(url)
+      axios
+        .get(url)
+        .then(response => {
+          vm.claimData.myUtxos = response.data
+          console.log(vm.claimData.myUtxos)
+        })
+        .catch(e => {
+          console.log(e)
+        });
+    },
+    buildTx () { // To Do: Call for most up to date reward at build
+      console.log('building transaction...')
+      var vm = this
+      var timelock = vm.unixtime - 777
+      var utxos = vm.claimData.myUtxos
+      var toAddress = vm.claimData.address
+      var inputamount = vm.claimData.satoshis
+      var rewardtotal = vm.rewarding
+      var amount = inputamount + rewardtotal
+      var privateKey = vm.claimData.privateKey
+      var transaction = new bitcore.Transaction()
+        .from(utxos)
+        .to(toAddress, amount)
+        .lockUntilDate(timelock)
+        .change(toAddress)
+      
+      transaction.inputs[0].sequenceNumber = 0
+      transaction.sign(privateKey)
+      
+        console.log(transaction);
+        
+        return transaction;
+    },
+    broadcastTx () {
+        wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
+        this.hideModal();
+        var transaction = this.buildTx();
+        var opts = {
+            disableMoreOutputThanInput: true
+        }
+        console.log('buildTx Serialized')
+        console.log(transaction.serialize(opts))
+        // Now broadcast: 
+        return wallet.electrum.broadcast(transaction.serialize(opts)) // Uncomment for LIVE TX Broadcasting on Confirm
+    },
+    fillClaimData () {
+      var dict = {}; 
+      var satoshis = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
+      dict["satoshis"] = satoshis;
+      var privateKey = new bitcore.PrivateKey(this.walletkmd.privKey.toString('hex'));
+      dict["privateKey"] = privateKey.toString();
+      var address = this.$store.getters.getWalletByTicker('KMD').address
+      dict["address"] = address.toString();
+      return dict;
     },
     claimRewards() {
       const kmdwallet = this.wallets.KMD;
-      if (this.displayInterest && this.rewards != 0) {
-        return this.prepareTx()
-          .then(tx => {
-            if (tx != null && tx.feeRate != null) {
-              return Promise.reject({ message: 'Not enough balance including fees.' });
-            }
-            return this.$store.dispatch('broadcastTransaction', { wallet: kmdwallet, ...tx });
-          })
-          .then((response) => {
-            this.withdraw.amount = null;
-            this.withdraw.address = '';
-          })
-          .catch(error => {
-            if (error.__type !== null && BigNumber(this.withdraw.amount).comparedTo(21000000) === 1) {
-              this.$toasted.info("You can't send more than 21 million at once");
-            } else {
-              this.$toasted.error(`Can't send transaction: ${error.message}`);
-            }
-          });
+      if (this.displayInterest && this.rewards != 0) {   
+          return this.broadcastTx()
       }
     },
   },
   computed: {
+    walletkmd () {
+      return this.$store.getters.getWalletByTicker('KMD');
+    },
     wallets() {
       return this.$store.getters.getWallets;
     },

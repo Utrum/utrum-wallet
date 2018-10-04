@@ -75,6 +75,7 @@
     }
   },
   "dependencies": {
+    "bitcore-lib": "^0.15.0",
     "app-root-dir": "^1.0.2",
     "axios": "^0.16.1",
     "bignumber.js": "^6.0.0",
