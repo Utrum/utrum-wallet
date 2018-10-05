@@ -75,14 +75,14 @@ export default {
       if (!refreshRewardData) {
         refreshRewardData = setInterval(function(){
           getRewardData(context, address, url);
-        }, 15000); 
-    }     
+        }, 15000);
+    }
       else {
           clearInterval(refreshRewardData);
           refreshRewardData = null;
           refreshRewardData = setInterval(function(){
           getRewardData(context, address, url);
-        }, 15000); 
+        }, 15000);
       }
     getRewardData(context, address, url);
   },
@@ -92,7 +92,7 @@ export default {
         height: '',
         scriptAddress: '',
         redeemScript: '',
-        amount,
+        amount: 0,
         myUtxos: []
       },
       explorer: 'https://kmdexplorer.io/',
@@ -102,7 +102,7 @@ export default {
       displayInterest: true,
       rewards: 0,
       rewarding: 0,
-      unixtime: Math.round(new Date().getTime()/1000),    
+      unixtime: Math.round(new Date().getTime()/1000),
       blocks: 1,
       estimatedFee: 0,
       feeSpeed: 'fast',
@@ -120,7 +120,7 @@ export default {
     };
   },
   methods: {
-    
+
 
     numberWithSpaces(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -134,7 +134,7 @@ export default {
     },
     hideModal() {
       this.$refs.confirmWithdraw.hide();
-    },  
+    },
     getUtxos () {
       var vm = this
       var addr = this.$store.getters.getWalletByTicker('KMD').address
@@ -165,12 +165,12 @@ export default {
         .to(toAddress, amount)
         .lockUntilDate(timelock)
         .change(toAddress)
-      
+
       transaction.inputs[0].sequenceNumber = 0
       transaction.sign(privateKey)
-      
+
         console.log(transaction);
-        
+
         return transaction;
     },
     broadcastTx () {
@@ -182,11 +182,11 @@ export default {
         }
         console.log('buildTx Serialized')
         console.log(transaction.serialize(opts))
-        // Now broadcast: 
+        // Now broadcast:
         return wallet.electrum.broadcast(transaction.serialize(opts)) // Uncomment for LIVE TX Broadcasting on Confirm
     },
     fillClaimData () {
-      var dict = {}; 
+      var dict = {};
       var satoshis = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
       dict["satoshis"] = satoshis;
       var privateKey = new bitcore.PrivateKey(this.walletkmd.privKey.toString('hex'));
@@ -197,7 +197,7 @@ export default {
     },
     claimRewards() {
       const kmdwallet = this.wallets.KMD;
-      if (this.displayInterest && this.rewards != 0) {   
+      if (this.displayInterest && this.rewards != 0) {
           return this.broadcastTx()
       }
     },
