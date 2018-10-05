@@ -23,8 +23,7 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
 
-var kmdfee = 10000,
-    refreshRewardData = null
+var refreshRewardData = null
 
 export default {
   name: 'balance',
@@ -153,6 +152,7 @@ export default {
     buildTx () { // To Do: Call for most up to date reward at build
       console.log('building transaction...')
       var vm = this
+      var txfee = vm.kmdfee
       var timelock = vm.unixtime - 777
       var utxos = vm.claimData.myUtxos
       var toAddress = vm.claimData.address
@@ -161,6 +161,7 @@ export default {
       var amount = inputamount + rewardtotal
       var privateKey = vm.claimData.privateKey
       var transaction = new bitcore.Transaction()
+        .fee(txfee)
         .from(utxos)
         .to(toAddress, amount)
         .lockUntilDate(timelock)
