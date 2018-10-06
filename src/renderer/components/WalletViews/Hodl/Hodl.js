@@ -17,10 +17,7 @@
 import bitcoinjs from 'bitcoinjs-lib';
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
-// import TransactionBuyHistory from '@/components/TransactionBuyHistory/TransactionBuyHistory.vue';
 import { BigNumber } from 'bignumber.js';
-// import { mapGetters } from 'vuex';
-// import * as _ from 'lodash';
 import bitcore from 'bitcore-lib';
 import axios from 'axios';
 
@@ -41,23 +38,24 @@ export default {
   mounted () {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
-    this.updateHeight()
+    this.updateUnlockTime()
     this.getUtxos()
   },
   data () {
     return {
       hodlInput: {
         amount: '',
-        height: ''
+        // daysToLock: 60 // TESTING!
+        daysToLock: 15
       },
       hodlData: {
-        height: '',
+        unlockTime: '',
         scriptAddress: '',
         redeemScript: '',
         myUtxos: []
       },
+      unlockTimeDate: '',
       scriptAddress: '',
-      coinsUnlockTime: '',
       redeemScript: '',
       validator: '',
       explorer: 'https://explorer.utrum.io/',
@@ -103,22 +101,27 @@ export default {
         self.isClipboard = false;
       }, 1000);
     },
-    // open links on an external browser
+    // open validation 3rd party software link on an external browser
     openValidator () {
       electron.shell.openExternal(`${this.validator}`);
     },
-    // update hodl height
-    updateHeight () {
-      // default vesting period to two months
-      this.hodlInput.height = (Date.now() / 1000 | 0) + 5184000
-      this.coinsUnlockTime = this.dateFormat(this.hodlInput.height)
+    // update hodl unlock time
+    updateUnlockTime () {
+      // convert days to seconds
+      //var secondsToLock = (this.hodlInput.daysToLock * 86400) // TESTING!
+      var secondsToLock = (this.hodlInput.daysToLock * 60) // TESTING!
+      var unlockTime = (Date.now() / 1000 | 0) + secondsToLock
+      this.hodlData.unlockTime = unlockTime
+      this.unlockTimeDate = (
+        this.dateFormat(unlockTime) + " (in " +
+        //this.hodlInput.daysToLock + ")" // TESTING!
+        this.hodlInput.daysToLock + " minutes)" // TESTING!
+      )
     },
     // method to retrieve hodl script from the hodl api
     getScript (url) {
       var vm = this
       vm.scriptAddress = "Loading..."
-      // reset human readable unlock time
-      vm.coinsUnlockTime = ""
       vm.redeemScript = ""
       vm.validator = ""
       axios
@@ -128,10 +131,8 @@ export default {
           vm.hodlData["redeemScript"] = response.data["redeemScript"]
           vm.hodlData["scriptAddress"] = response.data["address"]
           // update gui data
-          vm.redeemScript = response.data["redeemScript"]
           vm.scriptAddress = response.data["address"]
           vm.validator = 'https://deckersu.github.io/coinbin/?verify=' + response.data["redeemScript"]
-          vm.coinsUnlockTime = vm.dateFormat(vm.hodlData.height)
         })
         .catch(e => {
           console.log(e)
@@ -177,16 +178,16 @@ export default {
     hodlCreate () {
       var vm = this
 
-      // update height/unlock time to now
-      vm.updateHeight()
+      // update unlock time to now
+      vm.updateUnlockTime()
 
       vm.hodlData["scriptAddress"] = ''
       vm.hodlData["redeemScript"] = ''
-      vm.hodlData["height"] = vm.hodlInput.height
+      vm.hodlInput.daysToLock = ''
 
       var url = vm.explorer + "hodl-api/create/"
       url += vm.hodlData.publicKey
-      url += "/" + vm.hodlInput.height
+      url += "/" + vm.hodlData.unlockTime
       vm.getScript(url)
     },
     // here we store hodl related data
@@ -206,7 +207,7 @@ export default {
     },
     dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000);
-      const dateString = moment(blockchainDateUtc).local().format('hh:mm A DD/MM/YYYY');
+      const dateString = moment(blockchainDateUtc).local().format('hh:mm A MM/DD/YYYY');
       return dateString;
     }
   },
