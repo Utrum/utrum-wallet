@@ -114,7 +114,7 @@ export default {
       this.hodlData.unlockTime = unlockTime
       this.unlockTimeDate = (
         this.dateFormat(unlockTime) + " (in " +
-        //this.hodlInput.daysToLock + ")" // TESTING!
+        //this.hodlInput.daysToLock + " days)" // TESTING!
         this.hodlInput.daysToLock + " minutes)" // TESTING!
       )
     },

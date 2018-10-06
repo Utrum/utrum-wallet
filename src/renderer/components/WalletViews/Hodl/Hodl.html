@@ -25,7 +25,7 @@
       type="button">Get Code</button>
   </div>
 
-  <br>
+  <br><br>
   <div id="select-block" class="row">
     <span class="title-content">Hodl Address:</span>
     <div class="col-custom input-field row">
@@ -95,14 +95,12 @@
       <hr id="second-line"/>
     </div>
 
-    <div v-if="hodlInput.amount">
-      <div class="btn-center">
-        <button v-on:click="buildTx"
-          id="sendcoins"
-          class="btn sendcoins"
-          type="button">Deposit</button>
-      </div>
-    </div> <!-- conditional rendering -->
+    <div class="btn-center">
+      <button v-on:click="buildTx" :disabled="!hodlInput.amount"
+        id="sendcoins"
+        class="btn sendcoins"
+        type="button">Lock Funds</button>
+    </div>
 
   </div> <!-- conditional rendering -->
 
