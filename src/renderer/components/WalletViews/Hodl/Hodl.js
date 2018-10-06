@@ -39,7 +39,6 @@ export default {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
     this.updateUnlockTime()
-    this.getUtxos()
   },
   data () {
     return {
@@ -138,23 +137,24 @@ export default {
           console.log(e)
         });
     },
-    getUtxos () {
+    getTx () {
       var vm = this
       var url = vm.explorer + "insight-api-komodo/addr/" + vm.hodlData.address + "/utxo"
       console.log(url)
       axios
         .get(url)
         .then(response => {
-          vm.hodlData.myUtxos = response.data
+          var utxos = response.data
+          vm.hodlData.myUtxos = utxos
+          vm.buildTx(utxos)
         })
         .catch(e => {
           console.log(e)
         });
     },
-    buildTx () {
+    buildTx (utxos) {
       console.log('building transaction...')
       var vm = this
-      var utxos = vm.hodlData.myUtxos
       var toAddress = this.hodlData.scriptAddress
       var myAddress = vm.hodlData.address
       var amount = vm.hodlInput["amount"] * vm.satoshiNb

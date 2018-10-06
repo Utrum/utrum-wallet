@@ -82,7 +82,7 @@
     <div id="select-amount" class="row">
       <span class="title-content">AMOUNT</span>
         <div class="col-custom input-field row">
-        <input @keyup.enter="buildTx"
+        <input @keyup.enter="getTx"
           type="number"
           id="amount"
           v-model.number="hodlInput.amount"
@@ -96,7 +96,7 @@
     </div>
 
     <div class="btn-center">
-      <button v-on:click="buildTx" :disabled="!hodlInput.amount"
+      <button v-on:click="getTx" :disabled="!hodlInput.amount"
         id="sendcoins"
         class="btn sendcoins"
         type="button">Lock Funds</button>
