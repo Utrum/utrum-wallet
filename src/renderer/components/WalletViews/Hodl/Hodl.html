@@ -1,10 +1,28 @@
 <div class="content">
   <br>
+
+  <div id="select-amount" class="row">
+    <span class="title-content">LOCK FUNDS FOR</span>
+      <div class="col-custom input-field row">
+      <input @keyup.enter="hodlCreate"
+        type="number"
+        id="amount"
+        v-model.number="hodlInput.daysToLock"
+        class="col-custom input-field"
+        placeholder="How Many">
+      <!-- <span id="number-input">Days</span> --> <!-- TESTING! -->
+      <span id="number-input">Minutes</span> <!-- TESTING! -->
+    </div>
+  </div>
+  <div class="col-custom horizontal-line">
+    <hr id="second-line"/>
+  </div>
+
   <div class="btn-center">
-    <button v-on:click="hodlCreate"
+    <button v-on:click="hodlCreate" :disabled="!hodlInput.daysToLock"
       id="sendcoins"
       class="btn sendcoins"
-      type="button">Get Address</button>
+      type="button">Get Code</button>
   </div>
 
   <br>
@@ -26,7 +44,7 @@
   <div id="select-block" class="row">
     <span class="title-content">Unlock Time:</span>
     <div class="col-custom input-field row">
-      <span id="coinsUnlockTime">&nbsp;{{ coinsUnlockTime }}</span>
+      <span id="unlockTimeDate">&nbsp;{{ unlockTimeDate }}</span>
     </div>
   </div>
 
@@ -70,23 +88,22 @@
           v-model.number="hodlInput.amount"
           class="col-custom input-field"
           placeholder="Amount">
-        <span id="current-coin">&nbsp;{{select}}</span>
+        <span id="number-input">{{select}}</span>
       </div>
     </div>
     <div class="col-custom horizontal-line">
-      <hr id="first-line"/>
+      <hr id="second-line"/>
     </div>
 
     <div v-if="hodlInput.amount">
-
       <div class="btn-center">
         <button v-on:click="buildTx"
           id="sendcoins"
           class="btn sendcoins"
-          type="button">SEND</button>
+          type="button">Deposit</button>
       </div>
-
     </div> <!-- conditional rendering -->
+
   </div> <!-- conditional rendering -->
 
 </div>
