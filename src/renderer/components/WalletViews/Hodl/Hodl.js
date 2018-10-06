@@ -153,6 +153,7 @@ export default {
     },
     buildTx () {
       console.log('building transaction...')
+      this.getUtxos()
       var vm = this
       var utxos = vm.hodlData.myUtxos
       var toAddress = this.hodlData.scriptAddress
