@@ -96,11 +96,30 @@
     </div>
 
     <div class="btn-center">
-      <button v-on:click="getTx" :disabled="!hodlInput.amount"
+      <button v-on:click="getTx"
+        :disabled="!hodlInput.amount"
         id="sendcoins"
         class="btn sendcoins"
         type="button">Lock Funds</button>
     </div>
+
+    <br>
+    <div v-if="rawtx && !lastTxId">
+      <div class="btn-center">
+        <button v-on:click="submitTx"
+          :disabled="!rawtx"
+          id="sendcoins"
+          class="btn sendcoins"
+          type="button">Confirm</button>
+      </div>
+    </div> <!-- conditional rendering -->
+
+    <div v-if="lastTxId">
+      <br>
+      <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
+          <button class="btn btn-tx pointer" id="btn-tx-id" v-on:click="openTxExplorer()">{{ lastTxId }}</button>
+      </div>
+    </div> <!-- conditional rendering -->
 
   </div> <!-- conditional rendering -->
 

@@ -51,13 +51,15 @@ export default {
         unlockTime: '',
         scriptAddress: '',
         redeemScript: '',
-        myUtxos: []
+        myUtxos: [],
       },
       unlockTimeDate: '',
       scriptAddress: '',
       redeemScript: '',
       validator: '',
       explorer: 'https://explorer.utrum.io/',
+      rawtx: '',
+      lastTxId: '',
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
@@ -92,7 +94,10 @@ export default {
     };
   },
   methods: {
-    // for the hodl address copy button
+    openTxExplorer () {
+      electron.shell.openExternal(`${this.explorer}/tx/${this.lastTxId}`);
+    },
+    // for copy button
     onCopy() {
       const self = this;
       this.isClipboard = true;
@@ -138,6 +143,7 @@ export default {
         });
     },
     getTx () {
+      console.log('getting utxos...')
       var vm = this
       var url = vm.explorer + "insight-api-komodo/addr/" + vm.hodlData.address + "/utxo"
       console.log(url)
@@ -146,7 +152,9 @@ export default {
         .then(response => {
           var utxos = response.data
           vm.hodlData.myUtxos = utxos
-          vm.buildTx(utxos)
+          var rawtx = vm.buildTx(utxos)
+          vm.rawtx = rawtx
+          console.log('raw transaction stored')
         })
         .catch(e => {
           console.log(e)
@@ -171,8 +179,25 @@ export default {
         .change(myAddress)
         .addData(op_return)
         .sign(privateKey)
-      console.log(transaction.serialize(opts))
-      return transaction
+      var rawtx = transaction.serialize(opts)
+      vm.lastTxId = ''
+      return rawtx
+    },
+    submitTx () {
+      console.log('broadcasting transaction...')
+      var vm = this
+      var url = 'http://127.0.0.1:5000/submit-tx/'
+      var rawtx = vm.rawtx
+      vm.rawtx = ''
+      axios
+        .post(url, {'rawtx': rawtx})
+        .then(response => {
+          console.log(response.data)
+          vm.lastTxId = response.data.txid
+        })
+        .catch(e => {
+          console.log(e)
+        });
     },
     // hodl script creation
     hodlCreate () {
@@ -181,9 +206,12 @@ export default {
       // update unlock time to now
       vm.updateUnlockTime()
 
+      // flush data
       vm.hodlData["scriptAddress"] = ''
       vm.hodlData["redeemScript"] = ''
       vm.hodlInput.daysToLock = ''
+      vm.rawtx = ''
+      vm.lastTxId = ''
 
       var url = vm.explorer + "hodl-api/create/"
       url += vm.hodlData.publicKey
