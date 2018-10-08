@@ -19,7 +19,7 @@
       <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="~@/assets/icon-qrcode-select.svg"></button>
     </div>
   </div>
-  <div class="row-footer">
+  <div class="row-footer" v-bind:class="{kmd: wallet.ticker == 'KMD', oot: wallet.ticker == 'OOT', btc: wallet.ticker == 'BTC'}">
     <p class="col-header">Your {{wallet.coin.name}} address :</p>
     <div class="card">
       <button

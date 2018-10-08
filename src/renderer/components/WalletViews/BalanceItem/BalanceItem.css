@@ -93,6 +93,15 @@
   border: white;
   border-radius: 4px;
 }
+.row-footer.oot button{
+  background-color: #27aae0;
+}
+.row-footer.kmd button{
+  background-color: #316465;
+}
+.row-footer.btc button{
+  background-color: #f7a541;
+}
 
 .row-footer button:hover{
   background-color: #1EB0DC;
