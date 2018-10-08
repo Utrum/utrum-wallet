@@ -47,10 +47,7 @@ export default {
     openTxExplorer: (row) => {
       coins.all.forEach(coin => {
         if (row.item.ticker === coin.ticker) {
-          if(coin.ticker.toLocaleLowerCase() == 'kmd'){
-            electron.shell.openExternal(`https://kmdexplorer.io/tx/${row.item.tx_hash}`);
-          }
-          else electron.shell.openExternal(`${coin.explorer}/tx/${row.item.tx_hash}`);
+          electron.shell.openExternal(`${coin.explorer}/tx/${row.item.tx_hash}`);
         }
       });
     },
