@@ -60,8 +60,8 @@ function createWindow() {
     // titleBarStyle: 'hidden',
     // transparent: true, frame: false,
     center: true,
-    width: 1100,
-    height: 650,
+    // width: 1100,
+    // height: 650,
     minWidth: 1000,
     minHeight: 600,
     // nodeIntegration: 'iframe', // and this line
@@ -70,6 +70,7 @@ function createWindow() {
       webSecurity: false,
     },
   });
+  mainWindow.maximize();
 
   const template = [{
     label: 'Utrum Wallet App',
