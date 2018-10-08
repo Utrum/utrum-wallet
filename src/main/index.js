@@ -60,8 +60,6 @@ function createWindow() {
     // titleBarStyle: 'hidden',
     // transparent: true, frame: false,
     center: true,
-    // width: 1100,
-    // height: 650,
     minWidth: 1000,
     minHeight: 600,
     // nodeIntegration: 'iframe', // and this line
