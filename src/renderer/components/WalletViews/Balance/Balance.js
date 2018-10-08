@@ -42,49 +42,19 @@ export default {
         .catch(() => { })
       ;
     }, this);
-    var getJSON = (function(url, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.responseType = 'json';
-
-      xhr.onload = function() {
-        var status = xhr.status;
-        if (status === 200) {
-          callback(null, xhr.response);
-        } else {
-          callback(status, xhr.response);
-        }
-      };
-      xhr.send();
-    });
-    var context = this;
-    var address = this.$store.getters.getWalletByTicker('KMD').address;
-    var url = "https://dexstats.info/api/rewards.php?address=" + address;
-    var sats = this.satoshiNb
-    function getRewardData(context, address, url){
-     getJSON(url, function(err, data) {
-      if (err !== null) {
-        console.log('Something went wrong: ' + err);
-      } else {
-        context.rewards = data.rewards;
-        context.rewarding = Math.floor(data.rewards * 100000000)
-          console.log('getRewardData function rewards in sats: ', context.rewarding)
-      }
-    });
-    }
       if (!refreshRewardData) {
-        refreshRewardData = setInterval(function(){
-          getRewardData(context, address, url);
+        refreshRewardData = setInterval(() => {
+          this.getRewardData()
         }, 15000); 
     }     
-      else {
+    else {
           clearInterval(refreshRewardData);
           refreshRewardData = null;
-          refreshRewardData = setInterval(function(){
-          getRewardData(context, address, url);
+          refreshRewardData = setInterval(() => {
+          this.getRewardData()
         }, 15000); 
-      }
-    getRewardData(context, address, url);
+    }
+    this.getRewardData()
   },
   data() {
     return {
@@ -92,7 +62,7 @@ export default {
         height: '',
         scriptAddress: '',
         redeemScript: '',
-        amount,
+        amount: 0,
         myUtxos: []
       },
       explorer: 'https://kmdexplorer.io/',
@@ -201,6 +171,40 @@ export default {
           return this.broadcastTx()
       }
     },
+    getRewardData(){
+      var getJSON = (function(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'json';
+  
+        xhr.onload = function() {
+          var status = xhr.status;
+          if (status === 200) {
+            callback(null, xhr.response);
+          } else {
+            callback(status, xhr.response);
+          }
+        };
+        xhr.send();
+      });
+      var address = this.$store.getters.getWalletByTicker('KMD').address;
+      var url = "https://dexstats.info/api/rewards.php?address=" + address;
+      var sats = this.satoshiNb
+      getJSON(url, (err, data) => {
+        if (err !== null) {
+          console.log('Something went wrong: ' + err);
+        } else {
+          if(data && data.hasOwnProperty("rewards")){
+            this.rewards = data.rewards;
+            this.rewarding = Math.floor(data.rewards * 100000000)
+            console.log('getRewardData function rewards in sats: ', this.rewarding)
+          }
+          else{
+            console.log("Rewards not found");
+          }
+        }
+      });
+    }
   },
   computed: {
     walletkmd () {

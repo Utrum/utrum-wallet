@@ -9,16 +9,16 @@
     </div>
   </div>
   <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
-    <div v-if="wallet.ticker != 'BTC'">
       <balance-item :wallet="wallet"/>
-      <div v-if="wallet.ticker === 'KMD'">
-        <h3>KMD Rewards</h3>
-        <span v-if="rewards == 0"> You have no rewards to claim</span>
-        <p v-if="rewards > 0">{{rewards}}</p>
-        <button v-if="rewards > 0.0001" class="btn btn-tx pointer" id="btn" @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'">Claim</button>
+      <div v-if="wallet.ticker === 'KMD'" class="mb-0" style="display: flow-root;">
+        <h5 class="float-left" style="line-height: 38px;">KMD Rewards</h5>
+        <div class="float-right">
+          <p class="d-inline mr-2">{{rewards}}</p>
+          <button v-if="rewards > 0.0001" class="btn btn-tx pointer mr-2" id="btn" @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'">Claim</button>
+          <button class="btn btn-tx pointer" @click="getRewardData"><i class="fas fa-sync"></i></button>
+        </div>
       </div>
-      <hr v-if="wallet.ticker === 'KMD'">
-    </div>
+      <hr class="w-100" />
   </div>
   <b-modal @ok="claimRewards()" ref="confirmWithdraw" id="confirmWithdraw" centered>
     <div slot="modal-header" class="headerModalBuy">

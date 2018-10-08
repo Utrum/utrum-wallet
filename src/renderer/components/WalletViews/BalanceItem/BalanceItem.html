@@ -3,6 +3,7 @@
     <h4 id="coin-item">
       <img class="margin-auto sel-icon" v-if="wallet.ticker == 'KMD'" src="~@/assets/KMD-32x32.png"/>
       <img class="margin-auto sel-icon" v-if="wallet.ticker == 'OOT'" src="~@/assets/OOT-32x32.png"/>
+      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'BTC'" src="~@/assets/BTC-32x32.png"/>
       {{wallet.ticker}}
     </h4>
     <h4 id="balance-item">{{numberWithSpaces(wallet.balance).toString()}}</h4>
@@ -19,7 +20,7 @@
     </div>
   </div>
   <div class="row-footer">
-    <p class="col-header">Your {{wallet.coin.name}} deposit address :</p>
+    <p class="col-header">Your {{wallet.coin.name}} address :</p>
     <div class="card">
       <button
       v-clipboard:copy="wallet.address"
@@ -34,6 +35,5 @@
     </button>
   </div>
 </div>
-<hr/>
 <qrcode-modal :wallet="wallet"></qrcode-modal>
 </div>

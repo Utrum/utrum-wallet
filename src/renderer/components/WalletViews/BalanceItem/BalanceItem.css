@@ -64,7 +64,7 @@
   color: #0C6AA8;
 }
 #coin-item img{
-  height: 20px;
+  height: 24px;
   margin-top: -4px;
 }
 .row-content {
@@ -154,5 +154,5 @@ hr {
 }
 
 .row-main-item{
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
