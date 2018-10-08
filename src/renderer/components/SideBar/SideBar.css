@@ -14,7 +14,7 @@
  *                                                                            *
  ******************************************************************************/
 
-.active {
+ .active {
   transition: all 0.3s;
   color: #ffffff !important;
 }
@@ -30,7 +30,7 @@
 
 #sidebar {
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 0.82em;
   width: 50%;
   padding: 15px;
   min-width: 184px;
@@ -39,5 +39,46 @@
   background: rgb(250,250,250);
   transition: all 0.3s;
   position: fixed;
-  background-color: #1E2438;
+  background-color: #079cd8;
+}
+#sidebar .sidebar-header {
+  background: #6d7fcc;
+}
+
+#sidebar ul.components {
+  border-bottom: 1px solid #fff;
+}
+
+#sidebar ul p {
+  color: #fff;
+  padding: 10px;
+}
+
+#sidebar ul li {
+  margin: 20px 0;
+}
+
+#sidebar ul li a {
+  padding: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 0px;
+  font-size: 1.1em;
+  color: #fff;
+  display: block;
+  list-style-type: none;
+  cursor: pointer;
+}
+
+#sidebar ul li{
+  color: rgb(151,151,151);
+}
+
+#sidebar ul li > a.active {
+  color: #ffffff;
+  border-bottom: 2px solid #fff;
+}
+
+#sidebar a:focus{
+  outline: none;
 }
