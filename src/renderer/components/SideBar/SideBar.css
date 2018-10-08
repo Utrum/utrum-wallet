@@ -68,6 +68,7 @@
   display: block;
   list-style-type: none;
   cursor: pointer;
+  font-weight: normal;
 }
 
 #sidebar ul li{
