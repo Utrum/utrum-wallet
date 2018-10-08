@@ -25,6 +25,8 @@ export default {
       ootFacebookUrl: 'https://www.facebook.com/utrumdotio',
       ootRedditUrl: 'https://www.reddit.com/r/Utrumdotio/',
       ootTwitterURl: 'https://twitter.com/utrumdotio',
+      ootBlogURl: 'https://medium.com/utrum',
+      ootGithub: 'https://github.com/utrum'
     };
   },
   mounted() {
@@ -47,6 +49,15 @@ export default {
     },
     openOOTTwitter() {
       electron.shell.openExternal(this.ootTwitterURl);
+    },
+    openOOTGithub() {
+      electron.shell.openExternal(this.ootGithub);
+    },
+    openOOTBlog(link){
+      electron.shell.openExternal(this.ootBlogURl);
+    },
+    openLink(link){
+      electron.shell.openExternal(link);
     }
   },
   computed: {
