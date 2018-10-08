@@ -94,8 +94,13 @@ export default {
     };
   },
   methods: {
+    // open returned transaction id link
     openTxExplorer () {
       electron.shell.openExternal(`${this.explorer}/tx/${this.lastTxId}`);
+    },
+    // open validation 3rd party software link on an external browser
+    openValidator () {
+      electron.shell.openExternal(`${this.validator}`);
     },
     // for copy button
     onCopy() {
@@ -104,10 +109,6 @@ export default {
       setTimeout(() => {
         self.isClipboard = false;
       }, 1000);
-    },
-    // open validation 3rd party software link on an external browser
-    openValidator () {
-      electron.shell.openExternal(`${this.validator}`);
     },
     // update hodl unlock time
     updateUnlockTime () {
@@ -186,7 +187,7 @@ export default {
     submitTx () {
       console.log('broadcasting transaction...')
       var vm = this
-      var url = 'http://127.0.0.1:5000/submit-tx/'
+      var url = vm.explorer + "hodl-api/submit-tx/"
       var rawtx = vm.rawtx
       vm.rawtx = ''
       axios
