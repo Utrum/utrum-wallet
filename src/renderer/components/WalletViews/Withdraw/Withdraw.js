@@ -62,12 +62,8 @@ export default {
       },
       paused: false,
       readingQRCode: false,
-      select: 'OOT',
-      selectNew: {
-        icon: 'OOT',
-        ticker: 'OOT',
-        label: 'utrum (OOT)'
-      },
+      select: null,
+      selectNew: null,
       withdraw: {
         amount: null,
         address: '',
@@ -249,12 +245,18 @@ export default {
       return this.$store.getters.enabledCoins.map(coin => coin.ticker ).filter( coin => coin != 'BTC');
     },
     coinsNew() {
+      console.log("computing coninsNew");
       return this.$store.getters.enabledCoins.map(coin => {
-        return {
+        let tempObj = {
           ticker: coin.ticker,
           icon: coin.ticker,
           label: `${coin.name} (${coin.ticker})`
         }
+        if(!this.selectNew && coin.ticker == 'OOT'){
+          this.select = coin.ticker
+          this.selectNew = tempObj
+        }
+        return tempObj
       });
     },
     getTotalPriceWithFee() {
