@@ -1,7 +1,12 @@
 <div class="row-main-item">
   <div class="row-title">
-    <h2 id="balance-item">{{numberWithSpaces(wallet.balance).toString()}}</h2>
-    <h2 id="coin-item">{{wallet.ticker}}</h2>
+    <h4 id="coin-item">
+      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'KMD'" src="~@/assets/KMD-32x32.png"/>
+      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'OOT'" src="~@/assets/OOT-32x32.png"/>
+      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'BTC'" src="~@/assets/BTC-32x32.png"/>
+      {{wallet.ticker}}
+    </h4>
+    <h4 id="balance-item">{{numberWithSpaces(wallet.balance).toString()}}</h4>
     <p id="us-dollar" class="col-header"><img src="~@/assets/icon-usdollar.svg"/> {{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
   </div>
   <div class="d-flex flex-row justify-content-end">
