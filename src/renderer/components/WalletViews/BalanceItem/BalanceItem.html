@@ -30,7 +30,7 @@
       :data-clipboard-text="wallet.address">
       <div :id="wallet.ticker" class="btn-inside-qrcode">
         <span v-if="isClipboard" >Copied to the clipboard</span>
-        <span v-else>{{wallet.address}}</span>
+        <span v-else>{{wallet.address}} &nbsp; <i class="far fa-copy"></i></span>
       </div>
     </button>
   </div>
