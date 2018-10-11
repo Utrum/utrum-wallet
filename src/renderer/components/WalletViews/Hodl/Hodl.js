@@ -35,11 +35,13 @@ export default {
     'select2': Select2,
     'select-awesome': SelectAwesome
   },
+
   mounted () {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
     this.updateUnlockTime()
   },
+
   data () {
     return {
       hodlInput: {
@@ -65,15 +67,18 @@ export default {
       select: 'OOT',
     };
   },
+
   methods: {
     // open returned transaction id link
     openTxExplorer () {
       shell.openExternal(`${this.explorer}/tx/${this.lastTxId}`);
     },
+
     // open validation 3rd party software link on an external browser
     openValidator () {
       shell.openExternal(`${this.validator}`);
     },
+
     // for copy button
     onCopy() {
       const self = this;
@@ -82,6 +87,7 @@ export default {
         self.isClipboard = false;
       }, 1000);
     },
+
     // update hodl unlock time
     updateUnlockTime () {
       // convert days to seconds
@@ -95,6 +101,7 @@ export default {
         this.hodlInput.daysToLock + " minutes)" // TESTING!
       )
     },
+
     // method to retrieve hodl script from the hodl api
     getScript (url) {
       var vm = this
@@ -119,6 +126,8 @@ export default {
           console.log(e)
         });
     },
+
+    // get utxos and call build transaction function
     getTx () {
       console.log('getting utxos...')
       var vm = this
@@ -141,6 +150,8 @@ export default {
           console.log(e)
         });
     },
+
+    // build the funding transaction
     buildTx (utxos) {
       console.log('building transaction...')
       var vm = this
@@ -166,6 +177,8 @@ export default {
       vm.lastTxId = ''
       return rawtx
     },
+
+    // submit transaction for validation and broadcasting
     submitTx () {
       console.log('broadcasting transaction...')
       var vm = this
@@ -182,6 +195,7 @@ export default {
           console.log(e)
         });
     },
+
     // hodl script creation
     hodlCreate () {
       var vm = this
@@ -204,7 +218,8 @@ export default {
       // get script via http request
       vm.getScript(url)
     },
-    // here we store hodl related data
+
+    // store hodl related data
     fillHodlData () {
       var dict = {};
 
@@ -221,6 +236,7 @@ export default {
 
       return dict;
     },
+
     // convert unix time to human readable time
     dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000);
@@ -232,6 +248,7 @@ export default {
       return dateString;
     }
   },
+
   computed: {
     // get bitcoinjs-lib wallet data
     wallet () {
