@@ -87,6 +87,7 @@ export default {
       return promise
       .then(response => {
         let items = response.data.items
+        // treat each transaction
         for (var item in items) {
           // define "amount sent" as the first output value
           var sentAmount = parseFloat(items[item].vout[0].value)
