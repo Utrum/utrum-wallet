@@ -89,7 +89,7 @@ export default {
         let items = response.data.items
         for (var item in items) {
           // define "amount sent" as the first output value
-          var sentAmount = items[item].vout[0].value
+          var sentAmount = parseFloat(items[item].vout[0].value)
           items[item].sentAmount = sentAmount
           // build explorer tx page url
           items[item].explorerUrl = (
