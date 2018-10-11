@@ -151,9 +151,11 @@ export default {
       var op_return = "REDEEM SCRIPT " + vm.hodlData.redeemScript
       var privateKey = vm.hodlData.privateKey
 
-      var opts = { // https://bitcore.io/api/lib/transaction#serialization-checks
+      // https://bitcore.io/api/lib/transaction#serialization-checks
+      var opts = {
         disableDustOutputs: true
       }
+
       var transaction = new bitcore.Transaction()
         .from(utxos)
         .to(toAddress, amount)
@@ -206,7 +208,9 @@ export default {
     fillHodlData () {
       var dict = {};
 
-      var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'));
+      var privateKey = new bitcore.PrivateKey(
+        this.wallet.privKey.toString('hex')
+      );
       dict["privateKey"] = privateKey.toString();
 
       var publicKey = new bitcore.PublicKey(privateKey);
@@ -220,7 +224,11 @@ export default {
     // convert unix time to human readable time
     dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000);
-      const dateString = moment(blockchainDateUtc).local().format('hh:mm A MM/DD/YYYY');
+      const dateString = (
+        moment(blockchainDateUtc)
+        .local()
+        .format('hh:mm A MM/DD/YYYY')
+      )
       return dateString;
     }
   },
