@@ -216,7 +216,6 @@ export default {
     },
     // here we store hodl related data
     fillHodlData () {
-      console.log(this.wallet)
       var dict = {};
 
       var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'));
