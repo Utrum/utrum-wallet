@@ -131,12 +131,14 @@ export default {
     getTx () {
       console.log('getting utxos...')
       var vm = this
+      // construct call url
       var url = (
         vm.explorer +
         "insight-api-komodo/addr/" +
         vm.hodlData.address +
         "/utxo"
       )
+      // make call to api
       axios
         .get(url)
         .then(response => {
@@ -155,18 +157,23 @@ export default {
     buildTx (utxos) {
       console.log('building transaction...')
       var vm = this
-      var toAddress = this.hodlData.scriptAddress
+
+      // prepare variables to build our transaction
+      var toAddress = vm.hodlData.scriptAddress
       var myAddress = vm.hodlData.address
       var amount = vm.hodlInput["amount"] * vm.satoshiNb
-      vm.hodlInput["amount"] = ''
       var op_return = "REDEEM SCRIPT " + vm.hodlData.redeemScript
       var privateKey = vm.hodlData.privateKey
+
+      // gui related -
+      vm.hodlInput["amount"] = ''
 
       // https://bitcore.io/api/lib/transaction#serialization-checks
       var opts = {
         disableDustOutputs: true
       }
 
+      // use bitcore to build the transaction
       var transaction = new bitcore.Transaction()
         .from(utxos)
         .to(toAddress, amount)
