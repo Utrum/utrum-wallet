@@ -116,11 +116,15 @@
 
     <div v-if="lastTxId">
       <br>
+      <span>Transaction ID:</span>
       <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
           <button class="btn btn-tx pointer" id="btn-tx-id" v-on:click="openTxExplorer()">{{ lastTxId }}</button>
       </div>
     </div> <!-- conditional rendering -->
 
   </div> <!-- conditional rendering -->
+
+  <br><br>
+  <hodl-history id="hodlHistory" :wallet="wallet"></hodl-history>
 
 </div>

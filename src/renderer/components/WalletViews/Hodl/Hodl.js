@@ -22,14 +22,16 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 
 const { clipboard } = require('electron');
+const { shell } = require('electron');
 const moment = require('moment');
-const electron = require('electron');
 
+import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';
 
 export default {
   name: 'hodl',
   components: {
-    select2: Select2,
+    'hodl-history': HodlHistory,
+    'select2': Select2,
     'select-awesome': SelectAwesome
   },
   created () {
@@ -63,13 +65,6 @@ export default {
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
-      estimatedFee: 0,
-      feeSpeed: 'fast',
-      fees: [
-        { id: 0, label: 'Very fast', speed: 'fast', value: 'veryFast' },
-        { id: 1, label: 'Fast', speed: 'medium', value: 'fast' },
-        { id: 2, label: 'Low', speed: 'slow', value: 'low' },
-      ],
       videoConstraints: {
         width: {
           min: 265,
@@ -82,25 +77,17 @@ export default {
           max: 250,
         },
       },
-      paused: false,
-      readingQRCode: false,
       select: '',
-      withdraw: {
-        amount: null,
-        address: '',
-        coin: 'OOT',
-      },
-      history: [],
     };
   },
   methods: {
     // open returned transaction id link
     openTxExplorer () {
-      electron.shell.openExternal(`${this.explorer}/tx/${this.lastTxId}`);
+      shell.openExternal(`${this.explorer}/tx/${this.lastTxId}`);
     },
     // open validation 3rd party software link on an external browser
     openValidator () {
-      electron.shell.openExternal(`${this.validator}`);
+      shell.openExternal(`${this.validator}`);
     },
     // for copy button
     onCopy() {
@@ -126,9 +113,13 @@ export default {
     // method to retrieve hodl script from the hodl api
     getScript (url) {
       var vm = this
+
+      // gui
       vm.scriptAddress = "Loading..."
       vm.redeemScript = ""
       vm.validator = ""
+
+      // communicate with api
       axios
         .get(url)
         .then(response => {
@@ -147,7 +138,6 @@ export default {
       console.log('getting utxos...')
       var vm = this
       var url = vm.explorer + "insight-api-komodo/addr/" + vm.hodlData.address + "/utxo"
-      console.log(url)
       axios
         .get(url)
         .then(response => {
@@ -193,7 +183,7 @@ export default {
       axios
         .post(url, {'rawtx': rawtx})
         .then(response => {
-          console.log(response.data)
+          console.log("transaction submitted")
           vm.lastTxId = response.data.txid
         })
         .catch(e => {
@@ -207,16 +197,19 @@ export default {
       // update unlock time to now
       vm.updateUnlockTime()
 
-      // flush data
+      // flush data regarding responsive stuff
       vm.hodlData["scriptAddress"] = ''
       vm.hodlData["redeemScript"] = ''
       vm.hodlInput.daysToLock = ''
       vm.rawtx = ''
       vm.lastTxId = ''
 
+      // build url
       var url = vm.explorer + "hodl-api/create/"
       url += vm.hodlData.publicKey
       url += "/" + vm.hodlData.unlockTime
+
+      // get script via http request
       vm.getScript(url)
     },
     // here we store hodl related data
@@ -234,6 +227,7 @@ export default {
 
       return dict;
     },
+    // convert unix time to human readable time
     dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000);
       const dateString = moment(blockchainDateUtc).local().format('hh:mm A MM/DD/YYYY');
@@ -241,9 +235,9 @@ export default {
     }
   },
   computed: {
-    // get bitcoinjs-lib wallet
+    // get bitcoinjs-lib wallet data
     wallet () {
       return this.$store.getters.getWalletByTicker(this.select);
-    }
+    },
   }
 }
