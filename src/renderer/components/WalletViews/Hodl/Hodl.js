@@ -24,6 +24,7 @@ import axios from 'axios';
 const { clipboard } = require('electron');
 const { shell } = require('electron');
 const moment = require('moment');
+const coinbinValidator = 'https://deckersu.github.io/coinbin/?verify='
 
 import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';
 
@@ -33,9 +34,6 @@ export default {
     'hodl-history': HodlHistory,
     'select2': Select2,
     'select-awesome': SelectAwesome
-  },
-  created () {
-    this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
   },
   mounted () {
     // initialize hodl wallet
@@ -59,7 +57,6 @@ export default {
       scriptAddress: '',
       redeemScript: '',
       validator: '',
-      explorer: 'https://explorer.utrum.io/',
       rawtx: '',
       lastTxId: '',
       isClipboard: false,
@@ -77,7 +74,7 @@ export default {
           max: 250,
         },
       },
-      select: '',
+      select: 'OOT',
     };
   },
   methods: {
@@ -128,7 +125,7 @@ export default {
           vm.hodlData["scriptAddress"] = response.data["address"]
           // update gui data
           vm.scriptAddress = response.data["address"]
-          vm.validator = 'https://deckersu.github.io/coinbin/?verify=' + response.data["redeemScript"]
+          vm.validator = coinbinValidator + response.data["redeemScript"]
         })
         .catch(e => {
           console.log(e)
@@ -137,7 +134,12 @@ export default {
     getTx () {
       console.log('getting utxos...')
       var vm = this
-      var url = vm.explorer + "insight-api-komodo/addr/" + vm.hodlData.address + "/utxo"
+      var url = (
+        vm.explorer +
+        "insight-api-komodo/addr/" +
+        vm.hodlData.address +
+        "/utxo"
+      )
       axios
         .get(url)
         .then(response => {
@@ -214,6 +216,7 @@ export default {
     },
     // here we store hodl related data
     fillHodlData () {
+      console.log(this.wallet)
       var dict = {};
 
       var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'));
@@ -239,5 +242,8 @@ export default {
     wallet () {
       return this.$store.getters.getWalletByTicker(this.select);
     },
+    explorer () {
+      return this.wallet.coin.explorer
+    }
   }
 }
