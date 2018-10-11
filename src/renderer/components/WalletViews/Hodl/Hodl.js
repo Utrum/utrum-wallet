@@ -62,18 +62,6 @@ export default {
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
-      videoConstraints: {
-        width: {
-          min: 265,
-          ideal: 265,
-          max: 265,
-        },
-        height: {
-          min: 250,
-          ideal: 250,
-          max: 250,
-        },
-      },
       select: 'OOT',
     };
   },
