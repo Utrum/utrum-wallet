@@ -71,7 +71,7 @@ export default {
   methods: {
     // open returned transaction id link
     openTxExplorer () {
-      shell.openExternal(`${this.explorer}/tx/${this.lastTxId}`);
+      shell.openExternal(`${this.explorer}tx/${this.lastTxId}`);
     },
 
     // open validation 3rd party software link on an external browser
