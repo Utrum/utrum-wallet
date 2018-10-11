@@ -93,7 +93,7 @@ export default {
           items[item].sentAmount = sentAmount
           // build explorer tx page url
           items[item].explorerUrl = (
-            vm.wallet.coin.explorer + '/tx/' +
+            vm.wallet.coin.explorer + 'tx/' +
             items[item].txid
           )
         }
