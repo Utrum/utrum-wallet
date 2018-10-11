@@ -254,6 +254,8 @@ export default {
     wallet () {
       return this.$store.getters.getWalletByTicker(this.select);
     },
+
+    // get explorer url
     explorer () {
       return this.wallet.coin.explorer
     }
