@@ -87,8 +87,10 @@ export default {
       return promise
       .then(response => {
         let items = response.data.items
+
         // treat each transaction
         for (var item in items) {
+
           // define "amount sent" as the first output value
           var sentAmount = parseFloat(items[item].vout[0].value)
           items[item].sentAmount = sentAmount
@@ -97,9 +99,47 @@ export default {
             vm.wallet.coin.explorer + 'tx/' +
             items[item].txid
           )
+
+          // testing stuff: /////////////////////////////////////////////////
+          var destAddr = items[item].vout[0].scriptPubKey.addresses[0]
+          var isSentToScript = false
+          var isUtrumHodlTx = false
+
+          // detect if p2sh transaction
+          if ( destAddr.substring(0,1) == 'b'){
+            isSentToScript = true
+            var opReturnAsm = items[item].vout[1].scriptPubKey.asm
+            var opReturnHex = items[item].vout[1].scriptPubKey.hex
+
+            // check if this is an utrum hodl deposit
+            let hodlDepositHint = "OP_RETURN 52454445454d2053435249505420"
+            if ( opReturnAsm.substring(0,38) == hodlDepositHint ) {
+              isUtrumHodlTx = true
+              // get op_return data
+              var opReturnData = bitcore.Script(opReturnHex)
+              var opReturnString = opReturnData.chunks[1].buf.toString()
+              // get redeem script from op_return data
+              var header = "REDEEM SCRIPT "
+              var redeemScriptHex = opReturnString.replace(header, '')
+              var redeemScriptData = bitcore.Script(redeemScriptHex)
+              var redeemScriptString = redeemScriptData.toString()
+              // get nlocktime value from redeem script
+              var nLockTimeData = redeemScriptData.chunks[0].buf
+              var nLockTime = bitcore.crypto.BN.fromBuffer(
+                nLockTimeData, { endian: 'little' }
+              )
+              var nLockTimeString = nLockTime.toString()
+              console.log(nLockTimeString)
+            }
+          }
+
         }
+
         // calculate number of pages
         vm.totalRows = response.data.totalItems
+
+        // return data
+        //console.log(items) // TESTING!
         return(items || [])
       })
       .catch(e => {
