@@ -41,10 +41,10 @@ export default {
       currentPage: 1,
       perPage: 10,
       fields: [
-        { key: 'time', label: 'Time', sortable: true },
-        { key: 'blockheight', label: 'Block' },
+        { key: 'nLockTime', label: 'Release Time', sortable: false },
+//        { key: 'blockheight', label: 'Block' },
         { key: 'confirmations', label: 'Conf' },
-        { key: 'sentAmount', label: `Amount` },
+        { key: 'formattedAmount', label: 'Amount' },
         { key: 'txid', label: 'TxID' },
       ],
     };
@@ -76,7 +76,11 @@ export default {
     },
 
     getColorAmount(amount) {
-      return (amount > 0) ? 'positiveColor' : 'negativeColor';
+      if ( typeof amount == 'string' ) {  // non-hodl transactions
+        return 'positiveColor'
+      }else{
+        return (amount < 0) ? 'negativeColor' : 'hodlColor';
+      }
     },
 
     dateFormat(time) {
@@ -98,7 +102,20 @@ export default {
 
         // process each transaction
         for (var item in items) {
+
+          // add hodl related data to transactions
           items[item] = vm.processTx(items[item])
+
+          // for gui, custom "amount" format
+          if (items[item].isUtrumHodlTx === false) {
+            if ( this.wallet.address !== items[item].destAddr ){
+              items[item].formattedAmount = items[item].sentAmount * -1
+            }else{
+              items[item].formattedAmount = '+' + items[item].sentAmount
+            }
+          }else{
+            items[item].formattedAmount = items[item].sentAmount
+          }
         }
 
         // calculate number of pages
@@ -162,9 +179,13 @@ export default {
           )
           var nLockTimeString = nLockTime.toString()
           newTx.nLockTime = nLockTimeString
-          //console.log(nLockTimeString) // TESTING
         }
       }
+
+      // return output
+      newTx.destAddr = destAddr
+      newTx.isSentToScript = isSentToScript
+      newTx.isUtrumHodlTx = isUtrumHodlTx
       return newTx
     },
 

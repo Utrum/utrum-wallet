@@ -11,9 +11,18 @@
     :current-page="currentPage"
     :per-page="perPage"
     >
+<!--
         <template slot="time" slot-scope="row">
             <span>{{dateFormat(row.value)}}</span>
         </template>
+-->
+
+        <template slot="nLockTime" slot-scope="row">
+            <span v-if="row.value">{{ dateFormat(row.value) }}</span>
+            <span v-else>(normal transaction)</span>
+        </template>
+
+<!--
         <template slot="amount" slot-scope="row">
             <div :class="getColorAmount(row.value)">
                 <span v-if="satoshiToBitcoin(row.value) > 0">+</span>
@@ -21,6 +30,14 @@
                 {{satoshiToBitcoin(Math.abs(row.value))}}
             </div>
         </template>
+-->
+
+        <template slot="formattedAmount" slot-scope="row">
+            <div :class="getColorAmount(row.value)">
+                {{ row.value }}
+            </div>
+        </template>
+
         <template slot="confirmations" slot-scope="row">
             <span id="confirmations">{{handlePending(row.value)}}</span>
         </template>
