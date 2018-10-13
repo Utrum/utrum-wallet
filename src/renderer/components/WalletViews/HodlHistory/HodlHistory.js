@@ -35,6 +35,7 @@ export default {
         this.wallet.address +
         "/txs"),
       totalRows: 10,
+      transactions: [],
       sortBy: '',
       sortDesc: true,
       currentPage: 1,
@@ -49,16 +50,19 @@ export default {
     };
   },
   methods: {
+
     openTxExplorer: (row) => {
       var txid = row.item.txid
       shell.openExternal(row.item.explorerUrl);
     },
+
     handlePending(value) {
       if (value) {
         return value;
       }
       return 0;
     },
+
     copyToClipboard(row) {
       clipboard.writeText(row.item.txid);
       this.$toasted.show('Copied !', {
@@ -66,17 +70,21 @@ export default {
         icon: 'done',
       });
     },
+
     satoshiToBitcoin(amount) {
       return BigNumber(amount).dividedBy(satoshiNb).toNumber();
     },
+
     getColorAmount(amount) {
       return (amount > 0) ? 'positiveColor' : 'negativeColor';
     },
+
     dateFormat(time) {
       const blockchainDateUtc = moment.utc(time * 1000);
       const dateString = moment(blockchainDateUtc).local().format('hh:mm A MM/DD/YY');
       return dateString;
     },
+
     txHistory () {
       console.log('getting transaction history...')
       var vm = this
@@ -88,58 +96,18 @@ export default {
       .then(response => {
         let items = response.data.items
 
-        // treat each transaction
+        // process each transaction
         for (var item in items) {
-
-          // define "amount sent" as the first output value
-          var sentAmount = parseFloat(items[item].vout[0].value)
-          items[item].sentAmount = sentAmount
-          // build explorer tx page url
-          items[item].explorerUrl = (
-            vm.wallet.coin.explorer + 'tx/' +
-            items[item].txid
-          )
-
-          // testing stuff: /////////////////////////////////////////////////
-          var destAddr = items[item].vout[0].scriptPubKey.addresses[0]
-          var isSentToScript = false
-          var isUtrumHodlTx = false
-
-          // detect if p2sh transaction
-          if ( destAddr.substring(0,1) == 'b'){
-            isSentToScript = true
-            var opReturnAsm = items[item].vout[1].scriptPubKey.asm
-            var opReturnHex = items[item].vout[1].scriptPubKey.hex
-
-            // check if this is an utrum hodl deposit
-            let hodlDepositHint = "OP_RETURN 52454445454d2053435249505420"
-            if ( opReturnAsm.substring(0,38) == hodlDepositHint ) {
-              isUtrumHodlTx = true
-              // get op_return data
-              var opReturnData = bitcore.Script(opReturnHex)
-              var opReturnString = opReturnData.chunks[1].buf.toString()
-              // get redeem script from op_return data
-              var header = "REDEEM SCRIPT "
-              var redeemScriptHex = opReturnString.replace(header, '')
-              var redeemScriptData = bitcore.Script(redeemScriptHex)
-              var redeemScriptString = redeemScriptData.toString()
-              // get nlocktime value from redeem script
-              var nLockTimeData = redeemScriptData.chunks[0].buf
-              var nLockTime = bitcore.crypto.BN.fromBuffer(
-                nLockTimeData, { endian: 'little' }
-              )
-              var nLockTimeString = nLockTime.toString()
-              console.log(nLockTimeString)
-            }
-          }
-
+          items[item] = vm.processTx(items[item])
         }
 
         // calculate number of pages
         vm.totalRows = response.data.totalItems
 
+        // update shared data
+        vm.transactions = items
+
         // return data
-        //console.log(items) // TESTING!
         return(items || [])
       })
       .catch(e => {
@@ -147,11 +115,65 @@ export default {
         return([])
       });
     },
+
+    processTx (tx) {
+      var vm = this
+
+      // output variable
+      var newTx = tx
+
+      // define "amount sent" as the first output value
+      var sentAmount = parseFloat(tx.vout[0].value)
+      newTx.sentAmount = sentAmount
+
+      // build explorer tx page url
+      newTx.explorerUrl = (
+        vm.wallet.coin.explorer + 'tx/' +
+        tx.txid
+      )
+
+      // process hodl transactions
+      var destAddr = tx.vout[0].scriptPubKey.addresses[0]
+      var isSentToScript = false
+      var isUtrumHodlTx = false
+
+      // detect if p2sh transaction
+      if ( destAddr.substring(0,1) == 'b' ){
+        isSentToScript = true
+        var opReturnAsm = tx.vout[1].scriptPubKey.asm
+        var opReturnHex = tx.vout[1].scriptPubKey.hex
+        // check if this is an utrum hodl deposit
+        let hodlDepositHint = "OP_RETURN 52454445454d2053435249505420"
+        if ( opReturnAsm.substring(0,38) == hodlDepositHint ) {
+          isUtrumHodlTx = true
+          // get op_return data
+          var opReturnData = bitcore.Script(opReturnHex)
+          var opReturnString = opReturnData.chunks[1].buf.toString()
+          // get redeem script from op_return data
+          var header = "REDEEM SCRIPT "
+          var redeemScriptHex = opReturnString.replace(header, '')
+          var redeemScriptData = bitcore.Script(redeemScriptHex)
+          var redeemScriptString = redeemScriptData.toString()
+          newTx.redeemScript = redeemScriptHex
+          // get nlocktime value from redeem script
+          var nLockTimeData = redeemScriptData.chunks[0].buf
+          var nLockTime = bitcore.crypto.BN.fromBuffer(
+            nLockTimeData, { endian: 'little' }
+          )
+          var nLockTimeString = nLockTime.toString()
+          newTx.nLockTime = nLockTimeString
+          //console.log(nLockTimeString) // TESTING
+        }
+      }
+      return newTx
+    },
+
     linkGen (pageNum) {
       // leave empty
       // required to generate custom page url
     }
   },
+
   computed: {
     txsUrl () {
       var currentPage = this.currentPage - 1
