@@ -1,12 +1,7 @@
 <div class="row-main-item">
   <div class="row-title">
-    <h4 id="coin-item">
-      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'KMD'" src="~@/assets/KMD-32x32.png"/>
-      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'OOT'" src="~@/assets/OOT-32x32.png"/>
-      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'BTC'" src="~@/assets/BTC-32x32.png"/>
-      {{wallet.ticker}}
-    </h4>
-    <h4 id="balance-item">{{numberWithSpaces(wallet.balance).toString()}}</h4>
+    <h2 id="balance-item">{{numberWithSpaces(wallet.balance).toString()}}</h2>
+    <h2 id="coin-item">{{wallet.ticker}}</h2>
     <p id="us-dollar" class="col-header"><img src="~@/assets/icon-usdollar.svg"/> {{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
   </div>
   <div class="d-flex flex-row justify-content-end">
@@ -19,8 +14,8 @@
       <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="~@/assets/icon-qrcode-select.svg"></button>
     </div>
   </div>
-  <div class="row-footer" v-bind:class="{kmd: wallet.ticker == 'KMD', oot: wallet.ticker == 'OOT', btc: wallet.ticker == 'BTC'}">
-    <p class="col-header">Your {{wallet.coin.name}} address :</p>
+  <div class="row-footer">
+    <p class="col-header">Your {{wallet.coin.name}} deposit address :</p>
     <div class="card">
       <button
       v-clipboard:copy="wallet.address"
@@ -30,10 +25,11 @@
       :data-clipboard-text="wallet.address">
       <div :id="wallet.ticker" class="btn-inside-qrcode">
         <span v-if="isClipboard" >Copied to the clipboard</span>
-        <span v-else>{{wallet.address}} &nbsp; <i class="far fa-copy"></i></span>
+        <span v-else>{{wallet.address}}</span>
       </div>
     </button>
   </div>
 </div>
+<hr/>
 <qrcode-modal :wallet="wallet"></qrcode-modal>
 </div>

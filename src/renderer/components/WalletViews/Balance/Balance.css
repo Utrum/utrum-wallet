@@ -19,11 +19,6 @@
   margin: 0;
 }
 
-h5{
-  font-weight: 300;
-  color: #0D0032;
-}
-
 .col-custom {
   flex-grow: 1;
 }
@@ -80,12 +75,10 @@ h5{
   border-color: #430961;
 }
 
-.btn:not(:disabled):hover {
+.btn:hover {
   color: white;
 }
-.btn.disabled, .btn:disabled {
-  cursor: not-allowed;
-}
+
 .loader{
   margin-top: 25%;
 }
