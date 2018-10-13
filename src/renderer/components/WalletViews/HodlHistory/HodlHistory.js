@@ -29,7 +29,7 @@ export default {
   props: ['wallet'],
   data() {
     return {
-      transactionsUrl: (
+      txsUrlBase: (
         this.wallet.coin.explorer +
         "insight-api-komodo/addrs/" +
         this.wallet.address +
@@ -181,7 +181,7 @@ export default {
       if (currentPage > 0 ) {
         fromItem = (currentPage * 10)
       }
-      return this.transactionsUrl + '?from=' + fromItem
+      return this.txsUrlBase + '?from=' + fromItem
     },
   },
 };
