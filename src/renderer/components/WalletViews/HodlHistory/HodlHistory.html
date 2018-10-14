@@ -17,9 +17,10 @@
         </template>
 -->
 
-        <template slot="nLockTime" slot-scope="row">
-            <span v-if="row.value">{{ dateFormat(row.value) }}</span>
-            <span v-else>(normal transaction)</span>
+        <template slot="nLockTime" slot-scope="data">
+            <span v-if="data.item.nLockTime > data.item.timeNow" class="hodlColor">{{ dateFormat(data.item.nLockTime) }}</span>
+            <span v-else-if="data.item.nLockTime < data.item.timeNow" class="btn btn-tx">Ready to Unlock!</span>
+            <span v-else>Normal Transaction</span>
         </template>
 
 <!--

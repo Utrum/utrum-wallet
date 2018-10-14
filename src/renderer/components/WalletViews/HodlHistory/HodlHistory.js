@@ -41,7 +41,7 @@ export default {
       currentPage: 1,
       perPage: 10,
       fields: [
-        { key: 'nLockTime', label: 'Release Time', sortable: false },
+        { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
 //        { key: 'blockheight', label: 'Block' },
         { key: 'confirmations', label: 'Conf' },
         { key: 'formattedAmount', label: 'Amount' },
@@ -107,7 +107,7 @@ export default {
           items[item] = vm.processTx(items[item])
 
           // for gui, custom "amount" format
-          if (items[item].isUtrumHodlTx === false) {
+          if (items[item].isHodlTx === false) {
             if ( this.wallet.address !== items[item].destAddr ){
               items[item].formattedAmount = items[item].sentAmount * -1
             }else{
@@ -152,17 +152,18 @@ export default {
       // process hodl transactions
       var destAddr = tx.vout[0].scriptPubKey.addresses[0]
       var isSentToScript = false
-      var isUtrumHodlTx = false
+      var isHodlTx = false
+      var isSpent = tx.vout[0].scriptPubKey.spentHeight ? true : false
 
       // detect if p2sh transaction
-      if ( destAddr.substring(0,1) == 'b' ){
+      if ( destAddr.substring(0,1) == 'b' ) {
         isSentToScript = true
         var opReturnAsm = tx.vout[1].scriptPubKey.asm
         var opReturnHex = tx.vout[1].scriptPubKey.hex
         // check if this is an utrum hodl deposit
         let hodlDepositHint = "OP_RETURN 52454445454d2053435249505420"
         if ( opReturnAsm.substring(0,38) == hodlDepositHint ) {
-          isUtrumHodlTx = true
+          isHodlTx = true
           // get op_return data
           var opReturnData = bitcore.Script(opReturnHex)
           var opReturnString = opReturnData.chunks[1].buf.toString()
@@ -185,8 +186,16 @@ export default {
       // return output
       newTx.destAddr = destAddr
       newTx.isSentToScript = isSentToScript
-      newTx.isUtrumHodlTx = isUtrumHodlTx
+      newTx.isHodlTx = isHodlTx
+      newTx.isSpent = isSpent
+      newTx.timeNow = vm.timeNow()
       return newTx
+    },
+
+    timeNow () {
+      d = new Date()
+      output = Math.round(d.getTime() / 1000)
+      return output
     },
 
     linkGen (pageNum) {
@@ -196,6 +205,7 @@ export default {
   },
 
   computed: {
+
     txsUrl () {
       var currentPage = this.currentPage - 1
       var fromItem = 0
