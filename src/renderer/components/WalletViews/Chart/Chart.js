@@ -7,7 +7,7 @@ export default {
     LineChart,
     'v-select': vSelect
   },
-  data () {
+  data() {
     return {
       loaded: false,
       loading: false,
@@ -23,29 +23,45 @@ export default {
       url: 'https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days=',
       selTime: null,
       selCoin: null,
-      coins: [
-        {text: 'Utrum (OOT)', value: 'oot'}, 
-        {text: 'Komodo (KMD)', value: 'kmd'},
-        {text: 'Bitcoin', value: 'btc'}
+      coins: [{
+          text: 'Utrum (OOT)',
+          value: 'oot'
+        },
+        {
+          text: 'Komodo (KMD)',
+          value: 'kmd'
+        },
+        {
+          text: 'Bitcoin',
+          value: 'btc'
+        }
       ],
-      timeList: [
-        {text: 'Today', value: 1}, 
-        {text: 'This Week', value: 7}, 
-        {text: 'This Month', value: 30}
+      timeList: [{
+          text: 'Today',
+          value: 1
+        },
+        {
+          text: 'This Week',
+          value: 7
+        },
+        {
+          text: 'This Month',
+          value: 30
+        }
       ]
     }
   },
-  mounted () {
+  mounted() {
     this.requestData()
     this.selCoin = this.coins.length > 0 ? this.coins[0] : null
     this.selTime = this.timeList.length > 0 ? this.timeList[0] : null
   },
   methods: {
-    resetState () {
+    resetState() {
       this.loaded = false
       this.showError = false
     },
-    fixTime (unix) {
+    fixTime(unix) {
       var a = new Date(unix)
       var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
       var year = a.getFullYear()
@@ -58,10 +74,10 @@ export default {
       let time = `${localDt}`
       return time
     },
-    onCoinChange(selected){
-      if(selected) this.changeCoin(selected.value)
+    onCoinChange(selected) {
+      if (selected) this.changeCoin(selected.value)
     },
-    changeCoin (coin) {
+    changeCoin(coin) {
       if (coin == "oot") {
         this.url = 'https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days='
       } else if (coin == "kmd") {
@@ -71,66 +87,63 @@ export default {
       }
       this.requestData(this.selTime)
     },
-    onTimeChange(selected){
-      if(selected) this.requestData(selected.value)
+    onTimeChange(selected) {
+      if (selected) this.requestData(selected.value)
     },
-    requestData (days) {
+    requestData(days) {
       this.resetState()
       this.loading = true
       if (days == null) {
         days = 1
       }
-  
+
       axios.get(this.url + days)
         .then(response => {
           this.prices = response.data.prices.map(entry => entry[1])
-          let tempLabes = response.data.prices.map(entry => this.fixTime(entry[0]))
-          
+          let tempLabels = response.data.prices.map(entry => this.fixTime(entry[0]))
+
           this.labels = []
           let prevDt = null;
-          let maxDt = new Date(tempLabes[tempLabes.length -1])
+          let maxDt = new Date(tempLabels[tempLabels.length - 1])
           var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-          for(let val of tempLabes){
+          for (let val of tempLabels) {
             let curIdxDt = new Date(val)
             let tempFormat = moment(curIdxDt).format('DD MMM YYYY HH:mm')
-            switch(days){
-              case 1:{
-                if(!prevDt){
-                  prevDt = curIdxDt
-                  val = `${tempFormat};${moment(curIdxDt).format('HH:mm')}`
+            switch (days) {
+              case 1:
+                {
+                  if (!prevDt) {
+                    prevDt = curIdxDt
+                    val = `${tempFormat};${moment(curIdxDt).format('HH:mm')}`
+                  } else if (curIdxDt.getDate() != prevDt.getDate()) {
+                    val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
+                    prevDt = curIdxDt
+                  } else if (curIdxDt.getHours() != prevDt.getHours()) {
+                    val = `${tempFormat};${moment(curIdxDt).format('HH:mm')}`
+                    prevDt = curIdxDt
+                  } else {
+                    val = `${tempFormat};`
+                  }
+                  break;
                 }
-                else if(curIdxDt.getDate() != prevDt.getDate()){
-                  val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
-                  prevDt = curIdxDt
+              default:
+                {
+                  if (!prevDt) {
+                    prevDt = curIdxDt
+                    val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
+                  } else if (curIdxDt.getDate() != prevDt.getDate()) {
+                    val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
+                    prevDt = curIdxDt
+                  } else {
+                    val = `${tempFormat};`
+                  }
+                  break;
                 }
-                else if(curIdxDt.getHours() != prevDt.getHours()){
-                  val = `${tempFormat};${moment(curIdxDt).format('HH:mm')}`
-                  prevDt = curIdxDt
-                }
-                else{
-                  val = `${tempFormat};`
-                }
-                break;
-              }
-              default:{
-                if(!prevDt){
-                  prevDt = curIdxDt
-                  val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
-                }
-                else if(curIdxDt.getDate() != prevDt.getDate()){
-                  val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
-                  prevDt = curIdxDt
-                }
-                else{
-                  val = `${tempFormat};`
-                }
-                break;
-              }
             }
             this.labels.push(val)
           }
-          
+
           this.loaded = true
           this.loading = false
         })
@@ -139,12 +152,12 @@ export default {
           this.showError = true
         })
     },
-    validateDataRequest () {
+    validateDataRequest() {
       if (this.periodStart !== '') {
         this.requestData()
       }
     },
-    setLinePng (payload) {
+    setLinePng(payload) {
       this.linePng = payload
     }
   }
