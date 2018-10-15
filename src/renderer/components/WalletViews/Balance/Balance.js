@@ -156,20 +156,18 @@ export default {
       var timelock = vm.unixtime - 777
       var utxos = vm.claimData.myUtxos
       var toAddress = vm.claimData.address
-      var inputamount = vm.claimData.satoshis
+      var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
       var rewardtotal = vm.rewarding
-      var amount = inputamount + rewardtotal
+      var amount = (inputamount + rewardtotal)
       var privateKey = vm.claimData.privateKey
       var transaction = new bitcore.Transaction()
         .from(utxos)
         .to(toAddress, amount)
         .lockUntilDate(timelock)
         .change(toAddress)
-
       transaction.inputs[0].sequenceNumber = 0
       transaction.sign(privateKey)
-
-        console.log(transaction);
+        console.log(transaction)
 
         return transaction;
     },
