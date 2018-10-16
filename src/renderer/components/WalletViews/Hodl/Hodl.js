@@ -24,6 +24,7 @@ import axios from 'axios';
 const { clipboard } = require('electron');
 const { shell } = require('electron');
 const moment = require('moment');
+const coinbinValidator = 'https://deckersu.github.io/coinbin/?verify='
 
 import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';
 
@@ -34,14 +35,13 @@ export default {
     'select2': Select2,
     'select-awesome': SelectAwesome
   },
-  created () {
-    this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
-  },
+
   mounted () {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
     this.updateUnlockTime()
   },
+
   data () {
     return {
       hodlInput: {
@@ -59,36 +59,26 @@ export default {
       scriptAddress: '',
       redeemScript: '',
       validator: '',
-      explorer: 'https://explorer.utrum.io/',
       rawtx: '',
       lastTxId: '',
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
-      videoConstraints: {
-        width: {
-          min: 265,
-          ideal: 265,
-          max: 265,
-        },
-        height: {
-          min: 250,
-          ideal: 250,
-          max: 250,
-        },
-      },
-      select: '',
+      select: 'OOT',
     };
   },
+
   methods: {
     // open returned transaction id link
     openTxExplorer () {
-      shell.openExternal(`${this.explorer}/tx/${this.lastTxId}`);
+      shell.openExternal(`${this.explorer}tx/${this.lastTxId}`);
     },
+
     // open validation 3rd party software link on an external browser
     openValidator () {
       shell.openExternal(`${this.validator}`);
     },
+
     // for copy button
     onCopy() {
       const self = this;
@@ -97,6 +87,7 @@ export default {
         self.isClipboard = false;
       }, 1000);
     },
+
     // update hodl unlock time
     updateUnlockTime () {
       // convert days to seconds
@@ -110,6 +101,7 @@ export default {
         this.hodlInput.daysToLock + " minutes)" // TESTING!
       )
     },
+
     // method to retrieve hodl script from the hodl api
     getScript (url) {
       var vm = this
@@ -128,16 +120,25 @@ export default {
           vm.hodlData["scriptAddress"] = response.data["address"]
           // update gui data
           vm.scriptAddress = response.data["address"]
-          vm.validator = 'https://deckersu.github.io/coinbin/?verify=' + response.data["redeemScript"]
+          vm.validator = coinbinValidator + response.data["redeemScript"]
         })
         .catch(e => {
           console.log(e)
         });
     },
+
+    // get utxos and call build transaction function
     getTx () {
       console.log('getting utxos...')
       var vm = this
-      var url = vm.explorer + "insight-api-komodo/addr/" + vm.hodlData.address + "/utxo"
+      // construct call url
+      var url = (
+        vm.explorer +
+        "insight-api-komodo/addr/" +
+        vm.hodlData.address +
+        "/utxo"
+      )
+      // make call to api
       axios
         .get(url)
         .then(response => {
@@ -151,19 +152,28 @@ export default {
           console.log(e)
         });
     },
+
+    // build the funding transaction
     buildTx (utxos) {
       console.log('building transaction...')
       var vm = this
-      var toAddress = this.hodlData.scriptAddress
+
+      // prepare variables to build our transaction
+      var toAddress = vm.hodlData.scriptAddress
       var myAddress = vm.hodlData.address
       var amount = vm.hodlInput["amount"] * vm.satoshiNb
-      vm.hodlInput["amount"] = ''
       var op_return = "REDEEM SCRIPT " + vm.hodlData.redeemScript
       var privateKey = vm.hodlData.privateKey
 
-      var opts = { // https://bitcore.io/api/lib/transaction#serialization-checks
+      // gui related -
+      vm.hodlInput["amount"] = ''
+
+      // https://bitcore.io/api/lib/transaction#serialization-checks
+      var opts = {
         disableDustOutputs: true
       }
+
+      // use bitcore to build the transaction
       var transaction = new bitcore.Transaction()
         .from(utxos)
         .to(toAddress, amount)
@@ -174,6 +184,8 @@ export default {
       vm.lastTxId = ''
       return rawtx
     },
+
+    // submit transaction for validation and broadcasting
     submitTx () {
       console.log('broadcasting transaction...')
       var vm = this
@@ -190,6 +202,7 @@ export default {
           console.log(e)
         });
     },
+
     // hodl script creation
     hodlCreate () {
       var vm = this
@@ -212,11 +225,14 @@ export default {
       // get script via http request
       vm.getScript(url)
     },
-    // here we store hodl related data
+
+    // store hodl related data
     fillHodlData () {
       var dict = {};
 
-      var privateKey = new bitcore.PrivateKey(this.wallet.privKey.toString('hex'));
+      var privateKey = new bitcore.PrivateKey(
+        this.wallet.privKey.toString('hex')
+      );
       dict["privateKey"] = privateKey.toString();
 
       var publicKey = new bitcore.PublicKey(privateKey);
@@ -227,17 +243,28 @@ export default {
 
       return dict;
     },
+
     // convert unix time to human readable time
     dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000);
-      const dateString = moment(blockchainDateUtc).local().format('hh:mm A MM/DD/YYYY');
+      const dateString = (
+        moment(blockchainDateUtc)
+        .local()
+        .format('hh:mm A MM/DD/YYYY')
+      )
       return dateString;
     }
   },
+
   computed: {
     // get bitcoinjs-lib wallet data
     wallet () {
       return this.$store.getters.getWalletByTicker(this.select);
     },
+
+    // get explorer url
+    explorer () {
+      return this.wallet.coin.explorer
+    }
   }
 }

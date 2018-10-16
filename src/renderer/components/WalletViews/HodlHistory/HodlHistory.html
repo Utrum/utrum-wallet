@@ -11,9 +11,23 @@
     :current-page="currentPage"
     :per-page="perPage"
     >
+<!--
         <template slot="time" slot-scope="row">
             <span>{{dateFormat(row.value)}}</span>
         </template>
+-->
+
+        <template slot="nLockTime" slot-scope="data">
+            <span v-if="data.item.nLockTime > data.item.timeNow" class="hodlColor">{{ dateFormat(data.item.nLockTime) }}</span>
+            <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isRewardPaid === false"
+              @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript)"
+              class="btn btn-tx">Claim!</span>
+              <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
+                class="hodlColor">Hodl Completed</span>
+            <span v-else>Normal Transaction</span>
+        </template>
+
+<!--
         <template slot="amount" slot-scope="row">
             <div :class="getColorAmount(row.value)">
                 <span v-if="satoshiToBitcoin(row.value) > 0">+</span>
@@ -21,13 +35,31 @@
                 {{satoshiToBitcoin(Math.abs(row.value))}}
             </div>
         </template>
+-->
+
+        <template slot="formattedAmount" slot-scope="row">
+            <div :class="getColorAmount(row.value)">
+                {{ row.value }}
+            </div>
+        </template>
+
         <template slot="confirmations" slot-scope="row">
             <span id="confirmations">{{handlePending(row.value)}}</span>
         </template>
         <template slot="txid" slot-scope="row">
             <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
-                <button class="btn btn-tx pointer" id="btn-tx-id" :explorer="row.explorer" @click="openTxExplorer(row)">{{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
-                <button class="btn btn-tx pointer" id="btn-logo" @click.prevent="copyToClipboard(row)"><img src="~@/assets/icon-copy-paste.svg" alt=""></button>
+                <button
+                  class="btn btn-tx pointer"
+                  id="btn-tx-id"
+                  :explorer="row.explorer"
+                  @click="openTxExplorer(row)">
+                    {{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
+                <button
+                  class="btn btn-tx pointer"
+                  id="btn-logo"
+                  @click.prevent="copyToClipboard(row)">
+                  <img src="~@/assets/icon-copy-paste.svg" alt="">
+                </button>
             </div>
         </template>
     </b-table>
