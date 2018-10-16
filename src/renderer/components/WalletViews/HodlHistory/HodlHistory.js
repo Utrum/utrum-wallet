@@ -40,6 +40,7 @@ export default {
       sortDesc: true,
       currentPage: 1,
       perPage: 10,
+      timer: '',
       fields: [
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
         { key: 'confirmations', label: 'Conf' },
@@ -47,6 +48,9 @@ export default {
         { key: 'txid', label: 'TxID' },
       ],
     };
+  },
+  created: function() {
+    this.timer = setInterval(this.txHistory, 60000);
   },
   methods: {
 
@@ -273,4 +277,7 @@ export default {
       return this.txsUrlBase + '?from=' + fromItem
     },
   },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  }
 };
