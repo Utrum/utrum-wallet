@@ -39,6 +39,7 @@ export default {
       sortDesc: true,
       currentPage: 1,
       perPage: 10,
+      timer: '',
       fields: [
         { key: 'time', label: 'Time', sortable: true },
         { key: 'blockheight', label: 'Block' },
@@ -47,6 +48,9 @@ export default {
         { key: 'txid', label: 'TxID' },
       ],
     };
+  },
+  created: function() {
+    this.timer = setInterval(this.txHistory, 60000);
   },
   methods: {
     openTxExplorer: (row) => {
@@ -121,4 +125,7 @@ export default {
       return this.transactionsUrl + '?from=' + fromItem
     },
   },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  }
 };
