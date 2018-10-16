@@ -15,9 +15,25 @@ hr {
   margin-top: 50px;
 }
 
+.content h3 {
+  float: left;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.content h3:hover {
+  cursor: pointer;
+}
+
 .title {
   text-align: center;
   color: color(fjord);
+}
+
+.titleHold {
+  width: 92%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .container {

@@ -17,8 +17,9 @@
         </div>
       </div>
     </div>
-    <div @click="onMaxSelected()" id="card-current-balance" class="d-flex justify-content-end align-items-center">
-        <span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span><span>{{select}}</span>
+    <div @click="onMaxSelected()" id="card-current-balance" class="justify-content-end align-items-center">
+        <div style="float: right;"><span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span><span>{{select}}</span></div>
+        <div style="font-size: 16px;"><span id="us-dollar" class="col-header"><img src="~@/assets/icon-usdollar.svg"/> {{getUSDAmount.toString()}} (USD)</span></div>
     </div>
   </div>
 
@@ -35,7 +36,7 @@
 
   <div class="row">
     <span class="title-content">{{select}} ADDRESS</span>
-    <input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
+    <input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter recipient address">
     <button id="readerQrcode" v-b-modal="'readerQrcodeModal'" @click="readingQRCode = !readingQRCode">
       <img src="~@/assets/icon-scan-qrcode.svg">
     </button>
@@ -46,7 +47,7 @@
   </div>
 
   <div class="btn-center">
-    <button @click="onConfirmWithdrawModal" :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
+    <button @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
   </div>
 
   <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">

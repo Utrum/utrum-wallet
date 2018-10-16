@@ -1,5 +1,5 @@
 <div class="content">
-  <div class="row">
+  <div class="row mb-5">
     <div class="col-custom">
       <h3>BALANCES</h3>
     </div>
@@ -10,5 +10,38 @@
   </div>
   <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
     <balance-item :wallet="wallet"/>
-  </div>
+    <div v-if="wallet.ticker === 'KMD'" class="mb-0" style="display: flow-root;">
+        <h5 class="float-left" style="line-height: 38px;">KMD Rewards</h5>
+        <div class="float-right">
+          <p class="d-inline mr-2">{{rewards}}</p>
+          <button :disabled="rewards <= 0.0001" class="btn btn-tx pointer mr-2" id="btn" @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'">Claim</button>
+          <button class="btn btn-tx pointer" @click="getRewardData"><i class="fas fa-sync"></i></button>
+        </div>
+      </div>
+      <hr class="w-100" />
+  </div>    
+  <b-modal @ok="claimRewards()" ref="confirmWithdraw" id="confirmWithdraw" centered>
+    <div slot="modal-header" class="headerModalBuy">
+      <h2>CLAIM REWARDS</h2>
+    </div>
+    <div class="contentModalBuy">
+      <hr id="horizontalLine">
+      <div class="row-total-amount">
+        <div class="col-custom row">
+          <h2 class="col-custom">TOTAL REWARDS AVAILABLE TO CLAIM</h2>
+        </div>
+        <div id="amountTotal" class="col-custom row">
+          <div class="row">
+            <span id="totalAmount">{{rewards}}</span>
+            <span id="totalAmountCoin">KMD</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div slot="modal-footer" class="row footerBuyModal">
+      <button @click="hideModal" slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
+      <button @click="claimRewards()" slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
+    </div>
+  </b-modal>
+    
 </div>

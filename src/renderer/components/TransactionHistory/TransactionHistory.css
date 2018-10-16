@@ -22,6 +22,10 @@
   border-bottom: 1px solid rgba(222, 226, 230, 0.5);
 }
 
+.table {
+  font-size: 13px;
+}
+
 .table td, .table th {
   border: none;
   vertical-align: middle;
