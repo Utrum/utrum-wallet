@@ -1,12 +1,12 @@
 /** ***************************************************************************
- * Copyright © 2018 Monaize Singapore PTE. LTD.                               *
+ * Copyright © 2018 Utrum Foundation                                          *
  *                                                                            *
  * See the AUTHORS, and LICENSE files at the top-level directory of this      *
  * distribution for the individual copyright holder information and the       *
  * developer policies on copyright and licensing.                             *
  *                                                                            *
  * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Monaize Singapore PTE. LTD software, including this file may be copied,    *
+ * Utrum Foundation software, including this file may be copied,              *
  * modified, propagated or distributed except according to the terms          *
  * contained in the LICENSE file                                              *
  *                                                                            *
@@ -22,10 +22,8 @@ import ElectrumService from '../../../lib/electrum';
 import bitcore from 'bitcore-lib';
 import axios from 'axios';
 import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
-
 var kmdfee = 10000,
     refreshRewardData = null
-
 export default {
   name: 'balance',
   components: {
@@ -42,7 +40,6 @@ export default {
         .catch(() => { })
       ;
     }, this);
-
       if (!refreshRewardData) {
         refreshRewardData = setInterval(()=>{
           this.getRewardData();
@@ -91,7 +88,6 @@ export default {
     };
   },
   methods: {
-
     getRewardData(){
       var getJSON = (function(url, callback) {
         var xhr = new XMLHttpRequest();
@@ -111,14 +107,13 @@ export default {
       var address = this.$store.getters.getWalletByTicker('KMD').address;
       var url = "https://dexstats.info/api/rewards.php?address=" + address;
       var sats = this.satoshiNb
-
       getJSON(url, (err, data) => {
         if (err !== null) {
           console.log('Something went wrong: ' + err);
         } else {
           this.rewards = data.rewards;
           this.rewarding = Math.floor(data.rewards * 100000000)
-            console.log('getRewardData function rewards in sats: ', this.rewarding)
+            //console.log('getRewardData function rewards in sats: ', this.rewarding)
         }
       });
     },
@@ -139,19 +134,19 @@ export default {
       var vm = this
       var addr = this.$store.getters.getWalletByTicker('KMD').address
       var url = vm.explorer + "insight-api-komodo/addr/" + addr + "/utxo"
-      console.log(url)
+      //console.log(url)
       axios
         .get(url)
         .then(response => {
           vm.claimData.myUtxos = response.data
-          console.log(vm.claimData.myUtxos)
+          //console.log(vm.claimData.myUtxos)
         })
         .catch(e => {
           console.log(e)
         });
     },
     buildTx () { // To Do: Call for most up to date reward at build
-      console.log('building transaction...')
+      //console.log('building transaction...')
       var vm = this
       var timelock = vm.unixtime - 777
       var utxos = vm.claimData.myUtxos
@@ -167,8 +162,7 @@ export default {
         .change(toAddress)
       transaction.inputs[0].sequenceNumber = 0
       transaction.sign(privateKey)
-        console.log(transaction)
-
+        //console.log(transaction)
         return transaction;
     },
     broadcastTx () {
@@ -178,8 +172,8 @@ export default {
         var opts = {
             disableMoreOutputThanInput: true
         }
-        console.log('buildTx Serialized')
-        console.log(transaction.serialize(opts))
+        //console.log('buildTx Serialized')
+        //console.log(transaction.serialize(opts))
         // Now broadcast:
         return wallet.electrum.broadcast(transaction.serialize(opts)) // Uncomment for LIVE TX Broadcasting on Confirm
     },
