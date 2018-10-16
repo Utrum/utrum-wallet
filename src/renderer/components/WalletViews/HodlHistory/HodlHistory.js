@@ -42,7 +42,6 @@ export default {
       perPage: 10,
       fields: [
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
-//        { key: 'blockheight', label: 'Block' },
         { key: 'confirmations', label: 'Conf' },
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'txid', label: 'TxID' },
@@ -154,6 +153,7 @@ export default {
       var isSentToScript = false
       var isHodlTx = false
       var isSpent = tx.vout[0].scriptPubKey.spentHeight ? true : false
+      var isRewardPaid = false
 
       // detect if p2sh transaction
       if ( destAddr.substring(0,1) == 'b' ) {
@@ -188,14 +188,73 @@ export default {
       newTx.isSentToScript = isSentToScript
       newTx.isHodlTx = isHodlTx
       newTx.isSpent = isSpent
+      newTx.isRewardPaid = isRewardPaid
       newTx.timeNow = vm.timeNow()
       return newTx
     },
 
+    spendHodlUtxos (bAddr, redeemScript) {
+      var vm = this
+      var myAddress = vm.wallet.address
+
+      function buildTx (utxos) {
+
+        console.log(utxos)
+
+        // calculate total amount to be sent (recovered)
+        var totalAmount = 0
+        for ( var utxo in utxos ) {
+          totalAmount += utxos[utxo].satoshis
+        }
+        totalAmount = totalAmount - 10000
+
+        // calculate private key string
+        var privateKey = new bitcore.PrivateKey(
+          vm.wallet.privKey.toString('hex')
+        ).toString();
+
+        // use bitcore to build the transaction
+        var transaction = new bitcore.Transaction()
+          .from(utxos, redeemScript, 1)
+          .to(myAddress, totalAmount)
+          //.change(myAddress)
+          //.sign(privateKey)
+
+        console.log(transaction)
+        //var rawtx = transaction.serialize()
+        console.log(rawtx)
+        //return rawtx
+      }
+
+      // get utxos
+      console.log('getting utxos...')
+
+      // construct call url
+      var url = (
+        vm.wallet.coin.explorer +
+        "insight-api-komodo/addr/" +
+        bAddr +
+        "/utxo"
+      )
+
+      // make call to api to get utxos
+      axios
+        .get(url)
+        // process transaction
+        .then(response => {
+          var utxos = response.data
+          var rawTx = buildTx(utxos)
+          console.log(rawTx)
+        })
+        .catch(e => {
+          console.log(e)
+        });
+
+    },
+
     timeNow () {
-      d = new Date()
-      output = Math.round(d.getTime() / 1000)
-      return output
+      var d = new Date()
+      return Math.round(d.getTime() / 1000)
     },
 
     linkGen (pageNum) {
@@ -205,7 +264,6 @@ export default {
   },
 
   computed: {
-
     txsUrl () {
       var currentPage = this.currentPage - 1
       var fromItem = 0
