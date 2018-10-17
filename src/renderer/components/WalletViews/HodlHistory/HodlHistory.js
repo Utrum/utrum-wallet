@@ -50,6 +50,7 @@ export default {
     };
   },
   created: function() {
+    this.txHistory();
     this.timer = setInterval(this.txHistory, 60000);
   },
   methods: {
@@ -126,9 +127,6 @@ export default {
 
         // update shared data
         vm.transactions = items
-
-        // return data
-        return(items || [])
       })
       .catch(e => {
         console.log(e)
