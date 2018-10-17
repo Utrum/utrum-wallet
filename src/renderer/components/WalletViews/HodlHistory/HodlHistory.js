@@ -201,14 +201,27 @@ export default {
       var vm = this
       var myAddress = vm.wallet.address
 
+      // function to process and build the tx
       function buildTx (utxos) {
 
-        console.log(utxos)
+
+        var newUtxos = []
+        for (i in utxos) {
+          var d = {}
+          d.txId = utxos[i].txid
+          d.outputIndex = utxos[i].vout
+          d.address = utxos[i].address
+          d.script = redeemScript // utxos[i].scriptPubKey
+          d.satoshis = utxos[i].satoshis
+          newUtxos.push(d)
+        }
+
+        console.log(newUtxos)
 
         // calculate total amount to be sent (recovered)
         var totalAmount = 0
-        for ( var utxo in utxos ) {
-          totalAmount += utxos[utxo].satoshis
+        for ( var i in newUtxos ) {
+          totalAmount += utxos[i].satoshis
         }
         totalAmount = totalAmount - 10000
 
@@ -219,14 +232,13 @@ export default {
 
         // use bitcore to build the transaction
         var transaction = new bitcore.Transaction()
-          .from(utxos, redeemScript, 1)
+          .from(newUtxos)
           .to(myAddress, totalAmount)
-          //.change(myAddress)
           //.sign(privateKey)
 
         console.log(transaction)
         //var rawtx = transaction.serialize()
-        console.log(rawtx)
+        //console.log(rawtx)
         //return rawtx
       }
 
