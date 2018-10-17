@@ -127,6 +127,9 @@ export default {
 
         // update shared data
         vm.transactions = items
+
+        // return data
+        return(items || [])
       })
       .catch(e => {
         console.log(e)
