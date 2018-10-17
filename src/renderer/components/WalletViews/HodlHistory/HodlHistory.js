@@ -50,7 +50,6 @@ export default {
     };
   },
   created: function() {
-    this.txHistory();
     this.timer = setInterval(this.txHistory, 60000);
   },
   methods: {
@@ -129,7 +128,7 @@ export default {
         vm.transactions = items
 
         // return data
-        // return(items || [])
+        return(items || [])
       })
       .catch(e => {
         console.log(e)
