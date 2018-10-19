@@ -523,6 +523,9 @@ input::-webkit-inner-spin-button {
 .utrum-select .v-select .dropdown-toggle{
   height: 100% !important;
 }
+.utrum-select .v-select .dropdown-toggle::after{
+  display: none;
+}
 .utrum-select .v-select input{
   height: 100% !important;
   padding-left: 40px !important;
@@ -536,8 +539,13 @@ input::-webkit-inner-spin-button {
   display: none !important;
 }
 .utrum-select .v-select .selected-tag{
-    position: absolute;
     margin-left: 40px;
+}
+.utrum-select .v-select.unsearchable input{
+  display: none;
+}
+.utrum-select .v-select.open .selected-tag{
+  position: inherit !important;
 }
 .utrum-select .v-select .dropdown-menu li > a{
   padding: 10px 20px;
