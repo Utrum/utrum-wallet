@@ -524,6 +524,9 @@ input::-webkit-inner-spin-button {
 .utrum-select .v-select .dropdown-toggle{
   height: 100% !important;
 }
+.utrum-select .v-select .dropdown-toggle::after{
+  display: none;
+}
 .utrum-select .v-select input{
   height: 100% !important;
   padding-left: 40px !important;
