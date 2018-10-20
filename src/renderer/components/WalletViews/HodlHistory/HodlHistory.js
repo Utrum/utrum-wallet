@@ -50,8 +50,7 @@ export default {
     };
   },
   created: function() {
-    this.txHistory();
-    this.timer = setInterval(this.txHistory, 60000);
+    //this.timer = setInterval(this.txHistory, 60000);
   },
   methods: {
 
@@ -129,7 +128,7 @@ export default {
         vm.transactions = items
 
         // return data
-        // return(items || [])
+        return(items || [])
       })
       .catch(e => {
         console.log(e)
@@ -157,7 +156,7 @@ export default {
       var destAddr = tx.vout[0].scriptPubKey.addresses[0]
       var isSentToScript = false
       var isHodlTx = false
-      var isSpent = tx.vout[0].scriptPubKey.spentHeight ? true : false
+      var isSpent = tx.vout[0].spentHeight > 0 ? true : false
       var isRewardPaid = false
 
       // detect if p2sh transaction
@@ -177,7 +176,7 @@ export default {
           var redeemScriptHex = opReturnString.replace(header, '')
           var redeemScriptData = bitcore.Script(redeemScriptHex)
           var redeemScriptString = redeemScriptData.toString()
-          newTx.redeemScript = redeemScriptHex
+          newTx.redeemScript = redeemScriptString
           // get nlocktime value from redeem script
           var nLockTimeData = redeemScriptData.chunks[0].buf
           var nLockTime = bitcore.crypto.BN.fromBuffer(
@@ -202,14 +201,26 @@ export default {
       var vm = this
       var myAddress = vm.wallet.address
 
+      // function to process and build the tx
       function buildTx (utxos) {
 
-        console.log(utxos)
+        var newUtxos = []
+        for (i in utxos) {
+          var d = {}
+          d.prevTxId = utxos[i].txid
+          d.outputIndex = utxos[i].vout
+          d.address = utxos[i].address
+          d.script = utxos[i].scriptPubKey
+          d.satoshis = utxos[i].satoshis
+          newUtxos.push(d)
+        }
+
+        console.log(newUtxos)
 
         // calculate total amount to be sent (recovered)
         var totalAmount = 0
-        for ( var utxo in utxos ) {
-          totalAmount += utxos[utxo].satoshis
+        for ( var i in newUtxos ) {
+          totalAmount += utxos[i].satoshis
         }
         totalAmount = totalAmount - 10000
 
@@ -220,14 +231,20 @@ export default {
 
         // use bitcore to build the transaction
         var transaction = new bitcore.Transaction()
-          .from(utxos, redeemScript, 1)
-          .to(myAddress, totalAmount)
-          //.change(myAddress)
-          //.sign(privateKey)
+          //.from(newUtxos)
+          //.to(myAddress, totalAmount)
+          // .sgn(privateKey)
 
+        console.log(redeemScript)
+        for (var utxo in newUtxos) {
+          transaction.addInput(
+            new bitcore.Transaction.Input(newUtxos[utxo]), bitcore.Script.empty(), 100000
+          )
+        }
+        transaction.to(myAddress, totalAmount)
+        //transaction.applySignature(privateKey)
         console.log(transaction)
         //var rawtx = transaction.serialize()
-        console.log(rawtx)
         //return rawtx
       }
 
@@ -279,6 +296,6 @@ export default {
     },
   },
   beforeDestroy() {
-    clearInterval(this.timer);
+    //clearInterval(this.timer);
   }
 };

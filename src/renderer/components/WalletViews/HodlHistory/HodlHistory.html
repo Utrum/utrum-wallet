@@ -7,7 +7,7 @@
     :sort-desc.sync="sortDesc"
     :sort-by.sync="sortBy"
     :fields="fields"
-    :items="transactions"
+    :items="txHistory"
     :current-page="currentPage"
     :per-page="perPage"
     >
@@ -19,11 +19,11 @@
 
         <template slot="nLockTime" slot-scope="data">
             <span v-if="data.item.nLockTime > data.item.timeNow" class="hodlColor">{{ dateFormat(data.item.nLockTime) }}</span>
-            <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isRewardPaid === false"
+            <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === false"
               @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript)"
               class="btn btn-tx">Claim!</span>
-              <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
-                class="hodlColor">Hodl Completed</span>
+            <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
+                class="hodlColor">🎉 Hodl Complete 🎉</span>
             <span v-else>Normal Transaction</span>
         </template>
 
