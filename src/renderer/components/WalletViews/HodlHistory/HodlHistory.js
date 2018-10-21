@@ -50,10 +50,14 @@ export default {
     };
   },
   created: function() {
-    //this.timer = setInterval(this.txHistory, 60000);
+    this.timer = setInterval(this.refreshTable, 60000);
   },
   methods: {
-
+    refreshTable() {
+      console.log("refreshing table");
+      this.$refs.txTable.refresh();
+    },
+    
     openTxExplorer: (row) => {
       var txid = row.item.txid
       shell.openExternal(row.item.explorerUrl);
