@@ -180,6 +180,7 @@ export default {
         .change(myAddress)
         .addData(op_return)
         .sign(privateKey)
+      console.log(transaction) // testing stuff
       var rawtx = transaction.serialize(opts)
       vm.lastTxId = ''
       return rawtx
