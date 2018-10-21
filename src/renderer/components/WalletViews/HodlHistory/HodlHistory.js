@@ -183,7 +183,7 @@ export default {
             nLockTimeData, { endian: 'little' }
           )
           var nLockTimeString = nLockTime.toString()
-          newTx.nLockTime = nLockTimeString
+          newTx.nLockTime = Number(nLockTimeString)
         }
       }
 
@@ -197,7 +197,7 @@ export default {
       return newTx
     },
 
-    spendHodlUtxos (bAddr, redeemScript) {
+    spendHodlUtxos (bAddr, redeemScript, nLockTime) {
       var vm = this
       var myAddress = vm.wallet.address
 
@@ -210,12 +210,10 @@ export default {
           d.prevTxId = utxos[i].txid
           d.outputIndex = utxos[i].vout
           d.address = utxos[i].address
-          d.script = utxos[i].scriptPubKey
+          d.script = redeemScript //utxos[i].scriptPubKey
           d.satoshis = utxos[i].satoshis
           newUtxos.push(d)
         }
-
-        console.log(newUtxos)
 
         // calculate total amount to be sent (recovered)
         var totalAmount = 0
@@ -231,20 +229,25 @@ export default {
 
         // use bitcore to build the transaction
         var transaction = new bitcore.Transaction()
-          //.from(newUtxos)
-          //.to(myAddress, totalAmount)
-          // .sgn(privateKey)
-
-        console.log(redeemScript)
         for (var utxo in newUtxos) {
           transaction.addInput(
-            new bitcore.Transaction.Input(newUtxos[utxo]), bitcore.Script.empty(), 100000
+            new bitcore.Transaction.Input({
+              prevTxId: newUtxos[utxo].prevTxId,
+              outputIndex: newUtxos[utxo].outputIndex,
+              script: new bitcore.Script()
+            }),
+            newUtxos[utxo].script,
+            newUtxos[utxo].satoshis
           )
         }
-        transaction.to(myAddress, totalAmount)
-        //transaction.applySignature(privateKey)
-        console.log(transaction)
-        //var rawtx = transaction.serialize()
+        //transaction.to(myAddress, totalAmount)
+        transaction.addOutput(new bitcore.Transaction.Output({
+          script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
+          satoshis: totalAmount
+        }))
+        transaction.lockUntilDate(nLockTime)
+        console.log(privateKey)
+        transaction.sign(privateKey)
         //return rawtx
       }
 
