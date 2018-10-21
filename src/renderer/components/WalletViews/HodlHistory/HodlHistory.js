@@ -50,7 +50,7 @@ export default {
     };
   },
   created: function() {
-    this.timer = setInterval(this.refreshTable, 30000);
+    this.timer = setInterval(this.refreshTable, 60000);
   },
   methods: {
     refreshTable() {
