@@ -79,3 +79,22 @@
 .hodlColor{
   color: black;
 }
+
+.title-sec{
+  position: relative;
+}
+.title-sec span{
+  margin: 0;
+  font-weight: 400;
+  color: #0C6AA8;
+}
+.title-sec .btn-link{
+  position: absolute;
+  top: -3px;
+  right: 0px;
+  color: #837d95;
+}
+
+.title-sec .btn-link:hover{
+  color: #0C6AA8;
+}

@@ -1,7 +1,11 @@
 <div>
-    <b-button size="sm" variant="primary" @click="refreshTable" class="float-right mb-2">
-        Refresh
-    </b-button>
+    <div class="title-sec text-center">
+        <span>HISTORY</span>
+        <b-button size="sm" variant="link" @click="refreshTable" class="float-right">
+            <i class="fas fa-sync"></i>
+        </b-button>
+    </div>
+    <hr class="mb-0"/>
 
     <b-table  id="txTable"
     thead-tr-class="theadTrClass"
