@@ -216,7 +216,7 @@ export default {
           d.prevTxId = utxos[i].txid
           d.outputIndex = utxos[i].vout
           d.address = utxos[i].address
-          d.script = redeemScript //utxos[i].scriptPubKey
+          d.script = utxos[i].scriptPubKey
           d.satoshis = utxos[i].satoshis
           newUtxos.push(d)
         }
@@ -237,24 +237,26 @@ export default {
         var transaction = new bitcore.Transaction()
         for (var utxo in newUtxos) {
           transaction.addInput(
-            new bitcore.Transaction.Input({
+            new bitcore.Transaction.Input.PublicKeyHash({
+              output: new bitcore.Transaction.Output({ // previous output
+                script: newUtxos[utxo].script,
+                satoshis: newUtxos[utxo].satoshis
+              }),
               prevTxId: newUtxos[utxo].prevTxId,
               outputIndex: newUtxos[utxo].outputIndex,
-              script: new bitcore.Script()
-            }),
-            newUtxos[utxo].script,
-            newUtxos[utxo].satoshis
+              script: redeemScript
+            })
           )
         }
         //transaction.to(myAddress, totalAmount)
+        transaction.lockUntilDate(nLockTime)
         transaction.addOutput(new bitcore.Transaction.Output({
           script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
           satoshis: totalAmount
         }))
-        transaction.lockUntilDate(nLockTime)
-        console.log(privateKey)
+
+        console.log(transaction.toString())
         transaction.sign(privateKey)
-        //return rawtx
       }
 
       // get utxos
