@@ -47,12 +47,23 @@ export default {
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'txid', label: 'TxID' },
       ],
+      isBusy: false
     };
   },
   created: function() {
-    this.timer = setInterval(this.refreshTable, 60000);
+    // this.timer = setInterval(this.refreshTable, 60000);
   },
   methods: {
+    cancelTxHistoryTimer(){
+      if(this.timer){
+        clearInterval(this.timer)
+        this.timer = null
+      }
+    },
+    scheduleTxHistoryTimer(){
+      this.cancelTxHistoryTimer() //cancel if already running 
+      this.timer = setInterval(this.refreshTable, 60000);
+    },
     refreshTable() {
       if (this.$refs.txTable) {
         console.log("refreshing table");
@@ -99,12 +110,13 @@ export default {
     },
 
     txHistory () {
-      console.log('getting transaction history...')
+      //resolve exising tx data if request in already in progress
+      console.log(`[${new Date()}] isLoading: ${this.isBusy} getting transaction history...`)
+
       var vm = this
       let url = vm.txsUrl
       let promise = axios
       .get(url)
-
       return promise
       .then(response => {
         let items = response.data.items
@@ -133,11 +145,16 @@ export default {
         // update shared data
         vm.transactions = items
 
+        //schedule to refresh after next one min
+        this.scheduleTxHistoryTimer()
+
         // return data
         return(items || [])
       })
       .catch(e => {
         console.log(e)
+        //schedule to refresh after next one min
+        this.scheduleTxHistoryTimer()
         return([])
       });
     },

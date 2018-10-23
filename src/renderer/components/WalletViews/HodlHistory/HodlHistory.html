@@ -1,4 +1,12 @@
 <div>
+    <div class="title-sec text-center">
+        <span>HISTORY</span>
+        <b-button size="sm" variant="link" @click="refreshTable" class="float-right">
+            <i class="fas fa-sync"></i>
+        </b-button>
+    </div>
+    <hr class="mb-0"/>
+
     <b-table  id="txTable"
     thead-tr-class="theadTrClass"
     tbody-tr-class="theadClass"
@@ -11,6 +19,7 @@
     :current-page="currentPage"
     :per-page="perPage"
     ref="txTable"
+    :busy.sync="isBusy"
     >
 <!--
         <template slot="time" slot-scope="row">
