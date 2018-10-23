@@ -27,8 +27,26 @@ const funcExt  = require(`../../../config/func/${env}`);
 const tech     = _.merge(techBase, techExt);
 const func     = _.merge(funcBase, funcExt);
 
+var bitcore    = require('bitcore-lib');
+bitcore.Networks.add({
+  name: 'ootnet',
+  alias: 'mainnet',
+  pubkeyhash: 0x3c,
+  privatekey: 0xbc,
+  scripthash: 0x55,
+  xpubkey: 0x0488b21e,
+  xprivkey: 0x0488ade4,
+  networkMagic: 0xf9eee48d,
+  port: 8333,
+  dnsSeeds: [
+    'seed.komodoplatform.com'
+  ]
+});
+bitcore.Networks.defaultNetwork = bitcore.Networks.get('ootnet');
+
 module.exports = {
   tech,
   func,
   env,
 };
+
