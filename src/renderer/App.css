@@ -488,10 +488,6 @@ input::-webkit-inner-spin-button {
 .utrum-select .v-select .dropdown-toggle::after{
   display: none;
 }
-.utrum-select .v-select input{
-  height: 100% !important;
-  padding-left: 40px !important;
-}
 .utrum-select .v-select .selected-tag{
   line-height: 42px;
   font-size: 1.4rem;
@@ -504,7 +500,7 @@ input::-webkit-inner-spin-button {
     margin-left: 40px;
 }
 .utrum-select .v-select.unsearchable input{
-  display: none;
+  padding: 0px;
 }
 .utrum-select .v-select.open .selected-tag{
   position: inherit !important;
@@ -512,9 +508,6 @@ input::-webkit-inner-spin-button {
 .utrum-select .v-select .dropdown-menu li > a{
   padding: 10px 20px;
   text-transform: capitalize;
-}
-.utrum-select .v-select .active > a{
-  pointer-events: none;
 }
 .utrum-select{
   position: relative;
