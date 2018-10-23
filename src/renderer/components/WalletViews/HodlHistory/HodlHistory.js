@@ -228,13 +228,21 @@ export default {
         }
         totalAmount = totalAmount - 10000
 
-        // calculate private key string
+        // get private key
         var privateKey = new bitcore.PrivateKey(
           vm.wallet.privKey.toString('hex')
-        ).toString();
+        )
+
+        // get public key
+        var publicKey = privateKey.publicKey.toBuffer()
 
         // use bitcore to build the transaction
         var transaction = new bitcore.Transaction()
+        transaction.lockUntilDate(nLockTime)
+        var hashData = bitcore.crypto.Hash.sha256ripemd160(publicKey)
+        var sigtype = 0x01
+
+        // add inputs
         for (var utxo in newUtxos) {
           transaction.addInput(
             new bitcore.Transaction.Input.PublicKeyHash({
@@ -248,15 +256,36 @@ export default {
             })
           )
         }
-        //transaction.to(myAddress, totalAmount)
-        transaction.lockUntilDate(nLockTime)
+
+        // add outputs
         transaction.addOutput(new bitcore.Transaction.Output({
           script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
           satoshis: totalAmount
         }))
 
+        // sign inputs
+        var index = 0
+        var signatures = []
+        for (var utxo in newUtxos) {
+          var sighash = transaction.sign(
+            transaction, privateKey, sigtype, index, publicKey)
+          var signature = transaction.TransactionSignature({
+            publicKey: publicKey,
+            prevTxId: newUtxos[utxo].prevTxId,
+            outputIndex: newUtxos[utxo].outputIndex,
+            inputIndex: index,
+            signature: sighash,
+            sigtype: sigtype
+          })
+          index += 1
+          signatures.push(signature)
+        }
+
+        console.log(signatures)
+
         console.log(transaction.toString())
-        transaction.sign(privateKey)
+
+        //transaction.sign(privateKey)
       }
 
       // get utxos
