@@ -61,7 +61,7 @@ export default {
       }
     },
     scheduleTxHistoryTimer(){
-      this.cancelTxHistoryTimer() //cancel if already running 
+      this.cancelTxHistoryTimer() //cancel if already running
       this.timer = setInterval(this.refreshTable, 60000);
     },
     refreshTable() {
@@ -111,7 +111,7 @@ export default {
 
     txHistory () {
       //resolve exising tx data if request in already in progress
-      console.log(`[${new Date()}] isLoading: ${this.isBusy} getting transaction history...`)
+      console.log(`getting transaction history...`)
 
       var vm = this
       let url = vm.txsUrl
