@@ -492,12 +492,15 @@ input::-webkit-inner-spin-button {
   line-height: 42px;
   font-size: 1.4rem;
   text-transform: capitalize;
+  margin-left: 40px;
+  font-weight: 400;
+  color: #687078;
+}
+.v-select.single.open .selected-tag{
+  opacity: 1;
 }
 .utrum-select .v-select input[type="time"]::-webkit-clear-button {
   display: none !important;
-}
-.utrum-select .v-select .selected-tag{
-    margin-left: 40px;
 }
 .utrum-select .v-select.unsearchable input{
   padding: 0px;
