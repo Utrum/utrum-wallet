@@ -90,9 +90,9 @@
 }
 .title-sec .btn-link{
   position: absolute;
-  top: -3px;
   right: 0px;
-  color: #837d95;
+  font-size: .7rem;
+  color: rgba(131, 125, 149, 0.39);
 }
 
 .title-sec .btn-link:hover{
