@@ -1,24 +1,44 @@
 <div class="content">
-  <div class="error-message" v-if="showError">
-   {{ errorMessage }}
-  </div>
-  <div v-if="loading" class="loading">
-    🔧  Building Charts ...
-  </div>
-  <div class="Chart__container" v-if="loaded" style="width:95%">
-    <div class="titleHold">
-      <h3 v-bind:style="{'text-decoration': oot}" v-on:click="changeCoin('oot')">OOT Price Chart</h3>
-      <h3 v-bind:style="{'text-decoration': kmd}" v-on:click="changeCoin('kmd')">KMD Price Chart</h3>
-      <h3 v-bind:style="{'text-decoration': btc}" v-on:click="changeCoin('btc')">BTC Price Chart</h3>
+    <div class="error-message" v-if="showError">
+      {{ errorMessage }}
     </div>
-    <div class="Chart__content">
-      <div class="date-selectors">
-        <a v-bind:style="{'text-decoration': day}" v-on:click="requestData(1)">Today</a>
-        <a v-bind:style="{'text-decoration': week}" v-on:click="requestData(7)">This Week</a>
-        <a v-bind:style="{'text-decoration': month}" v-on:click="requestData(30)">This Month</a>
+    <div v-if="loading" class="loading">
+      🔧  Building Charts ...
+    </div>
+    <div class="Chart__container" style="width:95%" v-show="loaded">
+      <b-container class="mb-3">
+        <b-row>
+          <b-col>
+            <div class="utrum-select">
+              <div class="flex">
+                <img class="margin-auto sel-icon" v-if="selCoin && selCoin.value == 'kmd'" src="~@/assets/KMD-32x32.png"/>
+                <img class="margin-auto sel-icon" v-if="selCoin && selCoin.value == 'oot'" src="~@/assets/OOT-32x32.png"/>
+                <img class="margin-auto sel-icon" v-if="selCoin && selCoin.value == 'btc'" src="~@/assets/BTC-32x32.png"/>
+              </div>
+              <v-select v-model="selCoin" :options="coins" label="text" :searchable="false" @input="onCoinChange">
+                <template slot="option" slot-scope="option">
+                  <img v-if="option.value == 'kmd'" src="~@/assets/KMD.png"/>
+                  <img v-if="option.value == 'oot'" src="~@/assets/OOT.png"/>
+                  <img v-if="option.value == 'btc'" src="~@/assets/BTC.png"/>
+                  {{ option.text }}
+                </template>
+              </v-select>
+            </div>
+          </b-col>
+          <b-col>
+            <div class="utrum-select no-icon">
+              <v-select v-model="selTime" :options="timeList" label="text" :searchable="false" @input="onTimeChange">
+                <template slot="option" slot-scope="option">
+                  {{ option.text }}
+                </template>
+              </v-select>
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+      <div class="Chart__content" v-if="loaded">
+        <line-chart chart-id="line-daily" :chart-data="prices" :chart-labels="labels" @generate="setLinePng"/>
       </div>
-      <line-chart chart-id="line-daily" v-if="loaded" :chart-data="prices" :chart-labels="labels" @generate="setLinePng"/>
     </div>
   </div>
   </div>
-</div>
