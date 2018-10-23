@@ -495,6 +495,15 @@ input::-webkit-inner-spin-button {
   margin-left: 40px;
   font-weight: 400;
   color: #687078;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1.25rem;
+}
+.utrum-select .v-select ul li{
+  font-weight: 400;
+  color: #687078;
+  font-size: 1.20rem;
 }
 .v-select.single.open .selected-tag{
   opacity: 1;
