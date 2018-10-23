@@ -19,34 +19,45 @@ export default {
   name: 'social',
   data() {
     return {
-      mnzTelegramUrl: 'https://t.me/utrumdotio',
-      mnzDiscordUrl: 'https://discord.gg/tyf8Mqx',
-      ootTwitterUrl: 'https://twitter.com/utrumdotio',
-      ootFacebookUrl: 'https://www.facebook.com/utrumdotio',
-      ootRedditUrl: 'https://www.reddit.com/r/Utrumdotio/',
-      ootTwitterURl: 'https://twitter.com/utrumdotio',
+      utrumTelegramUrl: 'https://t.me/utrumdotio',
+      utrumDiscordUrl: 'https://discord.gg/tyf8Mqx',
+      utrumTwitterUrl: 'https://twitter.com/utrumdotio',
+      utrumFacebookUrl: 'https://www.facebook.com/utrumdotio',
+      utrumRedditUrl: 'https://www.reddit.com/r/Utrumdotio/',
+      utrumTwitterURl: 'https://twitter.com/utrumdotio',
+      utrumBlogURl: 'https://medium.com/utrum',
+      utrumGithub: 'https://github.com/utrum'
     };
   },
   mounted() {
   },
   methods: {
-    openMnzTelegram() {
-      electron.shell.openExternal(this.mnzTelegramUrl);
+    openUtrumTelegram() {
+      electron.shell.openExternal(this.utrumTelegramUrl);
     },
-    openMnzDiscord() {
-      electron.shell.openExternal(this.mnzDiscordUrl);
+    openUtrumDiscord() {
+      electron.shell.openExternal(this.utrumDiscordUrl);
     },
-    openOOTTwitter() {
-      electron.shell.openExternal(this.ootTwitterUrl);
+    openUtrumTwitter() {
+      electron.shell.openExternal(this.utrumTwitterUrl);
     },
-    openOOTFacebook() {
-      electron.shell.openExternal(this.ootFacebookUrl);
+    openUtrumFacebook() {
+      electron.shell.openExternal(this.utrumFacebookUrl);
     },
-    openOOTReddit() {
-      electron.shell.openExternal(this.ootRedditUrl);
+    openUtrumReddit() {
+      electron.shell.openExternal(this.utrumRedditUrl);
     },
-    openOOTTwitter() {
-      electron.shell.openExternal(this.ootTwitterURl);
+    openUtrumTwitter() {
+      electron.shell.openExternal(this.utrumTwitterURl);
+    },
+    openUtrumGithub() {
+      electron.shell.openExternal(this.utrumGithub);
+    },
+    openUtrumBlog(link){
+      electron.shell.openExternal(this.utrumBlogURl);
+    },
+    openLink(link){
+      electron.shell.openExternal(link);
     }
   },
   computed: {

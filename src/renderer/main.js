@@ -29,6 +29,7 @@ import router from './router';
 import store from './store';
 
 require('bootstrap/dist/css/bootstrap.min.css');
+require('@fortawesome/fontawesome-free/css/all.min.css');
 const vueElectron = require('vue-electron');
 
 Vue.use(BootstrapVue);
