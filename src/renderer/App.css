@@ -276,30 +276,13 @@ a, a:hover, a:focus {
 }
 
 #content {
-  margin-left: 240px;
-  height: 100vh;
+  margin-left: 210px;
 }
 
 .number-view {
   padding-right: 20px;
   fill: red;
-}
-
-#sidebar .sidebar-header {
-  background: #6d7fcc;
-}
-
-#sidebar ul.components {
-  border-bottom: 1px solid #47748b;
-}
-
-#sidebar ul p {
-  color: #fff;
-  padding: 10px;
-}
-
-#sidebar ul li {
-  margin: 20px 0;
+  width: 38px;
 }
 
 button span {
@@ -309,26 +292,6 @@ button span {
 #logout {
   position: fixed;
   bottom: 20px;
-}
-
-#sidebar ul li a {
-  padding: 5px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-radius: 26px;
-  font-size: 1.1em;
-  color: rgb(151,151,151);
-  display: block;
-  list-style-type: none;
-  cursor: pointer;
-}
-
-#sidebar ul li{
-  color: rgb(151,151,151);
-}
-
-#sidebar ul li > a.active {
-  color: #ffffff;
 }
 
 ul ul a {
@@ -369,8 +332,8 @@ ul ul a {
 .row-main-item {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .row {
@@ -508,7 +471,6 @@ input::-webkit-inner-spin-button {
   border: 1px solid rgba(0,0,0,0.1);
   background-color: white;
 }
-
 
 .utrum-select .v-select{
   height: 50px;;
