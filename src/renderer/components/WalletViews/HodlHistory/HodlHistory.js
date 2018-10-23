@@ -47,17 +47,30 @@ export default {
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'txid', label: 'TxID' },
       ],
+      isBusy: false
     };
   },
   created: function() {
-    this.timer = setInterval(this.refreshTable, 60000);
+    // this.timer = setInterval(this.refreshTable, 60000);
   },
   methods: {
-    refreshTable() {
-      console.log("refreshing table");
-      this.$refs.txTable.refresh();
+    cancelTxHistoryTimer(){
+      if(this.timer){
+        clearInterval(this.timer)
+        this.timer = null
+      }
     },
-    
+    scheduleTxHistoryTimer(){
+      this.cancelTxHistoryTimer() //cancel if already running 
+      this.timer = setInterval(this.refreshTable, 60000);
+    },
+    refreshTable() {
+      if (this.$refs.txTable) {
+        console.log("refreshing table");
+        this.$refs.txTable.refresh();
+      }
+    },
+
     openTxExplorer: (row) => {
       var txid = row.item.txid
       shell.openExternal(row.item.explorerUrl);
@@ -97,12 +110,13 @@ export default {
     },
 
     txHistory () {
-      console.log('getting transaction history...')
+      //resolve exising tx data if request in already in progress
+      console.log(`[${new Date()}] isLoading: ${this.isBusy} getting transaction history...`)
+
       var vm = this
       let url = vm.txsUrl
       let promise = axios
       .get(url)
-
       return promise
       .then(response => {
         let items = response.data.items
@@ -131,11 +145,16 @@ export default {
         // update shared data
         vm.transactions = items
 
+        //schedule to refresh after next one min
+        this.scheduleTxHistoryTimer()
+
         // return data
         return(items || [])
       })
       .catch(e => {
         console.log(e)
+        //schedule to refresh after next one min
+        this.scheduleTxHistoryTimer()
         return([])
       });
     },
@@ -214,7 +233,7 @@ export default {
           d.prevTxId = utxos[i].txid
           d.outputIndex = utxos[i].vout
           d.address = utxos[i].address
-          d.script = redeemScript //utxos[i].scriptPubKey
+          d.script = utxos[i].scriptPubKey
           d.satoshis = utxos[i].satoshis
           newUtxos.push(d)
         }
@@ -226,33 +245,64 @@ export default {
         }
         totalAmount = totalAmount - 10000
 
-        // calculate private key string
+        // get private key
         var privateKey = new bitcore.PrivateKey(
           vm.wallet.privKey.toString('hex')
-        ).toString();
+        )
+
+        // get public key
+        var publicKey = privateKey.publicKey.toBuffer()
 
         // use bitcore to build the transaction
         var transaction = new bitcore.Transaction()
+        transaction.lockUntilDate(nLockTime)
+        var hashData = bitcore.crypto.Hash.sha256ripemd160(publicKey)
+        var sigtype = 0x01
+
+        // add inputs
         for (var utxo in newUtxos) {
           transaction.addInput(
-            new bitcore.Transaction.Input({
+            new bitcore.Transaction.Input.PublicKeyHash({
+              output: new bitcore.Transaction.Output({ // previous output
+                script: newUtxos[utxo].script,
+                satoshis: newUtxos[utxo].satoshis
+              }),
               prevTxId: newUtxos[utxo].prevTxId,
               outputIndex: newUtxos[utxo].outputIndex,
-              script: new bitcore.Script()
-            }),
-            newUtxos[utxo].script,
-            newUtxos[utxo].satoshis
+              script: redeemScript
+            })
           )
         }
-        //transaction.to(myAddress, totalAmount)
+
+        // add outputs
         transaction.addOutput(new bitcore.Transaction.Output({
           script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
           satoshis: totalAmount
         }))
-        transaction.lockUntilDate(nLockTime)
-        console.log(privateKey)
-        transaction.sign(privateKey)
-        //return rawtx
+
+        // sign inputs
+        var index = 0
+        var signatures = []
+        for (var utxo in newUtxos) {
+          var sighash = transaction.sign(
+            transaction, privateKey, sigtype, index, publicKey)
+          var signature = transaction.TransactionSignature({
+            publicKey: publicKey,
+            prevTxId: newUtxos[utxo].prevTxId,
+            outputIndex: newUtxos[utxo].outputIndex,
+            inputIndex: index,
+            signature: sighash,
+            sigtype: sigtype
+          })
+          index += 1
+          signatures.push(signature)
+        }
+
+        console.log(signatures)
+
+        console.log(transaction.toString())
+
+        //transaction.sign(privateKey)
       }
 
       // get utxos

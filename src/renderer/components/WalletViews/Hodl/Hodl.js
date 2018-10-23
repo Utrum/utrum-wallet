@@ -165,7 +165,7 @@ export default {
       var op_return = "REDEEM SCRIPT " + vm.hodlData.redeemScript
       var privateKey = vm.hodlData.privateKey
 
-      // gui related -
+      // gui related
       vm.hodlInput["amount"] = ''
 
       // https://bitcore.io/api/lib/transaction#serialization-checks
@@ -182,7 +182,10 @@ export default {
         .sign(privateKey)
       console.log(transaction) // testing stuff
       var rawtx = transaction.serialize(opts)
+
+      // gui related
       vm.lastTxId = ''
+
       return rawtx
     },
 
@@ -196,8 +199,9 @@ export default {
       axios
         .post(url, {'rawtx': rawtx})
         .then(response => {
-          console.log("transaction submitted")
           vm.lastTxId = response.data.txid
+          console.log("transaction submitted:")
+          console.log(response.data)
         })
         .catch(e => {
           console.log(e)
