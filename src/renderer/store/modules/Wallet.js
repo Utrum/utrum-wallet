@@ -36,6 +36,7 @@ const state = {
     balance_usd: 0,
     ticker: null,
     txs: {},
+    rate_in_usd: 0
   }],
   coins: [],
   calculating: false,
@@ -230,6 +231,7 @@ const actions = {
           getCmcData(wallet.coin.name)
             .then(response => {
               response.data.forEach((cmcCoin) => {
+                wallet.rate_in_usd = cmcCoin.price_usd;
                 wallet.balance_usd = wallet.balance.multipliedBy(cmcCoin.price_usd);
               });
             })

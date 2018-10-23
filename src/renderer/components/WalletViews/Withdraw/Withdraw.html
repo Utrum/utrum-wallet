@@ -7,7 +7,8 @@
   </div>
 
   <div class="row">
-    <div id="selector-coin-buy" class="col-custom">
+    
+    <!-- <div id="selector-coin-buy" class="col-custom">
       <div class="row-header">
         <div class="btn select-all">
           <p @click="$root.$emit('select2:open')" id="add-coin">+</p>
@@ -16,7 +17,25 @@
           <select2 ref='select2' :options="coins" :value="select" @input="updateCoin"></select2>
         </div>
       </div>
+    </div> -->
+    <div class="utrum-select">
+        <div class="flex">
+            <img class="margin-auto sel-icon" v-if="selectNew && selectNew.icon == 'KMD'" src="~@/assets/KMD-32x32.png"/>
+            <img class="margin-auto sel-icon" v-if="selectNew && selectNew.icon == 'BTC'" src="~@/assets/BTC-32x32.png"/>
+            <img class="margin-auto sel-icon" v-if="selectNew && selectNew.icon == 'OOT'" src="~@/assets/OOT-32x32.png"/>
+        </div>
+        
+
+        <v-select :options="coinsNew" v-model="selectNew" @input="updateNewCoin" :searchable="false">
+            <template slot="option" slot-scope="option">
+                <img v-if="option.icon == 'KMD'" src="~@/assets/KMD.png"/>
+                <img v-if="option.icon == 'BTC'" src="~@/assets/BTC.png"/>
+                <img v-if="option.icon == 'OOT'" src="~@/assets/OOT.png"/>
+                {{ option.label }}
+            </template>
+        </v-select>
     </div>
+    
     <div @click="onMaxSelected()" id="card-current-balance" class="justify-content-end align-items-center">
         <div style="float: right;"><span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span><span>{{select}}</span></div>
         <div style="font-size: 16px;"><span id="us-dollar" class="col-header"><img src="~@/assets/icon-usdollar.svg"/> {{getUSDAmount.toString()}} (USD)</span></div>
@@ -24,11 +43,16 @@
   </div>
 
   <div id="select-amount" class="row">
-    <span class="title-content">AMOUNT</span>
-      <div class="col-custom input-field row">
-        <input type="number" id="amount" v-model.number="amount" class="col-custom input-field" placeholder="Amount">
-        <span id="current-coin"> {{select}}</span>
+    <div class="w-100">
+        <div class="col-custom input-field row">
+          <span class="title-content">AMOUNT</span>
+          <input type="number" id="amount" v-model.number="amount" class="col-custom input-field" placeholder="Amount">
+          <span id="current-coin"> {{select}}</span>
+      </div>
     </div>
+    <p class="text-right m-0 w-100">
+      ${{convertToUSDAmount.toString()}} (USD)
+    </p>
   </div>
   <div class="col-custom horizontal-line">
     <hr id="first-line"/>
