@@ -37,15 +37,15 @@ export default {
         }
       ],
       timeList: [{
-          text: 'Today',
+          text: '24 hours',
           value: 1
         },
         {
-          text: 'This Week',
+          text: '7 days',
           value: 7
         },
         {
-          text: 'This Month',
+          text: '30 days',
           value: 30
         }
       ]
@@ -53,7 +53,7 @@ export default {
   },
   mounted() {
     this.selCoin = this.coins.length > 0 ? this.coins[0] : null
-    this.selTime = this.timeList.length > 0 ? this.timeList[0] : null
+    this.selTime = this.timeList.length > 0 ? this.timeList[2] : null //set default selected time
     this.requestData(this.selTime.value)
   },
   methods: {
