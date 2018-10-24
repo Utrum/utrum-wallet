@@ -92,6 +92,12 @@
   font-weight: 500;
 }
 
+.number-view {
+  padding-right: 20px;
+  width: 38px;
+  font-size: 18px;
+}
+
 .flex{
   display: flex;
 }
