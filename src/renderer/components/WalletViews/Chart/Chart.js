@@ -37,15 +37,15 @@ export default {
         }
       ],
       timeList: [{
-          text: 'Today',
+          text: '24 hours',
           value: 1
         },
         {
-          text: 'This Week',
+          text: '7 days',
           value: 7
         },
         {
-          text: 'This Month',
+          text: '30 days',
           value: 30
         }
       ]
