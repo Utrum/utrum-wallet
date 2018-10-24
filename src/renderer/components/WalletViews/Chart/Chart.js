@@ -53,7 +53,7 @@ export default {
   },
   mounted() {
     this.selCoin = this.coins.length > 0 ? this.coins[0] : null
-    this.selTime = this.timeList.length > 0 ? this.timeList[0] : null
+    this.selTime = this.timeList.length > 0 ? this.timeList[2] : null //set default selected time
     this.requestData(this.selTime.value)
   },
   methods: {
