@@ -52,9 +52,9 @@ export default {
     }
   },
   mounted() {
-    this.requestData()
     this.selCoin = this.coins.length > 0 ? this.coins[0] : null
     this.selTime = this.timeList.length > 0 ? this.timeList[0] : null
+    this.requestData(this.selTime.value)
   },
   methods: {
     resetState() {
@@ -85,7 +85,7 @@ export default {
       } else if (coin == "btc") {
         this.url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days='
       }
-      this.requestData(this.selTime)
+      this.requestData(this.selTime.value)
     },
     onTimeChange(selected) {
       if (selected) this.requestData(selected.value)
@@ -154,7 +154,7 @@ export default {
     },
     validateDataRequest() {
       if (this.periodStart !== '') {
-        this.requestData()
+        this.requestData(this.selTime.value)
       }
     },
     setLinePng(payload) {

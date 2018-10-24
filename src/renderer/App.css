@@ -488,23 +488,31 @@ input::-webkit-inner-spin-button {
 .utrum-select .v-select .dropdown-toggle::after{
   display: none;
 }
-.utrum-select .v-select input{
-  height: 100% !important;
-  padding-left: 40px !important;
-}
 .utrum-select .v-select .selected-tag{
   line-height: 42px;
   font-size: 1.4rem;
   text-transform: capitalize;
+  margin-left: 40px;
+  font-weight: 400;
+  color: #687078;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1.25rem;
+}
+.utrum-select .v-select ul li{
+  font-weight: 400;
+  color: #687078;
+  font-size: 1.20rem;
+}
+.v-select.single.open .selected-tag{
+  opacity: 1;
 }
 .utrum-select .v-select input[type="time"]::-webkit-clear-button {
   display: none !important;
 }
-.utrum-select .v-select .selected-tag{
-    margin-left: 40px;
-}
 .utrum-select .v-select.unsearchable input{
-  display: none;
+  padding: 0px;
 }
 .utrum-select .v-select.open .selected-tag{
   position: inherit !important;
@@ -512,9 +520,6 @@ input::-webkit-inner-spin-button {
 .utrum-select .v-select .dropdown-menu li > a{
   padding: 10px 20px;
   text-transform: capitalize;
-}
-.utrum-select .v-select .active > a{
-  pointer-events: none;
 }
 .utrum-select{
   position: relative;

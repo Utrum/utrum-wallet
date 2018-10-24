@@ -47,7 +47,8 @@ export default {
     openTxExplorer: (row) => {
       coins.all.forEach(coin => {
         if (row.item.ticker === coin.ticker) {
-          electron.shell.openExternal(`${coin.explorer}/tx/${row.item.tx_hash}`);
+          let url = `${coin.explorer}/tx/${row.item.tx_hash}`
+          electron.shell.openExternal(url.replace(/([^:])(\/{2,})/g,"$1/"));
         }
       });
     },
