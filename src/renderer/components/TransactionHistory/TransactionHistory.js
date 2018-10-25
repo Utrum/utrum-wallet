@@ -75,8 +75,16 @@ export default {
     },
     dateFormat(time) {
       const blockchainDateUtc = moment.utc(time * 1000);
-      const dateString = moment(blockchainDateUtc).local().format('YYYY-MM-DD hh:mm A');
-      return dateString;
+    
+      const localDate = new Date(moment(blockchainDateUtc).local())
+      const currentDate = new Date()
+      if(currentDate.getFullYear() == localDate.getFullYear()){
+        //transaction is from this year
+        return moment(String(localDate)).format('MMM DD, hh:mm a')
+      }
+      else{
+        return moment(String(localDate)).format('MMM DD, YYYY')
+      }
     },
     getIconFromTicker(value) {
       return require(`@/assets/icon-${value}.svg`); // eslint-disable-line
