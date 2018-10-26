@@ -255,9 +255,9 @@ export default {
 
         // use bitcore to build the transaction
         var transaction = new bitcore.Transaction()
-        transaction.lockUntilDate(nLockTime)
         var hashData = bitcore.crypto.Hash.sha256ripemd160(publicKey)
         var sigtype = 0x01
+
 
         // add inputs
         for (var utxo in newUtxos) {
@@ -274,35 +274,47 @@ export default {
           )
         }
 
+        // required after adding inputs
+        transaction.lockUntilDate(nLockTime)
+
         // add outputs
         transaction.addOutput(new bitcore.Transaction.Output({
           script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
           satoshis: totalAmount
         }))
 
-        // sign inputs
-        var index = 0
+        console.log('unsigned transaction:')
+        console.log(transaction.toString())
+
+        // signing inputs...
         var signatures = []
-        for (var utxo in newUtxos) {
-          var sighash = transaction.sign(
-            transaction, privateKey, sigtype, index, publicKey)
-          var signature = transaction.TransactionSignature({
+        for (var i in transaction.inputs) {
+
+          //var sighash = bitcore.Transaction.Sighash.sign(
+          //  transaction, privateKey, sigtype, index, redeemScript)
+          //console.log(sighash.toString())
+
+          // get signature
+          console.log("inputIndex:", i)
+          var signature = bitcore.Transaction.Signature({
             publicKey: publicKey,
-            prevTxId: newUtxos[utxo].prevTxId,
-            outputIndex: newUtxos[utxo].outputIndex,
-            inputIndex: index,
-            signature: sighash,
+            redeemScript: redeemScript,
+            prevTxId: transaction.inputs[i].prevTxId,
+            outputIndex: transaction.inputs[i].outputIndex,
+            inputIndex: Number(i),
+            signature: bitcore.Transaction.Sighash.sign(
+              transaction, privateKey, sigtype, i, redeemScript),
             sigtype: sigtype
           })
-          index += 1
           signatures.push(signature)
-        }
+          console.log(signature)
 
-        console.log(signatures)
+          // apply sig
+          console.log(transaction.inputs[i].addSignature(transaction, signature))
+        }
 
         console.log(transaction.toString())
 
-        //transaction.sign(privateKey)
       }
 
       // get utxos
