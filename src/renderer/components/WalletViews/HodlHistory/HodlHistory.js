@@ -287,30 +287,35 @@ export default {
         console.log(transaction.toString())
 
         // signing inputs...
-        var signatures = []
+        var redeemScriptData = bitcore.Script(redeemScript)
+        var BufferUtil = bitcore.util.buffer
         for (var i in transaction.inputs) {
 
           //var sighash = bitcore.Transaction.Sighash.sign(
-          //  transaction, privateKey, sigtype, index, redeemScript)
+          //  transaction, privateKey, sigtype, Number(i), redeemScript)
           //console.log(sighash.toString())
 
           // get signature
-          console.log("inputIndex:", i)
           var signature = bitcore.Transaction.Signature({
             publicKey: publicKey,
-            redeemScript: redeemScript,
             prevTxId: transaction.inputs[i].prevTxId,
             outputIndex: transaction.inputs[i].outputIndex,
             inputIndex: Number(i),
             signature: bitcore.Transaction.Sighash.sign(
-              transaction, privateKey, sigtype, i, redeemScript),
+              transaction, privateKey, sigtype, Number(i), redeemScript),
             sigtype: sigtype
           })
-          signatures.push(signature)
-          console.log(signature)
+
+          // add signature
+          var script = new bitcore.Script()
+            .add(BufferUtil.concat([
+              signature.signature.toDER(),
+              BufferUtil.integerAsSingleByteBuffer(signature.sigtype)
+            ]))
+            .add(redeemScriptData.toBuffer());
 
           // apply sig
-          console.log(transaction.inputs[i].addSignature(transaction, signature))
+          transaction.inputs[i].setScript(script)
         }
 
         console.log(transaction.toString())
