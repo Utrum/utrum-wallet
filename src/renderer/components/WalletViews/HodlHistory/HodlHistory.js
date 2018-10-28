@@ -319,7 +319,7 @@ export default {
         .post(url, {'rawtx': rawtx})
         .then(response => {
           return response.data.txid
-          console.log("transaction submitted")
+          console.log("transaction broadcast")
         })
         .catch(e => {
           console.log(e)
