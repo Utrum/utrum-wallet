@@ -111,19 +111,17 @@ export default {
       console.log(`getting transaction history...`)
 
       var vm = this
+
       let url = vm.txsUrl
       let promise = axios
       .get(url)
       return promise
       .then(response => {
         let items = response.data.items
-
         // process each transaction
         for (var item in items) {
-
           // add hodl related data to transactions
           items[item] = vm.processTx(items[item])
-
           // for gui, custom "amount" format
           if (items[item].isHodlTx === false) {
             if ( this.wallet.address !== items[item].destAddr ){
@@ -135,16 +133,12 @@ export default {
             items[item].formattedAmount = items[item].sentAmount
           }
         }
-
         // calculate number of pages
         vm.totalRows = response.data.totalItems
-
         // update shared data
         vm.transactions = items
-
         //schedule to refresh after next one min
         this.scheduleTxHistoryTimer()
-
         // return data
         return(items || [])
       })
