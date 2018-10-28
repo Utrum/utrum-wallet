@@ -217,103 +217,106 @@ export default {
       return newTx
     },
 
-    spendHodlUtxos (bAddr, redeemScript, nLockTime) {
-      this.scheduleTxHistoryTimer()
+    buildTx (utxos, redeemScript, nLockTime) {
+      // this is the main function,
+      // processes and builds the hodl spend tx
+
       var vm = this
-      var myAddress = vm.wallet.address
 
-      // main function, to process and build the hodl spend tx
-      function buildTx (utxos) {
-
-        var newUtxos = []
-        for (i in utxos) {
-          var d = {}
-          d.prevTxId = utxos[i].txid
-          d.outputIndex = utxos[i].vout
-          d.address = utxos[i].address
-          d.script = utxos[i].scriptPubKey
-          d.satoshis = utxos[i].satoshis
-          newUtxos.push(d)
-        }
-
-        // calculate total amount to be sent (recovered)
-        var totalAmount = 0
-        for ( var i in newUtxos ) {
-          totalAmount += utxos[i].satoshis
-        }
-        totalAmount = totalAmount - 10000
-
-        // get private key
-        var privateKey = new bitcore.PrivateKey(
-          vm.wallet.privKey.toString('hex')
-        )
-
-        // get public key
-        var publicKey = privateKey.publicKey.toBuffer()
-
-        // use bitcore to build the transaction
-        var transaction = new bitcore.Transaction()
-        var hashData = bitcore.crypto.Hash.sha256ripemd160(publicKey)
-        var sigtype = 0x01
-
-
-        // add inputs
-        for (var utxo in newUtxos) {
-          transaction.addInput(
-            new bitcore.Transaction.Input.PublicKeyHash({
-              output: new bitcore.Transaction.Output({ // previous output
-                script: newUtxos[utxo].script,
-                satoshis: newUtxos[utxo].satoshis
-              }),
-              prevTxId: newUtxos[utxo].prevTxId,
-              outputIndex: newUtxos[utxo].outputIndex,
-              script: redeemScript
-            })
-          )
-        }
-
-        // required after adding inputs
-        transaction.lockUntilDate(nLockTime)
-
-        // add outputs
-        transaction.addOutput(new bitcore.Transaction.Output({
-          script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
-          satoshis: totalAmount
-        }))
-
-        // signing inputs...
-        var redeemScriptData = bitcore.Script(redeemScript)
-        var BufferUtil = bitcore.util.buffer
-        for (var i in transaction.inputs) {
-
-          // get signature hash
-          var sighash = bitcore.Transaction.Sighash.sign(
-            transaction, privateKey, sigtype, Number(i), redeemScript)
-
-          // get signature
-          var signature = bitcore.Transaction.Signature({
-            publicKey: publicKey,
-            prevTxId: transaction.inputs[i].prevTxId,
-            outputIndex: transaction.inputs[i].outputIndex,
-            inputIndex: Number(i),
-            signature: sighash,
-            sigtype: sigtype
-          })
-
-          // add signature
-          var script = new bitcore.Script()
-            .add(BufferUtil.concat([
-              signature.signature.toDER(),
-              BufferUtil.integerAsSingleByteBuffer(signature.sigtype)
-            ]))
-            .add(redeemScriptData.toBuffer());
-
-          // apply signature
-          transaction.inputs[i].setScript(script)
-        }
-        // output
-        return transaction.toString()
+      // new key names
+      var newUtxos = []
+      for (i in utxos) {
+        var d = {}
+        d.prevTxId = utxos[i].txid
+        d.outputIndex = utxos[i].vout
+        d.address = utxos[i].address
+        d.script = utxos[i].scriptPubKey
+        d.satoshis = utxos[i].satoshis
+        newUtxos.push(d)
       }
+
+      // calculate total amount to be sent (recovered)
+      var totalAmount = 0
+      for ( var i in newUtxos ) {
+        totalAmount += utxos[i].satoshis
+      }
+      totalAmount = totalAmount - 10000
+
+      // get private key
+      var privateKey = new bitcore.PrivateKey(
+        vm.wallet.privKey.toString('hex')
+      )
+
+      // get public key
+      var publicKey = privateKey.publicKey.toBuffer()
+
+      // use bitcore to build the transaction
+      var transaction = new bitcore.Transaction()
+      var hashData = bitcore.crypto.Hash.sha256ripemd160(publicKey)
+      var sigtype = 0x01
+
+
+      // add inputs
+      for (var utxo in newUtxos) {
+        transaction.addInput(
+          new bitcore.Transaction.Input.PublicKeyHash({
+            output: new bitcore.Transaction.Output({ // previous output
+              script: newUtxos[utxo].script,
+              satoshis: newUtxos[utxo].satoshis
+            }),
+            prevTxId: newUtxos[utxo].prevTxId,
+            outputIndex: newUtxos[utxo].outputIndex,
+            script: redeemScript
+          })
+        )
+      }
+
+      // required after adding inputs
+      transaction.lockUntilDate(nLockTime)
+
+      // add outputs
+      var myAddress = vm.wallet.address
+      transaction.addOutput(new bitcore.Transaction.Output({
+        script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
+        satoshis: totalAmount
+      }))
+
+      // signing inputs...
+      var redeemScriptData = bitcore.Script(redeemScript)
+      var BufferUtil = bitcore.util.buffer
+      for (var i in transaction.inputs) {
+
+        // get signature hash
+        var sighash = bitcore.Transaction.Sighash.sign(
+          transaction, privateKey, sigtype, Number(i), redeemScript)
+
+        // get signature
+        var signature = bitcore.Transaction.Signature({
+          publicKey: publicKey,
+          prevTxId: transaction.inputs[i].prevTxId,
+          outputIndex: transaction.inputs[i].outputIndex,
+          inputIndex: Number(i),
+          signature: sighash,
+          sigtype: sigtype
+        })
+
+        // add signature
+        var script = new bitcore.Script()
+          .add(BufferUtil.concat([
+            signature.signature.toDER(),
+            BufferUtil.integerAsSingleByteBuffer(signature.sigtype)
+          ]))
+          .add(redeemScriptData.toBuffer());
+
+        // apply signature
+        transaction.inputs[i].setScript(script)
+      }
+      // output
+      return transaction.toString()
+    },
+
+    spendHodlUtxos (bAddr, redeemScript, nLockTime) {
+      var vm = this
 
       // get utxos
       console.log('getting utxos...')
@@ -333,8 +336,10 @@ export default {
         .then(response => {
           var utxos = response.data
           // call main function
-          var rawTx = buildTx(utxos)
+          var rawTx = vm.buildTx(utxos, redeemScript, nLockTime)
           console.log(rawTx)
+          // re-schedule refresh timer
+          this.scheduleTxHistoryTimer(3000)
         })
         .catch(e => {
           console.log(e)
