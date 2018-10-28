@@ -54,7 +54,7 @@
         </template>
 
         <template slot="confirmations" slot-scope="row">
-            <span id="confirmations">{{handlePending(row.value)}}</span>
+            <span id="confirmations">{{ row.value || '0' }}</span>
         </template>
         <template slot="txid" slot-scope="row">
             <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">

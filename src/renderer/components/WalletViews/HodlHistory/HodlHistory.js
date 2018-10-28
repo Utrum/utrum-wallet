@@ -54,36 +54,33 @@ export default {
     // this.timer = setInterval(this.refreshTable, 60000);
   },
   methods: {
-    cancelTxHistoryTimer(){
+    cancelTxHistoryTimer () {
+      //cancel if already running
       if(this.timer){
         clearInterval(this.timer)
         this.timer = null
       }
     },
-    scheduleTxHistoryTimer(){
-      this.cancelTxHistoryTimer() //cancel if already running
-      this.timer = setInterval(this.refreshTable, 60000);
+
+    scheduleTxHistoryTimer (milsec) {
+      this.cancelTxHistoryTimer()
+      var milliseconds = milsec || 60000
+      this.timer = setInterval(this.refreshTable, milliseconds)
     },
-    refreshTable() {
+
+    refreshTable () {
       if (this.$refs.txTable) {
-        console.log("refreshing table");
-        this.$refs.txTable.refresh();
+        console.log("refreshing table")
+        this.$refs.txTable.refresh()
       }
     },
 
-    openTxExplorer: (row) => {
+    openTxExplorer (row) {
       var txid = row.item.txid
-      shell.openExternal(row.item.explorerUrl);
+      shell.openExternal(row.item.explorerUrl)
     },
 
-    handlePending(value) {
-      if (value) {
-        return value;
-      }
-      return 0;
-    },
-
-    copyToClipboard(row) {
+    copyToClipboard (row) {
       clipboard.writeText(row.item.txid);
       this.$toasted.show('Copied !', {
         duration: 1000,
@@ -91,11 +88,11 @@ export default {
       });
     },
 
-    satoshiToBitcoin(amount) {
+    satoshiToBitcoin (amount) {
       return BigNumber(amount).dividedBy(satoshiNb).toNumber();
     },
 
-    getColorAmount(amount) {
+    getColorAmount (amount) {
       if ( typeof amount == 'string' ) {  // non-hodl transactions
         return 'positiveColor'
       }else{
@@ -103,7 +100,7 @@ export default {
       }
     },
 
-    dateFormat(time) {
+    dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000);
       const dateString = moment(blockchainDateUtc).local().format('hh:mm A MM/DD/YY');
       return dateString;
@@ -114,19 +111,17 @@ export default {
       console.log(`getting transaction history...`)
 
       var vm = this
+
       let url = vm.txsUrl
       let promise = axios
       .get(url)
       return promise
       .then(response => {
         let items = response.data.items
-
         // process each transaction
         for (var item in items) {
-
           // add hodl related data to transactions
           items[item] = vm.processTx(items[item])
-
           // for gui, custom "amount" format
           if (items[item].isHodlTx === false) {
             if ( this.wallet.address !== items[item].destAddr ){
@@ -138,16 +133,12 @@ export default {
             items[item].formattedAmount = items[item].sentAmount
           }
         }
-
         // calculate number of pages
         vm.totalRows = response.data.totalItems
-
         // update shared data
         vm.transactions = items
-
         //schedule to refresh after next one min
         this.scheduleTxHistoryTimer()
-
         // return data
         return(items || [])
       })
@@ -220,107 +211,106 @@ export default {
       return newTx
     },
 
+    buildHodlSpendTx (utxos, redeemScript, nLockTime) {
+      // this is the main function,
+      // processes and builds the hodl spend tx
+
+      var vm = this
+
+      // new key names
+      var newUtxos = []
+      for (i in utxos) {
+        var d = {}
+        d.prevTxId = utxos[i].txid
+        d.outputIndex = utxos[i].vout
+        d.address = utxos[i].address
+        d.script = utxos[i].scriptPubKey
+        d.satoshis = utxos[i].satoshis
+        newUtxos.push(d)
+      }
+
+      // calculate total amount to be sent (recovered)
+      var totalAmount = 0
+      for ( var i in newUtxos ) {
+        totalAmount += utxos[i].satoshis
+      }
+      totalAmount = totalAmount - 10000
+
+      // get private key
+      var privateKey = new bitcore.PrivateKey(
+        vm.wallet.privKey.toString('hex')
+      )
+
+      // get public key
+      var publicKey = privateKey.publicKey.toBuffer()
+
+      // use bitcore to build the transaction
+      var transaction = new bitcore.Transaction()
+      var hashData = bitcore.crypto.Hash.sha256ripemd160(publicKey)
+      var sigtype = 0x01
+
+
+      // add inputs
+      for (var utxo in newUtxos) {
+        transaction.addInput(
+          new bitcore.Transaction.Input.PublicKeyHash({
+            output: new bitcore.Transaction.Output({ // previous output
+              script: newUtxos[utxo].script,
+              satoshis: newUtxos[utxo].satoshis
+            }),
+            prevTxId: newUtxos[utxo].prevTxId,
+            outputIndex: newUtxos[utxo].outputIndex,
+            script: redeemScript
+          })
+        )
+      }
+
+      // required after adding inputs
+      transaction.lockUntilDate(nLockTime)
+
+      // add outputs
+      var myAddress = vm.wallet.address
+      transaction.addOutput(new bitcore.Transaction.Output({
+        script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
+        satoshis: totalAmount
+      }))
+
+      // signing inputs...
+      var redeemScriptData = bitcore.Script(redeemScript)
+      var BufferUtil = bitcore.util.buffer
+      for (var i in transaction.inputs) {
+
+        // get signature hash
+        var sighash = bitcore.Transaction.Sighash.sign(
+          transaction, privateKey, sigtype, Number(i), redeemScript)
+
+        // get signature
+        var signature = bitcore.Transaction.Signature({
+          publicKey: publicKey,
+          prevTxId: transaction.inputs[i].prevTxId,
+          outputIndex: transaction.inputs[i].outputIndex,
+          inputIndex: Number(i),
+          signature: sighash,
+          sigtype: sigtype
+        })
+
+        // add signature
+        var script = new bitcore.Script()
+          .add(BufferUtil.concat([
+            signature.signature.toDER(),
+            BufferUtil.integerAsSingleByteBuffer(signature.sigtype)
+          ]))
+          .add(redeemScriptData.toBuffer());
+
+        // apply signature
+        transaction.inputs[i].setScript(script)
+      }
+      // output
+      return transaction.toString()
+    },
+
     spendHodlUtxos (bAddr, redeemScript, nLockTime) {
       var vm = this
-      var myAddress = vm.wallet.address
-
-      // function to process and build the tx
-      function buildTx (utxos) {
-
-        var newUtxos = []
-        for (i in utxos) {
-          var d = {}
-          d.prevTxId = utxos[i].txid
-          d.outputIndex = utxos[i].vout
-          d.address = utxos[i].address
-          d.script = utxos[i].scriptPubKey
-          d.satoshis = utxos[i].satoshis
-          newUtxos.push(d)
-        }
-
-        // calculate total amount to be sent (recovered)
-        var totalAmount = 0
-        for ( var i in newUtxos ) {
-          totalAmount += utxos[i].satoshis
-        }
-        totalAmount = totalAmount - 10000
-
-        // get private key
-        var privateKey = new bitcore.PrivateKey(
-          vm.wallet.privKey.toString('hex')
-        )
-
-        // get public key
-        var publicKey = privateKey.publicKey.toBuffer()
-
-        // use bitcore to build the transaction
-        var transaction = new bitcore.Transaction()
-        var hashData = bitcore.crypto.Hash.sha256ripemd160(publicKey)
-        var sigtype = 0x01
-
-
-        // add inputs
-        for (var utxo in newUtxos) {
-          transaction.addInput(
-            new bitcore.Transaction.Input.PublicKeyHash({
-              output: new bitcore.Transaction.Output({ // previous output
-                script: newUtxos[utxo].script,
-                satoshis: newUtxos[utxo].satoshis
-              }),
-              prevTxId: newUtxos[utxo].prevTxId,
-              outputIndex: newUtxos[utxo].outputIndex,
-              script: redeemScript
-            })
-          )
-        }
-
-        // required after adding inputs
-        transaction.lockUntilDate(nLockTime)
-
-        // add outputs
-        transaction.addOutput(new bitcore.Transaction.Output({
-          script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
-          satoshis: totalAmount
-        }))
-
-        console.log('unsigned transaction:')
-        console.log(transaction.toString())
-
-        // signing inputs...
-        var redeemScriptData = bitcore.Script(redeemScript)
-        var BufferUtil = bitcore.util.buffer
-        for (var i in transaction.inputs) {
-
-          //var sighash = bitcore.Transaction.Sighash.sign(
-          //  transaction, privateKey, sigtype, Number(i), redeemScript)
-          //console.log(sighash.toString())
-
-          // get signature
-          var signature = bitcore.Transaction.Signature({
-            publicKey: publicKey,
-            prevTxId: transaction.inputs[i].prevTxId,
-            outputIndex: transaction.inputs[i].outputIndex,
-            inputIndex: Number(i),
-            signature: bitcore.Transaction.Sighash.sign(
-              transaction, privateKey, sigtype, Number(i), redeemScript),
-            sigtype: sigtype
-          })
-
-          // add signature
-          var script = new bitcore.Script()
-            .add(BufferUtil.concat([
-              signature.signature.toDER(),
-              BufferUtil.integerAsSingleByteBuffer(signature.sigtype)
-            ]))
-            .add(redeemScriptData.toBuffer());
-
-          // apply sig
-          transaction.inputs[i].setScript(script)
-        }
-
-        console.log(transaction.toString())
-
-      }
 
       // get utxos
       console.log('getting utxos...')
@@ -339,13 +329,15 @@ export default {
         // process transaction
         .then(response => {
           var utxos = response.data
-          var rawTx = buildTx(utxos)
+          // call main function
+          var rawTx = vm.buildHodlSpendTx(utxos, redeemScript, nLockTime)
           console.log(rawTx)
+          // re-schedule refresh timer
+          this.scheduleTxHistoryTimer(3000)
         })
         .catch(e => {
           console.log(e)
         });
-
     },
 
     timeNow () {
@@ -356,6 +348,7 @@ export default {
     linkGen (pageNum) {
       // leave empty
       // required to generate custom page url
+      // do not delete this function, or bad things will happen
     }
   },
 
@@ -368,8 +361,5 @@ export default {
       }
       return this.txsUrlBase + '?from=' + fromItem
     },
-  },
-  beforeDestroy() {
-    //clearInterval(this.timer);
   }
 };
