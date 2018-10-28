@@ -211,7 +211,7 @@ export default {
       return newTx
     },
 
-    buildTx (utxos, redeemScript, nLockTime) {
+    buildHodlSpendTx (utxos, redeemScript, nLockTime) {
       // this is the main function,
       // processes and builds the hodl spend tx
 
@@ -330,7 +330,7 @@ export default {
         .then(response => {
           var utxos = response.data
           // call main function
-          var rawTx = vm.buildTx(utxos, redeemScript, nLockTime)
+          var rawTx = vm.buildHodlSpendTx(utxos, redeemScript, nLockTime)
           console.log(rawTx)
           // re-schedule refresh timer
           this.scheduleTxHistoryTimer(3000)
