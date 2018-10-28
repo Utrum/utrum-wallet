@@ -61,11 +61,13 @@ export default {
         this.timer = null
       }
     },
+
     scheduleTxHistoryTimer (milsec) {
       this.cancelTxHistoryTimer()
       var milliseconds = milsec || 60000
       this.timer = setInterval(this.refreshTable, milliseconds)
     },
+
     refreshTable () {
       if (this.$refs.txTable) {
         console.log("refreshing table")
@@ -366,8 +368,5 @@ export default {
       }
       return this.txsUrlBase + '?from=' + fromItem
     },
-  },
-  beforeDestroy () {
-    //clearInterval(this.timer);
   }
 };
