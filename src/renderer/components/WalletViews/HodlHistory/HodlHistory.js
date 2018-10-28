@@ -80,13 +80,6 @@ export default {
       shell.openExternal(row.item.explorerUrl)
     },
 
-    handlePending (value) {
-      if (value) {
-        return value;
-      }
-      return 0;
-    },
-
     copyToClipboard (row) {
       clipboard.writeText(row.item.txid);
       this.$toasted.show('Copied !', {
