@@ -349,6 +349,7 @@ export default {
     linkGen (pageNum) {
       // leave empty
       // required to generate custom page url
+      // do not delete this function, or bad things will happen
     }
   },
 
