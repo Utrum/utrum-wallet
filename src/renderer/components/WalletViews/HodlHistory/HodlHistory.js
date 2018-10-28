@@ -54,38 +54,38 @@ export default {
     // this.timer = setInterval(this.refreshTable, 60000);
   },
   methods: {
-    cancelTxHistoryTimer(){
+    cancelTxHistoryTimer () {
       //cancel if already running
       if(this.timer){
         clearInterval(this.timer)
         this.timer = null
       }
     },
-    scheduleTxHistoryTimer(milsec){
+    scheduleTxHistoryTimer (milsec) {
       this.cancelTxHistoryTimer()
       var milliseconds = milsec || 60000
-      this.timer = setInterval(this.refreshTable, milliseconds);
+      this.timer = setInterval(this.refreshTable, milliseconds)
     },
-    refreshTable() {
+    refreshTable () {
       if (this.$refs.txTable) {
-        console.log("refreshing table");
-        this.$refs.txTable.refresh();
+        console.log("refreshing table")
+        this.$refs.txTable.refresh()
       }
     },
 
-    openTxExplorer: (row) => {
+    openTxExplorer (row) {
       var txid = row.item.txid
-      shell.openExternal(row.item.explorerUrl);
+      shell.openExternal(row.item.explorerUrl)
     },
 
-    handlePending(value) {
+    handlePending (value) {
       if (value) {
         return value;
       }
       return 0;
     },
 
-    copyToClipboard(row) {
+    copyToClipboard (row) {
       clipboard.writeText(row.item.txid);
       this.$toasted.show('Copied !', {
         duration: 1000,
@@ -93,11 +93,11 @@ export default {
       });
     },
 
-    satoshiToBitcoin(amount) {
+    satoshiToBitcoin (amount) {
       return BigNumber(amount).dividedBy(satoshiNb).toNumber();
     },
 
-    getColorAmount(amount) {
+    getColorAmount (amount) {
       if ( typeof amount == 'string' ) {  // non-hodl transactions
         return 'positiveColor'
       }else{
@@ -105,7 +105,7 @@ export default {
       }
     },
 
-    dateFormat(time) {
+    dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000);
       const dateString = moment(blockchainDateUtc).local().format('hh:mm A MM/DD/YY');
       return dateString;
@@ -367,7 +367,7 @@ export default {
       return this.txsUrlBase + '?from=' + fromItem
     },
   },
-  beforeDestroy() {
+  beforeDestroy () {
     //clearInterval(this.timer);
   }
 };
