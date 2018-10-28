@@ -249,7 +249,6 @@ export default {
       var hashData = bitcore.crypto.Hash.sha256ripemd160(publicKey)
       var sigtype = 0x01
 
-
       // add inputs
       for (var utxo in newUtxos) {
         transaction.addInput(
@@ -309,6 +308,24 @@ export default {
       return transaction.toString()
     },
 
+    broadcastTx (rawtx) {
+      console.log('broadcasting transaction...')
+      var vm = this
+
+      // construct call url
+      var url = (vm.wallet.coin.explorer + "insight-api-komodo/tx/send")
+
+      axios
+        .post(url, {'rawtx': rawtx})
+        .then(response => {
+          return response.data.txid
+          console.log("transaction submitted")
+        })
+        .catch(e => {
+          console.log(e)
+        });
+    },
+
     spendHodlUtxos (bAddr, redeemScript, nLockTime) {
       var vm = this
 
@@ -331,9 +348,10 @@ export default {
           var utxos = response.data
           // call main function
           var rawTx = vm.buildHodlSpendTx(utxos, redeemScript, nLockTime)
-          console.log(rawTx)
+          // broadcast transaction
+          var txId = vm.broadcastTx(rawTx)
           // re-schedule refresh timer
-          this.scheduleTxHistoryTimer(3000)
+          this.scheduleTxHistoryTimer(1000)
         })
         .catch(e => {
           console.log(e)
