@@ -55,14 +55,16 @@ export default {
   },
   methods: {
     cancelTxHistoryTimer(){
+      //cancel if already running
       if(this.timer){
         clearInterval(this.timer)
         this.timer = null
       }
     },
-    scheduleTxHistoryTimer(){
-      this.cancelTxHistoryTimer() //cancel if already running
-      this.timer = setInterval(this.refreshTable, 60000);
+    scheduleTxHistoryTimer(milsec){
+      this.cancelTxHistoryTimer()
+      var milliseconds = milsec || 60000
+      this.timer = setInterval(this.refreshTable, milliseconds);
     },
     refreshTable() {
       if (this.$refs.txTable) {
@@ -221,10 +223,11 @@ export default {
     },
 
     spendHodlUtxos (bAddr, redeemScript, nLockTime) {
+      this.scheduleTxHistoryTimer()
       var vm = this
       var myAddress = vm.wallet.address
 
-      // function to process and build the tx
+      // main function, to process and build the hodl spend tx
       function buildTx (utxos) {
 
         var newUtxos = []
@@ -283,17 +286,14 @@ export default {
           satoshis: totalAmount
         }))
 
-        console.log('unsigned transaction:')
-        console.log(transaction.toString())
-
         // signing inputs...
         var redeemScriptData = bitcore.Script(redeemScript)
         var BufferUtil = bitcore.util.buffer
         for (var i in transaction.inputs) {
 
-          //var sighash = bitcore.Transaction.Sighash.sign(
-          //  transaction, privateKey, sigtype, Number(i), redeemScript)
-          //console.log(sighash.toString())
+          // get signature hash
+          var sighash = bitcore.Transaction.Sighash.sign(
+            transaction, privateKey, sigtype, Number(i), redeemScript)
 
           // get signature
           var signature = bitcore.Transaction.Signature({
@@ -301,8 +301,7 @@ export default {
             prevTxId: transaction.inputs[i].prevTxId,
             outputIndex: transaction.inputs[i].outputIndex,
             inputIndex: Number(i),
-            signature: bitcore.Transaction.Sighash.sign(
-              transaction, privateKey, sigtype, Number(i), redeemScript),
+            signature: sighash,
             sigtype: sigtype
           })
 
@@ -314,12 +313,11 @@ export default {
             ]))
             .add(redeemScriptData.toBuffer());
 
-          // apply sig
+          // apply signature
           transaction.inputs[i].setScript(script)
         }
-
-        console.log(transaction.toString())
-
+        // output
+        return transaction.toString()
       }
 
       // get utxos
@@ -339,13 +337,13 @@ export default {
         // process transaction
         .then(response => {
           var utxos = response.data
+          // call main function
           var rawTx = buildTx(utxos)
           console.log(rawTx)
         })
         .catch(e => {
           console.log(e)
         });
-
     },
 
     timeNow () {
