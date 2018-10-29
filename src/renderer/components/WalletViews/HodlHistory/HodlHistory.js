@@ -41,13 +41,18 @@ export default {
       currentPage: 1,
       perPage: 10,
       timer: '',
+      isBusy: false,
       fields: [
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
         { key: 'confirmations', label: 'Conf' },
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'txid', label: 'TxID' },
       ],
-      isBusy: false
+      dismissSecs: 20,
+      dismissCountDown: 0,
+      showDismissibleAlert: false,
+      alertText: '',
+      alertErrorText: ''
     };
   },
   created: function() {
@@ -101,9 +106,11 @@ export default {
     },
 
     dateFormat (time) {
-      const blockchainDateUtc = moment.utc(time * 1000);
-      const dateString = moment(blockchainDateUtc).local().format('hh:mm A MM/DD/YY');
-      return dateString;
+      const blockchainDateUtc = moment.utc(time * 1000)
+      const dateString = moment(blockchainDateUtc)
+        .local()
+        .format('hh:mm A MM/DD/YY')
+      return dateString
     },
 
     txHistory () {
@@ -318,11 +325,17 @@ export default {
       axios
         .post(url, {'rawtx': rawtx})
         .then(response => {
-          return response.data.txid
-          console.log("transaction broadcast")
+          var txid = response.data.txid
+          console.log('txid:', txid)
+          vm.alertText = 'Hodl deposit and reward unlocked!'
+          vm.showAlert()
+          // re-schedule refresh timer
+          this.scheduleTxHistoryTimer(20000)
         })
         .catch(e => {
           console.log(e)
+          vm.alertErrorText = (e.toString())
+          vm.showDismissibleAlert=true
         });
     },
 
@@ -349,12 +362,12 @@ export default {
           // call main function
           var rawTx = vm.buildHodlSpendTx(utxos, redeemScript, nLockTime)
           // broadcast transaction
-          var txId = vm.broadcastTx(rawTx)
-          // re-schedule refresh timer
-          this.scheduleTxHistoryTimer(1000)
+          vm.broadcastTx(rawTx)
         })
         .catch(e => {
           console.log(e)
+          vm.alertErrorText = (e.toString())
+          vm.showDismissibleAlert=true
         });
     },
 
@@ -367,7 +380,16 @@ export default {
       // leave empty
       // required to generate custom page url
       // do not delete this function, or bad things will happen
+    },
+
+    // boostrapvue related
+    countDownChanged (dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+    showAlert () {
+      this.dismissCountDown = this.dismissSecs
     }
+
   },
 
   computed: {
