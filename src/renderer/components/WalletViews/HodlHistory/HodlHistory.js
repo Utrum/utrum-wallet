@@ -41,13 +41,18 @@ export default {
       currentPage: 1,
       perPage: 10,
       timer: '',
+      isBusy: false,
       fields: [
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
         { key: 'confirmations', label: 'Conf' },
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'txid', label: 'TxID' },
       ],
-      isBusy: false
+      dismissSecs: 20,
+      dismissCountDown: 0,
+      showDismissibleAlert: false,
+      alertText: '',
+      alertErrorText: ''
     };
   },
   created: function() {
@@ -101,9 +106,11 @@ export default {
     },
 
     dateFormat (time) {
-      const blockchainDateUtc = moment.utc(time * 1000);
-      const dateString = moment(blockchainDateUtc).local().format('hh:mm A MM/DD/YY');
-      return dateString;
+      const blockchainDateUtc = moment.utc(time * 1000)
+      const dateString = moment(blockchainDateUtc)
+        .local()
+        .format('hh:mm A MM/DD/YY')
+      return dateString
     },
 
     txHistory () {
@@ -249,7 +256,6 @@ export default {
       var hashData = bitcore.crypto.Hash.sha256ripemd160(publicKey)
       var sigtype = 0x01
 
-
       // add inputs
       for (var utxo in newUtxos) {
         transaction.addInput(
@@ -309,6 +315,30 @@ export default {
       return transaction.toString()
     },
 
+    broadcastTx (rawtx) {
+      console.log('broadcasting transaction...')
+      var vm = this
+
+      // construct call url
+      var url = (vm.wallet.coin.explorer + "insight-api-komodo/tx/send")
+
+      axios
+        .post(url, {'rawtx': rawtx})
+        .then(response => {
+          var txid = response.data.txid
+          console.log('txid:', txid)
+          vm.alertText = 'Hodl deposit and reward unlocked!'
+          vm.showAlert()
+          // re-schedule refresh timer
+          this.scheduleTxHistoryTimer(20000)
+        })
+        .catch(e => {
+          console.log(e)
+          vm.alertErrorText = (e.toString())
+          vm.showDismissibleAlert=true
+        });
+    },
+
     spendHodlUtxos (bAddr, redeemScript, nLockTime) {
       var vm = this
 
@@ -331,12 +361,13 @@ export default {
           var utxos = response.data
           // call main function
           var rawTx = vm.buildHodlSpendTx(utxos, redeemScript, nLockTime)
-          console.log(rawTx)
-          // re-schedule refresh timer
-          this.scheduleTxHistoryTimer(3000)
+          // broadcast transaction
+          vm.broadcastTx(rawTx)
         })
         .catch(e => {
           console.log(e)
+          vm.alertErrorText = (e.toString())
+          vm.showDismissibleAlert=true
         });
     },
 
@@ -349,7 +380,16 @@ export default {
       // leave empty
       // required to generate custom page url
       // do not delete this function, or bad things will happen
+    },
+
+    // boostrapvue related
+    countDownChanged (dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+    showAlert () {
+      this.dismissCountDown = this.dismissSecs
     }
+
   },
 
   computed: {
