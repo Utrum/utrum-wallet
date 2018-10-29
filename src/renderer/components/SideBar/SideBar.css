@@ -55,11 +55,22 @@
   padding-right: 20px;
   border-radius: 0px;
   font-size: 1.1em;
-  color: #000;
   display: block;
   list-style-type: none;
   cursor: pointer;
   font-weight: normal;
+}
+
+#sidebar a {
+    color: #687078;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
+
+#sidebar a:hover {
+    color: #0D0032;
+    text-decoration: underline
 }
 
 #sidebar ul li{
@@ -88,7 +99,7 @@
 }
 
 #logout p {
-  color: #000000;
+  color: #687078;
   font-weight: 500;
 }
 
