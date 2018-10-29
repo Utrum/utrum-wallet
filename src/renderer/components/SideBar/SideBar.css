@@ -79,7 +79,7 @@
 
 #sidebar ul li > a.active {
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 500;
   background-color: #079cd8;
   border-radius: 2rem;
 }
