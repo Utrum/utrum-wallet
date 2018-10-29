@@ -75,7 +75,7 @@
     }
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.4.0",
+    "@fortawesome/fontawesome-free": "^5.4.1",
     "app-root-dir": "^1.0.2",
     "axios": "^0.16.1",
     "bignumber.js": "^6.0.0",
