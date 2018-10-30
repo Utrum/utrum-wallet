@@ -35,7 +35,7 @@ export default {
       currentPage: 1,
       perPage: 10,
       fields: [
-        { key: 'time', label: 'Time Stamp', sortable: true },
+        { key: 'time', label: 'Date', sortable: true },
         { key: 'address', label: 'Address' },
         { key: 'confirmations', label: 'Conf' },
         { key: 'amount', label: `Amount` },
@@ -75,15 +75,15 @@ export default {
     },
     dateFormat(time) {
       const blockchainDateUtc = moment.utc(time * 1000);
-    
+
       const localDate = new Date(moment(blockchainDateUtc).local())
       const currentDate = new Date()
       if(currentDate.getFullYear() == localDate.getFullYear()){
         //transaction is from this year
-        return moment(String(localDate)).format('MMM DD, hh:mm a')
+        return moment(String(localDate)).format('hh:mm a, MM/DD')
       }
       else{
-        return moment(String(localDate)).format('MMM DD, YYYY')
+        return moment(String(localDate)).format('MM/DD, YYYY')
       }
     },
     getIconFromTicker(value) {

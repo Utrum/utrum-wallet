@@ -38,7 +38,8 @@
 
 #btn-tx-id {
   border-radius: 10px;
-  width: 150px;
+  width: 90px;
+  font-size: small;
 }
 
 #btn-logo {
@@ -46,7 +47,7 @@
 }
 
 .btn-tx {
-  background-color: #0C6AA8;
+  background-color: #079cd8;
   border-color: white;
   color: white;
 }
@@ -97,4 +98,12 @@
 
 .title-sec .btn-link:hover{
   color: #0C6AA8;
+}
+
+.btn-copy-link:hover {
+  color: #619EC6
+}
+
+.btn-copy-link {
+  color: #079cd8
 }

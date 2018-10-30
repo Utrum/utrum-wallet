@@ -22,7 +22,7 @@
     </div>
 
 <!-- table -->
-    <div class="title-sec text-center">
+    <div class="title-sec text-left">
         <span>HISTORY</span>
         <b-button size="sm" variant="link" @click="refreshTable" class="float-right">
             <i class="fas fa-sync"></i>
@@ -44,11 +44,11 @@
     ref="txTable"
     :busy.sync="isBusy"
     >
-<!--
+
         <template slot="time" slot-scope="row">
             <span>{{dateFormat(row.value)}}</span>
         </template>
--->
+
 
         <template slot="nLockTime" slot-scope="data">
             <span v-if="data.item.nLockTime > data.item.timeNow" class="hodlColor">{{ dateFormat(data.item.nLockTime) }}</span>
@@ -76,9 +76,12 @@
             </div>
         </template>
 
+<!--
         <template slot="confirmations" slot-scope="row">
             <span id="confirmations">{{ row.value || '0' }}</span>
         </template>
+-->
+
         <template slot="txid" slot-scope="row">
             <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
                 <button
@@ -91,7 +94,8 @@
                   class="btn btn-tx pointer"
                   id="btn-logo"
                   @click.prevent="copyToClipboard(row)">
-                  <img src="~@/assets/icon-copy-paste.svg" alt="">
+                  <i class="far fa-copy btn-copy-link"></i>
+                  <!-- <img src="~@/assets/icon-copy-paste.svg" alt=""> -->
                 </button>
             </div>
         </template>
