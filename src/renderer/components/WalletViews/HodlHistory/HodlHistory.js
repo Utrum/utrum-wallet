@@ -43,8 +43,9 @@ export default {
       timer: '',
       isBusy: false,
       fields: [
+        //{ key: 'confirmations', label: 'Conf' },
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
-        { key: 'confirmations', label: 'Conf' },
+        { key: 'time', label: 'Date'},
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'txid', label: 'TxID' },
       ],
@@ -109,7 +110,7 @@ export default {
       const blockchainDateUtc = moment.utc(time * 1000)
       const dateString = moment(blockchainDateUtc)
         .local()
-        .format('hh:mm A MM/DD/YY')
+        .format('hh:mm a, MM/DD')
       return dateString
     },
 
