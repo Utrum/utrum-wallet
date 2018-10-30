@@ -17,6 +17,7 @@
 import bitcoinjs from 'bitcoinjs-lib';
 import { QrcodeReader } from 'vue-qrcode-reader';
 import Select2 from '@/components/Utils/Select2/Select2.vue';
+import vSelect from 'vue-select'
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
@@ -31,6 +32,7 @@ export default {
     'transaction-history': TransactionHistory,
     'select-awesome': SelectAwesome,
     QrcodeReader,
+    'v-select': vSelect
   },
   created() {
     this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
@@ -60,7 +62,8 @@ export default {
       },
       paused: false,
       readingQRCode: false,
-      select: '',
+      select: null,
+      selectNew: null,
       withdraw: {
         amount: null,
         address: '',
@@ -153,6 +156,10 @@ export default {
       };
       this.select = value;
     },
+    updateNewCoin(value) {
+      if(value)
+        this.updateCoin(value.ticker)
+    },
     prepareTx() {
       // Number here because of bitcoinjs incapacity to use Big types.
       const amount = this.getAmountInSatoshis.toNumber();
@@ -203,6 +210,8 @@ export default {
             }
           })
           ;
+      } else if (this.canWithdraw === false){
+        this.$toasted.error('Not enought balance including fees.');
       }
     },
   },
@@ -233,7 +242,22 @@ export default {
       return this.$store.getters.getConfig;
     },
     coins() {
-      return this.$store.getters.enabledCoins.map(coin => coin.ticker);
+      return this.$store.getters.enabledCoins.map(coin => coin.ticker ).filter( coin => coin != 'BTC');
+    },
+    coinsNew() {
+      console.log("computing coninsNew");
+      return this.$store.getters.enabledCoins.map(coin => {
+        let tempObj = {
+          ticker: coin.ticker,
+          icon: coin.ticker,
+          label: `${coin.name} (${coin.ticker})`
+        }
+        if(!this.selectNew && coin.ticker == 'OOT'){
+          this.select = coin.ticker
+          this.selectNew = tempObj
+        }
+        return tempObj
+      });
     },
     getTotalPriceWithFee() {
       if (this.getAmountInSatoshis != null && this.estimatedFee != null) {
@@ -252,6 +276,9 @@ export default {
     },
     getUSDAmount() {
       return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance_usd.toFixed(2));
+    },
+    convertToUSDAmount() {
+      return Number( this.amount * this.$store.getters.getWalletByTicker(this.select).rate_in_usd).toFixed(2);
     },
     canWithdraw() {
       if (this.withdraw.amount != null) {

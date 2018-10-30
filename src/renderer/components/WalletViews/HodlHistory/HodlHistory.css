@@ -14,46 +14,87 @@
  *                                                                            *
  ******************************************************************************/
 
-const sha256 = require('js-sha256');
-var wif = require('wif');
-
-/**
-* It returns a string from HEX array.
-* @param {Array} hash // HEX Array
-* @returns {String} // HEX in string
-*/
-function createHexString(hash) {
-  let result = '';
-
-  for (let i = 0; i < hash.length; i += 1) {
-    let str = hash[i].toString(16);
-    if (str.length === 1) {
-      str = `0${str}`;
-    }
-    result += str;
-  }
-
-  return result;
+#address {
+  font-size: 0.8em;
 }
 
-export default (passphrase) => {
-  if (passphrase !== 'default') {
-    const pass = passphrase;
-    const hash = sha256.array(pass);
+.borderBottom {
+  border-bottom: 1px solid rgba(222, 226, 230, 0.5);
+}
 
-    hash[0] &= 248;
-    hash[31] &= 127;
-    hash[31] |= 64;
+.table td, .table th {
+  border: none;
+  vertical-align: middle;
+}
 
-    const privKey = createHexString(hash);
-    if (pass.length == 52) {
-      try {
-        var obj = wif.decode(pass);
-        return obj.privateKey.toString('hex');
-      } catch (err) {
-        console.log("incorrect WIF, using input passphrase");
-      }
-    }
-    return privKey;
-  }
-};
+.btn-tx {
+ align-content: flex-end;
+}
+
+#btn-group-tx {
+  border-color: #0C6AA8;
+  width: 160px;
+}
+
+#btn-tx-id {
+  border-radius: 10px;
+  width: 150px;
+}
+
+#btn-logo {
+  background-color: white;
+}
+
+.btn-tx {
+  background-color: #0C6AA8;
+  border-color: white;
+  color: white;
+}
+
+.btn-tx:hover {
+  background-color: #619EC6;
+  border-color: white;
+  transition: 0.5s;
+}
+
+.btn-tx:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-tx:target {
+  background-color: #619EC6;
+  box-shadow: none;
+}
+
+.positiveColor {
+  color: #95989c;
+  font-weight: 400;
+}
+
+.negativeColor {
+	color: #95989c;
+}
+
+.hodlColor{
+  color: black;
+}
+
+.title-sec{
+  position: relative;
+}
+.title-sec span{
+  margin: 0;
+  font-weight: 400;
+  color: #0C6AA8;
+}
+.title-sec .btn-link{
+  position: absolute;
+  right: 0px;
+  font-size: .7rem;
+  color: rgba(131, 125, 149, 0.39);
+}
+
+.title-sec .btn-link:hover{
+  color: #0C6AA8;
+}

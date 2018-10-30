@@ -1,33 +1,130 @@
-<div class="d-flex flex-column content-buyview"">
-  <div class="buy-monaize" >
-		<div class="col-custom">
-			<div class="row">
-				<div class="col-custom title-buy-mnz">
-					<h3>not working yet, experimenting</h3>
-				</div>
-			</div>
+<div class="content">
+  <br>
 
-			<div class="row">
-		    <span class="title-content">{{select}} ADDRESS</span>
-		    <input v-model="hodl.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter hodl address">
-		  </div>
+  <div id="select-amount" class="row">
+    <span class="title-content">LOCK FUNDS FOR</span>
+      <div class="col-custom input-field row">
+      <input @keyup.enter="hodlCreate"
+        type="number"
+        id="amount"
+        v-model.number="hodlInput.daysToLock"
+        class="col-custom input-field"
+        placeholder="How Many">
+      <!-- <span id="number-input">Days</span> --> <!-- TESTING! -->
+      <span id="number-input">Minutes</span> <!-- TESTING! -->
+    </div>
+  </div>
+  <div class="col-custom horizontal-line">
+    <hr id="second-line"/>
+  </div>
 
-			<div id="select-amount" class="row">
-		    <span class="title-content">AMOUNT</span>
-		      <div class="col-custom input-field row">
-		        <input type="number" id="amount" v-model.number="hodl.amount" class="col-custom input-field" placeholder="Amount">
-		        <span id="current-coin"> {{select}}</span>
-		    </div>
-		  </div>
+  <div class="btn-center">
+    <button v-on:click="hodlCreate" :disabled="!hodlInput.daysToLock"
+      id="sendcoins"
+      class="btn sendcoins"
+      type="button">Get Code</button>
+  </div>
 
-			<div id="select-block" class="row">
-		    <span class="title-content">BLOCK HEIGHT</span>
-		      <div class="col-custom input-field row">
-		        <input type="number" id="amount" v-model.number="hodl.block" class="col-custom input-field" placeholder="Block">
-		    </div>
-		  </div>
+  <br><br>
+  <div id="select-block" class="row">
+    <span class="title-content">Hodl Address:</span>
+    <div class="col-custom input-field row">
+      <span id="hodlData">&nbsp;{{ scriptAddress }}</span>
+    </div>
+  </div>
 
-		</div>
-	</b-modal>
-	</div>
+  <div id="select-block" class="row">
+    <span class="title-content">My Address:</span>
+    <div class="col-custom input-field row">
+      <span v-if="hodlData.redeemScript"
+        id="myaddress">&nbsp;{{ hodlData.address }}</span>
+    </div>
+  </div>
+
+  <div id="select-block" class="row">
+    <span class="title-content">Unlock Time:</span>
+    <div class="col-custom input-field row">
+      <span id="unlockTimeDate">&nbsp;{{ unlockTimeDate }}</span>
+    </div>
+  </div>
+
+  <div v-if="hodlData.redeemScript">
+
+    <div id="select-block" class="row">
+      <div class="col-custom input-field row">
+        <span @click="openValidator" id="validator">
+          <a href="#" style="color:#0C6AA8;font-size:small;"><i>Validation link (third party).</i></a>
+        </span>
+      </div>
+	  </div>
+
+<!--
+    <br>
+    <div id="select-block" class="row">
+      <div class="col-custom input-field row">
+        <span>Send your coins to this address:</span>
+        <button
+          v-clipboard:copy="scriptAddress"
+          v-clipboard:success="onCopy"
+          type="button"
+          class="btn btn-copy-link btn-smartaddress"
+          :data-clipboard-text="scriptAddress">
+          <div :id="scriptAddress" class="btn-inside-qrcode">
+            <span v-if="isClipboard">Copied to the clipboard</span>
+            <span v-else>{{ scriptAddress }}</span>
+          </div>
+        </button>
+      </div>
+	  </div>
+-->
+
+    <br>
+    <div id="select-amount" class="row">
+      <span class="title-content">AMOUNT</span>
+        <div class="col-custom input-field row">
+        <input @keyup.enter="getTx"
+          type="number"
+          id="amount"
+          v-model.number="hodlInput.amount"
+          class="col-custom input-field"
+          placeholder="Amount">
+        <span id="number-input">{{select}}</span>
+      </div>
+    </div>
+    <div class="col-custom horizontal-line">
+      <hr id="second-line"/>
+    </div>
+
+    <div class="btn-center">
+      <button v-on:click="getTx"
+        :disabled="!hodlInput.amount"
+        id="sendcoins"
+        class="btn sendcoins"
+        type="button">Lock Funds</button>
+    </div>
+
+    <br>
+    <div v-if="rawtx && !lastTxId">
+      <div class="btn-center">
+        <button v-on:click="submitTx"
+          :disabled="!rawtx"
+          id="sendcoins"
+          class="btn sendcoins"
+          type="button">Confirm</button>
+      </div>
+    </div> <!-- conditional rendering -->
+
+    <div v-if="lastTxId">
+      <br>
+      <span>Transaction ID:</span>
+      <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
+          <button class="btn btn-tx pointer" id="btn-tx-id" v-on:click="openTxExplorer()">{{ lastTxId }}</button>
+      </div>
+    </div> <!-- conditional rendering -->
+
+  </div> <!-- conditional rendering -->
+
+  <br><br>
+  <hodl-history id="hodlHistory" :wallet="wallet"></hodl-history>
+
 </div>

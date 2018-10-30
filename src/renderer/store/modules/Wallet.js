@@ -36,6 +36,7 @@ const state = {
     balance_usd: 0,
     ticker: null,
     txs: {},
+    rate_in_usd: 0
   }],
   coins: [],
   calculating: false,
@@ -139,7 +140,7 @@ const actions = {
       const ticker = coin.ticker;
       const isTestMode = ticker.indexOf('TEST') >= 0;
       const wallet = new Wallet(privateKey, coin, isTestMode);
-      wallet.electrum = new ElectrumService(store, ticker, { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
+      wallet.electrum = new ElectrumService(store, ticker, { client: 'Utrum Wallet', version: '1.2' });
       wallet.ticker = ticker;
       wallet.balance = 0;
       wallet.balance_usd = 0;
@@ -190,11 +191,11 @@ const actions = {
       ;
   },
   broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
-    const buildedTx = wallet.buildTx(inputs, outputs, fee, dataScript);
-    const txId = buildedTx.getId();
+    const builtTx = wallet.buildTx(inputs, outputs, fee, dataScript);
+    const txId = builtTx.getId();
 
     return wallet.electrum
-      .broadcast(buildedTx.toHex())
+      .broadcast(builtTx.toHex())
       .then((broadcastedTx) => {
         if (txId === broadcastedTx) {
           return broadcastedTx;
@@ -230,6 +231,7 @@ const actions = {
           getCmcData(wallet.coin.name)
             .then(response => {
               response.data.forEach((cmcCoin) => {
+                wallet.rate_in_usd = cmcCoin.price_usd;
                 wallet.balance_usd = wallet.balance.multipliedBy(cmcCoin.price_usd);
               });
             })

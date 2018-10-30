@@ -1,23 +1,99 @@
-<div class="d-flex flex-row justify-content-center h-100">
-  <!-- <div class="vl"></div> -->
-  <div class="d-flex flex-column align-items-center w-100 mt-auto mb-auto">
-    <div>
-        <img src="~@/assets/icon-social.svg" alt="icon-social">
-    </div>
-    <div class="d-flex flex-row justify-content-center mt-4">
-      <button @click="openMnzTelegram" class="btn btn-light">Join our Telegram</button>
-      <button @click="openMnzDiscord" class="btn btn-light ml-4">Join our Discord</button>
-      <button @click="openOOTTwitter" class="btn btn-light ml-4">Follow us on Twitter</button>
-    </div>
-    <div class="d-flex flex-row justify-content-center mt-4">
-      <button @click="openOOTReddit" class="btn btn-light ml-4">Subscribe to us on Reddit</button>
-      <button @click="openOOTFacebook" class="btn btn-light ml-4">Like us on Facebook</button>
-    </div>
-    <div class="mt-4">
-      <span class="color-purple">Email: </span><a class="link" href="mailto:contact@utrum.io">contact@utrum.io</a>
-    </div>
-    <div class="mt-1">
-        <span class="color-purple">Issue tracker: </span><a class="link" href="mailto:support@utrum.io">support@utrum.io</a>
+<div class="content">
+  <div class="d-flex flex-row justify-content-center mt-5">
+    <div class="d-flex flex-column align-items-center w-100 mt-auto mb-auto">
+      <h3 class="text-center mt-3">
+        BUY OOT on these Exchanges
+      </h3>
+      <div class="d-flex flex-row justify-content-center mt-4">
+        <button class="btn btn-light img-icon-btn" @click="openLink('https://www.rightbtc.com/')">
+          <div class="flex">
+            <img src="~@/assets/right-btc.png">
+          </div>
+          RightBTC
+        </button>
+        <button class="btn btn-light img-icon-btn ml-4" @click="openLink('https://www.sistemkoin.com/')">
+          <div class="flex">
+            <img class="icon-img" src="~@/assets/systemkoin.png">
+          </div>
+          SistemKoin
+        </button>
+        <button class="btn btn-light ml-4 img-icon-btn" @click="openLink('https://www.coinexchange.io/market/OOT/BTC')">
+          <div class="flex">
+            <img class="icon-img" src="~@/assets/coinexchange.png">
+          </div>
+          CoinExchange
+        </button>
       </div>
+      <div class="d-flex flex-row justify-content-center mt-4">
+        <button class="btn btn-light img-icon-btn" @click="openLink('https://github.com/atomiclabs/hyperdex/releases')">
+          <div class="flex">
+            <img class="icon-img" src="~@/assets/barter-dex.png">
+          </div>
+          BarterDex
+        </button>
+        <button class="btn btn-light img-icon-btn ml-4" @click="openLink('https://digitalprice.io/order?url=oot-kmd')">
+          <div class="flex">
+            <img class="icon-img" src="~@/assets/digital-price.png">
+          </div>
+          Digital Price
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex flex-row justify-content-center mt-5">
+    <div class="d-flex flex-column align-items-center w-100 mt-auto mb-auto">
+      <h3 class="text-center mt-3">
+        Follow us on Social Media
+      </h3>
+      <div class="justify-content-center mt-4">
+        <button @click="openUtrumTelegram" class="btn btn-light img-icon-btn">
+          <div class="flex">
+            <i class="fab fa-telegram telegram-fc"></i>
+          </div>
+          Telegram
+        </button>
+        <button @click="openUtrumDiscord" class="btn btn-light ml-4 img-icon-btn">
+          <div class="flex">
+            <i class="fab fa-discord discord-fc"></i>
+          </div>
+          Discord
+        </button>
+        <button @click="openUtrumTwitter" class="btn btn-light ml-4 img-icon-btn">
+          <div class="flex">
+            <i class="fab fa-twitter twitter-fc"></i>
+          </div>
+          Twitter
+        </button>
+        <button @click="openUtrumGithub" class="btn btn-light ml-4 img-icon-btn">
+          <div class="flex">
+            <i class="fab fa-github github-fc"></i></i>
+          </div>
+          Github
+        </button>
+      </div>
+      <div class="justify-content-center mt-4">
+        <button @click="openUtrumReddit" class="btn btn-light img-icon-btn">
+          <div class="flex">
+            <i class="fab fa-reddit rddit-fc"></i>
+          </div>
+          Reddit
+        </button>
+        <button @click="openUtrumFacebook" class="btn btn-light ml-4 img-icon-btn">
+          <div class="flex">
+            <i class="fab fa-facebook-square fb-fc"></i>
+          </div>
+          Facebook
+        </button>
+        <button @click="openUtrumBlog" class="btn btn-light ml-4 img-icon-btn">
+          <div class="flex">
+            <i class="fab fa-medium"></i>
+          </div>
+          Blog
+        </button>
+      </div>
+      <div class="mt-5 mb-5">
+        For any questions, email us at <span class="color-purple"><a href="mailto:support@utrum.io">support@utrum.io</a></span>
+      </div>
+    </div>
   </div>
 </div>
