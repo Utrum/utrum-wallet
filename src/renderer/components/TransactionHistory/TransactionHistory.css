@@ -40,7 +40,8 @@
 
 #btn-tx-id {
   border-radius: 10px;
-  width: 130px;
+  width: 90px;
+  font-size: small;
 }
 
 #btn-logo {
