@@ -56,9 +56,6 @@ export default {
       alertErrorText: ''
     };
   },
-  created: function() {
-    // this.timer = setInterval(this.refreshTable, 60000);
-  },
   methods: {
     cancelTxHistoryTimer () {
       //cancel if already running
