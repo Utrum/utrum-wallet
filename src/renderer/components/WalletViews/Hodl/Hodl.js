@@ -102,6 +102,29 @@ export default {
       )
     },
 
+    // hodl script creation
+    hodlCreate () {
+      var vm = this
+
+      // update unlock time to now
+      vm.updateUnlockTime()
+
+      // flush data regarding responsive stuff
+      vm.hodlData["scriptAddress"] = ''
+      vm.hodlData["redeemScript"] = ''
+      vm.hodlInput.daysToLock = ''
+      vm.rawtx = ''
+      vm.lastTxId = ''
+
+      // build url
+      var url = vm.explorer + "hodl-api/create/"
+      url += vm.hodlData.publicKey
+      url += "/" + vm.hodlData.unlockTime
+
+      // get script via http request
+      vm.getScript(url)
+    },
+
     // method to retrieve hodl script from the hodl api
     getScript (url) {
       var vm = this
@@ -205,29 +228,6 @@ export default {
         .catch(e => {
           console.log(e)
         });
-    },
-
-    // hodl script creation
-    hodlCreate () {
-      var vm = this
-
-      // update unlock time to now
-      vm.updateUnlockTime()
-
-      // flush data regarding responsive stuff
-      vm.hodlData["scriptAddress"] = ''
-      vm.hodlData["redeemScript"] = ''
-      vm.hodlInput.daysToLock = ''
-      vm.rawtx = ''
-      vm.lastTxId = ''
-
-      // build url
-      var url = vm.explorer + "hodl-api/create/"
-      url += vm.hodlData.publicKey
-      url += "/" + vm.hodlData.unlockTime
-
-      // get script via http request
-      vm.getScript(url)
     },
 
     // store hodl related data
