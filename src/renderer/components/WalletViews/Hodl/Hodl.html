@@ -25,19 +25,11 @@
       type="button">Get Code</button>
   </div>
 
-  <br><br>
+  <br>
   <div id="select-block" class="row">
-    <span class="title-content">Hodl Address:</span>
+    <span class="title-content">Hodl Code:</span>
     <div class="col-custom input-field row">
       <span id="hodlData">&nbsp;{{ scriptAddress }}</span>
-    </div>
-  </div>
-
-  <div id="select-block" class="row">
-    <span class="title-content">My Address:</span>
-    <div class="col-custom input-field row">
-      <span v-if="hodlData.redeemScript"
-        id="myaddress">&nbsp;{{ hodlData.address }}</span>
     </div>
   </div>
 
@@ -49,34 +41,6 @@
   </div>
 
   <div v-if="hodlData.redeemScript">
-
-    <div id="select-block" class="row">
-      <div class="col-custom input-field row">
-        <span @click="openValidator" id="validator">
-          <a href="#" style="color:#0C6AA8;font-size:small;"><i>Validation link (third party).</i></a>
-        </span>
-      </div>
-	  </div>
-
-<!--
-    <br>
-    <div id="select-block" class="row">
-      <div class="col-custom input-field row">
-        <span>Send your coins to this address:</span>
-        <button
-          v-clipboard:copy="scriptAddress"
-          v-clipboard:success="onCopy"
-          type="button"
-          class="btn btn-copy-link btn-smartaddress"
-          :data-clipboard-text="scriptAddress">
-          <div :id="scriptAddress" class="btn-inside-qrcode">
-            <span v-if="isClipboard">Copied to the clipboard</span>
-            <span v-else>{{ scriptAddress }}</span>
-          </div>
-        </button>
-      </div>
-	  </div>
--->
 
     <br>
     <div id="select-amount" class="row">

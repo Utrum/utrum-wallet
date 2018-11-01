@@ -24,7 +24,6 @@ import axios from 'axios';
 const { clipboard } = require('electron');
 const { shell } = require('electron');
 const moment = require('moment');
-const coinbinValidator = 'https://deckersu.github.io/coinbin/?verify='
 
 import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';
 
@@ -58,7 +57,6 @@ export default {
       unlockTimeDate: '',
       scriptAddress: '',
       redeemScript: '',
-      validator: '',
       rawtx: '',
       lastTxId: '',
       isClipboard: false,
@@ -72,11 +70,6 @@ export default {
     // open returned transaction id link
     openTxExplorer () {
       shell.openExternal(`${this.explorer}tx/${this.lastTxId}`);
-    },
-
-    // open validation 3rd party software link on an external browser
-    openValidator () {
-      shell.openExternal(`${this.validator}`);
     },
 
     // for copy button
@@ -102,6 +95,29 @@ export default {
       )
     },
 
+    // hodl script creation
+    hodlCreate () {
+      var vm = this
+
+      // update unlock time to now
+      vm.updateUnlockTime()
+
+      // flush data regarding responsive stuff
+      vm.hodlData["scriptAddress"] = ''
+      vm.hodlData["redeemScript"] = ''
+      vm.hodlInput.daysToLock = ''
+      vm.rawtx = ''
+      vm.lastTxId = ''
+
+      // build url
+      var url = vm.explorer + "hodl-api/create/"
+      url += vm.hodlData.publicKey
+      url += "/" + vm.hodlData.unlockTime
+
+      // get script via http request
+      vm.getScript(url)
+    },
+
     // method to retrieve hodl script from the hodl api
     getScript (url) {
       var vm = this
@@ -109,22 +125,28 @@ export default {
       // gui
       vm.scriptAddress = "Loading..."
       vm.redeemScript = ""
-      vm.validator = ""
 
-      // communicate with api
-      axios
-        .get(url)
-        .then(response => {
-          // update hodl data object
-          vm.hodlData["redeemScript"] = response.data["redeemScript"]
-          vm.hodlData["scriptAddress"] = response.data["address"]
-          // update gui data
-          vm.scriptAddress = response.data["address"]
-          vm.validator = coinbinValidator + response.data["redeemScript"]
-        })
-        .catch(e => {
-          console.log(e)
-        });
+      // construct redeem script
+      var writer = new bitcore.encoding.BufferWriter()
+      var redeemScript = new bitcore.Script()
+        .add(writer.writeUInt32LE(vm.hodlData.unlockTime).bufs[0])
+        .add('OP_NOP2')
+        .add('OP_DROP')
+        .add(new Buffer(vm.hodlData.publicKey, 'hex'))
+        .add('OP_CHECKSIG')
+        .toHex()
+      console.log(redeemScript.toString())
+
+      // get address from redeem script
+      var scriptBuffer = new bitcore.Script(redeemScript).toBuffer()
+      var scriptSha256 = bitcore.crypto.Hash.sha256(scriptBuffer)
+      var scriptSha256ripemd160 = bitcore.crypto.Hash.ripemd160(scriptSha256)
+      var scriptAddress = bitcore.Address.fromScriptHash(scriptSha256ripemd160)
+      console.log(scriptAddress.toString())
+
+      // update hodl data object
+      vm.hodlData["redeemScript"] = redeemScript.toString()
+      vm.hodlData["scriptAddress"] = vm.scriptAddress = scriptAddress.toString()
     },
 
     // get utxos and call build transaction function
@@ -205,29 +227,6 @@ export default {
         .catch(e => {
           console.log(e)
         });
-    },
-
-    // hodl script creation
-    hodlCreate () {
-      var vm = this
-
-      // update unlock time to now
-      vm.updateUnlockTime()
-
-      // flush data regarding responsive stuff
-      vm.hodlData["scriptAddress"] = ''
-      vm.hodlData["redeemScript"] = ''
-      vm.hodlInput.daysToLock = ''
-      vm.rawtx = ''
-      vm.lastTxId = ''
-
-      // build url
-      var url = vm.explorer + "hodl-api/create/"
-      url += vm.hodlData.publicKey
-      url += "/" + vm.hodlData.unlockTime
-
-      // get script via http request
-      vm.getScript(url)
     },
 
     // store hodl related data
