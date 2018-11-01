@@ -122,14 +122,12 @@ export default {
         .add(new Buffer(vm.hodlData.publicKey, 'hex'))
         .add('OP_CHECKSIG')
         .toHex()
-      console.log(redeemScript.toString())
 
       // get address from redeem script
       var scriptBuffer = new bitcore.Script(redeemScript).toBuffer()
       var scriptSha256 = bitcore.crypto.Hash.sha256(scriptBuffer)
       var scriptSha256ripemd160 = bitcore.crypto.Hash.ripemd160(scriptSha256)
       var scriptAddress = bitcore.Address.fromScriptHash(scriptSha256ripemd160)
-      console.log(scriptAddress.toString())
 
       // update hodl data object
       vm.hodlData["redeemScript"] = redeemScript.toString()
@@ -208,8 +206,7 @@ export default {
         .post(url, {'rawtx': rawtx})
         .then(response => {
           vm.lastTxId = response.data.txid
-          console.log("transaction submitted:")
-          console.log(response.data)
+          console.log("transaction submitted")
         })
         .catch(e => {
           console.log(e)
