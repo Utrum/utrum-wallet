@@ -109,20 +109,7 @@ export default {
       vm.rawtx = ''
       vm.lastTxId = ''
 
-      // build url
-      var url = vm.explorer + "hodl-api/create/"
-      url += vm.hodlData.publicKey
-      url += "/" + vm.hodlData.unlockTime
-
-      // get script via http request
-      vm.getScript(url)
-    },
-
-    // get hodl redeem script and address
-    getScript (url) {
-      var vm = this
-
-      // gui
+      // gui related
       vm.scriptAddress = "Loading..."
       vm.redeemScript = ""
 
