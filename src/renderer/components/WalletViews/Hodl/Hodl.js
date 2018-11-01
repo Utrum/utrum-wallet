@@ -126,7 +126,7 @@ export default {
       vm.scriptAddress = "Loading..."
       vm.redeemScript = ""
 
-      // construct redeem script
+      // get redeem script
       var writer = new bitcore.encoding.BufferWriter()
       var redeemScript = new bitcore.Script()
         .add(writer.writeUInt32LE(vm.hodlData.unlockTime).bufs[0])
