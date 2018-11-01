@@ -177,7 +177,6 @@ export default {
       var isSentToScript = false
       var isHodlTx = false
       var isSpent = tx.vout[0].spentHeight > 0 ? true : false
-      var isRewardPaid = false
 
       // detect if p2sh transaction
       if ( destAddr.substring(0,1) == 'b' ) {
@@ -212,7 +211,6 @@ export default {
       newTx.isSentToScript = isSentToScript
       newTx.isHodlTx = isHodlTx
       newTx.isSpent = isSpent
-      newTx.isRewardPaid = isRewardPaid
       newTx.timeNow = vm.timeNow()
       return newTx
     },
@@ -279,6 +277,10 @@ export default {
         script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
         satoshis: totalAmount
       }))
+
+      // add opreturn label
+      var op_return = "HODL FUNDS UNLOCKED"
+      transaction.addData(op_return)
 
       // signing inputs...
       var redeemScriptData = bitcore.Script(redeemScript)
