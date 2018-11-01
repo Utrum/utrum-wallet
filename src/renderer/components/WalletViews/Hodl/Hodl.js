@@ -144,6 +144,19 @@ export default {
           // update gui data
           vm.scriptAddress = response.data["address"]
           vm.validator = coinbinValidator + response.data["redeemScript"]
+
+
+          // construct redeem script
+          var writer = new bitcore.encoding.BufferWriter()
+          var script = new bitcore.Script()
+            .add(writer.writeUInt32LE(vm.hodlData.unlockTime).bufs[0])
+            .add('OP_NOP2')
+            .add('OP_DROP')
+            .add(new Buffer(vm.hodlData.publicKey, 'hex'))
+            .add('OP_CHECKSIG')
+
+          console.log(script.toHex())
+
         })
         .catch(e => {
           console.log(e)
