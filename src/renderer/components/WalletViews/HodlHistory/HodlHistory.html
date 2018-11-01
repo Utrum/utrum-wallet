@@ -56,7 +56,7 @@
               @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
               class="btn btn-tx">Claim!</span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
-                class="hodlColor">🎉 Hodl Complete 🎉</span>
+                class="hodlComplete">🎉 Hodl Complete 🎉</span>
             <span v-else>Normal Transaction</span>
         </template>
 
