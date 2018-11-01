@@ -109,24 +109,11 @@ export default {
       vm.rawtx = ''
       vm.lastTxId = ''
 
-      // build url
-      var url = vm.explorer + "hodl-api/create/"
-      url += vm.hodlData.publicKey
-      url += "/" + vm.hodlData.unlockTime
-
-      // get script via http request
-      vm.getScript(url)
-    },
-
-    // method to retrieve hodl script from the hodl api
-    getScript (url) {
-      var vm = this
-
-      // gui
+      // gui related
       vm.scriptAddress = "Loading..."
       vm.redeemScript = ""
 
-      // construct redeem script
+      // get redeem script
       var writer = new bitcore.encoding.BufferWriter()
       var redeemScript = new bitcore.Script()
         .add(writer.writeUInt32LE(vm.hodlData.unlockTime).bufs[0])

@@ -49,7 +49,7 @@ export default {
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'txid', label: 'TxID' },
       ],
-      dismissSecs: 20,
+      dismissSecs: 30,
       dismissCountDown: 0,
       showDismissibleAlert: false,
       alertText: '',
