@@ -118,7 +118,7 @@ export default {
       vm.getScript(url)
     },
 
-    // method to retrieve hodl script from the hodl api
+    // get hodl redeem script and address
     getScript (url) {
       var vm = this
 
