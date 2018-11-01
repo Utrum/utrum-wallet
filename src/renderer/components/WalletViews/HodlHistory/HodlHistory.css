@@ -77,8 +77,14 @@
 	color: #95989c;
 }
 
+.hodlComplete{
+  color: green;
+  font-weight: 500;
+}
+
 .hodlColor{
-  color: black;
+  color: #687078;
+  font-weight: 500;
 }
 
 .title-sec{
