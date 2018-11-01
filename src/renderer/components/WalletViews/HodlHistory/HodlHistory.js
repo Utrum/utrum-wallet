@@ -49,7 +49,7 @@ export default {
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'txid', label: 'TxID' },
       ],
-      dismissSecs: 30,
+      dismissSecs: 20,
       dismissCountDown: 0,
       showDismissibleAlert: false,
       alertText: '',
@@ -66,8 +66,9 @@ export default {
     },
 
     scheduleTxHistoryTimer (milsec) {
-      this.cancelTxHistoryTimer()
+      // default is 1 minute
       var milliseconds = milsec || 60000
+      this.cancelTxHistoryTimer()
       this.timer = setInterval(this.refreshTable, milliseconds)
     },
 
@@ -328,7 +329,7 @@ export default {
           vm.alertText = 'Hodl deposit and reward unlocked!'
           vm.showAlert()
           // re-schedule refresh timer
-          this.scheduleTxHistoryTimer(20000)
+          this.scheduleTxHistoryTimer(vm.dismissSecs * 1000)
         })
         .catch(e => {
           console.log(e)
@@ -380,7 +381,7 @@ export default {
       // do not delete this function, or bad things will happen
     },
 
-    // boostrapvue related
+    // boostrap-vue related
     countDownChanged (dismissCountDown) {
       this.dismissCountDown = dismissCountDown
     },
