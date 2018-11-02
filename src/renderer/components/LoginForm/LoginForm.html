@@ -1,39 +1,3 @@
-<!-- 
-<div class="content-login d-flex flex-column text-center">
-  <div class="flex icon-wrapper">
-      <div class="margin-auto">
-        <img id="icon-login" class="margin-auto" src="~@/assets/icon-login-utrum.png">
-      </div>
-  </div>
-  <div class="d-flex flex-column justify-content-center form-wrapper">
-    <div class="d-flex align-items-center justify-content-center">
-      <div class="d-flex flex-row input-login col-6">
-        <form id="login" class="row login" method="POST" enctype="multipart/form-data">
-          <img v-if="typeInput === 'password'" class="icon-mdp" src="~@/assets/icon-mdp-hide.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
-          <img v-if="typeInput === 'text'" class="icon-mdp" src="~@/assets/icon-mdp.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
-          <input :type="typeInput" class="col" @keydown.enter.stop.prevent="validatePassPhrase()" v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" :id="passphraseId">
-          <button @click.prevent="validatePassPhrase()" :class="btnSendStatus" class="btn-send-enabled">
-            <img src="~@/assets/icon-send-login.svg">
-          </button>
-          <b-button size="sm" variant="primary">
-              Login
-          </b-button>
-        </form>
-      </div>
-    </div>
-    <div class="mt-2 d-flex align-items-center justify-content-center">
-      <div class="d-flex flex-row col-6">
-        <span id="info-passphrase">For obvious security reasons, we strongly recommend you use at least a 12 words passphrase as enforced by the BIP39 protocol</span>
-      </div>
-    </div>
-    <div class="w-100 mt-4">
-      <button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Generate Passphrase</button>
-    </div>
-  </div>
-  <img id="img-background" src="~@/assets/img-login_background.svg">
-</div> -->
-
-
 <div class="flex" style="height: 100vh;">
   <div class="margin-auto text-center">
       <div class="text-center w-100">
@@ -50,11 +14,6 @@
             </b-button>
           </form>
       </div>
-      <!-- <div class="w-100 mt-4">
-          <button @click.prevent="validatePassPhrase()" class="btn-round-light" :disabled="passphrase == ''">
-            Login
-          </button>
-      </div> -->
       <div class="text-center w-80 margin-auto mt-3" style="max-width: 515px;">
         <span id="info-passphrase">For obvious security reasons, we strongly recommend you use at least a 12 words passphrase as enforced by the BIP39 protocol</span>
       </div>
