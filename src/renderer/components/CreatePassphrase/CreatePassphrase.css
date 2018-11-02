@@ -145,6 +145,9 @@
 	top: 0px;
 	right: 0px;
 }
+.cp-btn-wrapper i{
+	font-size: 1.3rem;
+}
 .passphrase-generated button{
 	margin: 0 auto;
 }
