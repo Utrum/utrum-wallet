@@ -127,7 +127,7 @@ export default {
         // process each transaction
         for (var item in items) {
           // add hodl related data to transactions
-          items[item] = vm.processTx(items[item])
+          items[item] = vm.analyzeTx(items[item])
           // for gui, custom "amount" format
           if (items[item].isHodlTx === false) {
             if ( this.wallet.address !== items[item].destAddr ){
@@ -156,62 +156,62 @@ export default {
       });
     },
 
-    processTx (tx) {
+    analyzeTx (tx) {
       var vm = this
 
-      // output variable
-      var newTx = tx
-
-      // define "amount sent" as the first output value
-      var sentAmount = parseFloat(tx.vout[0].value)
-      newTx.sentAmount = sentAmount
-
-      // build explorer tx page url
-      newTx.explorerUrl = (
+      // prepare hodl relevant variables
+      var explorerUrl = (
         vm.wallet.coin.explorer + 'tx/' +
         tx.txid
       )
-
-      // process hodl transactions
       var destAddr = tx.vout[0].scriptPubKey.addresses[0]
-      var isSentToScript = false
-      var isHodlTx = false
+      var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
       var isSpent = tx.vout[0].spentHeight > 0 ? true : false
+      var sentAmount = parseFloat(tx.vout[0].value)
 
-      // detect if p2sh transaction
-      if ( destAddr.substring(0,1) == 'b' ) {
-        isSentToScript = true
-        var opReturnAsm = tx.vout[1].scriptPubKey.asm
-        var opReturnHex = tx.vout[1].scriptPubKey.hex
-        // check if this is an utrum hodl deposit
-        let hodlDepositHint = "OP_RETURN 52454445454d2053435249505420"
-        if ( opReturnAsm.substring(0,38) == hodlDepositHint ) {
-          isHodlTx = true
-          // get op_return data
-          var opReturnData = bitcore.Script(opReturnHex)
-          var opReturnString = opReturnData.chunks[1].buf.toString()
-          // get redeem script from op_return data
-          var header = "REDEEM SCRIPT "
-          var redeemScriptHex = opReturnString.replace(header, '')
-          var redeemScriptData = bitcore.Script(redeemScriptHex)
-          var redeemScriptString = redeemScriptData.toString()
-          newTx.redeemScript = redeemScriptString
-          // get nlocktime value from redeem script
-          var nLockTimeData = redeemScriptData.chunks[0].buf
-          var nLockTime = bitcore.crypto.BN.fromBuffer(
-            nLockTimeData, { endian: 'little' }
-          )
-          var nLockTimeString = nLockTime.toString()
-          newTx.nLockTime = Number(nLockTimeString)
-        }
+      // create output object
+      var newTx = {
+        "explorerUrl": explorerUrl,
+        "destAddr": destAddr,
+        "isSentToScript": isSentToScript,
+        "isHodlTx": false,
+        "isHodlSpend": false,
+        "isSpent": isSpent,
+        "timeNow": vm.timeNow(),
+        "sentAmount": sentAmount,
+        ...tx
+      }
+
+      // read opreturn label
+      var opReturnString = ''
+      if (tx.vout[1]) {
+        var opReturnHex = tx.vout[1].scriptPubKey.hex || false
+        var opReturnData = bitcore.Script(opReturnHex) || false
+        opReturnString = opReturnData.chunks[1].buf.toString() || ''
+      }
+
+      // check if this is an utrum hodl deposit
+      if ( opReturnString.substring(0,13) == "REDEEM SCRIPT" ) {
+        newTx.isHodlTx = true
+        // get redeem script from op_return data
+        var header = "REDEEM SCRIPT "
+        var redeemScriptHex = opReturnString.replace(header, '')
+        var redeemScriptData = bitcore.Script(redeemScriptHex)
+        var redeemScriptString = redeemScriptData.toString()
+        newTx.redeemScript = redeemScriptString
+        // get nlocktime value from redeem script
+        var nLockTimeData = redeemScriptData.chunks[0].buf
+        var nLockTime = bitcore.crypto.BN.fromBuffer(
+          nLockTimeData, { endian: 'little' }
+        )
+        var nLockTimeString = nLockTime.toString()
+        newTx.nLockTime = Number(nLockTimeString)
+      } else if ( opReturnString == "HODL FUNDS UNLOCKED" ) {
+        newTx.isHodlSpend = true
+        console.log("is hodl spend:", tx)
       }
 
       // return output
-      newTx.destAddr = destAddr
-      newTx.isSentToScript = isSentToScript
-      newTx.isHodlTx = isHodlTx
-      newTx.isSpent = isSpent
-      newTx.timeNow = vm.timeNow()
       return newTx
     },
 
