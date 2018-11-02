@@ -28,6 +28,7 @@ export default {
       passphraseGenerated: '',
       isConfirmed: false,
       passphraseValue: '',
+      isClipboard: false,
     };
   },
   computed: {
@@ -80,5 +81,15 @@ export default {
         this.$router.push('/wallet');
       }
     },
+    onCopy() {
+      this.isClipboard = true;
+      setTimeout(() => {
+        this.isClipboard = false;
+      }, 1000);
+    },
+    onPaste(){
+      this.passphraseValue = clipboard.readText();
+      this.checkPassphrase()
+    }
   },
 };
