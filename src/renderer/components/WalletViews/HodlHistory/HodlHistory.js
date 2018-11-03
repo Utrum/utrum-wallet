@@ -92,18 +92,6 @@ export default {
       });
     },
 
-    satoshiToBitcoin (amount) {
-      return BigNumber(amount).dividedBy(satoshiNb).toNumber();
-    },
-
-    getColorAmount (amount) {
-      if ( typeof amount == 'string' ) {  // non-hodl transactions
-        return 'normalTxColor'
-      }else{
-        return (amount < 0) ? 'negativeColor' : 'hodlColor';
-      }
-    },
-
     dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000)
       const dateString = moment(blockchainDateUtc)
@@ -134,11 +122,13 @@ export default {
             items[item].isHodlSpend === false) {
             if ( this.wallet.address !== items[item].destAddr ){
               items[item].formattedAmount = String(items[item].sentAmount * -1)
-            }else{
+            } else {
               items[item].formattedAmount = '+' + items[item].sentAmount
             }
-          }else{
+          } else if (items[item].isHodlTx === true) {
             items[item].formattedAmount = items[item].sentAmount
+          } else if (items[item].isHodlSpend === true) {
+            items[item].formattedAmount = items[item].rewardReceived
           }
         }
         // calculate number of pages
@@ -156,23 +146,6 @@ export default {
         this.scheduleTxHistoryTimer()
         return([])
       });
-    },
-
-    getTx (txid) {
-      // construct call url
-      var url = (this.wallet.coin.explorer + "insight-api-komodo/tx/" + txid)
-
-      // process transaction
-      let promise = axios
-        .get(url)
-      return promise
-        .then(response => {
-          //console.log(response.data)
-          return response.data
-        })
-        .catch(e => {
-          console.log(e)
-        });
     },
 
     analyzeTx (tx) {
@@ -211,7 +184,7 @@ export default {
           opReturnData.chunks[1].buf.toString() : ''
       }
 
-      // check if this is an utrum hodl deposit
+      // check if this is an utrum hodl deposit transaction
       if ( opReturnString.substring(0,13) == "REDEEM SCRIPT" ) {
         newTx.isHodlTx = true
         // get redeem script from op_return data
@@ -227,20 +200,14 @@ export default {
         )
         var nLockTimeString = nLockTime.toString()
         newTx.nLockTime = Number(nLockTimeString)
+      // check if this is an utrum hodl spend transaction
       } else if ( opReturnString == "HODL FUNDS UNLOCKED" ) {
         newTx.isHodlSpend = true
-        console.log("is hodl spend:", newTx.sentAmount)
-        newTx.rewardReceived = 0
-        for (var n in newTx.vin) {
-          //if (newTx.vin[n].value)
-          //console.log("Get tx:", newTx.vin[n])
-          //var txVin =  vm.getTx(newTx.vin[n].txid)
-          //console.log(txVin)
-          //console.log(txVin.vin[0])
-
+        newTx.rewardReceived = "0"
+        if (newTx.vin[0].value < newTx.vout[0].value) {
+          var rewardReceived = newTx.vout[0].value - newTx.vin[1].value
+          newTx.rewardReceived = String(parseFloat(rewardReceived).toFixed(4))
         }
-        console.log("reward sent to hodl address:", newTx.rewardReceived)
-
       }
 
       // return output
