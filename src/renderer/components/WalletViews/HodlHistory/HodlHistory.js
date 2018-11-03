@@ -98,7 +98,7 @@ export default {
 
     getColorAmount (amount) {
       if ( typeof amount == 'string' ) {  // non-hodl transactions
-        return 'positiveColor'
+        return 'normalTxColor'
       }else{
         return (amount < 0) ? 'negativeColor' : 'hodlColor';
       }
@@ -129,9 +129,11 @@ export default {
           // add hodl related data to transactions
           items[item] = vm.analyzeTx(items[item])
           // for gui, custom "amount" format
-          if (items[item].isHodlTx === false) {
+          if (
+            items[item].isHodlTx === false &&
+            items[item].isHodlSpend === false) {
             if ( this.wallet.address !== items[item].destAddr ){
-              items[item].formattedAmount = items[item].sentAmount * -1
+              items[item].formattedAmount = String(items[item].sentAmount * -1)
             }else{
               items[item].formattedAmount = '+' + items[item].sentAmount
             }
@@ -156,6 +158,23 @@ export default {
       });
     },
 
+    getTx (txid) {
+      // construct call url
+      var url = (this.wallet.coin.explorer + "insight-api-komodo/tx/" + txid)
+
+      // process transaction
+      let promise = axios
+        .get(url)
+      return promise
+        .then(response => {
+          //console.log(response.data)
+          return response.data
+        })
+        .catch(e => {
+          console.log(e)
+        });
+    },
+
     analyzeTx (tx) {
       var vm = this
 
@@ -178,16 +197,18 @@ export default {
         "isHodlSpend": false,
         "isSpent": isSpent,
         "timeNow": vm.timeNow(),
-        "sentAmount": sentAmount,
-        ...tx
+        "sentAmount": sentAmount
       }
+
+      Object.assign(newTx, tx)
 
       // read opreturn label
       var opReturnString = ''
       if (tx.vout[1]) {
-        var opReturnHex = tx.vout[1].scriptPubKey.hex || false
-        var opReturnData = bitcore.Script(opReturnHex) || false
-        opReturnString = opReturnData.chunks[1].buf.toString() || ''
+        var opReturnHex = tx.vout[1].scriptPubKey.hex
+        var opReturnData = bitcore.Script(opReturnHex)
+        opReturnString = opReturnData.chunks[1].buf ?
+          opReturnData.chunks[1].buf.toString() : ''
       }
 
       // check if this is an utrum hodl deposit
@@ -208,7 +229,18 @@ export default {
         newTx.nLockTime = Number(nLockTimeString)
       } else if ( opReturnString == "HODL FUNDS UNLOCKED" ) {
         newTx.isHodlSpend = true
-        console.log("is hodl spend:", tx)
+        console.log("is hodl spend:", newTx.sentAmount)
+        newTx.rewardReceived = 0
+        for (var n in newTx.vin) {
+          //if (newTx.vin[n].value)
+          //console.log("Get tx:", newTx.vin[n])
+          //var txVin =  vm.getTx(newTx.vin[n].txid)
+          //console.log(txVin)
+          //console.log(txVin.vin[0])
+
+        }
+        console.log("reward sent to hodl address:", newTx.rewardReceived)
+
       }
 
       // return output
