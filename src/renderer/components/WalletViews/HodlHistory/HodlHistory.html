@@ -51,26 +51,47 @@
 
 
         <template slot="nLockTime" slot-scope="data">
-            <span v-if="data.item.nLockTime > data.item.timeNow" class="hodlColor">{{ dateFormat(data.item.nLockTime) }}</span>
+            <span v-if="data.item.nLockTime > data.item.timeNow"
+              class="hodlRed">
+              {{ dateFormat(data.item.nLockTime) }}
+            </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === false"
               @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
-              class="btn btn-tx">Claim!</span>
+              class="btn btn-tx">
+              Claim!
+            </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
-                class="hodlComplete">Hodl Complete 🎉</span>
+              class="hodlGreen">
+              Hodl Complete 🎉
+            </span>
             <span v-else-if="data.item.isHodlSpend === true"
-                class="hodlSpend">Reward 🎉</span>
-            <span v-else>Normal Transaction</span>
+              class="hodlGray">
+              Reward
+            </span>
+            <span v-else>
+              Normal Transaction
+            </span>
         </template>
 
 
         <template slot="formattedAmount" slot-scope="data">
             <div
-              v-if="!data.item.isHodlTx && !data.item.isHodlSpend && !data.item.isSentToScript"
-              class="normalTxColor">
+              v-if="data.item.isHodlSpend"
+              class="hodlGreen">
                 {{ data.item.formattedAmount }}
             </div>
             <div
-              v-else class="negativeColor">
+              v-else-if="data.item.isHodlTx && !data.item.isSpent && data.item.nLockTime < data.item.timeNow"
+              class="hodlOrange">
+                {{ data.item.formattedAmount }}
+            </div>
+            <div
+              v-else-if="data.item.isHodlTx"
+              class="hodlGray">
+                {{ data.item.formattedAmount }}
+            </div>
+            <div
+              v-else class="normalTxColor">
                 {{ data.item.formattedAmount }}
             </div>
         </template>

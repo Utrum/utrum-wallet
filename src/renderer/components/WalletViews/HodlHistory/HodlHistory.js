@@ -45,8 +45,8 @@ export default {
       fields: [
         //{ key: 'confirmations', label: 'Conf' },
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
-        { key: 'time', label: 'Date'},
         { key: 'formattedAmount', label: 'Amount' },
+        { key: 'time', label: 'Date'},
         { key: 'txid', label: 'TxID' },
       ],
       dismissSecs: 20,

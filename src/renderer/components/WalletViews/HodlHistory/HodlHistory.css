@@ -77,13 +77,23 @@
 	color: #95989c;
 }
 
-.hodlComplete{
+.hodlGreen{
   color: green;
   font-weight: 500;
 }
 
-.hodlColor{
+.hodlGray{
   color: #687078;
+  font-weight: 500;
+}
+
+.hodlOrange{
+  color: orange;
+  font-weight: 500;
+}
+
+.hodlRed{
+  color: darkred;
   font-weight: 500;
 }
 
