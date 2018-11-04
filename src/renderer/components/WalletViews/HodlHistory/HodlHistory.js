@@ -45,8 +45,8 @@ export default {
       fields: [
         //{ key: 'confirmations', label: 'Conf' },
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
-        { key: 'time', label: 'Date'},
         { key: 'formattedAmount', label: 'Amount' },
+        { key: 'time', label: 'Date'},
         { key: 'txid', label: 'TxID' },
       ],
       dismissSecs: 20,
@@ -92,18 +92,6 @@ export default {
       });
     },
 
-    satoshiToBitcoin (amount) {
-      return BigNumber(amount).dividedBy(satoshiNb).toNumber();
-    },
-
-    getColorAmount (amount) {
-      if ( typeof amount == 'string' ) {  // non-hodl transactions
-        return 'positiveColor'
-      }else{
-        return (amount < 0) ? 'negativeColor' : 'hodlColor';
-      }
-    },
-
     dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000)
       const dateString = moment(blockchainDateUtc)
@@ -127,16 +115,20 @@ export default {
         // process each transaction
         for (var item in items) {
           // add hodl related data to transactions
-          items[item] = vm.processTx(items[item])
+          items[item] = vm.analyzeTx(items[item])
           // for gui, custom "amount" format
-          if (items[item].isHodlTx === false) {
+          if (
+            items[item].isHodlTx === false &&
+            items[item].isHodlSpend === false) {
             if ( this.wallet.address !== items[item].destAddr ){
-              items[item].formattedAmount = items[item].sentAmount * -1
-            }else{
+              items[item].formattedAmount = String(items[item].sentAmount * -1)
+            } else {
               items[item].formattedAmount = '+' + items[item].sentAmount
             }
-          }else{
+          } else if (items[item].isHodlTx === true) {
             items[item].formattedAmount = items[item].sentAmount
+          } else if (items[item].isHodlSpend === true) {
+            items[item].formattedAmount = items[item].rewardReceived
           }
         }
         // calculate number of pages
@@ -156,64 +148,69 @@ export default {
       });
     },
 
-    processTx (tx) {
+    analyzeTx (tx) {
       var vm = this
 
-      // output variable
-      var newTx = tx
-
-      // define "amount sent" as the first output value
-      var sentAmount = parseFloat(tx.vout[0].value)
-      newTx.sentAmount = sentAmount
-
-      // build explorer tx page url
-      newTx.explorerUrl = (
+      // prepare hodl relevant variables
+      var explorerUrl = (
         vm.wallet.coin.explorer + 'tx/' +
         tx.txid
       )
-
-      // process hodl transactions
       var destAddr = tx.vout[0].scriptPubKey.addresses[0]
-      var isSentToScript = false
-      var isHodlTx = false
+      var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
       var isSpent = tx.vout[0].spentHeight > 0 ? true : false
-      var isRewardPaid = false
+      var sentAmount = parseFloat(tx.vout[0].value)
 
-      // detect if p2sh transaction
-      if ( destAddr.substring(0,1) == 'b' ) {
-        isSentToScript = true
-        var opReturnAsm = tx.vout[1].scriptPubKey.asm
+      // create output object
+      var newTx = {
+        "explorerUrl": explorerUrl,
+        "destAddr": destAddr,
+        "isSentToScript": isSentToScript,
+        "isHodlTx": false,
+        "isHodlSpend": false,
+        "isSpent": isSpent,
+        "timeNow": vm.timeNow(),
+        "sentAmount": sentAmount
+      }
+
+      Object.assign(newTx, tx)
+
+      // read opreturn label
+      var opReturnString = ''
+      if (tx.vout[1]) {
         var opReturnHex = tx.vout[1].scriptPubKey.hex
-        // check if this is an utrum hodl deposit
-        let hodlDepositHint = "OP_RETURN 52454445454d2053435249505420"
-        if ( opReturnAsm.substring(0,38) == hodlDepositHint ) {
-          isHodlTx = true
-          // get op_return data
-          var opReturnData = bitcore.Script(opReturnHex)
-          var opReturnString = opReturnData.chunks[1].buf.toString()
-          // get redeem script from op_return data
-          var header = "REDEEM SCRIPT "
-          var redeemScriptHex = opReturnString.replace(header, '')
-          var redeemScriptData = bitcore.Script(redeemScriptHex)
-          var redeemScriptString = redeemScriptData.toString()
-          newTx.redeemScript = redeemScriptString
-          // get nlocktime value from redeem script
-          var nLockTimeData = redeemScriptData.chunks[0].buf
-          var nLockTime = bitcore.crypto.BN.fromBuffer(
-            nLockTimeData, { endian: 'little' }
-          )
-          var nLockTimeString = nLockTime.toString()
-          newTx.nLockTime = Number(nLockTimeString)
+        var opReturnData = bitcore.Script(opReturnHex)
+        opReturnString = opReturnData.chunks[1].buf ?
+          opReturnData.chunks[1].buf.toString() : ''
+      }
+
+      // check if this is an utrum hodl deposit transaction
+      if ( opReturnString.substring(0,13) == "REDEEM SCRIPT" ) {
+        newTx.isHodlTx = true
+        // get redeem script from op_return data
+        var header = "REDEEM SCRIPT "
+        var redeemScriptHex = opReturnString.replace(header, '')
+        var redeemScriptData = bitcore.Script(redeemScriptHex)
+        var redeemScriptString = redeemScriptData.toString()
+        newTx.redeemScript = redeemScriptString
+        // get nlocktime value from redeem script
+        var nLockTimeData = redeemScriptData.chunks[0].buf
+        var nLockTime = bitcore.crypto.BN.fromBuffer(
+          nLockTimeData, { endian: 'little' }
+        )
+        var nLockTimeString = nLockTime.toString()
+        newTx.nLockTime = Number(nLockTimeString)
+      // check if this is an utrum hodl spend transaction
+      } else if ( opReturnString == "HODL FUNDS UNLOCKED" ) {
+        newTx.isHodlSpend = true
+        newTx.rewardReceived = "0"
+        if (newTx.vin[0].value < newTx.vout[0].value) {
+          var rewardReceived = newTx.vout[0].value - newTx.vin[1].value
+          newTx.rewardReceived = String(parseFloat(rewardReceived).toFixed(4))
         }
       }
 
       // return output
-      newTx.destAddr = destAddr
-      newTx.isSentToScript = isSentToScript
-      newTx.isHodlTx = isHodlTx
-      newTx.isSpent = isSpent
-      newTx.isRewardPaid = isRewardPaid
-      newTx.timeNow = vm.timeNow()
       return newTx
     },
 
@@ -279,6 +276,10 @@ export default {
         script: new bitcore.Script.buildPublicKeyHashOut(myAddress),
         satoshis: totalAmount
       }))
+
+      // add opreturn label
+      var op_return = "HODL FUNDS UNLOCKED"
+      transaction.addData(op_return)
 
       // signing inputs...
       var redeemScriptData = bitcore.Script(redeemScript)
