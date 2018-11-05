@@ -1,11 +1,11 @@
 <div class="content">
   <div class="row mb-5">
     <div class="col-custom">
-      <h3>BALANCES</h3>
+      <h4>BALANCES</h4>
     </div>
     <div class="col-custom text-right row-main-item">
         <h5>TOTAL BALANCES</h5>
-        <span id="totalBalanceUsd"><img src="~@/assets/icon-usdollar.svg"/>{{totalBalance}}</span>
+        <span id="totalBalanceUsd">$ {{totalBalance}}</span>
     </div>
   </div>
   <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
