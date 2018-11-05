@@ -168,7 +168,7 @@ export default {
       // prepare variables to build our transaction
       var toAddress = vm.hodlData.scriptAddress
       var myAddress = vm.hodlData.address
-      var amount = vm.hodlInput["amount"] * vm.satoshiNb
+      var amount = Math.round(vm.hodlInput["amount"] * vm.satoshiNb)
       var op_return = "REDEEM SCRIPT " + vm.hodlData.redeemScript
       var privateKey = vm.hodlData.privateKey
 
