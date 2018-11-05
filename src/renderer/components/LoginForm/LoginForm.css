@@ -70,6 +70,12 @@
 	 /* margin-bottom: 15px; */
 	 padding: 28px 10px;
  }
+ .input-login .btn-outline-primary.disabled, 
+ .input-login .btn-outline-primary:disabled,
+ .input-login .btn-outline-primary{
+	color: #079cd8;
+	border-color: #079cd8;
+ }
  
  .middle {
 	 vertical-align: middle;
