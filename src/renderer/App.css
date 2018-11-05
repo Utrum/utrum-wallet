@@ -451,6 +451,9 @@ input::-webkit-inner-spin-button {
   background-color: white;
 }
 
+.utrum-select{
+  min-width: 250px;
+}
 .utrum-select .v-select{
   height: 50px;;
 }
@@ -463,13 +466,17 @@ input::-webkit-inner-spin-button {
 }
 .utrum-select .v-select .dropdown-toggle{
   height: 100% !important;
+  position: relative !important;
 }
 .utrum-select .v-select .dropdown-toggle::after{
   display: none;
 }
 .utrum-select .v-select .selected-tag{
-  line-height: 42px;
-  font-size: 1.4rem;
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  border: none;
+  line-height: 48px;
   text-transform: capitalize;
   margin-left: 40px;
   font-weight: 400;
@@ -477,7 +484,9 @@ input::-webkit-inner-spin-button {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: 1.25rem;
+  font-size: 1rem;
+  height: 100%;
+  font-family: 'Montserrat', sans-serif !important;
 }
 .utrum-select .v-select ul li{
   font-weight: 400;
@@ -485,20 +494,40 @@ input::-webkit-inner-spin-button {
   font-size: 1.20rem;
 }
 .v-select.single.open .selected-tag{
-  opacity: 1;
+  opacity: 0.5;
 }
 .utrum-select .v-select input[type="time"]::-webkit-clear-button {
   display: none !important;
+}
+.utrum-select .v-select input[type=search], .utrum-select .v-select input[type=search]:focus{
+  height: 100% !important;
+  position: absolute !important;
+  left: 0 !important;
+  /* left: 38px !important; */
+  /* padding-left: 38px !important; */
+  padding-left: 20px !important;
+  font-weight: 400 !important;
+  font-size: 1rem !important;
+  font-family: 'Montserrat', sans-serif !important;
+  transition: all 0.1s;
+}
+.utrum-select .v-select input[type=search]:focus{
+  background: #fff !important;
 }
 .utrum-select .v-select.unsearchable input{
   padding: 0px;
 }
 .utrum-select .v-select.open .selected-tag{
   position: inherit !important;
+  z-index: 100;
+  left: -20px;
 }
 .utrum-select .v-select .dropdown-menu li > a{
   padding: 10px 20px;
   text-transform: capitalize;
+  font-weight: 400 !important;
+  font-size: 1rem !important;
+  font-family: 'Montserrat', sans-serif !important;
 }
 .utrum-select{
   position: relative;

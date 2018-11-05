@@ -15,7 +15,7 @@
                 <img class="margin-auto sel-icon" v-if="selCoin && selCoin.value == 'oot'" src="~@/assets/OOT-32x32.png"/>
                 <img class="margin-auto sel-icon" v-if="selCoin && selCoin.value == 'btc'" src="~@/assets/BTC-32x32.png"/>
               </div>
-              <v-select v-model="selCoin" :options="coins" label="text" :searchable="false" @input="onCoinChange">
+              <v-select v-model="selCoin" :options="coins" label="text" :searchable="true" @input="onCoinChange">
                 <template slot="option" slot-scope="option">
                   <img v-if="option.value == 'kmd'" src="~@/assets/KMD.png"/>
                   <img v-if="option.value == 'oot'" src="~@/assets/OOT.png"/>
