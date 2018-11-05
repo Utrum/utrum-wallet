@@ -48,8 +48,12 @@
 	-ms-text-align-last: center;
 	-moz-text-align-last: center;
 	text-align-last: center;
+	font-size: 1em;
+	color: #3e3e3e;
 }
-
+.content-createpassphrase i{
+	color: #079cd8;
+}
 .content-createpassphrase p:last-child {
 	-ms-text-align-last: center;
 	-moz-text-align-last: center;
