@@ -211,7 +211,7 @@ export default {
           })
           ;
       } else if (this.canWithdraw === false){
-        this.$toasted.error('Not enought balance including fees.');
+        this.$toasted.error('Not enough balance including fees.');
       }
     },
   },
@@ -306,6 +306,24 @@ export default {
         }
       }
     },
+    canSend(){
+    console.log("canSend: ",this.withdraw.amount && 
+    this.withdraw.address && 
+    this.withdraw.amount.trim() != "" &&
+    this.withdraw.address.trim() != "")
+     if(
+       this.withdraw.amount && 
+       this.withdraw.address && 
+       this.withdraw.amount.trim() != "" &&
+       this.withdraw.address.trim() != "" &&
+       this.withdraw.amount > 0
+      ){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
   },
 };
 
