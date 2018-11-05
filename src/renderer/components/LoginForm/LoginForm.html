@@ -1,9 +1,9 @@
 <div class="flex" style="height: 100vh;">
   <div class="margin-auto text-center">
-      <div class="text-center w-100">
+      <div class="text-center w-100" style="margin-bottom: 4rem;">
         <img id="icon-login" class="margin-auto" src="~@/assets/icon-login-utrum.png">
       </div>
-      <div class="w-100 mt-4 input-login">
+      <div class="w-100 input-login">
           <form id="login" class="row login" method="POST" enctype="multipart/form-data">
             <img v-if="typeInput === 'password'" class="icon-mdp" src="~@/assets/icon-mdp-hide.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
             <img v-if="typeInput === 'text'" class="icon-mdp" src="~@/assets/icon-mdp.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
