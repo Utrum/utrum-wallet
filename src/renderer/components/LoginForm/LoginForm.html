@@ -3,7 +3,7 @@
     <img id="icon-login" class="margin-auto mb-0" src="~@/assets/icon-login-utrum.png">
   </div>
   <div class="flex" style="height: 33.33vh">
-    <div class="margin-auto text-center" style="max-width: 515px;">
+    <div class="margin-auto text-center" style="min-width: 525px;">
       <div class="w-100 input-login" @click="setFocus">
           <form id="login" class="row login" method="POST" enctype="multipart/form-data">
             <img v-if="typeInput === 'password'" class="icon-mdp" src="~@/assets/icon-mdp-hide.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
