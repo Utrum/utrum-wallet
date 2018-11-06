@@ -18,6 +18,9 @@
 	align-items: center;
 	padding-left: 50px;
 	padding-right: 50px;
+	height: 80vh;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .input-createpassphrase .row-main-item {
@@ -34,6 +37,7 @@
 	text-align: center;
 	margin-bottom: 40px;
 	margin-top: 40px;
+	color: #687078;
 }
 
 .content-createpassphrase p {
@@ -44,8 +48,12 @@
 	-ms-text-align-last: center;
 	-moz-text-align-last: center;
 	text-align-last: center;
+	font-size: 1em;
+	color: #3e3e3e;
 }
-
+.content-createpassphrase i{
+	color: #079cd8;
+}
 .content-createpassphrase p:last-child {
 	-ms-text-align-last: center;
 	-moz-text-align-last: center;
@@ -55,12 +63,10 @@
 .footer {
 	position: fixed;
 	background-color: white;
-	padding: 70px;
-	padding-left: 100px;
-	padding-right: 100px;
 	bottom: 0;
 	left: 0;
 	right: 0;
+	height: 20vh;
 }
 
 .footer .row {
@@ -92,13 +98,14 @@
 }
 
 .passphrase-generated {
+	position: relative;
 	border: 2px solid rgba(24,13,57,0.1);
 	font-size: 1.2em;
 	text-align: center;
 	border-radius: 4px;
 	font-weight: 400;
 	color: #687078;
-	padding: 15px;
+	padding: 15px 55px 15px 15px;
 	margin-left: auto;
 	margin-right: auto;
 	width: 80%;
@@ -107,7 +114,47 @@
 	-ms-user-select: none;      /* IE 10+ */
 	user-select: none;          /* Likely future */   
 }
+.passphrase-generated .cp-btn-wrapper{
+	background: #fbfbfb;
+	display: flex;
+	position: absolute;
+	height: 100%;
+	width: 40px;
+	top: 0px;
+	right: 0px;
+}
 
+.cp-optn-wrapper{
+	position: relative;
+	border: 2px solid rgba(24,13,57,0.1);
+	padding: 15px 55px 15px 15px;
+	border-radius: 4px;
+}
+.cp-optn-wrapper textarea{
+	width: 100%;
+	height: 100%;
+	border: none;
+	outline: none;
+	text-align: center;
+	color: #687078;
+	font-size: 1.2em;
+	word-wrap: normal;
+}
+.cp-optn-wrapper .cp-btn-wrapper{
+	background: #fbfbfb;
+	display: flex;
+	position: absolute;
+	height: 100%;
+	width: 40px;
+	top: 0px;
+	right: 0px;
+}
+.cp-btn-wrapper i{
+	font-size: 1.3rem;
+}
+.passphrase-generated button{
+	margin: 0 auto;
+}
 #btn-continue {
 	min-height: 50px;
 	max-height: 50px;
