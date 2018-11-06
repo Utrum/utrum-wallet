@@ -77,6 +77,11 @@
 	border-color: #079cd8;
  }
  
+ .btn-outline-primary:not(:disabled):not(.disabled):hover{
+	background-color: #079cd8;
+	color: #fff;
+ }
+
  .middle {
 	 vertical-align: middle;
  }
