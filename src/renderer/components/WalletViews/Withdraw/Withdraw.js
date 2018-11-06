@@ -187,6 +187,12 @@ export default {
     debounceInfo: _.debounce(function () {
       this.$toasted.info('The address is not valid.');
     }, 500),
+    refresh(){
+      setTimeout(()=>{
+        console.log("refresh called ",this.wallet.coin.ticker);
+        this.$store.dispatch('buildTxHistory', this.$store.getters.getWallets[this.wallet.coin.ticker], { root: true })
+      }, 0)
+    },
     withdrawFunds() {
       this.hideModal();
       if (this.canWithdraw === true && this.addressIsValid === true) {
@@ -195,6 +201,9 @@ export default {
             if (tx != null && tx.feeRate != null) {
               return Promise.reject({ message: 'Not enough balance including fees.' });
             }
+            setTimeout(()=>{
+              this.refresh();
+            }, 500)
             return this.$store.dispatch('broadcastTransaction', { wallet: this.wallet, ...tx });
           })
           .then((response) => {

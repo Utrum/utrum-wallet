@@ -36,6 +36,7 @@ const state = {
     balance_usd: 0,
     ticker: null,
     txs: {},
+    isLoadingTransactions: false,
     rate_in_usd: 0
   }],
   coins: [],
@@ -120,6 +121,12 @@ const mutations = {
   DELETE_TX(state, { ticker, tx }) {
     state.wallets[ticker].txs.slice(state.wallets[ticker].txs.indexOf(tx), 1);
   },
+  SET_TRANSACTIONS_LOADING(state, {ticker}){
+    state.wallets[ticker].isLoadingTransactions = true
+  },
+  SET_TRANSACTIONS_LOADED(state, {ticker}){
+    state.wallets[ticker].isLoadingTransactions = false
+  }
 };
 
 const actions = {
@@ -146,6 +153,7 @@ const actions = {
       wallet.balance_usd = 0;
       wallet.txs = [];
       wallet.privKey = privateKey;
+      wallet.isLoadingTransactions = false;
       commit('ADD_WALLET', wallet);
 
       return wallet.electrum
@@ -197,6 +205,8 @@ const actions = {
     return wallet.electrum
       .broadcast(builtTx.toHex())
       .then((broadcastedTx) => {
+        console.log("%c broadcastTransaction", "color: green; font-size: 20px;")
+        console.log(broadcastedTx)
         if (txId === broadcastedTx) {
           return broadcastedTx;
         }

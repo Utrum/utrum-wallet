@@ -73,6 +73,12 @@
   <div class="btn-center">
     <button @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
   </div>
+  
+  <div class="w-100">
+    <b-button @click="refresh" size="sm" variant="link" class="float-right">
+      <i class="fas fa-sync-alt" v-bind:class="{ 'fa-spin': wallet.isLoadingTransactions }"></i>
+    </b-button>
+  </div>
 
   <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">
     <transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
