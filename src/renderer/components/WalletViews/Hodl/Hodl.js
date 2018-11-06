@@ -55,6 +55,7 @@ export default {
         myUtxos: [],
       },
       unlockTimeDate: '',
+      expectedReward: '',
       scriptAddress: '',
       redeemScript: '',
       rawtx: '',
@@ -172,9 +173,6 @@ export default {
       var op_return = "REDEEM SCRIPT " + vm.hodlData.redeemScript
       var privateKey = vm.hodlData.privateKey
 
-      // gui related
-      vm.hodlInput["amount"] = ''
-
       // https://bitcore.io/api/lib/transaction#serialization-checks
       var opts = {
         disableDustOutputs: true
@@ -190,6 +188,8 @@ export default {
       var rawtx = transaction.serialize(opts)
 
       // gui related
+      vm.expectedReward = vm.calculatedReward
+      vm.hodlInput["amount"] = ''
       vm.lastTxId = ''
 
       return rawtx
@@ -252,6 +252,10 @@ export default {
     // get explorer url
     explorer () {
       return this.wallet.coin.explorer
+    },
+
+    calculatedReward () {
+      return this.hodlInput.amount * 0.0083
     }
   }
 }
