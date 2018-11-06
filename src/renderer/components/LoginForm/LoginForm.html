@@ -1,8 +1,9 @@
-<div class="flex" style="height: 100vh;">
-  <div class="margin-auto text-center">
-      <div class="text-center w-100" style="margin-bottom: 4rem;">
-        <img id="icon-login" class="margin-auto" src="~@/assets/icon-login-utrum.png">
-      </div>
+<div  style="height: 100vh;">
+  <div class="flex" style="height: 33.33vh">
+    <img id="icon-login" class="margin-auto mb-0" src="~@/assets/icon-login-utrum.png">
+  </div>
+  <div class="flex" style="height: 33.33vh">
+    <div class="margin-auto text-center" style="max-width: 515px;">
       <div class="w-100 input-login" @click="setFocus">
           <form id="login" class="row login" method="POST" enctype="multipart/form-data">
             <img v-if="typeInput === 'password'" class="icon-mdp" src="~@/assets/icon-mdp-hide.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
@@ -14,12 +15,16 @@
             </b-button>
           </form>
       </div>
-      <div class="text-center w-80 margin-auto mt-5" style="max-width: 515px;">
-        <span id="info-passphrase">For obvious security reasons, we strongly recommend you use at least a 12 words passphrase as enforced by the BIP39 protocol</span>
-      </div>
-      <div class="w-100 mt-5">
-        <button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light">Generate Passphrase</button>
-      </div>
+  </div>
+  </div>
+  <div style="height: 33.33vh">
+    <div class="text-center w-80 margin-auto" style="max-width: 515px;">
+      <span id="info-passphrase">For obvious security reasons, we strongly recommend you use at least a 12 words passphrase as enforced by the BIP39 protocol</span>
+    </div>
+    
+    <div class="flex mt-5">
+      <button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light margin-auto">Generate Passphrase</button>
+    </div>
   </div>
   <img id="img-background" src="~@/assets/img-login_background.svg">
 </div>
