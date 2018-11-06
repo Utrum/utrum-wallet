@@ -205,8 +205,13 @@ export default {
       axios
         .post(url, {'rawtx': rawtx})
         .then(response => {
-          vm.lastTxId = response.data.txid
-          console.log("transaction submitted")
+          console.log(response.data)
+          if (!response.data.error) {
+            vm.lastTxId = response.data.txid
+            console.log("transaction submitted")
+          } else {
+            throw response.data.error
+          }
         })
         .catch(e => {
           console.log(e)
