@@ -70,7 +70,7 @@
         <div id="select-block" class="row">
           <span class="title-content">Expected Reward:</span>
           <div class="col-custom input-field row">
-            <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx">
+            <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx || lastTxId">
               &nbsp;{{ parseFloat(calculatedReward || expectedReward).toFixed(8) }}</span>
             <span id="unlockTimeDate" v-else>&nbsp;0</span>
           </div>
