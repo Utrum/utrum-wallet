@@ -54,16 +54,7 @@ const mutations = {
 };
 
 const actions = {
-  startUpdateConfig({ commit, dispatch, rootGetters }) {
-    return pullConfiguration()
-      .then((config) => {
-        commit('SET_CONFIG', config);
-        setTimeout(() => {
-          dispatch('startUpdateConfig');
-        }, getRefreshRate(rootGetters.icoWillBegin));
-      })
-    ;
-  },
+  //"startUpdateConfig": ""
 };
 
 const getRefreshRate = (icoWillBegin) => {
@@ -72,17 +63,6 @@ const getRefreshRate = (icoWillBegin) => {
   return Math.floor(Math.random() * (((max - min) + 1) + min)) * 1000;
 };
 
-const pullConfiguration = () => {
-  return axios
-    .get(`http://mnz.monaize.com/${config.env}.clientConfiguration.json`)
-    .then(response => {
-      return response.data;
-    })
-    .catch((error) => {
-      console.log(`Can't reach configuration for current env {${config.env}}`, error); // eslint-disable-line
-    })
-  ;
-};
 
 export default {
   state,

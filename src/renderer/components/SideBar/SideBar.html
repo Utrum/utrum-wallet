@@ -18,7 +18,7 @@
       </router-link>
     </li>
 
-    <li v-on:click="hodlClicked" v-if="hasPlannedIco">
+    <li v-on:click="hodlClicked">
       <router-link active-class="active" tag="a" to="hodl">
         <img v-if="hodlState" id="icon-hodl" src="~@/assets/icon-hodl.svg" class="number-view" />
         <img v-else id="icon-hodl" src="~@/assets/icon-hodl-grey.svg" class="number-view" />

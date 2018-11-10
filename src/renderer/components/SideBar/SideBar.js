@@ -14,7 +14,7 @@
  *                                                                            *
  ******************************************************************************/
 
-import { mapGetters } from 'vuex';
+//import { mapGetters } from 'vuex';
 
 export default {
   name: 'sidebar',
@@ -79,6 +79,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['icoIsRunning', 'hasPlannedIco']),
+    //...mapGetters(['icoIsRunning', 'hasPlannedIco']),
   },
 };
