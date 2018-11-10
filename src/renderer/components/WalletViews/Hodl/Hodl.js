@@ -43,9 +43,9 @@ export default {
   data () {
     return {
       hodlInput: {
-        amount: '',
+        amount: null,
         // daysToLock: 60 // TESTING!
-        daysToLock: null
+        daysToLock: 0
       },
       hodlData: {
         unlockTime: '',
@@ -55,8 +55,6 @@ export default {
       },
       unlockTimeDate: '',
       expectedReward: '',
-      scriptAddress: '',
-      redeemScript: '',
       rawtx: '',
       lastTxId: '',
       isClipboard: false,
@@ -82,6 +80,7 @@ export default {
     onTimeChange(selectedOption) {
       if (selectedOption) {
           this.hodlInput.daysToLock = selectedOption.value
+          this.hodlCreate()
       }
     },
 
@@ -120,16 +119,11 @@ export default {
       // update unlock time to now
       vm.updateUnlockTime()
 
-      // flush data regarding responsive stuff
+      // flush data
       vm.hodlData["scriptAddress"] = ''
       vm.hodlData["redeemScript"] = ''
-      vm.hodlInput.daysToLock = ''
       vm.rawtx = ''
       vm.lastTxId = ''
-
-      // gui related
-      vm.scriptAddress = "Loading..."
-      vm.redeemScript = ""
 
       // get redeem script
       var writer = new bitcore.encoding.BufferWriter()
@@ -149,13 +143,14 @@ export default {
 
       // update hodl data object
       vm.hodlData["redeemScript"] = redeemScript.toString()
-      vm.hodlData["scriptAddress"] = vm.scriptAddress = scriptAddress.toString()
+      vm.hodlData["scriptAddress"] = scriptAddress.toString()
     },
 
     // get utxos and call build transaction function
     getTx () {
-      console.log('getting utxos...')
       var vm = this
+
+      console.log('getting utxos...')
       // construct call url
       var url = (
         vm.explorer +

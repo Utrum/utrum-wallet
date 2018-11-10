@@ -1,7 +1,7 @@
 <div class="content">
 
-  <div id="select-amount" class="row">
-    <span class="title-content">LOCK FUNDS FOR</span>
+  <div id="select-days" class="row">
+    <div class="title-content">LOCK FUNDS FOR</div>
 
     <div class="utrum-select">
       <v-select v-model="vestingPeriod"
@@ -28,6 +28,7 @@
 -->
   </div>
 
+<!--
   <div class="col-custom horizontal-line">
     <hr id="second-line"/>
     <div class="btn-center">
@@ -37,8 +38,9 @@
       type="button">Set Date</button>
     </div>
   </div>
+-->
 
-  <div v-if="hodlData.redeemScript">
+  <div>
 
     <div id="select-amount" class="row">
       <span class="title-content">AMOUNT</span>
