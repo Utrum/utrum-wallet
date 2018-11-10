@@ -451,8 +451,12 @@ input::-webkit-inner-spin-button {
   background-color: white;
 }
 
+.v-select.single.open .selected-tag{
+  opacity: 1;
+}
+
 .utrum-select .v-select{
-  height: 50px;;
+  height: 50px;
 }
 .utrum-select .v-select .clear{
   display: none !important;
@@ -483,9 +487,6 @@ input::-webkit-inner-spin-button {
   font-weight: 400;
   color: #687078;
   font-size: 1.20rem;
-}
-.v-select.single.open .selected-tag{
-  opacity: 1;
 }
 .utrum-select .v-select input[type="time"]::-webkit-clear-button {
   display: none !important;
