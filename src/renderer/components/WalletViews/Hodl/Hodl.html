@@ -2,7 +2,21 @@
 
   <div id="select-amount" class="row">
     <span class="title-content">LOCK FUNDS FOR</span>
-      <div class="col-custom input-field row">
+
+    <div class="utrum-select no-icon">
+      <v-select v-model="vestingPeriod"
+        :options="timeList"
+        label="text"
+        :searchable="false"
+        @input="onTimeChange">
+        <template slot="option" slot-scope="option">
+          {{ option.text }}
+        </template>
+      </v-select>
+    </div>
+
+
+    <div class="col-custom input-field row">
       <input @keyup.enter="hodlCreate"
         type="number"
         id="amount"
@@ -36,7 +50,7 @@
           v-model.number="hodlInput.amount"
           class="col-custom input-field"
           placeholder="Amount">
-        <span id="number-input">{{select}}</span>
+        <span id="number-input">{{ selectedCoin }}</span>
       </div>
     </div>
 

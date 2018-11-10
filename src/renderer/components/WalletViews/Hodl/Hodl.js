@@ -15,11 +15,10 @@
  ******************************************************************************/
 
 import bitcoinjs from 'bitcoinjs-lib';
-import Select2 from '@/components/Utils/Select2/Select2.vue';
-import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
 import bitcore from 'bitcore-lib';
 import axios from 'axios';
+import vSelect from 'vue-select'
 
 const { clipboard } = require('electron');
 const { shell } = require('electron');
@@ -31,8 +30,7 @@ export default {
   name: 'hodl',
   components: {
     'hodl-history': HodlHistory,
-    'select2': Select2,
-    'select-awesome': SelectAwesome
+    'v-select': vSelect
   },
 
   mounted () {
@@ -63,11 +61,29 @@ export default {
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
-      select: 'OOT',
+      selectedCoin: 'OOT',
+      vestingPeriod: 0,
+      timeList: [
+        {
+          text: '15 minutes',
+          value: 15
+        },
+        {
+          text: '30 minutes',
+          value: 30
+        },
+      ]
     };
   },
 
   methods: {
+    // vue-select stuff
+    onTimeChange(selectedOption) {
+      if (selectedOption) {
+          this.hodlInput.daysToLock = selectedOption.value
+      }
+    },
+
     // open returned transaction id link
     openTxExplorer () {
       shell.openExternal(`${this.explorer}tx/${this.lastTxId}`);
@@ -251,7 +267,7 @@ export default {
   computed: {
     // get bitcoinjs-lib wallet data
     wallet () {
-      return this.$store.getters.getWalletByTicker(this.select);
+      return this.$store.getters.getWalletByTicker(this.selectedCoin);
     },
 
     // get explorer url
