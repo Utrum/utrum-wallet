@@ -37,6 +37,7 @@ export default {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
     this.updateUnlockTime()
+    this.vestingPeriod = this.timeList[0]
   },
 
   data () {
@@ -44,7 +45,7 @@ export default {
       hodlInput: {
         amount: '',
         // daysToLock: 60 // TESTING!
-        daysToLock: 15
+        daysToLock: null
       },
       hodlData: {
         unlockTime: '',
@@ -62,7 +63,7 @@ export default {
       satoshiNb: 100000000,
       blocks: 1,
       selectedCoin: 'OOT',
-      vestingPeriod: 0,
+      vestingPeriod: null,
       timeList: [
         {
           text: '15 minutes',
@@ -277,6 +278,6 @@ export default {
 
     calculatedReward () {
       return this.hodlInput.amount * 0.0083
-    }
+    },
   }
 }

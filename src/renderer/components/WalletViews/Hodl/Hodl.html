@@ -3,7 +3,7 @@
   <div id="select-amount" class="row">
     <span class="title-content">LOCK FUNDS FOR</span>
 
-    <div class="utrum-select no-icon">
+    <div class="utrum-select">
       <v-select v-model="vestingPeriod"
         :options="timeList"
         label="text"
@@ -15,7 +15,7 @@
       </v-select>
     </div>
 
-
+<!--
     <div class="col-custom input-field row">
       <input @keyup.enter="hodlCreate"
         type="number"
@@ -23,10 +23,11 @@
         v-model.number="hodlInput.daysToLock"
         class="col-custom input-field"
         placeholder="How Many">
-      <!-- <span id="number-input">Days</span> --> <!-- TESTING! -->
-      <span id="number-input">Minutes</span> <!-- TESTING! -->
+      <span id="number-input">Minutes</span> TESTING!
     </div>
+-->
   </div>
+
   <div class="col-custom horizontal-line">
     <hr id="second-line"/>
     <div class="btn-center">
