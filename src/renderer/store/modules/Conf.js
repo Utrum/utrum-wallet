@@ -54,7 +54,6 @@ const mutations = {
 };
 
 const actions = {
-  //"startUpdateConfig": ""
 };
 
 const getRefreshRate = (icoWillBegin) => {
