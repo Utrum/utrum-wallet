@@ -1,11 +1,21 @@
 <div>
-  <div class="content-createpassphrase row-main-item">
-    <div v-on:click="backArrow" v-if="(step2 || step3)" id="back-arrow" class="row-custom">
-      <img src="~@/assets/icon-back.svg">
-      <p>Back</p>
-    </div>
+  <div class="content-createpassphrase">
+    <b-row class="mt-3">
+        <b-col>
+            <div class="w-100 h-100" style="display : flex;
+            align-items : center;" v-on:click="backArrow" v-if="(step2 || step3)">
+                <img src="~@/assets/icon-back.svg">
+                <p style="    margin-bottom: -5px;
+                margin-left: 10px;
+                width: auto;">Back</p>
+            </div>
+        </b-col>
+        <b-col class="text-center">
+            <img id="icon-login" src="~@/assets/icon-login-utrum.png" height="60" >
+        </b-col>
+        <b-col></b-col>
+    </b-row>
 
-    <img id="icon-login" src="~@/assets/icon-login-utrum.png" height="60" class="col-custom">
     <h3 class="col-custom">CREATE PASSPHRASE</h3>
     <div v-if="step1" class="col-custom">
       <p>
@@ -22,18 +32,39 @@
         Please write down the set of words below in the exact sequence. You will be asked to re-enter your Backup Phrase on the next screen in order to ensure accuracy.
       </p>
       <div class="passphrase-generated">
-        {{getRandomPassphrase()}}
+        {{ isClipboard ? 'Copied to the clipboard' : getRandomPassphrase()}}
+        <div class="cp-btn-wrapper">
+            <b-button 
+            :show="passphraseGenerated != '' && !isClipboard" 
+            variant="link" 
+            class="float-right"
+            v-clipboard:copy="getRandomPassphrase()"
+            v-clipboard:success="onCopy"
+            :data-clipboard-text="getRandomPassphrase()" title="Copy">
+              <i class="far fa-copy"></i>
+            </b-button>
+        </div>
       </div>
     </div>
     <div v-if="step3" class="row-main-item">
       <p class="col-custom">Please enter your 24-word Backup Phrase to ensure you have written it down correctly.
       </p>
-      <textarea v-on:keyup="checkPassphrase" v-model="passphraseValue" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" id="create-passphrase-input" class="col-custom" type="text" onPaste="return false" name="input-login" onDrag="return false" onDrop="return false" autocomplete=off
-      ></textarea>
+      <div class="d-flex">
+          <div class="cp-optn-wrapper m-auto" style="width: 80%;">
+              <textarea v-on:keyup="checkPassphrase" v-model="passphraseValue" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" class="col-custom" type="text" onPaste="return false" name="input-login" onDrag="return false" onDrop="return false" autocomplete=off
+              ></textarea>
+    
+              <div class="cp-btn-wrapper">
+                <b-button variant="link" @click.prevent="onPaste()" title="Paste">
+                  <i class="far fa-clipboard"></i>
+                </b-button>
+              </div>
+            </div>
+      </div>
     </div>
   </div>
-  <div class="footer">
-    <div class="row-custom">
+  <div class="footer d-flex">
+    <div class="m-auto">
       <div v-if="step1">
         <button v-on:click="cancelCreate" id="btn-not-now" class="col-custom btn-round-light">
           Not now
