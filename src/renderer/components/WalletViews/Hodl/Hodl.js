@@ -44,7 +44,6 @@ export default {
     return {
       hodlInput: {
         amount: null,
-        // daysToLock: 60 // TESTING!
         daysToLock: 0
       },
       hodlData: {
