@@ -49,6 +49,7 @@ export default {
         { key: 'time', label: 'Date'},
         { key: 'txid', label: 'TxID' },
       ],
+      // boostrap-vue related
       dismissSecs: 20,
       dismissCountDown: 0,
       showDismissibleAlert: false,
