@@ -69,7 +69,13 @@ export default {
           text: '30 minutes',
           value: 30
         },
-      ]
+      ],
+      // boostrap-vue related
+      dismissSecs: 20,
+      dismissCountDown: 0,
+      showDismissibleAlert: false,
+      alertText: '',
+      alertErrorText: ''
     };
   },
 
@@ -259,7 +265,16 @@ export default {
         .format('hh:mm A MM/DD/YYYY')
       )
       return dateString;
+    },
+
+    // boostrap-vue related
+    countDownChanged (dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+    showAlert () {
+      this.dismissCountDown = this.dismissSecs
     }
+
   },
 
   computed: {
