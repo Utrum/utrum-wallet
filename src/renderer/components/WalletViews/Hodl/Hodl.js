@@ -15,11 +15,10 @@
  ******************************************************************************/
 
 import bitcoinjs from 'bitcoinjs-lib';
-import Select2 from '@/components/Utils/Select2/Select2.vue';
-import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
 import bitcore from 'bitcore-lib';
 import axios from 'axios';
+import vSelect from 'vue-select'
 
 const { clipboard } = require('electron');
 const { shell } = require('electron');
@@ -31,22 +30,21 @@ export default {
   name: 'hodl',
   components: {
     'hodl-history': HodlHistory,
-    'select2': Select2,
-    'select-awesome': SelectAwesome
+    'v-select': vSelect
   },
 
   mounted () {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
     this.updateUnlockTime()
+    this.vestingPeriod = this.timeList[0]
   },
 
   data () {
     return {
       hodlInput: {
-        amount: '',
-        // daysToLock: 60 // TESTING!
-        daysToLock: 15
+        amount: null,
+        daysToLock: 0
       },
       hodlData: {
         unlockTime: '',
@@ -55,19 +53,35 @@ export default {
         myUtxos: [],
       },
       unlockTimeDate: '',
-      expectedReward: '',
-      scriptAddress: '',
-      redeemScript: '',
-      rawtx: '',
-      lastTxId: '',
+      rawtx: null,
+      lastTxId: null,
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
-      select: 'OOT',
+      selectedCoin: 'OOT',
+      vestingPeriod: null,
+      timeList: [
+        {
+          text: '15 minutes',
+          value: 15
+        },
+        {
+          text: '30 minutes',
+          value: 30
+        },
+      ]
     };
   },
 
   methods: {
+    // vue-select stuff
+    onTimeChange(selectedOption) {
+      if (selectedOption) {
+          this.hodlInput.daysToLock = selectedOption.value
+          this.hodlCreate()
+      }
+    },
+
     // open returned transaction id link
     openTxExplorer () {
       shell.openExternal(`${this.explorer}tx/${this.lastTxId}`);
@@ -103,16 +117,11 @@ export default {
       // update unlock time to now
       vm.updateUnlockTime()
 
-      // flush data regarding responsive stuff
-      vm.hodlData["scriptAddress"] = ''
-      vm.hodlData["redeemScript"] = ''
-      vm.hodlInput.daysToLock = ''
-      vm.rawtx = ''
-      vm.lastTxId = ''
-
-      // gui related
-      vm.scriptAddress = "Loading..."
-      vm.redeemScript = ""
+      // flush data
+      vm.hodlData["redeemScript"] = null
+      vm.hodlData["scriptAddress"] = null
+      vm.rawtx = null
+      vm.lastTxId = null
 
       // get redeem script
       var writer = new bitcore.encoding.BufferWriter()
@@ -132,13 +141,17 @@ export default {
 
       // update hodl data object
       vm.hodlData["redeemScript"] = redeemScript.toString()
-      vm.hodlData["scriptAddress"] = vm.scriptAddress = scriptAddress.toString()
+      vm.hodlData["scriptAddress"] = scriptAddress.toString()
     },
 
     // get utxos and call build transaction function
     getTx () {
-      console.log('getting utxos...')
       var vm = this
+
+      // re-create hodl script just in case
+      vm.hodlCreate()
+
+      console.log('getting utxos...')
       // construct call url
       var url = (
         vm.explorer +
@@ -187,21 +200,22 @@ export default {
         .sign(privateKey)
       var rawtx = transaction.serialize(opts)
 
-      // gui related
-      vm.expectedReward = vm.calculatedReward
-      vm.hodlInput["amount"] = ''
-      vm.lastTxId = ''
+      vm.lastTxId = null
 
       return rawtx
     },
 
     // submit transaction for validation and broadcasting
     submitTx () {
-      console.log('broadcasting transaction...')
       var vm = this
-      var url = vm.explorer + "hodl-api/submit-tx/"
+
       var rawtx = vm.rawtx
-      vm.rawtx = ''
+      vm.rawtx = null
+      vm.hodlInput["amount"] = null
+
+      console.log('broadcasting transaction...')
+
+      var url = vm.explorer + "hodl-api/submit-tx/"
       axios
         .post(url, {'rawtx': rawtx})
         .then(response => {
@@ -251,7 +265,7 @@ export default {
   computed: {
     // get bitcoinjs-lib wallet data
     wallet () {
-      return this.$store.getters.getWalletByTicker(this.select);
+      return this.$store.getters.getWalletByTicker(this.selectedCoin);
     },
 
     // get explorer url
@@ -261,6 +275,6 @@ export default {
 
     calculatedReward () {
       return this.hodlInput.amount * 0.0083
-    }
+    },
   }
 }
