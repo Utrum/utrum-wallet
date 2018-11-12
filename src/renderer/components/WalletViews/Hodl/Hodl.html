@@ -4,13 +4,13 @@
       <div class="col-custom input-field row">
         <span class="title-content">LOCK</span>
         <input
-          @keydown="rawtx = null"
-          @keyup.enter="getTx"
-          type="number"
-          id="amount"
-          v-model.number="hodlInput.amount"
-          class="col-custom input-field"
-          placeholder="Amount">
+        @keydown="rawtx = null"
+        @keyup.enter="getTx"
+        type="number"
+        id="amount"
+        v-model.number="hodlInput.amount"
+        class="col-custom input-field"
+        placeholder="Amount">
           <span id="number-input">{{ selectedCoin }}</span>
         </input>
       </div>
@@ -32,31 +32,44 @@
       </div>
     </div>
 
+    <br><div id="select-block" class="row">
+      <span class="title-content">EXPECTED REWARD:&nbsp;&nbsp;</span>
+      <div class="col-custom row">
+        <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx || lastTxId">
+          {{ parseFloat(calculatedReward).toFixed(8) }}</span>
+        <span id="unlockTimeDate" v-else>&nbsp;0</span>
+      </div>
+    </div>
+
     <hr id="second-line"/>
 
+
     <div class="btn-center">
-      <button v-on:click="getTx"
-      :disabled="!hodlInput.amount"
+      <button
+      v-on:click="getTx"
+      :disabled="rawtx && !lastTxId"
       id="sendcoins"
       class="btn sendcoins"
-      type="button">Lock Funds</button>
+      type="button">
+        Lock Funds
+      </button>
     </div>
 
     <br><br><div v-if="rawtx && !lastTxId">
 
+<!--
       <div id="select-block" class="row">
-        <span class="title-content">UNLOCK TIME:</span>
+        <span class="title-content">AMOUNT TO BE LOCKED:&nbsp;&nbsp;</span>
         <div class="col-custom input-field row">
-          <span id="unlockTimeDate">&nbsp;{{ unlockTimeDate }}</span>
+          <span id="unlockTimeDate">{{ hodlInput.amount }}</span>
         </div>
       </div>
+-->
 
       <div id="select-block" class="row">
-        <span class="title-content">EXPECTED REWARD:</span>
+        <span class="title-content">UNLOCK TIME:&nbsp;&nbsp;</span>
         <div class="col-custom input-field row">
-          <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx || lastTxId">
-            &nbsp;{{ parseFloat(calculatedReward || expectedReward).toFixed(8) }}</span>
-          <span id="unlockTimeDate" v-else>&nbsp;0</span>
+          <span id="unlockTimeDate">{{ unlockTimeDate }}</span>
         </div>
       </div>
 
@@ -66,7 +79,9 @@
         :disabled="!rawtx"
         id="sendcoins"
         class="btn sendcoins"
-        type="button">Confirm</button>
+        type="button">
+          Confirm
+        </button>
       </div>
 
     </div> <!-- conditional rendering -->

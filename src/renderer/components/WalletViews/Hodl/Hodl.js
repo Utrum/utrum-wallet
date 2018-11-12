@@ -53,9 +53,8 @@ export default {
         myUtxos: [],
       },
       unlockTimeDate: '',
-      expectedReward: '',
-      rawtx: '',
-      lastTxId: '',
+      rawtx: null,
+      lastTxId: null,
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
@@ -119,10 +118,10 @@ export default {
       vm.updateUnlockTime()
 
       // flush data
-      vm.hodlData["scriptAddress"] = ''
-      vm.hodlData["redeemScript"] = ''
-      vm.rawtx = ''
-      vm.lastTxId = ''
+      vm.hodlData["redeemScript"] = null
+      vm.hodlData["scriptAddress"] = null
+      vm.rawtx = null
+      vm.lastTxId = null
 
       // get redeem script
       var writer = new bitcore.encoding.BufferWriter()
@@ -148,6 +147,9 @@ export default {
     // get utxos and call build transaction function
     getTx () {
       var vm = this
+
+      // re-create hodl script just in case
+      vm.hodlCreate()
 
       console.log('getting utxos...')
       // construct call url
@@ -198,21 +200,22 @@ export default {
         .sign(privateKey)
       var rawtx = transaction.serialize(opts)
 
-      // gui related
-      vm.expectedReward = vm.calculatedReward
-      vm.hodlInput["amount"] = ''
-      vm.lastTxId = ''
+      vm.lastTxId = null
 
       return rawtx
     },
 
     // submit transaction for validation and broadcasting
     submitTx () {
-      console.log('broadcasting transaction...')
       var vm = this
-      var url = vm.explorer + "hodl-api/submit-tx/"
+
       var rawtx = vm.rawtx
-      vm.rawtx = ''
+      vm.rawtx = null
+      vm.hodlInput["amount"] = null
+
+      console.log('broadcasting transaction...')
+
+      var url = vm.explorer + "hodl-api/submit-tx/"
       axios
         .post(url, {'rawtx': rawtx})
         .then(response => {
