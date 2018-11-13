@@ -61,7 +61,7 @@ export default {
   watch: {
     lastTxId: function () {
       if ( this.lastTxId != null ) {
-        console.log("lastTxId changed!!!")
+        console.log("new lastTxId")
         this.scheduleTxHistoryTimer(2000)
       }
     }
