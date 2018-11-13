@@ -88,11 +88,6 @@ export default {
       }
     },
 
-    // open returned transaction id link
-    openTxExplorer () {
-      shell.openExternal(`${this.explorer}tx/${this.lastTxId}`);
-    },
-
     // for copy button
     onCopy() {
       const self = this;
@@ -228,8 +223,12 @@ export default {
           console.log(response.data)
           if (!response.data.error) {
             vm.lastTxId = response.data.txid
-            console.log("transaction submitted")
+            vm.alertText = "Funds locked successfully!"
+            // boostrap-vue alert
+            vm.showAlert()
           } else {
+            vm.alertErrorText = (response.data.error)
+            vm.showDismissibleAlert=true
             throw response.data.error
           }
         })

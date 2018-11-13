@@ -1,121 +1,109 @@
 <div class="content">
 
-  <!-- bootstrapvue alerts -->
-    <div>
-      <b-alert variant="danger"
-               dismissible
-               fade
-               :show="showDismissibleAlert"
-               @dismissed="showDismissibleAlert=false">
-        {{alertErrorText}}
-      </b-alert>
+<!-- bootstrap-vue alerts -->
+  <div>
+    <b-alert
+    variant="danger"
+    dismissible
+    fade
+    :show="showDismissibleAlert"
+    @dismissed="showDismissibleAlert=false">
+      {{alertErrorText}}
+    </b-alert>
 
-      <b-alert :show="dismissCountDown"
-               dismissible
-               fade
-               variant="success"
-               @dismissed="dismissCountDown=0"
-               @dismiss-count-down="countDownChanged">
-        {{alertText}}
-        Refreshing in {{dismissCountDown}} seconds...
-      </b-alert>
+    <b-alert :show="dismissCountDown"
+    dismissible
+    fade
+    variant="success"
+    @dismissed="dismissCountDown=0"
+    @dismiss-count-down="countDownChanged">
+      {{alertText}}
+    </b-alert>
+  </div>
+
+  <div id="select-amount" class="row">
+    <div class="col-custom input-field row">
+      <span class="title-content">LOCK</span>
+      <input
+      @keydown="rawtx = null"
+      @keyup.enter="getTx"
+      type="number"
+      id="amount"
+      v-model.number="hodlInput.amount"
+      class="col-custom input-field"
+      placeholder="Amount">
+        <span id="number-input">{{ selectedCoin }}</span>
+      </input>
     </div>
+  </div>
 
-    <div id="select-amount" class="row">
+  <div id="select-amount" class="row">
+    <span class="title-content">FOR</span>
+    <div class="utrum-select col-custom input-field row" style="justify-content: flex-end;">
+      <v-select
+      v-model="vestingPeriod"
+      :options="timeList"
+      label="text"
+      :searchable="false"
+      @input="onTimeChange">
+        <template slot="option" slot-scope="option">
+          {{ option.text }}
+        </template>
+      </v-select>
+    </div>
+  </div>
+
+  <br><div id="select-block" class="row">
+    <span class="title-content">EXPECTED REWARD:&nbsp;&nbsp;</span>
+    <div class="col-custom row">
+      <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx || lastTxId">
+        {{ parseFloat(calculatedReward).toFixed(8) }}</span>
+      <span id="unlockTimeDate" v-else>&nbsp;0</span>
+    </div>
+  </div>
+
+  <hr id="second-line"/>
+
+
+  <div class="btn-center">
+    <button
+    v-on:click="getTx"
+    :disabled="rawtx && !lastTxId || (calculatedReward == 0)"
+    id="sendcoins"
+    class="btn sendcoins"
+    type="button">
+      Lock Funds
+    </button>
+  </div>
+
+  <br><br>
+  <div v-if="rawtx && !lastTxId">
+
+    <div id="select-block" class="row">
+      <span class="title-content">UNLOCK TIME:&nbsp;&nbsp;</span>
       <div class="col-custom input-field row">
-        <span class="title-content">LOCK</span>
-        <input
-        @keydown="rawtx = null"
-        @keyup.enter="getTx"
-        type="number"
-        id="amount"
-        v-model.number="hodlInput.amount"
-        class="col-custom input-field"
-        placeholder="Amount">
-          <span id="number-input">{{ selectedCoin }}</span>
-        </input>
-      </div>
-    </div>
-
-    <div id="select-amount" class="row">
-      <span class="title-content">FOR</span>
-      <div class="utrum-select col-custom input-field row" style="justify-content: flex-end;">
-        <v-select
-        v-model="vestingPeriod"
-        :options="timeList"
-        label="text"
-        :searchable="false"
-        @input="onTimeChange">
-          <template slot="option" slot-scope="option">
-            {{ option.text }}
-          </template>
-        </v-select>
-      </div>
-    </div>
-
-    <br><div id="select-block" class="row">
-      <span class="title-content">EXPECTED REWARD:&nbsp;&nbsp;</span>
-      <div class="col-custom row">
-        <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx || lastTxId">
-          {{ parseFloat(calculatedReward).toFixed(8) }}</span>
-        <span id="unlockTimeDate" v-else>&nbsp;0</span>
+        <span id="unlockTimeDate">{{ unlockTimeDate }}</span>
       </div>
     </div>
 
     <hr id="second-line"/>
-
-
     <div class="btn-center">
-      <button
-      v-on:click="getTx"
-      :disabled="rawtx && !lastTxId || (calculatedReward == 0)"
+      <button v-on:click="submitTx"
+      :disabled="!rawtx"
       id="sendcoins"
       class="btn sendcoins"
       type="button">
-        Lock Funds
+        Confirm
       </button>
     </div>
 
-    <br><br><div v-if="rawtx && !lastTxId">
+  </div> <!-- conditional rendering -->
 
-<!--
-      <div id="select-block" class="row">
-        <span class="title-content">AMOUNT TO BE LOCKED:&nbsp;&nbsp;</span>
-        <div class="col-custom input-field row">
-          <span id="unlockTimeDate">{{ hodlInput.amount }}</span>
-        </div>
-      </div>
--->
-
-      <div id="select-block" class="row">
-        <span class="title-content">UNLOCK TIME:&nbsp;&nbsp;</span>
-        <div class="col-custom input-field row">
-          <span id="unlockTimeDate">{{ unlockTimeDate }}</span>
-        </div>
-      </div>
-
-      <hr id="second-line"/>
-      <div class="btn-center">
-        <button v-on:click="submitTx"
-        :disabled="!rawtx"
-        id="sendcoins"
-        class="btn sendcoins"
-        type="button">
-          Confirm
-        </button>
-      </div>
-
-    </div> <!-- conditional rendering -->
-
-
-    <div v-if="lastTxId">
-      <br>
-      <span>Transaction ID:</span>
-      <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
-          <button class="btn btn-tx pointer" id="btn-tx-id" v-on:click="openTxExplorer()">{{ lastTxId }}</button>
-      </div>
-    </div> <!-- conditional rendering -->
-
-    <br><hodl-history id="hodlHistory" :wallet="wallet"></hodl-history>
-
+  <br>
+  <hodl-history
+    id="hodlHistory"
+    :wallet="wallet"
+    :lastTxId="lastTxId">
+  </hodl-history>
+  
 </div>

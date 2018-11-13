@@ -26,7 +26,7 @@ const satoshiNb = 100000000;
 
 export default {
   name: 'hodl-history',
-  props: ['wallet'],
+  props: ['wallet', 'lastTxId'],
   data() {
     return {
       txsUrlBase: (
@@ -40,7 +40,6 @@ export default {
       sortDesc: true,
       currentPage: 1,
       perPage: 10,
-      timer: '',
       isBusy: false,
       fields: [
         //{ key: 'confirmations', label: 'Conf' },
@@ -50,6 +49,7 @@ export default {
         { key: 'txid', label: 'TxID' },
       ],
       // boostrap-vue related
+      timer: null,
       dismissSecs: 20,
       dismissCountDown: 0,
       showDismissibleAlert: false,
@@ -57,6 +57,17 @@ export default {
       alertErrorText: ''
     };
   },
+
+  watch: {
+    lastTxId: function () {
+      if ( this.lastTxId != null ) {
+        console.log("lastTxId changed!!!")
+        this.timer = null
+        this.timer = setInterval(this.refreshTable, 2000)
+      }
+    }
+  },
+
   methods: {
     cancelTxHistoryTimer () {
       //cancel if already running
