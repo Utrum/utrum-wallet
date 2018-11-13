@@ -69,7 +69,13 @@ export default {
           text: '30 minutes',
           value: 30
         },
-      ]
+      ],
+      // boostrap-vue related
+      dismissSecs: 20,
+      dismissCountDown: 0,
+      showDismissibleAlert: false,
+      alertText: '',
+      alertErrorText: ''
     };
   },
 
@@ -80,11 +86,6 @@ export default {
           this.hodlInput.daysToLock = selectedOption.value
           this.hodlCreate()
       }
-    },
-
-    // open returned transaction id link
-    openTxExplorer () {
-      shell.openExternal(`${this.explorer}tx/${this.lastTxId}`);
     },
 
     // for copy button
@@ -222,8 +223,12 @@ export default {
           console.log(response.data)
           if (!response.data.error) {
             vm.lastTxId = response.data.txid
-            console.log("transaction submitted")
+            vm.alertText = "Funds locked successfully!"
+            // boostrap-vue alert
+            vm.showAlert()
           } else {
+            vm.alertErrorText = (response.data.error)
+            vm.showDismissibleAlert=true
             throw response.data.error
           }
         })
@@ -259,7 +264,16 @@ export default {
         .format('hh:mm A MM/DD/YYYY')
       )
       return dateString;
+    },
+
+    // boostrap-vue related
+    countDownChanged (dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+    showAlert () {
+      this.dismissCountDown = this.dismissSecs
     }
+
   },
 
   computed: {
