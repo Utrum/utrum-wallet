@@ -62,8 +62,7 @@ export default {
     lastTxId: function () {
       if ( this.lastTxId != null ) {
         console.log("lastTxId changed!!!")
-        this.timer = null
-        this.timer = setInterval(this.refreshTable, 2000)
+        this.scheduleTxHistoryTimer(2000)
       }
     }
   },
