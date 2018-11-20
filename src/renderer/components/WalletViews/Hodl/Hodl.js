@@ -193,13 +193,13 @@ export default {
       }
 
       // use bitcore to build the transaction
-      var transaction = new bitcore.Transaction()
+      var rawtx = new bitcore.Transaction()
         .from(utxos)
         .to(toAddress, amount)
         .change(myAddress)
         .addData(op_return)
         .sign(privateKey)
-      var rawtx = transaction.serialize(opts)
+        .serialize(opts)
 
       vm.lastTxId = null
 
