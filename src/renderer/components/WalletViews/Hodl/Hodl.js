@@ -159,7 +159,7 @@ export default {
         vm.hodlData.address +
         "/utxo"
       )
-      // make call to api
+      // make call to explorer api to get utxos, and build transaction
       axios
         .get(url)
         .then(response => {
