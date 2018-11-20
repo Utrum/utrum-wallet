@@ -196,9 +196,7 @@ export default {
         .add('OP_EQUALVERIFY')
         .add('OP_CHECKSIG')
         .toHex()
-      console.log(myScriptPubkey)
       for (var i in utxos) {
-        console.log(utxos[i].scriptPubKey)
         utxos[i].scriptPubKey = myScriptPubkey
       }
 
