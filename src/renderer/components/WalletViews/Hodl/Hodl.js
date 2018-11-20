@@ -190,12 +190,12 @@ export default {
 
       // workaround to insight's non confirmed utxos bug
       let myScriptPubkey = new bitcore.Script()
-      .add('OP_DUP')
-      .add('OP_HASH160')
-      .add(bitcore.Address(myAddress).hashBuffer)
-      .add('OP_EQUALVERIFY')
-      .add('OP_CHECKSIG')
-      .toHex()
+        .add('OP_DUP')
+        .add('OP_HASH160')
+        .add(bitcore.Address(myAddress).hashBuffer)
+        .add('OP_EQUALVERIFY')
+        .add('OP_CHECKSIG')
+        .toHex()
       console.log(myScriptPubkey)
       for (var i in utxos) {
         console.log(utxos[i].scriptPubKey)
