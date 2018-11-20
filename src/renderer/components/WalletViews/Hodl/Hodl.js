@@ -200,7 +200,6 @@ export default {
       for (var i in utxos) {
         console.log(utxos[i].scriptPubKey)
         utxos[i].scriptPubKey = myScriptPubkey
-        // '76a914e33115988e5b84d5a5d5dfb633bc6ef46715282388ac'
       }
 
       // use bitcore to build the transaction
