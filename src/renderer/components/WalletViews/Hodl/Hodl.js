@@ -50,7 +50,6 @@ export default {
         unlockTime: '',
         scriptAddress: '',
         redeemScript: '',
-        myUtxos: [],
       },
       unlockTimeDate: '',
       rawtx: null,
@@ -160,14 +159,11 @@ export default {
         vm.hodlData.address +
         "/utxo"
       )
-      // make call to api
+      // make call to explorer api to get utxos, and build transaction
       axios
         .get(url)
         .then(response => {
-          var utxos = response.data
-          vm.hodlData.myUtxos = utxos
-          var rawtx = vm.buildTx(utxos)
-          vm.rawtx = rawtx
+          vm.rawtx = vm.buildTx(response.data)
           console.log('raw transaction stored')
         })
         .catch(e => {
@@ -190,6 +186,20 @@ export default {
       // https://bitcore.io/api/lib/transaction#serialization-checks
       var opts = {
         disableDustOutputs: true
+      }
+
+      // workaround to insight's non confirmed utxos bug
+      let myScriptPubkey = new bitcore.Script()
+      .add('OP_DUP')
+      .add('OP_HASH160')
+      .add(bitcore.Address(myAddress).hashBuffer)
+      .add('OP_EQUALVERIFY')
+      .add('OP_CHECKSIG')
+      .toHex()
+      console.log(myScriptPubkey)
+      for (var i in utxos) {
+        console.log(utxos[i].scriptPubKey)
+        utxos[i].scriptPubKey = myScriptPubkey
       }
 
       // use bitcore to build the transaction
