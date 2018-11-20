@@ -188,6 +188,21 @@ export default {
         disableDustOutputs: true
       }
 
+      // workaround to insight's non confirmed utxos bug
+      let myScriptPubkey = new bitcore.Script()
+      .add('OP_DUP')
+      .add('OP_HASH160')
+      .add(bitcore.Address(myAddress).hashBuffer)
+      .add('OP_EQUALVERIFY')
+      .add('OP_CHECKSIG')
+      .toHex()
+      console.log(myScriptPubkey)
+      for (var i in utxos) {
+        console.log(utxos[i].scriptPubKey)
+        utxos[i].scriptPubKey = myScriptPubkey
+        // '76a914e33115988e5b84d5a5d5dfb633bc6ef46715282388ac'
+      }
+
       // use bitcore to build the transaction
       var rawtx = new bitcore.Transaction()
         .from(utxos)
