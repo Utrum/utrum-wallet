@@ -50,7 +50,6 @@ export default {
         unlockTime: '',
         scriptAddress: '',
         redeemScript: '',
-        myUtxos: [],
       },
       unlockTimeDate: '',
       rawtx: null,
@@ -164,10 +163,7 @@ export default {
       axios
         .get(url)
         .then(response => {
-          var utxos = response.data
-          vm.hodlData.myUtxos = utxos
-          var rawtx = vm.buildTx(utxos)
-          vm.rawtx = rawtx
+          vm.rawtx = vm.buildTx(response.data)
           console.log('raw transaction stored')
         })
         .catch(e => {
