@@ -521,8 +521,13 @@ input::-webkit-inner-spin-button {
   color: #5ebee5;
 }
 
-.btn-outline-lightblue.disabled,
+/*.btn-outline-lightblue.disabled,
 .btn-outline-lightblue:disabled {
+  opacity: 1;
+}*/
+
+.btn.disabled,
+.btn:disabled {
   cursor: default !important;
 }
 

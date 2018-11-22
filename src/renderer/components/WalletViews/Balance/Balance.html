@@ -14,8 +14,8 @@
         <h5 class="float-left balance__title" style="line-height: 38px;">Rewards :</h5>
         <div class="float-right">
           <p class="d-inline mr-2">{{rewards}} (KMD)</p>
-          <b-button variant="outline-lightblue" size="sm" class="btn-no-focus" :disabled="rewards <= 0.0001" id="btn" @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'">Claim</b-button>
-          <b-button variant="outline-lightblue" size="sm" class="btn-no-focus" @click="getRewardData"><i class="fas fa-sync"></i></b-button>
+          <b-button variant="outline-primary" size="sm" class="btn-no-focus" :disabled="rewards <= 0.0001" id="btn" @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'">Claim</b-button>
+          <b-button variant="outline-primary" size="sm" class="btn-no-focus" @click="getRewardData"><i class="fas fa-sync"></i></b-button>
         </div>
       </div>
       <hr class="w-100" />
