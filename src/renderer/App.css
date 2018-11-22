@@ -515,25 +515,20 @@ input::-webkit-inner-spin-button {
   max-height: 25px;
 }
 
-.btn-outline-lightblue {
+.btn-outline-gray {
   background-color: transparent;
-  border-color: #5ebee5;
-  color: #5ebee5;
+  border-color: #999;
+  color: #999;
 }
 
-/*.btn-outline-lightblue.disabled,
-.btn-outline-lightblue:disabled {
-  opacity: 1;
-}*/
+.btn-outline-gray:hover:not([disbled]):not(.disabled) {
+  background-color: #999;
+  color: white;
+}
 
 .btn.disabled,
 .btn:disabled {
   cursor: default !important;
-}
-
-.btn-outline-lightblue:hover:not([disbled]):not(.disabled) {
-  background-color: #5ebee5;
-  color: white;
 }
 
 .btn-no-focus:focus {
