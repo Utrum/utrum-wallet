@@ -11,11 +11,11 @@
   <div v-for="wallet in wallets" v-bind:key="wallet.ticker">
     <balance-item :wallet="wallet" :class="{'mb-2': wallet.ticker === 'KMD'}"/>
     <div v-if="wallet.ticker === 'KMD'" class="mb-0" style="display: flow-root;">
-        <h5 class="float-left balance__title" style="line-height: 38px;">KMD Rewards</h5>
+        <h5 class="float-left balance__title" style="line-height: 38px;">Rewards:</h5>
         <div class="float-right">
-          <p class="d-inline mr-2">{{rewards}}</p>
-          <b-button variant="outline-lightblue" size="sm" :disabled="rewards <= 0.0001" id="btn" @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'">Claim</b-button>
-          <b-button variant="outline-lightblue" size="sm" @click="getRewardData"><i class="fas fa-sync"></i></b-button>
+          <p class="d-inline mr-2">{{rewards}} KMD</p>
+          <b-button variant="outline-lightblue" size="sm" :disabled="rewards <= 0.0001" id="btn" @click.prevent="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'">Claim</b-button>
+          <b-button variant="outline-lightblue" size="sm" @click.prevent="getRewardData"><i class="fas fa-sync"></i></b-button>
         </div>
       </div>
       <hr class="w-100" />
