@@ -515,13 +515,18 @@ input::-webkit-inner-spin-button {
   max-height: 25px;
 }
 
-.btn.btn-outline-lightblue {
+.btn-outline-lightblue {
   background-color: transparent;
   border-color: #5ebee5;
   color: #5ebee5;
 }
 
-.btn.btn-outline-lightblue:hover:not([disbled]):not(.disabled) {
+.btn-outline-lightblue.disabled,
+.btn-outline-lightblue:disabled {
+  cursor: default !important;
+}
+
+.btn-outline-lightblue:hover:not([disbled]):not(.disabled) {
   background-color: #5ebee5;
   color: white;
 }
