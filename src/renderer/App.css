@@ -525,3 +525,7 @@ input::-webkit-inner-spin-button {
   background-color: #5ebee5;
   color: white;
 }
+
+.btn-no-focus:focus {
+  box-shadow: none;
+}
