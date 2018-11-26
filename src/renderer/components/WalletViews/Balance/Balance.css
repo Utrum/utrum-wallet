@@ -202,6 +202,11 @@ footer {
   border-color: #430961;
 }
 
+.balance__title {
+  color: #999 !important;
+  font-size: 17px;
+}
+
 
 .right{
   float:right;
@@ -222,4 +227,16 @@ footer {
 .row-footer p {
   font-weight: 300;
   color: #0D0032;
+}
+
+.balance__wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 250px);
+}
+
+.balance__item {
+  border-top: 1px solid rgba(0, 0, 0, .1);
+  flex-grow: 1;
+  padding: 1rem 0;
 }
