@@ -306,6 +306,20 @@ export default {
         }
       }
     },
+    canSend(){
+      if(
+        this.withdraw.amount && 
+        this.withdraw.address && 
+        this.withdraw.amount.trim() != "" &&
+        this.withdraw.address.trim() != "" &&
+        this.withdraw.amount > 0
+      ){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
   },
 };
 
