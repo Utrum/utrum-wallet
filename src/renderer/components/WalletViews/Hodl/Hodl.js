@@ -296,7 +296,7 @@ export default {
     },
 
     calculatedReward () {
-      return this.hodlInput.amount * 0.0083
+      return this.hodlInput.amount * 0.00834
     },
   }
 }
