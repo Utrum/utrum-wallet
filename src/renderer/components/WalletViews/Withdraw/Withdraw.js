@@ -211,7 +211,7 @@ export default {
           })
           ;
       } else if (this.canWithdraw === false){
-        this.$toasted.error('Not enought balance including fees.');
+        this.$toasted.error('Not enough balance including fees.');
       }
     },
   },
