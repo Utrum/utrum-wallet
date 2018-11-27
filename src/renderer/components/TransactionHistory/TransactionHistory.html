@@ -15,7 +15,7 @@
             <span>{{dateFormat(row.value)}}</span>
         </template>
         <template slot="address" slot-scope="row">
-            <span style="font-size: small;">{{row.value}}</span>
+            <span>{{row.value}}</span>
         </template>
         <template slot="amount" slot-scope="row">
             <div :class="getColorAmount(row.value)">
