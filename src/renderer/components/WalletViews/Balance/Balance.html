@@ -8,7 +8,7 @@
         <span id="totalBalanceUsd">$ {{totalBalance}}</span>
     </div>
   </div>
-  <div class="balance__wrap">
+  
     <div v-for="wallet in wallets" v-bind:key="wallet.ticker" class="balance__item">
       <balance-item :wallet="wallet"/>
       <div v-if="wallet.ticker === 'KMD'" class="mb-0" style="display: flow-root;">
@@ -19,8 +19,8 @@
           <b-button variant="outline-gray" size="sm" class="btn-no-focus" @click="getRewardData"><i class="fas fa-sync"></i></b-button>
         </div>
       </div>
+      <hr class="w-100" />
     </div>
-  </div>
   <b-modal @ok="claimRewards()" ref="confirmWithdraw" id="confirmWithdraw" centered>
     <div slot="modal-header" class="headerModalBuy">
       <h2>CLAIM REWARDS</h2>
