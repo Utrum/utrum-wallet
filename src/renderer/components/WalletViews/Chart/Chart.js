@@ -70,7 +70,7 @@ export default {
       var hour = a.getHours()
       var min = a.getMinutes()
       var sec = a.getSeconds()
-      let localDt = new Date(`${year}/${a.getMonth()}/${date} ${hour}:${min}:${sec}`)
+      let localDt = new Date(`${year}/${a.getMonth()+1}/${date} ${hour}:${min}:${sec}`)
       let time = `${localDt}`
       return time
     },
