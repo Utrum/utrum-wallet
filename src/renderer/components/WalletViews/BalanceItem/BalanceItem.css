@@ -20,6 +20,7 @@
 
 #us-dollar {
   text-align: right;
+  font-weight: 500;
 }
 
 .modal-header {
@@ -53,7 +54,7 @@
 
 #balance-item {
   margin: 0;
-  font-weight: 300;
+  font-weight: 500;
   color: #0C6AA8;
 }
 
