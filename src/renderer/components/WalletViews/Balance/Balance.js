@@ -97,7 +97,7 @@ export default {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'json';
-  
+
         xhr.onload = function() {
           var status = xhr.status;
           if (status === 200) {
@@ -158,9 +158,10 @@ export default {
       var toAddress = vm.claimData.address
       var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
       var rewardtotal = vm.rewarding
-      var amount = (inputamount + rewardtotal)
+      var amount = (inputamount - vm.kmdfee)
       var privateKey = vm.claimData.privateKey
       var transaction = new bitcore.Transaction()
+        .fee(vm.kmdfee)
         .from(utxos)
         .to(toAddress, amount)
         .lockUntilDate(timelock)
