@@ -12,10 +12,10 @@
     </b-alert>
 
     <b-alert
-    :show="dismissCountDown"
+    variant="success"
     dismissible
     fade
-    variant="success"
+    :show="dismissCountDown"
     @dismissed="dismissCountDown=0"
     @dismiss-count-down="countDownChanged">
       {{alertText}}
