@@ -192,7 +192,6 @@ export default {
       return dict;
     },
     claimRewards() {
-      var kmdwallet = this.wallets.KMD;
       if (this.displayInterest && this.rewards != 0) {
           return this.broadcastTx()
       }

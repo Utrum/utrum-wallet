@@ -70,11 +70,11 @@ export default {
         },
       ],
       // boostrap-vue related
-      dismissSecs: 20,
-      dismissCountDown: 0,
-      showDismissibleAlert: false,
+      dismissSecs: 10,
+      dismissAlertCountDown: 0,
+      dismissErrorCountDown: 0,
       alertText: '',
-      alertErrorText: ''
+      errorText: ''
     };
   },
 
@@ -172,8 +172,9 @@ export default {
           if ( balance / vm.satoshiNb < vm.hodlInput.amount ) {
             // boostrap-vue alert
             let errorMessage = "Insufficient funds, please check your balance."
-            vm.alertErrorText = errorMessage
-            vm.showDismissibleAlert=true
+            vm.showError(errorMessage)
+            // delete wrong amount
+            vm.hodlInput.amount = null
             throw errorMessage
           }
           // so far so good, build transaction
@@ -245,12 +246,10 @@ export default {
           console.log(response.data)
           if (!response.data.error) {
             vm.lastTxId = response.data.txid
-            vm.alertText = "Funds locked successfully!"
             // boostrap-vue alert
-            vm.showAlert()
+            vm.showAlert("Funds locked successfully!")
           } else {
-            vm.alertErrorText = (response.data.error)
-            vm.showDismissibleAlert=true
+            vm.showError(response.data.error)
             throw response.data.error
           }
         })
@@ -289,11 +288,19 @@ export default {
     },
 
     // boostrap-vue related
-    countDownChanged (dismissCountDown) {
-      this.dismissCountDown = dismissCountDown
+    alertCountDownChanged (n) {
+      this.dismissAlertCountDown = n
     },
-    showAlert () {
-      this.dismissCountDown = this.dismissSecs
+    errorCountDownChanged (n) {
+      this.dismissErrorCountDown = n
+    },
+    showAlert (msg) {
+      this.dismissAlertCountDown = this.dismissSecs
+      this.alertText = msg
+    },
+    showError(msg) {
+      this.dismissErrorCountDown = this.dismissSecs
+      this.errorText = msg
     }
 
   },
