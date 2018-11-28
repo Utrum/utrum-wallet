@@ -163,6 +163,20 @@ export default {
       axios
         .get(url)
         .then(response => {
+          // check if there are enough funds
+          let utxos = response.data
+          let balance = 0
+          for ( var i in utxos ) {
+              balance += utxos[i].satoshis
+          }
+          if ( balance / vm.satoshiNb < vm.hodlInput.amount ) {
+            // boostrap-vue alert
+            let errorMessage = "Insufficient funds, please check your balance."
+            vm.alertErrorText = errorMessage
+            vm.showDismissibleAlert=true
+            throw errorMessage
+          }
+          // so far so good, build transaction
           vm.rawtx = vm.buildTx(response.data)
           console.log('raw transaction stored')
         })
