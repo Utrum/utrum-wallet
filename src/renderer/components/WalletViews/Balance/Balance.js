@@ -66,7 +66,6 @@ export default {
         amount: 0,
         myUtxos: []
       },
-      explorer: 'https://kmdexplorer.io/',
       satoshiNb: 100000000,
       satoshiConvert: 0.00000001,
       kmdfee: 10000,
@@ -138,7 +137,8 @@ export default {
     getUtxos () {
       var vm = this
       var addr = this.$store.getters.getWalletByTicker('KMD').address
-      var url = vm.explorer + "insight-api-komodo/addr/" + addr + "/utxo"
+      var explorer = this.$store.getters.getWalletByTicker('KMD').coin.explorer
+      var url = explorer + "/insight-api-komodo/addr/" + addr + "/utxo"
       console.log(url)
       axios
         .get(url)
@@ -159,7 +159,7 @@ export default {
       var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
       var rewardtotal = vm.rewarding
       var amount = (inputamount + rewardtotal)
-      var privateKey = vm.claimData.privateKey
+      var privateKey = this.$store.getters.getWalletByTicker('KMD').privKey
       var transaction = new bitcore.Transaction()
         .from(utxos)
         .to(toAddress, amount)
@@ -187,14 +187,12 @@ export default {
       var dict = {};
       var satoshis = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
       dict["satoshis"] = satoshis;
-      var privateKey = new bitcore.PrivateKey(this.walletkmd.privKey.toString('hex'));
-      dict["privateKey"] = privateKey.toString();
       var address = this.$store.getters.getWalletByTicker('KMD').address
       dict["address"] = address.toString();
       return dict;
     },
     claimRewards() {
-      const kmdwallet = this.wallets.KMD;
+      var kmdwallet = this.wallets.KMD;
       if (this.displayInterest && this.rewards != 0) {
           return this.broadcastTx()
       }
