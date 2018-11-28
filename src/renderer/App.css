@@ -514,3 +514,23 @@ input::-webkit-inner-spin-button {
   margin: auto;
   max-height: 25px;
 }
+
+.btn-outline-gray {
+  background-color: transparent;
+  border-color: #999;
+  color: #999;
+}
+
+.btn-outline-gray:hover:not([disbled]):not(.disabled) {
+  background-color: #999;
+  color: white;
+}
+
+.btn.disabled,
+.btn:disabled {
+  cursor: default !important;
+}
+
+.btn-no-focus:focus {
+  box-shadow: none;
+}
