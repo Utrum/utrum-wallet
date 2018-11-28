@@ -16,23 +16,21 @@
 
 import bitcoinjs from 'bitcoinjs-lib';
 import { QrcodeReader } from 'vue-qrcode-reader';
-import Select2 from '@/components/Utils/Select2/Select2.vue';
-import vSelect from 'vue-select'
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
+import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
 
 const { clipboard } = require('electron');
 
 export default {
   name: 'withdraw',
   components: {
-    select2: Select2,
+    SelectDropdown,
     'transaction-history': TransactionHistory,
     'select-awesome': SelectAwesome,
-    QrcodeReader,
-    'v-select': vSelect
+    QrcodeReader
   },
   created() {
     this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
@@ -249,8 +247,9 @@ export default {
       return this.$store.getters.enabledCoins.map(coin => {
         let tempObj = {
           ticker: coin.ticker,
-          icon: coin.ticker,
-          label: `${coin.name} (${coin.ticker})`
+          // icon: coin.ticker,
+          label: `${coin.name} (${coin.ticker})`,
+          image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
         }
         if(!this.selectNew && coin.ticker == 'OOT'){
           this.select = coin.ticker
