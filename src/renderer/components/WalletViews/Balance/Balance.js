@@ -59,7 +59,7 @@ export default {
   },
   data() {
     return {
-    claimData: {
+      claimData: {
         height: '',
         scriptAddress: '',
         redeemScript: '',
