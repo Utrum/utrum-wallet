@@ -59,7 +59,7 @@ export default {
   },
   data() {
     return {
-    claimData: {
+      claimData: {
         height: '',
         scriptAddress: '',
         redeemScript: '',
@@ -97,7 +97,7 @@ export default {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'json';
-  
+
         xhr.onload = function() {
           var status = xhr.status;
           if (status === 200) {
