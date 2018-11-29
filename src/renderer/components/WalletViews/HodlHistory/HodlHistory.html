@@ -1,6 +1,6 @@
 <div>
 
-<!-- bootstrap-vue alerts -->
+<!-- bootstrap-vue alerts
     <div>
       <b-alert variant="danger"
                dismissible
@@ -18,6 +18,27 @@
                @dismiss-count-down="countDownChanged">
         {{alertText}}
         Refreshing in {{dismissCountDown}} seconds...
+      </b-alert>
+    </div> -->
+
+    <!-- bootstrap-vue alerts -->
+    <div>
+      <b-alert variant="danger"
+               dismissible
+               fade
+               :show="dismissErrorCountDown"
+               @dismissed="dismissErrorCountDown=0"
+               @dismiss-count-down="errorCountDownChanged">
+        {{errorText}}
+      </b-alert>
+      <b-alert variant="success"
+               dismissible
+               fade
+               :show="dismissAlertCountDown"
+               @dismissed="dismissAlertCountDown=0"
+               @dismiss-count-down="alertCountDownChanged">
+        {{alertText}}
+        Refreshing in {{dismissAlertCountDown}} seconds...
       </b-alert>
     </div>
 
