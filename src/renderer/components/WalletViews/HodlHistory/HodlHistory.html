@@ -21,29 +21,31 @@
       </b-alert>
     </div>
 
-<!-- table -->
+    <!-- table -->
     <div class="title-sec text-left">
         <span>HISTORY</span>
-        <b-button size="sm" variant="link" @click="refreshTable" class="float-right">
+        <b-button size="sm"
+                  variant="link"
+                  @click="refreshTable"
+                  class="float-right">
             <i class="fas fa-sync"></i>
         </b-button>
     </div>
     <hr class="mb-0"/>
 
     <b-table  id="txTable"
-    thead-tr-class="theadTrClass"
-    tbody-tr-class="theadClass"
-    thead-class="theadClass borderBottom"
-    small
-    :sort-desc.sync="sortDesc"
-    :sort-by.sync="sortBy"
-    :fields="fields"
-    :items="txHistory"
-    :current-page="currentPage"
-    :per-page="perPage"
-    ref="txTable"
-    :busy.sync="isBusy"
-    >
+              thead-tr-class="theadTrClass"
+              tbody-tr-class="theadClass"
+              thead-class="theadClass borderBottom"
+              small
+              :sort-desc.sync="sortDesc"
+              :sort-by.sync="sortBy"
+              :fields="fields"
+              :items="txHistory"
+              :current-page="currentPage"
+              :per-page="perPage"
+              ref="txTable"
+              :busy.sync="isBusy">
 
         <template slot="time" slot-scope="row">
             <span>{{dateFormat(row.value)}}</span>
@@ -52,20 +54,20 @@
 
         <template slot="nLockTime" slot-scope="data">
             <span v-if="data.item.nLockTime > data.item.timeNow"
-              class="hodlRed">
+                  class="hodlRed">
               {{ dateFormat(data.item.nLockTime) }}
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === false"
-              @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
-              class="btn btn-tx">
+                  @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
+                  class="btn btn-tx">
               Claim!
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
-              class="hodlGreen">
+                  class="hodlGreen">
               Hodl Complete 🎉
             </span>
             <span v-else-if="data.item.isHodlSpend === true"
-              class="hodlGray">
+                  class="hodlGray">
               Reward
             </span>
             <span v-else>
@@ -75,23 +77,20 @@
 
 
         <template slot="formattedAmount" slot-scope="data">
-            <div
-              v-if="data.item.isHodlSpend"
-              class="hodlGreen">
+            <div v-if="data.item.isHodlSpend"
+                 class="hodlGreen">
                 {{ data.item.formattedAmount }}
             </div>
-            <div
-              v-else-if="data.item.isHodlTx && !data.item.isSpent && data.item.nLockTime < data.item.timeNow"
-              class="hodlOrange">
+            <div v-else-if="data.item.isHodlTx && !data.item.isSpent && data.item.nLockTime < data.item.timeNow"
+                 class="hodlOrange">
                 {{ data.item.formattedAmount }}
             </div>
-            <div
-              v-else-if="data.item.isHodlTx"
-              class="hodlGray">
+            <div v-else-if="data.item.isHodlTx"
+                 class="hodlGray">
                 {{ data.item.formattedAmount }}
             </div>
-            <div
-              v-else class="normalTxColor">
+            <div v-else
+                 class="normalTxColor">
                 {{ data.item.formattedAmount }}
             </div>
         </template>
@@ -104,27 +103,24 @@
 
         <template slot="txid" slot-scope="row">
             <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
-                <button
-                  class="btn btn-tx pointer"
-                  id="btn-tx-id"
-                  :explorer="row.explorer"
-                  @click="openTxExplorer(row)">
+                <button class="btn btn-tx pointer"
+                        id="btn-tx-id"
+                        :explorer="row.explorer"
+                        @click="openTxExplorer(row)">
                     {{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
-                <button
-                  class="btn btn-tx pointer"
-                  id="btn-logo"
-                  @click.prevent="copyToClipboard(row)">
+                <button class="btn btn-tx pointer"
+                        id="btn-logo"
+                        @click.prevent="copyToClipboard(row)">
                   <i class="far fa-copy btn-copy-link"></i>
                 </button>
             </div>
         </template>
     </b-table>
 
-    <b-pagination-nav
-      align="center"
-      :number-of-pages="Math.round(this.totalRows/perPage)"
-      v-model="currentPage"
-      :link-gen="linkGen"
-      class="my-0"/>
+    <b-pagination-nav align="center"
+                      :number-of-pages="Math.round(this.totalRows/perPage)"
+                      v-model="currentPage"
+                      :link-gen="linkGen"
+                      class="my-0"/>
 
 </div>
