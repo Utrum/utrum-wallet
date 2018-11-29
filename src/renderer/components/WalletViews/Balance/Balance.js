@@ -158,9 +158,10 @@ export default {
       var toAddress = vm.claimData.address
       var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
       var rewardtotal = vm.rewarding
-      var amount = (inputamount + rewardtotal)
+      var amount = (inputamount - vm.kmdfee)
       var privateKey = this.$store.getters.getWalletByTicker('KMD').privKey
       var transaction = new bitcore.Transaction()
+        .fee(vm.kmdfee)
         .from(utxos)
         .to(toAddress, amount)
         .lockUntilDate(timelock)
