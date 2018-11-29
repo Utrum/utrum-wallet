@@ -1,23 +1,21 @@
 <div class="content">
 
-<!-- bootstrap-vue alerts -->
+  <!-- bootstrap-vue alerts -->
   <div>
-    <b-alert
-    variant="danger"
-    dismissible
-    fade
-    :show="showDismissibleAlert"
-    @dismissed="showDismissibleAlert=false">
-      {{alertErrorText}}
+    <b-alert variant="danger"
+             dismissible
+             fade
+             :show="dismissErrorCountDown"
+             @dismissed="dismissErrorCountDown=0"
+             @dismiss-count-down="errorCountDownChanged">
+      {{errorText}}
     </b-alert>
-
-    <b-alert
-    variant="success"
-    dismissible
-    fade
-    :show="dismissCountDown"
-    @dismissed="dismissCountDown=0"
-    @dismiss-count-down="countDownChanged">
+    <b-alert variant="success"
+             dismissible
+             fade
+             :show="dismissAlertCountDown"
+             @dismissed="dismissAlertCountDown=0"
+             @dismiss-count-down="alertCountDownChanged">
       {{alertText}}
     </b-alert>
   </div>
