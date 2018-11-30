@@ -23,7 +23,6 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
 
-var refreshRewardData = null
 
 export default {
   name: 'balance',
@@ -42,19 +41,22 @@ export default {
       ;
     }, this);
 
-    if (!refreshRewardData) {
-      refreshRewardData = setInterval(()=>{
+    if (!this.refreshRewardData) {
+      this.refreshRewardData = setInterval(()=>{
         this.getRewardData();
-      }, 15000);
+      }, 60000);
     }
     else {
-      clearInterval(refreshRewardData);
-      refreshRewardData = null;
-      refreshRewardData = setInterval(()=>{
+      clearInterval(this.refreshRewardData);
+      this.refreshRewardData = null;
+      this.refreshRewardData = setInterval(()=>{
         this.getRewardData();
-      }, 15000);
+      }, 60000);
     }
     this.getRewardData();
+  },
+  beforeDestroy() {
+    clearInterval(this.refreshRewardData);
   },
   data() {
     return {
@@ -83,6 +85,7 @@ export default {
         coin: 'KMD',
       },
       table: [],
+      refreshRewardData: null,
     };
   },
   methods: {
