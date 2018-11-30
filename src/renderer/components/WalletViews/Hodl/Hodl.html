@@ -29,7 +29,7 @@
 
   <div id="select-amount" class="row">
     <div class="col-custom input-field row">
-      <span class="title-content">LOCK</span>
+      <span class="title-content">LOCK AMOUNT :</span>
       <input
       @keydown="rawtx = null"
       @keyup.enter="getTx"
@@ -44,7 +44,7 @@
   </div>
 
   <div id="select-amount" class="row">
-    <span class="title-content">FOR</span>
+    <span class="title-content">TIME PERIOD :</span>
     <div class="utrum-select col-custom input-field row" style="justify-content: flex-end;">
       <v-select
       v-model="vestingPeriod"
