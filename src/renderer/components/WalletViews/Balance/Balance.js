@@ -23,8 +23,7 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
 
-var kmdfee = 10000,
-    refreshRewardData = null
+var refreshRewardData = null
 
 export default {
   name: 'balance',
