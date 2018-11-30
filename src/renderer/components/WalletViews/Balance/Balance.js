@@ -55,6 +55,9 @@ export default {
     }
     this.getRewardData();
   },
+  beforeDestroy() {
+    clearInterval(this.refreshRewardData);
+  },
   data() {
     return {
       claimData: {
