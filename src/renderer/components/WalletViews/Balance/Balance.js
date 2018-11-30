@@ -71,7 +71,6 @@ export default {
       kmdfee: 10000,
       displayInterest: true,
       rewards: 0,
-      unixtime: Math.round(new Date().getTime()/1000),
       blocks: 1,
       estimatedFee: 0,
       feeSpeed: 'fast',
@@ -151,7 +150,7 @@ export default {
     buildTx () { // To Do: Call for most up to date reward at build
       console.log('building transaction...')
       var vm = this
-      var timelock = vm.unixtime - 777
+      var timelock = Math.round(new Date().getTime()/1000) - 777
       var utxos = vm.claimData.myUtxos
       var toAddress = vm.claimData.address
       var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
