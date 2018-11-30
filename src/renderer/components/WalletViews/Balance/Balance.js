@@ -67,7 +67,6 @@ export default {
         myUtxos: []
       },
       satoshiNb: 100000000,
-      satoshiConvert: 0.00000001,
       kmdfee: 10000,
       displayInterest: true,
       rewards: 0,
