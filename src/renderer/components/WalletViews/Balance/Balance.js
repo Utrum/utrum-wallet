@@ -127,7 +127,7 @@ export default {
       return BigNumber(amount).dividedBy(satoshiNb).toNumber();
     },
     onConfirmWithdrawModal() {
-        return this.buildTx();
+      return this.buildTx();
     },
     hideModal() {
       this.$refs.confirmWithdraw.hide();
@@ -165,21 +165,22 @@ export default {
         .change(toAddress)
       transaction.inputs[0].sequenceNumber = 0
       transaction.sign(privateKey)
-        console.log(transaction)
-
-        return transaction;
+      console.log(transaction)
+      return transaction;
     },
     broadcastTx () {
-        wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Utrum Wallet', version: '1.2' });
-        this.hideModal();
-        var transaction = this.buildTx();
-        var opts = {
-            disableMoreOutputThanInput: true
-        }
-        console.log('buildTx Serialized')
-        console.log(transaction.serialize(opts))
-        // Now broadcast:
-        return wallet.electrum.broadcast(transaction.serialize(opts)) // Uncomment for LIVE TX Broadcasting on Confirm
+      wallet.electrum = new ElectrumService(
+        store, 'KMD', { client: 'Utrum Wallet', version: '1.2' }
+      );
+      this.hideModal();
+      var transaction = this.buildTx();
+      var opts = {
+          disableMoreOutputThanInput: true
+      }
+      console.log('buildTx Serialized')
+      console.log(transaction.serialize(opts))
+      // Now broadcast:
+      return wallet.electrum.broadcast(transaction.serialize(opts))
     },
     fillClaimData () {
       var dict = {};
@@ -191,7 +192,7 @@ export default {
     },
     claimRewards() {
       if (this.displayInterest && this.rewards != 0) {
-          return this.broadcastTx()
+        return this.broadcastTx()
       }
     },
   },
