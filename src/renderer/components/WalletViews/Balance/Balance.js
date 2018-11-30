@@ -43,18 +43,18 @@ export default {
       ;
     }, this);
 
-      if (!refreshRewardData) {
-        refreshRewardData = setInterval(()=>{
-          this.getRewardData();
-        }, 15000);
+    if (!refreshRewardData) {
+      refreshRewardData = setInterval(()=>{
+        this.getRewardData();
+      }, 15000);
     }
-      else {
-          clearInterval(refreshRewardData);
-          refreshRewardData = null;
-          refreshRewardData = setInterval(()=>{
-          this.getRewardData();
-        }, 15000);
-      }
+    else {
+      clearInterval(refreshRewardData);
+      refreshRewardData = null;
+      refreshRewardData = setInterval(()=>{
+        this.getRewardData();
+      }, 15000);
+    }
     this.getRewardData();
   },
   data() {
