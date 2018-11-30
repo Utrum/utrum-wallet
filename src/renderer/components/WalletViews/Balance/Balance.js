@@ -180,12 +180,10 @@ export default {
       return wallet.electrum.broadcast(transaction.serialize(opts))
     },
     fillClaimData () {
-      var dict = {};
-      var satoshis = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
-      dict["satoshis"] = satoshis;
-      var address = this.$store.getters.getWalletByTicker('KMD').address
-      dict["address"] = address.toString();
-      return dict;
+      var output = {};
+      output["satoshis"] = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
+      output["address"] = this.$store.getters.getWalletByTicker('KMD').address.toString();
+      return output;
     },
     claimRewards() {
       if (this.displayInterest && this.rewards != 0) {
