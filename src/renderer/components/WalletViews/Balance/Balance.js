@@ -171,9 +171,7 @@ export default {
       );
       this.hideModal();
       var transaction = this.buildTx();
-      var opts = {
-          disableMoreOutputThanInput: true
-      }
+      var opts = { disableMoreOutputThanInput: true }
       console.log('buildTx Serialized')
       console.log(transaction.serialize(opts))
       // Now broadcast:
