@@ -71,7 +71,6 @@ export default {
       kmdfee: 10000,
       displayInterest: true,
       rewards: 0,
-      rewarding: 0,
       unixtime: Math.round(new Date().getTime()/1000),
       blocks: 1,
       estimatedFee: 0,
@@ -116,8 +115,7 @@ export default {
           console.log('Something went wrong: ' + err);
         } else {
           this.rewards = data.rewards;
-          this.rewarding = Math.floor(data.rewards * 100000000)
-            console.log('getRewardData function rewards in sats: ', this.rewarding)
+            console.log('getRewardData function rewards:', this.rewards)
         }
       });
     },
@@ -157,7 +155,6 @@ export default {
       var utxos = vm.claimData.myUtxos
       var toAddress = vm.claimData.address
       var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
-      var rewardtotal = vm.rewarding
       var amount = (inputamount - vm.kmdfee)
       var privateKey = this.$store.getters.getWalletByTicker('KMD').privKey
       var transaction = new bitcore.Transaction()
@@ -173,7 +170,7 @@ export default {
         return transaction;
     },
     broadcastTx () {
-        wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Monaize ICO Wallet 0.1', version: '1.2' });
+        wallet.electrum = new ElectrumService(store, 'KMD', { client: 'Utrum Wallet', version: '1.2' });
         this.hideModal();
         var transaction = this.buildTx();
         var opts = {
