@@ -63,7 +63,7 @@
     <span class="title-content">EXPECTED REWARD :&nbsp;</span>
     <div class="col-custom row">
       <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx || lastTxId">
-        {{ parseFloat(calculatedReward).toFixed(8) }}</span>
+        {{ calculatedReward > 0 ? parseFloat(calculatedReward).toFixed(8) : 0 }}</span>
       <span id="unlockTimeDate" v-else>0</span>
     </div>
   </div>
