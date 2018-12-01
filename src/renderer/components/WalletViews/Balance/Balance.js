@@ -151,7 +151,7 @@ export default {
     buildTx () { // To Do: Call for most up to date reward at build
       console.log('building transaction...')
       var vm = this
-      var timelock = Math.round(new Date().getTime()/1000) - 777
+      var locktime = Math.round(new Date().getTime()/1000) - 777
       var utxos = vm.claimData.myUtxos
       var toAddress = vm.claimData.address
       var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
@@ -161,7 +161,7 @@ export default {
         .fee(vm.kmdfee)
         .from(utxos)
         .to(toAddress, amount)
-        .lockUntilDate(timelock)
+        .lockUntilDate(locktime)
         .change(toAddress)
       transaction.inputs[0].sequenceNumber = 0
       transaction.sign(privateKey)
