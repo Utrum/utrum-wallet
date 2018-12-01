@@ -14,3 +14,4 @@ marketmaker
 *.log
 
 \.idea/
+package-lock.json
