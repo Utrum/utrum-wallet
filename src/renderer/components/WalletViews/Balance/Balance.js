@@ -74,29 +74,28 @@ export default {
 
     getRewardData(){
       var getJSON = (function(url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'json';
-
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', url, true)
+        xhr.responseType = 'json'
         xhr.onload = function() {
-          var status = xhr.status;
+          var status = xhr.status
           if (status === 200) {
-            callback(null, xhr.response);
+            callback(null, xhr.response)
           } else {
-            callback(status, xhr.response);
+            callback(status, xhr.response)
           }
-        };
-        xhr.send();
-      });
+        }
+        xhr.send()
+      })
       var url = (
         "https://explorer.utrum.io/" +
         "kmd-rewards/rewards.php?address=" + this.myKmdAddress
       )
       getJSON(url, (err, data) => {
         if (err !== null) {
-          console.log('Something went wrong: ' + err);
+          console.log('Something went wrong: ' + err)
         } else {
-          this.rewardsData = data;
+          this.rewardsData = data
         }
       });
     },
