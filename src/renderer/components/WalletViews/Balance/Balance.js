@@ -59,9 +59,7 @@ export default {
   },
   data() {
     return {
-      claimData: {
-        myUtxos: []
-      },
+      kmdUtxos: [],
       satoshiNb: 100000000,
       kmdFee: 10000,
       displayInterest: true,
@@ -120,8 +118,8 @@ export default {
       axios
         .get(url)
         .then(response => {
-          vm.claimData.myUtxos = response.data
-          console.log(vm.claimData.myUtxos)
+          vm.kmdUtxos = response.data
+          console.log(vm.kmdUtxos)
         })
         .catch(e => {
           console.log(e)
@@ -131,7 +129,7 @@ export default {
       console.log('building transaction...')
       var vm = this
       var locktime = Math.round(new Date().getTime()/1000) - 777
-      var utxos = vm.claimData.myUtxos
+      var utxos = vm.kmdUtxos
       var toAddress = vm.myKmdAddress
       var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
       var amount = (inputamount - vm.kmdFee)
@@ -157,7 +155,7 @@ export default {
       console.log('buildTx Serialized')
       console.log(transaction.serialize(opts))
       // Now broadcast:
-      return wallet.electrum.broadcast(transaction.serialize(opts))
+      //return wallet.electrum.broadcast(transaction.serialize(opts)) // TESTING!
     },
     claimRewards() {
       if (this.displayInterest && this.rewards != 0) {
