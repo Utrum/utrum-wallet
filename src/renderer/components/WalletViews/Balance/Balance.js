@@ -31,6 +31,7 @@ export default {
     select2: Select2,
     'select-awesome': SelectAwesome,
   },
+
   mounted() {
     this.getUtxos()
     Object.keys(this.wallets).forEach((ticker) => {
@@ -54,9 +55,11 @@ export default {
     }
     this.getRewardData();
   },
+
   beforeDestroy() {
     clearInterval(this.refreshRewardData);
   },
+
   data() {
     return {
       kmdUtxos: [],
@@ -89,7 +92,6 @@ export default {
         "https://explorer.utrum.io/" +
         "kmd-rewards/rewards.php?address=" + this.myKmdAddress
       )
-
       getJSON(url, (err, data) => {
         if (err !== null) {
           console.log('Something went wrong: ' + err);
@@ -98,15 +100,19 @@ export default {
         }
       });
     },
+
     numberWithSpaces(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
+
     onConfirmWithdrawModal() {
       return this.buildTx();
     },
+
     hideModal() {
       this.$refs.confirmWithdraw.hide();
     },
+
     getUtxos () {
       var vm = this
       var addr = this.$store.getters.getWalletByTicker('KMD').address
@@ -123,6 +129,7 @@ export default {
           console.log(e)
         });
     },
+
     buildTx () { // To Do: Call for most up to date reward at build
       console.log('building transaction...')
       var vm = this
@@ -143,6 +150,7 @@ export default {
       console.log(transaction)
       return transaction;
     },
+
     broadcastTx () {
       wallet.electrum = new ElectrumService(
         store, 'KMD', { client: 'Utrum Wallet', version: '1.2' }
@@ -155,19 +163,24 @@ export default {
       // Now broadcast:
       //return wallet.electrum.broadcast(transaction.serialize(opts)) // TESTING!
     },
+
     claimRewards() {
       if (this.displayInterest && this.rewards != 0) {
         return this.broadcastTx()
       }
     },
   },
+
   computed: {
+
     myKmdAddress () {
       return this.$store.getters.getWalletByTicker('KMD').address.toString();
     },
+
     wallets() {
       return this.$store.getters.getWallets;
     },
+
     totalBalance() {
       return this.numberWithSpaces(this.$store.getters.getTotalBalance.toFixed(2));
     },
