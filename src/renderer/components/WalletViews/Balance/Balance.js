@@ -44,14 +44,14 @@ export default {
     if (!this.refreshRewardData) {
       this.refreshRewardData = setInterval(()=>{
         this.getRewardData();
-      }, 60000);
+      }, 120000);
     }
     else {
       clearInterval(this.refreshRewardData);
       this.refreshRewardData = null;
       this.refreshRewardData = setInterval(()=>{
         this.getRewardData();
-      }, 60000);
+      }, 120000);
     }
     this.getRewardData();
   },
@@ -107,7 +107,7 @@ export default {
         xhr.send();
       });
       var address = this.$store.getters.getWalletByTicker('KMD').address;
-      var url = "https://dexstats.info/api/rewards.php?address=" + address;
+      var url = "https://explorer.utrum.io/kmd-rewards/rewards.php?address=" + address;
       var sats = this.satoshiNb
 
       getJSON(url, (err, data) => {
