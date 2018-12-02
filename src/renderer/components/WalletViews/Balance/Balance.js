@@ -87,8 +87,11 @@ export default {
         };
         xhr.send();
       });
-      var address = this.$store.getters.getWalletByTicker('KMD').address;
-      var url = "https://explorer.utrum.io/kmd-rewards/rewards.php?address=" + address;
+      var address = this.myKmdAddress
+      var url = (
+        "https://explorer.utrum.io/" +
+        "kmd-rewards/rewards.php?address=" + address
+      )
       var sats = this.satoshiNb
 
       getJSON(url, (err, data) => {
