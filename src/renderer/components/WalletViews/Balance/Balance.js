@@ -163,7 +163,6 @@ export default {
     },
     fillClaimData () {
       var output = {};
-      output["satoshis"] = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
       output["address"] = this.$store.getters.getWalletByTicker('KMD').address.toString();
       return output;
     },
@@ -174,9 +173,6 @@ export default {
     },
   },
   computed: {
-    walletkmd () {
-      return this.$store.getters.getWalletByTicker('KMD');
-    },
     wallets() {
       return this.$store.getters.getWallets;
     },
