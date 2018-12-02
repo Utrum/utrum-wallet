@@ -85,12 +85,10 @@ export default {
         };
         xhr.send();
       });
-      var address = this.myKmdAddress
       var url = (
         "https://explorer.utrum.io/" +
-        "kmd-rewards/rewards.php?address=" + address
+        "kmd-rewards/rewards.php?address=" + this.myKmdAddress
       )
-      var sats = this.satoshiNb
 
       getJSON(url, (err, data) => {
         if (err !== null) {
