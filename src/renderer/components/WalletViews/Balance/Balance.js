@@ -115,7 +115,6 @@ export default {
           console.log('Something went wrong: ' + err);
         } else {
           this.rewards = data.rewards;
-            console.log('getRewardData function rewards:', this.rewards)
         }
       });
     },
