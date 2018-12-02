@@ -65,7 +65,7 @@ export default {
       kmdUtxos: [],
       satoshiNb: 100000000,
       kmdFee: 10000,
-      displayInterest: true,
+      displayKmdRewards: true,
       rewards: 0,
       refreshRewardData: null,
     };
@@ -165,7 +165,7 @@ export default {
     },
 
     claimRewards() {
-      if (this.displayInterest && this.rewards != 0) {
+      if (this.displayKmdRewards && this.rewards != 0) {
         return this.broadcastTx()
       }
     },
