@@ -155,8 +155,8 @@ export default {
       var opts = { disableMoreOutputThanInput: true }
       // broadcast
       console.log("broadcasting serialized transaction...")
-      console.log(transaction.serialize(opts))
-      //return wallet.electrum.broadcast(transaction.serialize(opts))
+      return wallet.electrum.broadcast(transaction.serialize(opts))
+      // TODO show new value for accrued rewards, call getRewardData again
     },
 
     claimRewards() {
