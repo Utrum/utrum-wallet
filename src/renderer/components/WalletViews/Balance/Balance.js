@@ -67,14 +67,6 @@ export default {
       kmdFee: 10000,
       displayInterest: true,
       rewards: 0,
-      blocks: 1,
-      estimatedFee: 0,
-      feeSpeed: 'fast',
-      fees: [
-        { id: 0, label: 'Very fast', speed: 'fast', value: 'veryFast' },
-        { id: 1, label: 'Fast', speed: 'medium', value: 'fast' },
-        { id: 2, label: 'Low', speed: 'slow', value: 'low' },
-      ],
       refreshRewardData: null,
     };
   },
