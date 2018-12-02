@@ -66,7 +66,7 @@ export default {
       satoshiNb: 100000000,
       kmdFee: 10000,
       displayKmdRewards: true,
-      rewards: 0,
+      rewardsData: {},
       refreshRewardData: null,
     };
   },
@@ -96,7 +96,7 @@ export default {
         if (err !== null) {
           console.log('Something went wrong: ' + err);
         } else {
-          this.rewards = data.rewards;
+          this.rewardsData = data;
         }
       });
     },
