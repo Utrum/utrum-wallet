@@ -105,10 +105,6 @@ export default {
     numberWithSpaces(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
-    satoshiToBitcoin(amount) {
-      const satoshiNb = 100000000;
-      return BigNumber(amount).dividedBy(satoshiNb).toNumber();
-    },
     onConfirmWithdrawModal() {
       return this.buildTx();
     },
