@@ -61,10 +61,6 @@ export default {
   data() {
     return {
       claimData: {
-        height: '',
-        scriptAddress: '',
-        redeemScript: '',
-        amount: 0,
         myUtxos: []
       },
       satoshiNb: 100000000,
@@ -79,12 +75,6 @@ export default {
         { id: 1, label: 'Fast', speed: 'medium', value: 'fast' },
         { id: 2, label: 'Low', speed: 'slow', value: 'low' },
       ],
-      withdraw: {
-        amount: null,
-        address: '',
-        coin: 'KMD',
-      },
-      table: [],
       refreshRewardData: null,
     };
   },
