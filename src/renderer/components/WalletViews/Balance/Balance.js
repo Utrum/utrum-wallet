@@ -117,12 +117,10 @@ export default {
       var addr = this.$store.getters.getWalletByTicker('KMD').address
       var explorer = this.$store.getters.getWalletByTicker('KMD').coin.explorer
       var url = explorer + "/insight-api-komodo/addr/" + addr + "/utxo"
-      console.log(url)
       axios
         .get(url)
         .then(response => {
           vm.kmdUtxos = response.data
-          console.log(vm.kmdUtxos)
         })
         .catch(e => {
           console.log(e)
@@ -130,13 +128,11 @@ export default {
     },
 
     buildTx () { // To Do: Call for most up to date reward at build
-      console.log('building transaction...')
       var vm = this
       var locktime = Math.round(new Date().getTime()/1000) - 777
       var utxos = vm.kmdUtxos
       var toAddress = vm.myKmdAddress
       var amount = Math.round(vm.rewardsData.totalBalance)
-      console.log(amount)
       var privateKey = this.$store.getters.getWalletByTicker('KMD').privKey
       var transaction = new bitcore.Transaction()
         .fee(vm.kmdFee)
@@ -146,7 +142,6 @@ export default {
         .change(toAddress)
       transaction.inputs[0].sequenceNumber = 0
       transaction.sign(privateKey)
-      console.log(transaction)
       return transaction;
     },
 
@@ -155,12 +150,13 @@ export default {
         store, 'KMD', { client: 'Utrum Wallet', version: '1.2' }
       );
       this.hideModal();
+      console.log("building transaction...")
       var transaction = this.buildTx();
       var opts = { disableMoreOutputThanInput: true }
-      console.log('buildTx Serialized')
+      // broadcast
+      console.log("broadcasting serialized transaction...")
       console.log(transaction.serialize(opts))
-      // Now broadcast:
-      //return wallet.electrum.broadcast(transaction.serialize(opts)) // TESTING!
+      //return wallet.electrum.broadcast(transaction.serialize(opts))
     },
 
     claimRewards() {
