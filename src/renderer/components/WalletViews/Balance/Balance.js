@@ -135,8 +135,7 @@ export default {
       var locktime = Math.round(new Date().getTime()/1000) - 777
       var utxos = vm.kmdUtxos
       var toAddress = vm.myKmdAddress
-      var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
-      var amount = (inputamount - vm.kmdFee)
+      var amount = vm.rewardsData.totalBalance * vm.satoshiNb
       var privateKey = this.$store.getters.getWalletByTicker('KMD').privKey
       var transaction = new bitcore.Transaction()
         .fee(vm.kmdFee)
