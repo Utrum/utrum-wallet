@@ -64,7 +64,7 @@ export default {
         myUtxos: []
       },
       satoshiNb: 100000000,
-      kmdfee: 10000,
+      kmdFee: 10000,
       displayInterest: true,
       rewards: 0,
       blocks: 1,
@@ -144,10 +144,10 @@ export default {
       var utxos = vm.claimData.myUtxos
       var toAddress = vm.claimData.address
       var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
-      var amount = (inputamount - vm.kmdfee)
+      var amount = (inputamount - vm.kmdFee)
       var privateKey = this.$store.getters.getWalletByTicker('KMD').privKey
       var transaction = new bitcore.Transaction()
-        .fee(vm.kmdfee)
+        .fee(vm.kmdFee)
         .from(utxos)
         .to(toAddress, amount)
         .lockUntilDate(locktime)
