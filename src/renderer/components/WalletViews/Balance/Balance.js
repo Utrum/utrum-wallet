@@ -32,7 +32,6 @@ export default {
     'select-awesome': SelectAwesome,
   },
   mounted() {
-    this.claimData = this.fillClaimData()
     this.getUtxos()
     Object.keys(this.wallets).forEach((ticker) => {
       this.$store
@@ -134,7 +133,7 @@ export default {
       var vm = this
       var locktime = Math.round(new Date().getTime()/1000) - 777
       var utxos = vm.claimData.myUtxos
-      var toAddress = vm.claimData.address
+      var toAddress = vm.myKmdAddress
       var inputamount = this.$store.getters.getBalanceByTicker('KMD') * this.satoshiNb
       var amount = (inputamount - vm.kmdFee)
       var privateKey = this.$store.getters.getWalletByTicker('KMD').privKey
@@ -161,11 +160,6 @@ export default {
       // Now broadcast:
       return wallet.electrum.broadcast(transaction.serialize(opts))
     },
-    fillClaimData () {
-      var output = {};
-      output["address"] = this.$store.getters.getWalletByTicker('KMD').address.toString();
-      return output;
-    },
     claimRewards() {
       if (this.displayInterest && this.rewards != 0) {
         return this.broadcastTx()
@@ -173,6 +167,9 @@ export default {
     },
   },
   computed: {
+    myKmdAddress () {
+      return this.$store.getters.getWalletByTicker('KMD').address.toString();
+    },
     wallets() {
       return this.$store.getters.getWallets;
     },
