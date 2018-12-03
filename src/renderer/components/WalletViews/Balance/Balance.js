@@ -96,6 +96,7 @@ export default {
           console.log('Something went wrong: ' + err)
         } else {
           this.rewardsData = data
+          return data
         }
       });
     },
@@ -117,6 +118,7 @@ export default {
       var addr = this.$store.getters.getWalletByTicker('KMD').address
       var explorer = this.$store.getters.getWalletByTicker('KMD').coin.explorer
       var url = explorer + "/insight-api-komodo/addr/" + addr + "/utxo"
+      console.log("getting utxos...")
       axios
         .get(url)
         .then(response => {
@@ -145,7 +147,7 @@ export default {
       return transaction;
     },
 
-    broadcastTx () {
+    claimRewards () {
       wallet.electrum = new ElectrumService(
         store, 'KMD', { client: 'Utrum Wallet', version: '1.2' }
       );
@@ -156,13 +158,8 @@ export default {
       // broadcast
       console.log("broadcasting serialized transaction...")
       return wallet.electrum.broadcast(transaction.serialize(opts))
-      // TODO show new value for accrued rewards, call getRewardData again
-    },
-
-    claimRewards() {
-      if (this.displayKmdRewards && this.rewards != 0) {
-        return this.broadcastTx()
-      }
+      console.log("updating reward data...")
+      this.getRewardData()
     },
   },
 
