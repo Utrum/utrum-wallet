@@ -19,6 +19,7 @@ import { BigNumber } from 'bignumber.js';
 const moment = require('moment');
 const coins = require('libwallet-mnz').coins;
 const electron = require('electron');
+const { clipboard } = require('electron');
 
 const satoshiNb = 100000000;
 
@@ -56,6 +57,13 @@ export default {
         return value;
       }
       return 0;
+    },
+    copyToClipboard(row) {
+      clipboard.writeText(row.item.tx_hash);
+      this.$toasted.show('Copied !', {
+        duration: 1000,
+        icon: 'done',
+      });
     },
     myRowClickHandler() {
     },
