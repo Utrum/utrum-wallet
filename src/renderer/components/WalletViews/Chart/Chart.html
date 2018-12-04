@@ -9,30 +9,10 @@
       <b-container style="margin-bottom: 7rem;">
         <b-row>
           <b-col>
-            <div class="utrum-select">
-              <div class="flex">
-                <img class="margin-auto sel-icon" v-if="selCoin && selCoin.value == 'kmd'" src="~@/assets/KMD-32x32.png"/>
-                <img class="margin-auto sel-icon" v-if="selCoin && selCoin.value == 'oot'" src="~@/assets/OOT-32x32.png"/>
-                <img class="margin-auto sel-icon" v-if="selCoin && selCoin.value == 'btc'" src="~@/assets/BTC-32x32.png"/>
-              </div>
-              <v-select v-model="selCoin" :options="coins" label="text" :searchable="false" @input="onCoinChange">
-                <template slot="option" slot-scope="option">
-                  <img v-if="option.value == 'kmd'" src="~@/assets/KMD.png"/>
-                  <img v-if="option.value == 'oot'" src="~@/assets/OOT.png"/>
-                  <img v-if="option.value == 'btc'" src="~@/assets/BTC.png"/>
-                  {{ option.text }}
-                </template>
-              </v-select>
-            </div>
+              <select-dropdown default-text="Select" v-model="selCoin" :data="coins" icon-prop="image_url" label-prop="text" :searchable="false" @input="onCoinChange"/>
           </b-col>
           <b-col>
-            <div class="utrum-select no-icon">
-              <v-select v-model="selTime" :options="timeList" label="text" :searchable="false" @input="onTimeChange">
-                <template slot="option" slot-scope="option">
-                  {{ option.text }}
-                </template>
-              </v-select>
-            </div>
+            <select-dropdown default-text="Select" v-model="selTime" :data="timeList" label-prop="text" :searchable="false" @input="onTimeChange"/>
           </b-col>
         </b-row>
       </b-container>

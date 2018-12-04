@@ -1,0 +1,16 @@
+<b-dropdown id="ddown1" variant="utrum-primary" class="utrum-dd-search">
+  <template slot="button-content">
+    <span v-if="selected" :title="selected[labelProp]">
+      <span v-if="iconProp"> <img :src='selected[iconProp]'/></span> {{selected[labelProp]}}
+    </span>
+    <span v-else>
+      {{defaultText}}
+    </span>
+  </template>
+  <b-dropdown-header class="m-0" v-if="searchable">
+    <input type="text" class="form-control" placeholder="Search" v-model="keyword">
+  </b-dropdown-header>
+  <b-dropdown-item v-for="(d, index) in filteredCoins.slice(0, 8)" :key="`data-${index}`" @click="onSelect(d)" v-bind:class="{ 'active': isActive(d) }">
+    <span v-if="iconProp"> <img :src='d[iconProp]'/>&nbsp;</span> {{d[labelProp]}}
+  </b-dropdown-item>
+</b-dropdown>

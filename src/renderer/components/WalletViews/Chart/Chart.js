@@ -1,11 +1,11 @@
 import axios from 'axios'
 import LineChart from '@/components/WalletViews/Chart/LineChart'
-import vSelect from 'vue-select'
+import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
 import moment from 'moment'
 export default {
   components: {
     LineChart,
-    'v-select': vSelect
+    SelectDropdown
   },
   data() {
     return {
@@ -25,15 +25,18 @@ export default {
       selCoin: null,
       coins: [{
           text: 'Utrum (OOT)',
-          value: 'oot'
+          value: 'oot',
+          image_url: require(`@/assets/OOT-32x32.png`)
         },
         {
           text: 'Komodo (KMD)',
-          value: 'kmd'
+          value: 'kmd',
+          image_url: require(`@/assets/KMD-32x32.png`)
         },
         {
-          text: 'Bitcoin',
-          value: 'btc'
+          text: 'Bitcoin (BTC)',
+          value: 'btc',
+          image_url: require(`@/assets/BTC-32x32.png`)
         }
       ],
       timeList: [{
