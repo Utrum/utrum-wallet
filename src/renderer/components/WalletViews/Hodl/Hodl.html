@@ -1,23 +1,21 @@
 <div class="content">
 
-<!-- bootstrap-vue alerts -->
+  <!-- bootstrap-vue alerts -->
   <div>
-    <b-alert
-    variant="danger"
-    dismissible
-    fade
-    :show="showDismissibleAlert"
-    @dismissed="showDismissibleAlert=false">
-      {{alertErrorText}}
+    <b-alert variant="danger"
+             dismissible
+             fade
+             :show="dismissErrorCountDown"
+             @dismissed="dismissErrorCountDown=0"
+             @dismiss-count-down="errorCountDownChanged">
+      {{errorText}}
     </b-alert>
-
-    <b-alert
-    variant="success"
-    dismissible
-    fade
-    :show="dismissCountDown"
-    @dismissed="dismissCountDown=0"
-    @dismiss-count-down="countDownChanged">
+    <b-alert variant="success"
+             dismissible
+             fade
+             :show="dismissAlertCountDown"
+             @dismissed="dismissAlertCountDown=0"
+             @dismiss-count-down="alertCountDownChanged">
       {{alertText}}
     </b-alert>
   </div>
@@ -31,7 +29,7 @@
 
   <div id="select-amount" class="row">
     <div class="col-custom input-field row">
-      <span class="title-content">LOCK</span>
+      <span class="title-content">LOCK AMOUNT :</span>
       <input
       @keydown="rawtx = null"
       @keyup.enter="getTx"
@@ -46,7 +44,7 @@
   </div>
 
   <div id="select-amount" class="row">
-    <span class="title-content">FOR</span>
+    <span class="title-content">TIME PERIOD :</span>
     <div class="utrum-select col-custom input-field row" style="justify-content: flex-end;">
       <v-select
       v-model="vestingPeriod"
@@ -61,11 +59,11 @@
     </div>
   </div>
 
-  <br><div id="select-block" class="row">
+  <div id="select-amount" class="row">
     <span class="title-content">EXPECTED REWARD :&nbsp;</span>
     <div class="col-custom row">
       <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx || lastTxId">
-        {{ parseFloat(calculatedReward).toFixed(8) }}</span>
+        {{ calculatedReward > 0 ? parseFloat(calculatedReward).toFixed(8) : 0 }}</span>
       <span id="unlockTimeDate" v-else>0</span>
     </div>
   </div>

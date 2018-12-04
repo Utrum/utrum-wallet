@@ -307,9 +307,9 @@ export default {
     },
     canSend(){
       if(
-        this.withdraw.amount && 
-        this.withdraw.address && 
-        this.withdraw.amount.trim() != "" &&
+        this.withdraw.amount &&
+        this.withdraw.address &&
+        this.withdraw.amount != "" &&
         this.withdraw.address.trim() != "" &&
         this.withdraw.amount > 0
       ){

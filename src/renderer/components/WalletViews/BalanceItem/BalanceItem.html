@@ -6,7 +6,10 @@
       <img class="margin-auto sel-icon" v-if="wallet.ticker == 'BTC'" src="~@/assets/BTC-32x32.png"/>
       {{wallet.ticker}}
     </h4>
-    <h4 id="balance-item">{{numberWithSpaces(wallet.balance).toString()}}</h4>
+    <h4 v-if="wallet.ticker == 'BTC'" id="balance-item">
+      {{wallet.balance > 0 ? wallet.balance.toFixed(6) : 0}}</h4>
+    <h4 v-else id="balance-item">
+      {{wallet.balance > 0 ? wallet.balance.toFixed(2) : 0}}</h4>
     <p id="us-dollar" class="col-header"><img src="~@/assets/icon-usdollar.svg"/> {{numberWithSpaces(wallet.balance_usd.toFixed(2))}} (USD)</p>
   </div>
   <div class="d-flex flex-row justify-content-end">

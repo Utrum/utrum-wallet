@@ -48,13 +48,14 @@ export default {
         { key: 'time', label: 'Date'},
         { key: 'txid', label: 'TxID' },
       ],
+
       // boostrap-vue related
       timer: null,
       dismissSecs: 20,
-      dismissCountDown: 0,
-      showDismissibleAlert: false,
+      dismissAlertCountDown: 0,
+      dismissErrorCountDown: 0,
       alertText: '',
-      alertErrorText: ''
+      errorText: ''
     };
   },
 
@@ -338,15 +339,13 @@ export default {
         .then(response => {
           var txid = response.data.txid
           console.log('txid:', txid)
-          vm.alertText = 'Hodl deposit and reward unlocked!'
-          vm.showAlert()
+          vm.showAlert("Hodl deposit and reward unlocked!")
           // re-schedule refresh timer
-          this.scheduleTxHistoryTimer(vm.dismissSecs * 1000)
+          vm.scheduleTxHistoryTimer(vm.dismissSecs * 1000)
         })
         .catch(e => {
-          console.log(e)
-          vm.alertErrorText = (e.toString())
-          vm.showDismissibleAlert=true
+          vm.showError(e.toString())
+          throw e.toString()
         });
     },
 
@@ -376,9 +375,8 @@ export default {
           vm.broadcastTx(rawTx)
         })
         .catch(e => {
-          console.log(e)
-          vm.alertErrorText = (e.toString())
-          vm.showDismissibleAlert=true
+          vm.showError(e.toString())
+          throw e.toString()
         });
     },
 
@@ -394,11 +392,19 @@ export default {
     },
 
     // boostrap-vue related
-    countDownChanged (dismissCountDown) {
-      this.dismissCountDown = dismissCountDown
+    alertCountDownChanged (n) {
+      this.dismissAlertCountDown = n
     },
-    showAlert () {
-      this.dismissCountDown = this.dismissSecs
+    errorCountDownChanged (n) {
+      this.dismissErrorCountDown = n
+    },
+    showAlert (msg) {
+      this.dismissAlertCountDown = this.dismissSecs
+      this.alertText = msg
+    },
+    showError(msg) {
+      this.dismissErrorCountDown = this.dismissSecs
+      this.errorText = msg
     }
 
   },
