@@ -5,7 +5,7 @@
       <h6 id="str-current-balances" class="col-custom sub-title">CURRENT BALANCE</h6>
     </div>
   </div>
-
+  
   <div class="row">
     
     <select-dropdown default-text="Select" 
@@ -21,7 +21,7 @@
          id="card-current-balance"
          class="justify-content-end align-items-center float-right">
       <div>
-        <span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span>
+        <span id="value-current-balance"><full-amount-viewer :amount="getBalance"/></span>
         <span>{{select}}</span>
       </div>
       <div style="font-size: 16px;">

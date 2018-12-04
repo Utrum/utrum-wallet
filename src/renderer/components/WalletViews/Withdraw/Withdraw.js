@@ -18,6 +18,7 @@ import bitcoinjs from 'bitcoinjs-lib';
 import { QrcodeReader } from 'vue-qrcode-reader';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
+import FullAmountViewer from '@/components/FullAmountViewer/FullAmountViewer.vue';
 import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
 import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
@@ -27,6 +28,7 @@ const { clipboard } = require('electron');
 export default {
   name: 'withdraw',
   components: {
+    FullAmountViewer,
     SelectDropdown,
     'transaction-history': TransactionHistory,
     'select-awesome': SelectAwesome,

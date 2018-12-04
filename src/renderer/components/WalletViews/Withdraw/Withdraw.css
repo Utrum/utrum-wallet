@@ -171,6 +171,11 @@
   text-align: right;
   font-size: 1.5em;
 }
+#card-current-balance >>> .amount-second-section{
+  font-size: 0.65em;
+  color: #acacac;
+  margin-left: -3px;
+}
 
 #add-coin {
   color: #0C6AA8 !important;
