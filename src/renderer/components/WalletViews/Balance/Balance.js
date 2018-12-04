@@ -174,9 +174,7 @@ export default {
     },
 
     totalBalance() {
-      return this.numberWithSpaces(
-        this.$store.getters.getTotalBalance.toFixed(2)
-      );
+      return this.$store.getters.getTotalBalance.toFixed(2)
     },
   },
 };
