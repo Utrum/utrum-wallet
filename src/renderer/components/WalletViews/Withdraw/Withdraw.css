@@ -308,3 +308,8 @@
 #qrcode {
   margin-top: 15px;
 }
+
+.utrum-dd-search{
+  max-width: 250px;
+  height: 45px;
+}
