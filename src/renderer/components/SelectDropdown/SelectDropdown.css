@@ -24,6 +24,7 @@
  box-shadow: none !important;
 }
 .utrum-dd-search .dropdown-menu{
+  padding: 0px;
   left: -2px !important;
   min-width: calc(100% + 4px);
 }
