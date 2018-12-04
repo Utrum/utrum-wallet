@@ -101,10 +101,6 @@ export default {
       });
     },
 
-    numberWithSpaces(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
-
     onConfirmWithdrawModal() {
       return this.buildTx();
     },
