@@ -29,7 +29,7 @@
         </template>
         <template slot="tx_hash" slot-scope="row">
             <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
-                <button class="btn btn-tx pointer" id="btn-tx-id" v-on:click="openTxExplorer(row)">{{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
+                <button class="btn btn-tx pointer" id="btn-tx-id" v-on:click="openTxExplorer(row)">{{row.value.substring(0,2)}}...{{row.value.substring(row.value.length-2,row.value.length)}}</button>
             </div>
         </template>
     </b-table>

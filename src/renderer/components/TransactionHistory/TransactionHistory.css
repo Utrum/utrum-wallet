@@ -41,7 +41,6 @@
 
 .tx-history #btn-tx-id {
   border-radius: 10px;
-  width: 90px;
   font-size: small;
 }
 
@@ -53,6 +52,7 @@
   background-color: #079cd8;
   border-color: white;
   color: white;
+  padding: 5px;
 }
 
 .tx-history .btn-tx:hover {
