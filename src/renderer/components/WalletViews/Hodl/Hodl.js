@@ -18,7 +18,7 @@ import bitcoinjs from 'bitcoinjs-lib';
 import { BigNumber } from 'bignumber.js';
 import bitcore from 'bitcore-lib';
 import axios from 'axios';
-import vSelect from 'vue-select'
+import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
 
 const { clipboard } = require('electron');
 const { shell } = require('electron');
@@ -30,7 +30,7 @@ export default {
   name: 'hodl',
   components: {
     'hodl-history': HodlHistory,
-    'v-select': vSelect
+    SelectDropdown
   },
 
   mounted () {

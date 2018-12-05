@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  <div id="select-amount" class="row">
+  <div id="select-amount" class="row mt-30">
     <div class="col-custom input-field row">
       <span class="title-content">LOCK AMOUNT :</span>
       <input
@@ -43,23 +43,19 @@
     </div>
   </div>
 
-  <div id="select-amount" class="row">
+  <div id="select-amount" class="row mt-30">
     <span class="title-content">TIME PERIOD :</span>
     <div class="utrum-select col-custom input-field row" style="justify-content: flex-end;">
-      <v-select
-      v-model="vestingPeriod"
-      :options="timeList"
-      label="text"
-      :searchable="false"
-      @input="onTimeChange">
-        <template slot="option" slot-scope="option">
-          {{ option.text }}
-        </template>
-      </v-select>
+      <select-dropdown default-text="Select" 
+        v-model="vestingPeriod" 
+        :data="timeList"
+        label-prop="text"
+        :searchable="false"
+        @input="onTimeChange"/>
     </div>
   </div>
 
-  <div id="select-amount" class="row">
+  <div id="select-amount" class="row mt-30">
     <span class="title-content">EXPECTED REWARD :&nbsp;</span>
     <div class="col-custom row">
       <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx || lastTxId">
