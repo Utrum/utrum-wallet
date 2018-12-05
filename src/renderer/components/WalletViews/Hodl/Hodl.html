@@ -46,16 +46,12 @@
   <div id="select-amount" class="row">
     <span class="title-content">TIME PERIOD :</span>
     <div class="utrum-select col-custom input-field row" style="justify-content: flex-end;">
-      <v-select
-      v-model="vestingPeriod"
-      :options="timeList"
-      label="text"
-      :searchable="false"
-      @input="onTimeChange">
-        <template slot="option" slot-scope="option">
-          {{ option.text }}
-        </template>
-      </v-select>
+      <select-dropdown default-text="Select" 
+        v-model="vestingPeriod" 
+        :data="timeList"
+        label-prop="text"
+        :searchable="false"
+        @input="onTimeChange"/>
     </div>
   </div>
 
