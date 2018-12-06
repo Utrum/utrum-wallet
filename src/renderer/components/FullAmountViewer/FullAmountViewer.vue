@@ -32,11 +32,11 @@ export default {
     splitNumber(){
       let strInput = this.amount.toString()
       if(strInput.indexOf(".") > -1){
-        this.firstSection = Number(strInput.slice(0, strInput.indexOf('.')+3))
-        this.secondSection = Number(strInput.slice(strInput.indexOf('.')+3))
+        this.firstSection = strInput.slice(0, strInput.indexOf('.')+3)
+        this.secondSection = strInput.slice(strInput.indexOf('.')+3)
       }
       else{
-        this.firstSection = this.amount.toNumber()
+        this.firstSection = Number(this.amount)
         this.secondSection = 0
       }
     }
