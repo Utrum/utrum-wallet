@@ -63,15 +63,15 @@
     },
     "mac": {
       "icon": "build/icons/512x512.png",
-      "artifactName": "utrum-wallet-${version}-${env.WALLET_ENV}-mac.${ext}"
+      "artifactName": "utrum-wallet-${version}-mac.${ext}"
     },
     "win": {
       "icon": "build/icons/512x512.png",
-      "artifactName": "utrum-wallet-${version}-${env.WALLET_ENV}-setup.${ext}"
+      "artifactName": "utrum-wallet-${version}-setup.${ext}"
     },
     "linux": {
       "icon": "build/icons",
-      "artifactName": "utrum-wallet-${version}-${env.WALLET_ENV}-x86_64.${ext}"
+      "artifactName": "utrum-wallet-${version}-x86_64.${ext}"
     }
   },
   "dependencies": {
