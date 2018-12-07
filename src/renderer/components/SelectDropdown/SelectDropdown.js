@@ -1,5 +1,6 @@
 export default {
   name: 'select-dropdown',
+
   props: {
     'data': {
       default: [],
@@ -30,20 +31,24 @@ export default {
       type: String
     }
   },
+
   data(){
     return {
       selected: null,
       keyword: ''
     }
   },
+
   created(){
     this.selected = this.value;
   },
+
   watch:{
     value: function(val){
       if(!this.selected) this.selected = val; //set selected value if not already set
     }
   },
+
   methods:{
     onSelect(d){
       this.selected = d
@@ -61,18 +66,26 @@ export default {
       }
     }
   },
+
   computed: {
     filteredCoins: function () {
       if(this.keyword && this.keyword.trim() != ""){
-          return this.data.filter(val => {
-            if(val[this.labelProp] && val[this.labelProp].toLowerCase().includes(this.keyword)){
-              return true
-            }
-            else return false
+        return this.data.filter(val => {
+          if(
+            val[this.labelProp] &&
+            val[this.labelProp].toLowerCase().includes(this.keyword)
+          ){
+            return true
           }
-        )
+          else {
+            return false
+          }
+        })
       }
-      else return this.data
+      else {
+        return this.data
+      }
     }
   }
+
 }
