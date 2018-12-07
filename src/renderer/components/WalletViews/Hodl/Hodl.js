@@ -36,15 +36,13 @@ export default {
   mounted () {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
-    this.updateUnlockTime()
-    this.vestingPeriod = this.timeList[0]
   },
 
   data () {
     return {
       hodlInput: {
         amount: null,
-        daysToLock: 0
+        daysToLock: null
       },
       hodlData: {
         unlockTime: '',
@@ -58,7 +56,6 @@ export default {
       satoshiNb: 100000000,
       blocks: 1,
       selectedCoin: 'OOT',
-      vestingPeriod: null,
       timeList: [
         {
           text: '15 minutes',
@@ -82,8 +79,8 @@ export default {
     // vue-select stuff
     onTimeChange(selectedOption) {
       if (selectedOption) {
-          this.hodlInput.daysToLock = selectedOption.value
-          this.hodlCreate()
+        this.hodlInput.daysToLock = selectedOption.value
+        this.hodlCreate()
       }
     },
 
