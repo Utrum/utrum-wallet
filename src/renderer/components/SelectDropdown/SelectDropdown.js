@@ -6,15 +6,15 @@ export default {
       default: [],
       type: Array
     },
-    'defaultText':{
+    'defaultText': {
       default: 'Select',
       type: String
     },
-    'labelProp':{
+    'labelProp': {
       default: 'label',
       type: String
     },
-    'iconProp':{
+    'iconProp': {
       default: null,
       type: String
     },
@@ -69,12 +69,11 @@ export default {
 
   computed: {
     filteredCoins: function () {
-      if(this.keyword && this.keyword.trim() != ""){
+      if( this.keyword && this.keyword.trim() != "" ){
+        let label = val[this.labelProp]
+        let labelIncludesKeyword = label.toLowerCase().includes(this.keyword)
         return this.data.filter(val => {
-          if(
-            val[this.labelProp] &&
-            val[this.labelProp].toLowerCase().includes(this.keyword)
-          ){
+          if ( label && labelIncludesKeyword ) {
             return true
           } else {
             return false
