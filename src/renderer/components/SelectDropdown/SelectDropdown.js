@@ -76,13 +76,11 @@ export default {
             val[this.labelProp].toLowerCase().includes(this.keyword)
           ){
             return true
-          }
-          else {
+          } else {
             return false
           }
         })
-      }
-      else {
+      } else {
         return this.data
       }
     }
