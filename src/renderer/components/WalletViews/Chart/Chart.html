@@ -1,24 +1,37 @@
 <div class="content">
-    <div class="error-message" v-if="showError">
-      {{ errorMessage }}
-    </div>
-    <div v-if="loading" class="loading">
-      <i class="fas fa-cogs"/>  building charts...
-    </div>
-    <div class="Chart__container" style="width:95%" v-show="loaded">
-      <b-container style="margin-bottom: 7rem;">
-        <b-row>
-          <b-col>
-              <select-dropdown default-text="Select" v-model="selCoin" :data="coins" icon-prop="image_url" label-prop="text" :searchable="false" @input="onCoinChange"/>
-          </b-col>
-          <b-col>
-            <select-dropdown default-text="Select" v-model="selTime" :data="timeList" label-prop="text" :searchable="false" @input="onTimeChange"/>
-          </b-col>
-        </b-row>
-      </b-container>
-      <div class="Chart__content" v-if="loaded">
-        <line-chart chart-id="line-daily" :chart-data="prices" :chart-labels="labels" @generate="setLinePng"/>
-      </div>
+  <div class="error-message" v-if="showError">
+    {{ errorMessage }}
+  </div>
+  <div v-if="loading" class="loading">
+    <i class="fas fa-cogs"/>  building charts...
+  </div>
+  <div class="Chart__container" style="width:95%" v-show="loaded">
+    <b-container style="margin-bottom: 7rem;">
+      <b-row>
+        <b-col>
+          <select-dropdown default-text="Select"
+                           v-model="selCoin"
+                           :data="coins"
+                           icon-prop="image_url"
+                           label-prop="text"
+                           :searchable="false"
+                           @input="onCoinChange"/>
+        </b-col>
+        <b-col>
+          <select-dropdown default-text="Select"
+                           v-model="selTime"
+                           :data="timeList"
+                           label-prop="text"
+                           :searchable="false"
+                           @input="onTimeChange"/>
+        </b-col>
+      </b-row>
+    </b-container>
+    <div class="Chart__content" v-if="loaded">
+      <line-chart chart-id="line-daily"
+                  :chart-data="prices"
+                  :chart-labels="labels"
+                  @generate="setLinePng"/>
     </div>
   </div>
-  </div>
+</div>
