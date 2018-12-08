@@ -44,7 +44,8 @@
 
   <div id="select-amount" class="row mt-30">
     <span class="title-content">TIME PERIOD :</span>
-    <div class="utrum-select col-custom input-field row" style="justify-content: flex-end;">
+    <div class="utrum-select col-custom input-field row"
+         style="justify-content: flex-end;">
       <select-dropdown default-text="Select"
                        :data="timeList"
                        label-prop="text"
@@ -57,7 +58,8 @@
     <span class="title-content">EXPECTED REWARD :&nbsp;</span>
     <div class="col-custom row">
       <span id="unlockTimeDate" v-if="hodlInput.amount || rawtx || lastTxId">
-        {{ calculatedReward > 0 ? parseFloat(calculatedReward).toFixed(8) : 0 }}</span>
+        {{ calculatedReward > 0 ? parseFloat(calculatedReward).toFixed(8) : 0 }}
+      </span>
       <span id="unlockTimeDate" v-else>0</span>
     </div>
   </div>
