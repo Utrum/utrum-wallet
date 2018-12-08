@@ -36,6 +36,8 @@ export default {
   mounted () {
     // initialize hodl wallet
     this.hodlData = this.fillHodlData()
+    // set default value for "time period"
+    this.onTimeChange(this.timeList[0])
   },
 
   data () {
