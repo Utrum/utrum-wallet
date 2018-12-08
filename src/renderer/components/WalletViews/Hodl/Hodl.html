@@ -30,14 +30,13 @@
   <div id="select-amount" class="row mt-30">
     <div class="col-custom input-field row">
       <span class="title-content">LOCK AMOUNT :</span>
-      <input
-      @keydown="rawtx = null"
-      @keyup.enter="getTx"
-      type="number"
-      id="amount"
-      v-model.number="hodlInput.amount"
-      class="col-custom input-field"
-      placeholder="Amount">
+      <input @keydown="rawtx = null"
+             @keyup.enter="getTx"
+             type="number"
+             id="amount"
+             v-model.number="hodlInput.amount"
+             class="col-custom input-field"
+             placeholder="Amount">
         <span id="number-input">{{ selectedCoin }}</span>
       </input>
     </div>
@@ -46,12 +45,11 @@
   <div id="select-amount" class="row mt-30">
     <span class="title-content">TIME PERIOD :</span>
     <div class="utrum-select col-custom input-field row" style="justify-content: flex-end;">
-      <select-dropdown
-        default-text="Select"
-        :data="timeList"
-        label-prop="text"
-        :searchable="false"
-        @input="onTimeChange"/>
+      <select-dropdown default-text="Select"
+                       :data="timeList"
+                       label-prop="text"
+                       :searchable="false"
+                       @input="onTimeChange"/>
     </div>
   </div>
 
@@ -68,12 +66,11 @@
 
 
   <div class="btn-center">
-    <button
-    v-on:click="getTx"
-    :disabled="rawtx && !lastTxId || (calculatedReward == 0)"
-    id="sendcoins"
-    class="btn sendcoins"
-    type="button">
+    <button v-on:click="getTx"
+            :disabled="rawtx && !lastTxId || (calculatedReward == 0)"
+            id="sendcoins"
+            class="btn sendcoins"
+            type="button">
       Lock Funds
     </button>
   </div>
@@ -91,10 +88,10 @@
     <hr id="second-line"/>
     <div class="btn-center">
       <button v-on:click="submitTx"
-      :disabled="!rawtx"
-      id="sendcoins"
-      class="btn sendcoins"
-      type="button">
+              :disabled="!rawtx"
+              id="sendcoins"
+              class="btn sendcoins"
+              type="button">
         Confirm
       </button>
     </div>
@@ -102,10 +99,9 @@
   </div> <!-- conditional rendering -->
 
   <br>
-  <hodl-history
-    id="hodlHistory"
-    :wallet="wallet"
-    :lastTxId="lastTxId">
+  <hodl-history id="hodlHistory"
+                :wallet="wallet"
+                :lastTxId="lastTxId">
   </hodl-history>
 
 </div>
