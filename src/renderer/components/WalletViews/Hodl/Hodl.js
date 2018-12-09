@@ -202,7 +202,7 @@ export default {
         disableDustOutputs: true
       }
 
-      // workaround to insight's non confirmed utxos bug
+      // workaround to insight/komodod non-confirmed-utxos bug
       let myScriptPubkey = new bitcore.Script()
         .add('OP_DUP')
         .add('OP_HASH160')
