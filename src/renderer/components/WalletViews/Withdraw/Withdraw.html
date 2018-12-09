@@ -7,34 +7,40 @@
   </div>
 
   <div class="row">
-    
-    <select-dropdown default-text="Select" 
-                     v-model="selectNew" 
+
+    <select-dropdown default-text="Select"
+                     v-model="selectNew"
                      :data="coinsNew"
                      icon-prop="image_url"
                      label-prop="label"
                      unique-key-prop="ticker"
                      :searchable="false"
                      @input="updateNewCoin"/>
-    
+
     <div @click="onMaxSelected()"
          id="card-current-balance"
          class="justify-content-end align-items-center float-right">
-      <div>
-        <span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span>
-        <span>{{select}}</span>
+      <div v-if="getBalance > 0">
+        <span id="value-current-balance">{{getBalance.toString().slice(0, -6)}}</span>
+        <span id="extra-decimals">{{getBalance.toString().substr(-6)}}</span>
+        <span>({{select}})</span>
       </div>
-      <div style="font-size: 16px;">
+      <div v-else>
+        <span id="value-current-balance">{{getBalance.toString()}}</span>
+        <span>({{select}})</span>
+      </div>
+      <div>
         <span id="us-dollar" class="col-header">$ {{getUSDAmount.toString()}} (USD)</span>
       </div>
     </div>
+
   </div>
 
   <div id="select-amount" class="row">
     <div class="w-100">
         <div class="col-custom input-field row">
           <span class="title-content">AMOUNT</span>
-          <input type="number" id="amount" v-model.number="amount" class="col-custom input-field" placeholder="Amount">
+          <input type="number" id="amount" v-model.number="amount" class="col-custom input-field" placeholder="Enter amount">
           <span id="current-coin"> {{select}}</span>
       </div>
     </div>
