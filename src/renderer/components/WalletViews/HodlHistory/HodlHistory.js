@@ -131,7 +131,8 @@ export default {
           // for gui, custom "amount" format
           if (
             items[item].isHodlTx === false &&
-            items[item].isHodlSpend === false) {
+            items[item].isHodlSpend === false)
+          {
             if ( this.wallet.address !== items[item].destAddr ){
               items[item].formattedAmount = String(items[item].sentAmount * -1)
             } else {
