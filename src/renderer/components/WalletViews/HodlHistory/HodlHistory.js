@@ -170,6 +170,10 @@ export default {
       var destAddr = tx.vout[0].scriptPubKey.addresses[0]
       var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
       var isSpent = tx.vout[0].spentHeight > 0 ? true : false
+      var sentAmount = parseFloat(tx.vout[0].value)
+
+
+
 
       // TESTING STUFF
       console.log("vin address:")
@@ -182,7 +186,9 @@ export default {
         } catch (e) { }
       }
       console.log("------------------")
-      var sentAmount = parseFloat(tx.vout[0].value)
+
+
+
 
       // create output object
       var newTx = {
@@ -195,9 +201,6 @@ export default {
         "timeNow": vm.timeNow(),
         "sentAmount": sentAmount
       }
-
-      console.log(newTx)
-
       Object.assign(newTx, tx)
 
       // read opreturn label
