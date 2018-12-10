@@ -1,16 +1,15 @@
 <div>
     <b-table  id="txTable"
-    thead-tr-class="theadTrClass"
-    tbody-tr-class="theadClass"
-    thead-class="theadClass borderBottom"
-    small
-    :sort-desc.sync="sortDesc"
-    :sort-by.sync="sortBy"
-    :fields="fields"
-    :items="txHistory"
-    :current-page="currentPage"
-    :per-page="perPage"
-    >
+              thead-tr-class="theadTrClass"
+              tbody-tr-class="theadClass"
+              thead-class="theadClass borderBottom"
+              small
+              :sort-desc.sync="sortDesc"
+              :sort-by.sync="sortBy"
+              :fields="fields"
+              :items="txHistory"
+              :current-page="currentPage"
+              :per-page="perPage">
         <template slot="time" slot-scope="row">
             <span>{{dateFormat(row.value)}}</span>
         </template>
@@ -29,13 +28,21 @@
         </template>
         <template slot="tx_hash" slot-scope="row">
             <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
-                <button class="btn btn-tx pointer" id="btn-tx-id" v-on:click="openTxExplorer(row)">{{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
-                <button class="btn btn-tx pointer" id="btn-logo" @click.prevent="copyToClipboard(row)">
+                <button class="btn btn-tx pointer"
+                        id="btn-tx-id"
+                        v-on:click="openTxExplorer(row)">{{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
+                <button class="btn btn-tx pointer"
+                        id="btn-logo"
+                        @click.prevent="copyToClipboard(row)">
                     <i class="far fa-copy"></i>
                 </button>
             </div>
         </template>
     </b-table>
 
-    <b-pagination align="center" :total-rows="txHistory.length" :per-page="perPage" v-model="currentPage" class="my-0" />
+    <b-pagination align="center"
+                  :total-rows="txHistory.length"
+                  :per-page="perPage"
+                  v-model="currentPage"
+                  class="my-0" />
 </div>
