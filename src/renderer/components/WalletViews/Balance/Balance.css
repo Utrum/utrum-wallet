@@ -19,6 +19,10 @@
   margin: 0;
 }
 
+.mb-5 {
+  margin-bottom: 2rem!important;
+}
+
 h5{
   font-weight: 300;
   color: #0D0032;
