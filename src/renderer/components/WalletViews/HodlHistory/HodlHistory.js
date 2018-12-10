@@ -167,47 +167,36 @@ export default {
         vm.wallet.coin.explorer + 'tx/' +
         tx.txid
       )
-      var destAddr = tx.vout[0].scriptPubKey.addresses[0]
-      var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
-      var isSpent = tx.vout[0].spentHeight > 0 ? true : false
-      //var sentAmount = parseFloat(tx.vout[0].value)
-
 
 
 
       // TESTING STUFF
 
-      console.log("vin address:")
-      console.log(tx.vin[0].addr)
-
       // determine if transaction was created by us
       let isMine = false
+      let destAddr = vm.wallet.address
       if ( vm.wallet.address === tx.vin[0].addr ) {
-        console.log("is mine!")
         isMine = true
+        destAddr = tx.vout[0].scriptPubKey.addresses[0]
       }
 
-      console.log("vout addresses:")
       // get sent amount
       let sentAmount = Number(0)
       for (var i in tx.vout) {
         try {
           let voutAddr = tx.vout[i].scriptPubKey.addresses[0]
           let voutValue = Number(tx.vout[i].value)
-          console.log(voutAddr)
-          console.log(voutValue)
+          // determine sent amount
           if ( isMine == true && voutAddr != vm.wallet.address) {
             sentAmount += voutValue
-          }
-          if ( isMine == false && voutAddr === vm.wallet.address ) {
+          } else if ( isMine == false && voutAddr === vm.wallet.address ) {
             sentAmount += voutValue
           }
         } catch (e) { }
       }
-      console.log("SENT AMOUNT:")
-      console.log(sentAmount)
 
-      console.log("------------------")
+      var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
+      var isSpent = tx.vout[0].spentHeight > 0 ? true : false
 
 
 
