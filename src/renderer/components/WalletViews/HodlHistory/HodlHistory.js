@@ -29,11 +29,6 @@ export default {
   props: ['wallet', 'lastTxId'],
   data() {
     return {
-      txsUrlBase: (
-        this.wallet.coin.explorer +
-        "insight-api-komodo/addrs/" +
-        this.wallet.address +
-        "/txs"),
       totalRows: 10,
       transactions: [],
       sortBy: '',
@@ -171,7 +166,7 @@ export default {
       // determine if transaction was created by us
       let isMine = false
       let destAddr = vm.wallet.address
-      if ( vm.wallet.address === tx.vin[0].addr ) {
+      if ( tx.vin.length > 0 && vm.wallet.address === tx.vin[0].addr ) {
         isMine = true
         destAddr = tx.vout[0].scriptPubKey.addresses[0] // TODO improve logic
       }
@@ -433,6 +428,17 @@ export default {
   },
 
   computed: {
+    txsUrlBase () {
+      let coinExplorer = this.wallet.coin.explorer
+      if ( coinExplorer.slice(-1) !== '/') {
+        coinExplorer += '/'
+      }
+      return ( coinExplorer +
+      "insight-api-komodo/addrs/" +
+      this.wallet.address +
+      "/txs")
+    },
+
     txsUrl () {
       var currentPage = this.currentPage - 1
       var fromItem = 0
