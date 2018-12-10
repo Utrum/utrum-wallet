@@ -170,21 +170,43 @@ export default {
       var destAddr = tx.vout[0].scriptPubKey.addresses[0]
       var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
       var isSpent = tx.vout[0].spentHeight > 0 ? true : false
-      var sentAmount = parseFloat(tx.vout[0].value)
+      //var sentAmount = parseFloat(tx.vout[0].value)
 
 
 
 
       // TESTING STUFF
+
       console.log("vin address:")
       console.log(tx.vin[0].addr)
-      console.log("vout addresses:")
 
+      // determine if transaction was created by us
+      let isMine = false
+      if ( vm.wallet.address === tx.vin[0].addr ) {
+        console.log("is mine!")
+        isMine = true
+      }
+
+      console.log("vout addresses:")
+      // get sent amount
+      let sentAmount = Number(0)
       for (var i in tx.vout) {
         try {
-          console.log(tx.vout[i].scriptPubKey.addresses[0])
+          let voutAddr = tx.vout[i].scriptPubKey.addresses[0]
+          let voutValue = Number(tx.vout[i].value)
+          console.log(voutAddr)
+          console.log(voutValue)
+          if ( isMine == true && voutAddr != vm.wallet.address) {
+            sentAmount += voutValue
+          }
+          if ( isMine == false && voutAddr === vm.wallet.address ) {
+            sentAmount += voutValue
+          }
         } catch (e) { }
       }
+      console.log("SENT AMOUNT:")
+      console.log(sentAmount)
+
       console.log("------------------")
 
 
