@@ -129,10 +129,9 @@ export default {
           // add hodl related data to transactions
           items[item] = vm.analyzeTx(items[item])
           // for gui, custom "amount" format
-          if (
-            items[item].isHodlTx === false &&
-            items[item].isHodlSpend === false) {
-            if ( this.wallet.address !== items[item].destAddr ){
+          if ( items[item].isHodlTx === false &&
+               items[item].isHodlSpend === false ) {
+            if ( this.wallet.address !== items[item].destAddr ) {
               items[item].formattedAmount = String(items[item].sentAmount * -1)
             } else {
               items[item].formattedAmount = '+' + items[item].sentAmount
@@ -168,10 +167,35 @@ export default {
         vm.wallet.coin.explorer + 'tx/' +
         tx.txid
       )
-      var destAddr = tx.vout[0].scriptPubKey.addresses[0]
+
+      // determine if transaction was created by us
+      let isMine = false
+      let destAddr = vm.wallet.address
+      if ( vm.wallet.address === tx.vin[0].addr ) {
+        isMine = true
+        destAddr = tx.vout[0].scriptPubKey.addresses[0] // TODO improve logic
+      }
+
+      // get sent amount
+      let sentAmount = Number(0)
+      let isSpent = false
+      for (var i in tx.vout) {
+        try {
+          let voutAddr = tx.vout[i].scriptPubKey.addresses[0]
+          let voutValue = Number(tx.vout[i].value)
+          // determine sent amount
+          if ( isMine == true && voutAddr != vm.wallet.address) {
+            sentAmount += voutValue
+          } else if ( isMine == false && voutAddr === vm.wallet.address ) {
+            sentAmount += voutValue
+          }
+          // determine if this "transaction" can be marked as spent
+          if ( tx.vout[i].spentHeight > 0 ) { isSpent = true }
+        } catch (e) { }
+      }
+
+      // determine if sent to script address instead of normal address
       var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
-      var isSpent = tx.vout[0].spentHeight > 0 ? true : false
-      var sentAmount = parseFloat(tx.vout[0].value)
 
       // create output object
       var newTx = {
@@ -184,7 +208,6 @@ export default {
         "timeNow": vm.timeNow(),
         "sentAmount": sentAmount
       }
-
       Object.assign(newTx, tx)
 
       // read opreturn label
