@@ -168,10 +168,6 @@ export default {
         tx.txid
       )
 
-
-
-      // TESTING STUFF
-
       // determine if transaction was created by us
       let isMine = false
       let destAddr = vm.wallet.address
@@ -182,6 +178,7 @@ export default {
 
       // get sent amount
       let sentAmount = Number(0)
+      let isSpent = false
       for (var i in tx.vout) {
         try {
           let voutAddr = tx.vout[i].scriptPubKey.addresses[0]
@@ -192,14 +189,13 @@ export default {
           } else if ( isMine == false && voutAddr === vm.wallet.address ) {
             sentAmount += voutValue
           }
+          // determine if this "transaction" can be marked as spent
+          if ( tx.vout[i].spentHeight > 0 ) { isSpent = true }
         } catch (e) { }
       }
 
+      // determine if sent to script address instead of normal address
       var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
-      var isSpent = tx.vout[0].spentHeight > 0 ? true : false
-
-
-
 
       // create output object
       var newTx = {
