@@ -68,6 +68,14 @@
     <button :disabled="!canSend" @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
   </div>
 
+<!-- testing -->
+  <br>
+  <hodl-history id="hodlHistory"
+                :wallet="wallet"
+                >
+  </hodl-history>
+<!-- testing -->
+
   <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">
     <transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
   </div>
