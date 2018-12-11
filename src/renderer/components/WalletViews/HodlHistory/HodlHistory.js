@@ -26,7 +26,7 @@ const satoshiNb = 100000000;
 
 export default {
   name: 'hodl-history',
-  props: ['wallet', 'lastTxId'],
+  props: ['wallet', 'reload'],
   data() {
     return {
       totalRows: 10,
@@ -55,9 +55,8 @@ export default {
   },
 
   watch: {
-    lastTxId: function () {
-      if ( this.lastTxId != null ) {
-        console.log("new lastTxId")
+    reload: function () {
+      if ( this.reload != null ) {
         this.scheduleTxHistoryTimer(2000)
       }
     }
@@ -358,7 +357,7 @@ export default {
           var txid = response.data.txid
           console.log('txid:', txid)
           vm.showAlert("Hodl deposit and reward unlocked!")
-          // re-schedule refresh timer
+          // re-schedule lastTxId timer
           vm.scheduleTxHistoryTimer(vm.dismissSecs * 1000)
         })
         .catch(e => {
