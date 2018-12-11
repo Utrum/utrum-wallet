@@ -433,8 +433,10 @@ export default {
       if ( coinExplorer.slice(-1) !== '/') {
         coinExplorer += '/'
       }
+      let ticker = this.wallet.ticker
+      let apiPath = ticker === 'BTC' ? 'api' : 'insight-api-komodo'
       return ( coinExplorer +
-      "insight-api-komodo/addrs/" +
+      apiPath + "/addrs/" +
       this.wallet.address +
       "/txs")
     },
