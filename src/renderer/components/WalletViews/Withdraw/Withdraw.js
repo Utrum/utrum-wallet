@@ -70,8 +70,20 @@ export default {
         coin: 'OOT',
       },
       history: [],
+      reloadTxHistory: null
     };
   },
+
+  watch: {
+    select: function () {
+      console.log("=====================")
+      console.log("select:", this.select)
+      // reload transaction history
+      let timestamp = Date.now() // necessary
+      this.reloadTxHistory = [100, timestamp]
+    }
+  },
+
   methods: {
     onMaxSelected() {
       this.withdraw.amount = this.getBalance;
@@ -157,8 +169,9 @@ export default {
       this.select = value;
     },
     updateNewCoin(value) {
-      if(value)
+      if (value) {
         this.updateCoin(value.ticker)
+      }
     },
     prepareTx() {
       // Number here because of bitcoinjs incapacity to use Big types.
@@ -245,7 +258,6 @@ export default {
       return this.$store.getters.enabledCoins.map(coin => coin.ticker ).filter( coin => coin != 'BTC');
     },
     coinsNew() {
-      console.log("computing coninsNew");
       return this.$store.getters.enabledCoins.map(coin => {
         let tempObj = {
           ticker: coin.ticker,

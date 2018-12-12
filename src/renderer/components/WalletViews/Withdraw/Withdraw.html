@@ -85,7 +85,10 @@
 
 <!-- testing -->
   <br>
-  <hodl-history id="hodlHistory" :wallet="wallet"></hodl-history>
+  <hodl-history id="hodlHistory"
+                :wallet="wallet"
+                :reload="reloadTxHistory">
+  </hodl-history>
 <!-- testing -->
 
   <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">
