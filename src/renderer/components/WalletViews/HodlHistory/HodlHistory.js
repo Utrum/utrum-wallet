@@ -57,7 +57,13 @@ export default {
   watch: {
     reload: function () {
       if ( typeof this.reload !== 'undefined' ) {
-        this.scheduleTxHistoryTimer(this.reload[0])
+        var vm = this
+        // beware: calling scheduleTxHistoryTimer results
+        // in eventual infinite loops, don't do that
+        clearInterval(vm.timer)
+        // delay refreshing for the given time in milliseconds
+        setTimeout(function(){vm.refreshTable();}, vm.reload[0]);
+        vm.scheduleTxHistoryTimer(60000)
       }
     }
   },
@@ -65,7 +71,7 @@ export default {
   methods: {
     cancelTxHistoryTimer () {
       //cancel if already running
-      if(this.timer){
+      if (this.timer) {
         clearInterval(this.timer)
         this.timer = null
       }
@@ -107,9 +113,7 @@ export default {
     },
 
     txHistory () {
-      //resolve exising tx data if request in already in progress
       console.log(`getting transaction history...`)
-
       var vm = this
 
       let url = vm.txsUrl
