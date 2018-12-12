@@ -246,7 +246,9 @@ export default {
           console.log(response.data)
           if (!response.data.error) {
             vm.lastTxId = response.data.txid
-            vm.reloadTxHistory = 2000
+            // reload transaction history
+            let d = new Date() ; let t = d.getTime() // necessary
+            vm.reloadTxHistory = [1000, t]
             // boostrap-vue alert
             vm.showAlert("Funds locked successfully!")
           } else {

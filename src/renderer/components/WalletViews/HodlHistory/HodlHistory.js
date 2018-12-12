@@ -56,9 +56,10 @@ export default {
 
   watch: {
     reload: function () {
-      if ( this.reload != null ) {
-        this.scheduleTxHistoryTimer(this.reload)
-        this.reload = null
+      if ( typeof this.reload !== 'undefined' ) {
+        console.log("HodlHistory.js:")
+        console.log(this.reload)
+        this.scheduleTxHistoryTimer(this.reload[0])
       }
     }
   },
