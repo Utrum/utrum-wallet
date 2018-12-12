@@ -54,6 +54,7 @@ export default {
       unlockTimeDate: '',
       rawtx: null,
       lastTxId: null,
+      reloadTxHistory: null,
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
@@ -245,6 +246,7 @@ export default {
           console.log(response.data)
           if (!response.data.error) {
             vm.lastTxId = response.data.txid
+            vm.reloadTxHistory = 2000
             // boostrap-vue alert
             vm.showAlert("Funds locked successfully!")
           } else {
