@@ -26,7 +26,7 @@ const satoshiNb = 100000000;
 
 export default {
   name: 'hodl-history',
-  props: ['wallet', 'reload'],
+  props: ['wallet', 'reload', 'parent'],
   data() {
     return {
       totalRows: 10,
@@ -37,10 +37,10 @@ export default {
       perPage: 10,
       isBusy: false,
       fields: [
-        //{ key: 'confirmations', label: 'Conf' },
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'time', label: 'Date'},
+        { key: 'confirmations', label: 'Conf' },
         { key: 'txid', label: 'TxID' },
       ],
 
