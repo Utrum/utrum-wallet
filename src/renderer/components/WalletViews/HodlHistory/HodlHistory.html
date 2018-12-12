@@ -56,16 +56,11 @@
             <span>{{dateFormat(row.value)}}</span>
         </template>
 
-<!--
-        <template slot="fromAddr" slot-scope="row">
-            <span style="font-size: small;">{{ row.value }}</span>
-        </template>
--->
 
         <template slot="nLockTime" slot-scope="data">
             <span v-if="data.item.nLockTime > data.item.timeNow"
                   class="hodlRed">
-              {{ dateFormat(data.item.nLockTime) }}
+              Locked until {{ dateFormat(data.item.nLockTime) }}
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === false"
                   @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
@@ -80,9 +75,16 @@
                   class="hodlGray">
               Reward
             </span>
-            <span v-else-if="!data.item.isMine">
+            <span v-else-if="!data.item.isMine && data.item.fromAddr">
               From
               <span style="font-size: small;">{{ data.item.fromAddr }}</span>
+            </span>
+            <span v-else-if="data.item.isMine">
+              To
+              <span style="font-size: small;">{{ data.item.destAddr }}</span>
+            </span>
+            <span v-else-if="!data.item.isMine && !data.item.fromAddr">
+              From unknown address
             </span>
         </template>
 
@@ -97,11 +99,11 @@
                 {{ data.item.formattedAmount }}
             </div>
             <div v-else-if="data.item.isHodlTx"
-                 class="hodlGray">
+                 class="normalTxColor">
                 {{ data.item.formattedAmount }}
             </div>
             <div v-else
-                 class="normalTxColor">
+                 class="hodlGray">
                 {{ data.item.formattedAmount }}
             </div>
         </template>
