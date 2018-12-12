@@ -176,9 +176,13 @@ export default {
       // determine if transaction was created by us
       let isMine = false
       let destAddr = vm.wallet.address
-      if ( tx.vin.length > 0 && vm.wallet.address === tx.vin[0].addr ) {
-        isMine = true
-        destAddr = tx.vout[0].scriptPubKey.addresses[0] // TODO improve logic
+      let fromAddr = null
+      if ( tx.vin.length > 0 ) {
+        if ( vm.wallet.address === tx.vin[0].addr ) {
+          isMine = true
+          destAddr = tx.vout[0].scriptPubKey.addresses[0] //TODO improve logic
+        }
+        fromAddr = tx.vin[0].addr
       }
 
       // get sent amount
@@ -207,10 +211,12 @@ export default {
       var newTx = {
         "explorerUrl": explorerUrl,
         "destAddr": destAddr,
+        "fromAddr": fromAddr,
         "isSentToScript": isSentToScript,
         "isHodlTx": false,
         "isHodlSpend": false,
         "isSpent": isSpent,
+        "isMine": isMine,
         "timeNow": vm.timeNow(),
         "sentAmount": sentAmount
       }

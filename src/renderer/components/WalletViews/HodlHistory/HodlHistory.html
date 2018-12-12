@@ -36,6 +36,7 @@
   <div v-if="parent === 'withdraw'"> <!-- conditional rendering -->
     <hr class="mb-0"/>
 
+
     <b-table  id="txTable"
               thead-tr-class="theadTrClass"
               tbody-tr-class="theadClass"
@@ -50,10 +51,16 @@
               ref="txTable"
               :busy.sync="isBusy">
 
+
         <template slot="time" slot-scope="row">
             <span>{{dateFormat(row.value)}}</span>
         </template>
 
+<!--
+        <template slot="fromAddr" slot-scope="row">
+            <span style="font-size: small;">{{ row.value }}</span>
+        </template>
+-->
 
         <template slot="nLockTime" slot-scope="data">
             <span v-if="data.item.nLockTime > data.item.timeNow"
@@ -73,8 +80,9 @@
                   class="hodlGray">
               Reward
             </span>
-            <span v-else>
-              Normal Transaction
+            <span v-else-if="!data.item.isMine">
+              From
+              <span style="font-size: small;">{{ data.item.fromAddr }}</span>
             </span>
         </template>
 
