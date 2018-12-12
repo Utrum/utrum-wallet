@@ -40,10 +40,17 @@ export default {
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
         { key: 'formattedAmount', label: 'Amount' },
         { key: 'time', label: 'Date'},
+        { key: 'txid', label: 'TxID' },
+      ],
+      // the template dedicated to parent "withdraw"
+      // will use the following fields instead
+      fieldsWithdraw: [
+        { key: 'nLockTime', label: 'Details', sortable: false },
+        { key: 'formattedAmount', label: 'Amount' },
+        { key: 'time', label: 'Date'},
         { key: 'confirmations', label: 'Conf' },
         { key: 'txid', label: 'TxID' },
       ],
-
       // boostrap-vue related
       timer: null,
       dismissSecs: 20,
