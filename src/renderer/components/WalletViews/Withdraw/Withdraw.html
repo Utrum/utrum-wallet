@@ -21,8 +21,8 @@
          id="card-current-balance"
          class="justify-content-end align-items-center float-right">
       <div v-if="getBalance > 0">
-        <span id="value-current-balance">{{ getBalance.toString().replace(/^(\d+\.\d\d)(.*)/, '$1') }}</span>
-        <span id="extra-decimals">{{ getBalance.toString().replace(/^(\d+\.\d\d)(.*)/, '$2') }}</span>
+        <span id="value-current-balance">{{ getBalance.toString().replace(/^(\d+\.?\d\d)(.*)/, '$1') }}</span>
+        <span id="extra-decimals">{{ getBalance.toString().replace(/^(\d+\.?\d\d)(.*)/, '$2') }}</span>
         <span>({{ select }})</span>
       </div>
       <div v-else>
