@@ -217,6 +217,7 @@ export default {
             this.withdraw.amount = null;
             this.withdraw.address = '';
             alert(this, response);
+            this.reloadTransactionHistory(700);
           })
           .catch(error => {
             if (error.__type !== null && BigNumber(this.withdraw.amount).comparedTo(21000000) === 1) {
