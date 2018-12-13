@@ -115,7 +115,7 @@ export default {
       const blockchainDateUtc = moment.utc(time * 1000)
       const dateString = moment(blockchainDateUtc)
         .local()
-        .format('MMM DD, hh:mm a')
+        .format('DD MMM, hh:mm a')
       return dateString
     },
 
