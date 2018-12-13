@@ -159,7 +159,7 @@ export default {
       console.log("broadcasting serialized transaction...")
       console.log(wallet.electrum.broadcast(transaction.serialize(opts)))
       console.log("updating reward data...")
-      this.getRewardData()
+      setTimeout(function(){this.getRewardData();}, 1000);
     },
   },
 
