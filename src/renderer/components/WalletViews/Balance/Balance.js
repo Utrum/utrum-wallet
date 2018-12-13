@@ -64,7 +64,7 @@ export default {
     return {
       kmdUtxos: [],
       satoshiNb: 100000000,
-      kmdFee: 10000,
+      kmdFee: 20000,
       displayKmdRewards: true,
       rewardsData: {},
       refreshRewardData: null,
