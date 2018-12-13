@@ -68,7 +68,7 @@
               Claim!
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
-                  class="normalTxColor">
+                  class="hodlLightGray">
               Hold Complete 🎉
             </span>
             <span v-else-if="data.item.isHodlSpend === true"
@@ -101,7 +101,7 @@
                 {{ data.item.formattedAmount }}
             </div>
             <div v-else-if="data.item.isHodlTx"
-                 class="normalTxColor">
+                 class="hodlLightGray">
                 {{ data.item.formattedAmount }}
             </div>
             <div v-else-if="/^\+/.test(data.item.formattedAmount)"
@@ -199,7 +199,7 @@
                 {{ data.item.formattedAmount }}
             </div>
             <div v-else
-                 class="normalTxColor">
+                 class="hodlLightGray">
                 {{ data.item.formattedAmount }}
             </div>
         </template>
