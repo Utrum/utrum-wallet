@@ -54,6 +54,7 @@ export default {
       unlockTimeDate: '',
       rawtx: null,
       lastTxId: null,
+      reloadTxHistory: null,
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
@@ -78,6 +79,12 @@ export default {
   },
 
   methods: {
+    // reload transaction history child component
+    reloadTransactionHistory (milisec) {
+      let timestamp = Date.now() // necessary
+      this.reloadTxHistory = [milisec, timestamp]
+    },
+
     // vue-select stuff
     onTimeChange(selectedOption) {
       if (selectedOption) {
@@ -245,6 +252,8 @@ export default {
           console.log(response.data)
           if (!response.data.error) {
             vm.lastTxId = response.data.txid
+            // reload transaction history
+            this.reloadTransactionHistory(1000)
             // boostrap-vue alert
             vm.showAlert("Funds locked successfully!")
           } else {

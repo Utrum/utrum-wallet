@@ -26,14 +26,9 @@ const satoshiNb = 100000000;
 
 export default {
   name: 'hodl-history',
-  props: ['wallet', 'lastTxId'],
+  props: ['wallet', 'reload', 'parent'],
   data() {
     return {
-      txsUrlBase: (
-        this.wallet.coin.explorer +
-        "insight-api-komodo/addrs/" +
-        this.wallet.address +
-        "/txs"),
       totalRows: 10,
       transactions: [],
       sortBy: '',
@@ -42,13 +37,20 @@ export default {
       perPage: 10,
       isBusy: false,
       fields: [
-        //{ key: 'confirmations', label: 'Conf' },
+        { key: 'time', label: 'Date' },
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
         { key: 'formattedAmount', label: 'Amount' },
-        { key: 'time', label: 'Date'},
         { key: 'txid', label: 'TxID' },
       ],
-
+      // the template dedicated to parent "withdraw"
+      // will use the following fields instead
+      fieldsWithdraw: [
+        { key: 'time', label: 'Date' },
+        { key: 'nLockTime', label: 'Info', sortable: false },
+        { key: 'formattedAmount', label: 'Amount' },
+        { key: 'confirmations', label: 'Conf' },
+        { key: 'txid', label: 'TxID' },
+      ],
       // boostrap-vue related
       timer: null,
       dismissSecs: 20,
@@ -60,10 +62,15 @@ export default {
   },
 
   watch: {
-    lastTxId: function () {
-      if ( this.lastTxId != null ) {
-        console.log("new lastTxId")
-        this.scheduleTxHistoryTimer(2000)
+    reload: function () {
+      if ( typeof this.reload !== 'undefined' ) {
+        var vm = this
+        // beware: calling scheduleTxHistoryTimer results
+        // in eventual infinite loops, don't do that
+        clearInterval(vm.timer)
+        // delay refreshing for the given time in milliseconds
+        setTimeout(function(){vm.refreshTable();}, vm.reload[0]);
+        vm.scheduleTxHistoryTimer(60000)
       }
     }
   },
@@ -71,7 +78,7 @@ export default {
   methods: {
     cancelTxHistoryTimer () {
       //cancel if already running
-      if(this.timer){
+      if (this.timer) {
         clearInterval(this.timer)
         this.timer = null
       }
@@ -108,14 +115,12 @@ export default {
       const blockchainDateUtc = moment.utc(time * 1000)
       const dateString = moment(blockchainDateUtc)
         .local()
-        .format('hh:mm a, MM/DD')
+        .format('DD MMM, hh:mm a')
       return dateString
     },
 
     txHistory () {
-      //resolve exising tx data if request in already in progress
       console.log(`getting transaction history...`)
-
       var vm = this
 
       let url = vm.txsUrl
@@ -171,14 +176,17 @@ export default {
       // determine if transaction was created by us
       let isMine = false
       let destAddr = vm.wallet.address
-      if ( vm.wallet.address === tx.vin[0].addr ) {
-        isMine = true
-        destAddr = tx.vout[0].scriptPubKey.addresses[0] // TODO improve logic
+      let fromAddr = null
+      if ( tx.vin.length > 0 ) {
+        if ( vm.wallet.address === tx.vin[0].addr ) {
+          isMine = true
+          destAddr = tx.vout[0].scriptPubKey.addresses[0] //TODO improve logic
+        }
+        fromAddr = tx.vin[0].addr
       }
 
       // get sent amount
       let sentAmount = Number(0)
-      let isSpent = false
       for (var i in tx.vout) {
         try {
           let voutAddr = tx.vout[i].scriptPubKey.addresses[0]
@@ -189,22 +197,26 @@ export default {
           } else if ( isMine == false && voutAddr === vm.wallet.address ) {
             sentAmount += voutValue
           }
-          // determine if this "transaction" can be marked as spent
-          if ( tx.vout[i].spentHeight > 0 ) { isSpent = true }
         } catch (e) { }
       }
 
       // determine if sent to script address instead of normal address
       var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
 
+      // determine if first hodl deposit may be marked as spent
+      let vout0SH = tx.vout[0].spentHeight
+      let isSpent = isSentToScript && ( vout0SH > 0 ) ? true : false
+
       // create output object
       var newTx = {
         "explorerUrl": explorerUrl,
         "destAddr": destAddr,
+        "fromAddr": fromAddr,
         "isSentToScript": isSentToScript,
         "isHodlTx": false,
         "isHodlSpend": false,
         "isSpent": isSpent,
+        "isMine": isMine,
         "timeNow": vm.timeNow(),
         "sentAmount": sentAmount
       }
@@ -363,7 +375,7 @@ export default {
           var txid = response.data.txid
           console.log('txid:', txid)
           vm.showAlert("Hodl deposit and reward unlocked!")
-          // re-schedule refresh timer
+          // re-schedule lastTxId timer
           vm.scheduleTxHistoryTimer(vm.dismissSecs * 1000)
         })
         .catch(e => {
@@ -433,6 +445,19 @@ export default {
   },
 
   computed: {
+    txsUrlBase () {
+      let coinExplorer = this.wallet.coin.explorer
+      if ( coinExplorer.slice(-1) !== '/') {
+        coinExplorer += '/'
+      }
+      let ticker = this.wallet.ticker
+      let apiPath = ticker === 'BTC' ? 'api' : 'insight-api-komodo'
+      return ( coinExplorer +
+      apiPath + "/addrs/" +
+      this.wallet.address +
+      "/txs")
+    },
+
     txsUrl () {
       var currentPage = this.currentPage - 1
       var fromItem = 0

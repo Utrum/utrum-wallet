@@ -1,7 +1,7 @@
 {
   "name": "utrum-wallet",
   "version": "2.0.0",
-  "author": "./LEGAL/AUTHORS",
+  "author": "Utrum Foundation",
   "description": "Utrum Wallet",
   "license": "GPL-2.0",
   "main": "./dist/electron/main.js",

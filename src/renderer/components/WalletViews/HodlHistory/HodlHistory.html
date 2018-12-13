@@ -1,36 +1,145 @@
 <div>
 
-    <!-- bootstrap-vue alerts -->
-    <div>
-      <b-alert variant="danger"
-               dismissible
-               fade
-               :show="dismissErrorCountDown"
-               @dismissed="dismissErrorCountDown=0"
-               @dismiss-count-down="errorCountDownChanged">
-        {{errorText}}
-      </b-alert>
-      <b-alert variant="success"
-               dismissible
-               fade
-               :show="dismissAlertCountDown"
-               @dismissed="dismissAlertCountDown=0"
-               @dismiss-count-down="alertCountDownChanged">
-        {{alertText}}
-        Refreshing in {{dismissAlertCountDown}} seconds...
-      </b-alert>
-    </div>
+  <!-- bootstrap-vue alerts -->
+  <div>
+    <b-alert variant="danger"
+             dismissible
+             fade
+             :show="dismissErrorCountDown"
+             @dismissed="dismissErrorCountDown=0"
+             @dismiss-count-down="errorCountDownChanged">
+      {{errorText}}
+    </b-alert>
+    <b-alert variant="success"
+             dismissible
+             fade
+             :show="dismissAlertCountDown"
+             @dismissed="dismissAlertCountDown=0"
+             @dismiss-count-down="alertCountDownChanged">
+      {{alertText}}
+      Refreshing in {{dismissAlertCountDown}} seconds...
+    </b-alert>
+  </div>
 
-    <!-- table -->
-    <div class="title-sec text-left">
-        <span>HISTORY</span>
-        <b-button size="sm"
-                  variant="link"
-                  @click="refreshTable"
-                  class="float-right">
-            <i class="fas fa-sync"></i>
-        </b-button>
-    </div>
+
+  <div class="title-sec text-left">
+    <span>HISTORY</span>
+    <b-button size="sm"
+      variant="link"
+      @click="refreshTable"
+      class="float-right">
+      <i class="fas fa-sync"></i>
+    </b-button>
+  </div>
+
+  <!-- send page version -->
+  <div v-if="parent === 'withdraw'"> <!-- conditional rendering -->
+    <hr class="mb-0"/>
+
+
+    <b-table  id="txTable"
+              thead-tr-class="theadTrClass"
+              tbody-tr-class="theadClass"
+              thead-class="theadClass borderBottom"
+              small
+              :sort-desc.sync="sortDesc"
+              :sort-by.sync="sortBy"
+              :fields="fieldsWithdraw"
+              :items="txHistory"
+              :current-page="currentPage"
+              :per-page="perPage"
+              ref="txTable"
+              :busy.sync="isBusy">
+
+
+        <template slot="time" slot-scope="row">
+            <span>{{dateFormat(row.value)}}</span>
+        </template>
+
+
+        <template slot="nLockTime" slot-scope="data">
+            <span v-if="data.item.nLockTime > data.item.timeNow"
+                  class="hodlRed">
+              Locked until {{ dateFormat(data.item.nLockTime) }}
+            </span>
+            <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === false"
+                  @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
+                  class="btn btn-tx">
+              Claim!
+            </span>
+            <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
+                  class="hodlLightGray">
+              Hold Complete 🎉
+            </span>
+            <span v-else-if="data.item.isHodlSpend === true"
+                  class="hodlLightGray">
+              Reward
+            </span>
+            <span v-else-if="!data.item.isMine && data.item.fromAddr"
+                  class="hodlGray">
+              From
+              <span style="font-size: small;">{{ data.item.fromAddr }}</span>
+            </span>
+            <span v-else-if="data.item.isMine"
+                  class="hodlGray">
+              To
+              <span style="font-size: small;">{{ data.item.destAddr }}</span>
+            </span>
+            <span v-else-if="!data.item.isMine && !data.item.fromAddr">
+              From unknown address
+            </span>
+        </template>
+
+
+        <template slot="formattedAmount" slot-scope="data">
+            <div v-if="data.item.isHodlSpend"
+                 class="hodlGreen">
+                {{ data.item.formattedAmount }}
+            </div>
+            <div v-else-if="data.item.isHodlTx && !data.item.isSpent && data.item.nLockTime < data.item.timeNow"
+                 class="hodlOrange">
+                {{ data.item.formattedAmount }}
+            </div>
+            <div v-else-if="data.item.isHodlTx"
+                 class="hodlLightGray">
+                {{ data.item.formattedAmount }}
+            </div>
+            <div v-else-if="/^\+/.test(data.item.formattedAmount)"
+                 class="hodlGreen">
+                {{ data.item.formattedAmount }}
+            </div>
+            <div v-else-if="/^\-/.test(data.item.formattedAmount)"
+                 class="hodlRed">
+                {{ data.item.formattedAmount }}
+            </div>
+        </template>
+
+
+        <template slot="confirmations" slot-scope="row">
+            <span id="confirmations">{{ row.value || '0' }}</span>
+        </template>
+
+
+        <template slot="txid" slot-scope="row">
+            <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
+                <button class="btn btn-tx pointer"
+                        id="btn-tx-id"
+                        :explorer="row.explorer"
+                        @click="openTxExplorer(row)">
+                    {{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
+                <button class="btn btn-tx pointer"
+                        id="btn-logo"
+                        @click.prevent="copyToClipboard(row)">
+                  <i class="far fa-copy btn-copy-link"></i>
+                </button>
+            </div>
+        </template>
+    </b-table>
+  </div> <!-- conditional rendering -->
+
+
+  <!-- hodl page version (default) -->
+  <div v-else> <!-- conditional rendering -->
     <hr class="mb-0"/>
 
     <b-table  id="txTable"
@@ -90,16 +199,11 @@
                 {{ data.item.formattedAmount }}
             </div>
             <div v-else
-                 class="normalTxColor">
+                 class="hodlLightGray">
                 {{ data.item.formattedAmount }}
             </div>
         </template>
 
-<!--
-        <template slot="confirmations" slot-scope="row">
-            <span id="confirmations">{{ row.value || '0' }}</span>
-        </template>
--->
 
         <template slot="txid" slot-scope="row">
             <div id="btn-group-tx" class="d-flex flex-row justify-content-center w-100">
@@ -117,10 +221,11 @@
         </template>
     </b-table>
 
-    <b-pagination-nav align="center"
-                      :number-of-pages="Math.round(this.totalRows/perPage)"
-                      v-model="currentPage"
-                      :link-gen="linkGen"
-                      class="my-0"/>
+  </div> <!-- conditional rendering -->
 
+  <b-pagination-nav align="center"
+                    :number-of-pages="Math.round(this.totalRows/perPage)"
+                    v-model="currentPage"
+                    :link-gen="linkGen"
+                    class="my-0"/>
 </div>

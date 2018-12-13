@@ -21,13 +21,13 @@
          id="card-current-balance"
          class="justify-content-end align-items-center float-right">
       <div v-if="getBalance > 0">
-        <span id="value-current-balance">{{getBalance.toString().slice(0, -6)}}</span>
-        <span id="extra-decimals">{{getBalance.toString().substr(-6)}}</span>
-        <span>({{select}})</span>
+        <span id="value-current-balance">{{ getBalance.toString().replace(/^(\d+)(\.\d\d?)?(.*)/, '$1$2') }}</span>
+        <span id="extra-decimals">{{ getBalance.toString().replace(/^(\d+)(\.\d\d?)?(.*)/, '$3') }}</span>
+        <span>({{ select }})</span>
       </div>
       <div v-else>
-        <span id="value-current-balance">{{getBalance.toString()}}</span>
-        <span>({{select}})</span>
+        <span id="value-current-balance">{{ getBalance.toString() }}</span>
+        <span>({{ select }})</span>
       </div>
       <div>
         <span id="us-dollar" class="col-header">$ {{getUSDAmount.toString()}} (USD)</span>
@@ -40,7 +40,11 @@
     <div class="w-100">
         <div class="col-custom input-field row">
           <span class="title-content">AMOUNT</span>
-          <input type="number" id="amount" v-model.number="amount" class="col-custom input-field" placeholder="Enter amount">
+          <input type="number"
+                 id="amount"
+                 v-model.number="amount"
+                 class="col-custom input-field"
+                 placeholder="Enter amount">
           <span id="current-coin"> {{select}}</span>
       </div>
     </div>
@@ -54,8 +58,14 @@
 
   <div class="row">
     <span class="title-content">{{select}} ADDRESS</span>
-    <input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter recipient address">
-    <button id="readerQrcode" v-b-modal="'readerQrcodeModal'" @click="readingQRCode = !readingQRCode">
+    <input v-model="withdraw.address"
+           type="text"
+           class="col-custom input-field"
+           id="addr"
+           placeholder="Enter recipient address">
+    <button id="readerQrcode"
+            v-b-modal="'readerQrcodeModal'"
+            @click="readingQRCode = !readingQRCode">
       <img src="~@/assets/icon-scan-qrcode.svg">
     </button>
 
@@ -65,18 +75,48 @@
   </div>
 
   <div class="btn-center">
-    <button :disabled="!canSend" @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
+    <button :disabled="!canSend"
+            @click="onConfirmWithdrawModal"
+            v-b-modal="'confirmWithdraw'"
+            id="sendcoins"
+            class="btn sendcoins"
+            type="button">SEND</button>
   </div>
 
+
+  <br><br>
+  <hodl-history id="hodlHistory"
+                :wallet="wallet"
+                :reload="reloadTxHistory"
+                :parent="'withdraw'">
+  </hodl-history>
+
+<!--
   <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">
-    <transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
+    <transaction-history id="transactionHistory" :coin="wallet.coin">
+    </transaction-history>
   </div>
+-->
 
-  <b-modal size="sm" :hide-header="true" :hide-footer="true" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
-    <qrcode-reader id="qrcode" :video-constraints="videoConstraints" @decode="onDecode" :paused="paused" v-if="readingQRCode" @init="onInit"></qrcode-reader>
+  <b-modal size="sm"
+           :hide-header="true"
+           :hide-footer="true"
+           @hide="readingQRCode = false"
+           id="readerQrcodeModal"
+           centered>
+    <qrcode-reader id="qrcode"
+                   :video-constraints="videoConstraints"
+                   @decode="onDecode"
+                   :paused="paused"
+                   v-if="readingQRCode"
+                   @init="onInit">
+    </qrcode-reader>
   </b-modal>
 
-  <b-modal @ok="withdrawFunds()" ref="confirmWithdraw" id="confirmWithdraw" centered>
+  <b-modal @ok="withdrawFunds()"
+           ref="confirmWithdraw"
+           id="confirmWithdraw"
+           centered>
     <div slot="modal-header" class="headerModalBuy">
       <h2>WITHDRAWAL</h2>
     </div>
@@ -99,7 +139,12 @@
         <div class="row" v-if="wallet.coin.ticker.indexOf('BTC') >= 0">
           <span class="subTitle">Transaction fees</span>
           <div class="col-custom row-main-item">
-            <select-awesome @change="onFeeChange" :value="fees[0].label" :fees="fees" id="selectAwesome" class="col-custom"></select-awesome>
+            <select-awesome @change="onFeeChange"
+                            :value="fees[0].label"
+                            :fees="fees"
+                            id="selectAwesome"
+                            class="col-custom">
+            </select-awesome>
             <div class="col-custom"><hr></div>
           </div>
         </div>
@@ -119,8 +164,14 @@
       </div>
     </div>
     <div slot="modal-footer" class="row footerBuyModal">
-      <button @click="hideModal" slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
-      <button @click="withdrawFunds()" slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
+      <button @click="hideModal"
+              slot="modal-cancel"
+              id="cancel"
+              class="col-custom btn-round-light">Cancel</button>
+      <button @click="withdrawFunds()"
+              slot="modal-ok"
+              id="confirm"
+              class="col-custom btn-round-light">Confirm</button>
     </div>
   </b-modal>
 </div>

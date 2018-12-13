@@ -17,6 +17,7 @@
 import bitcoinjs from 'bitcoinjs-lib';
 import { QrcodeReader } from 'vue-qrcode-reader';
 import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
+import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
@@ -29,6 +30,7 @@ export default {
   components: {
     SelectDropdown,
     'transaction-history': TransactionHistory,
+    'hodl-history': HodlHistory,
     'select-awesome': SelectAwesome,
     QrcodeReader
   },
@@ -68,9 +70,24 @@ export default {
         coin: 'OOT',
       },
       history: [],
+      reloadTxHistory: null
     };
   },
+
+  watch: {
+    select: function () {
+      console.log("=====================")
+      console.log("select:", this.select)
+      this.reloadTransactionHistory(100)
+    }
+  },
+
   methods: {
+    reloadTransactionHistory (milisec) {
+      // reload transaction history
+      let timestamp = Date.now() // necessary
+      this.reloadTxHistory = [milisec, timestamp]
+    },
     onMaxSelected() {
       this.withdraw.amount = this.getBalance;
     },
@@ -155,8 +172,9 @@ export default {
       this.select = value;
     },
     updateNewCoin(value) {
-      if(value)
+      if (value) {
         this.updateCoin(value.ticker)
+      }
     },
     prepareTx() {
       // Number here because of bitcoinjs incapacity to use Big types.
@@ -199,6 +217,7 @@ export default {
             this.withdraw.amount = null;
             this.withdraw.address = '';
             alert(this, response);
+            this.reloadTransactionHistory(700);
           })
           .catch(error => {
             if (error.__type !== null && BigNumber(this.withdraw.amount).comparedTo(21000000) === 1) {
@@ -243,7 +262,6 @@ export default {
       return this.$store.getters.enabledCoins.map(coin => coin.ticker ).filter( coin => coin != 'BTC');
     },
     coinsNew() {
-      console.log("computing coninsNew");
       return this.$store.getters.enabledCoins.map(coin => {
         let tempObj = {
           ticker: coin.ticker,
