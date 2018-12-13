@@ -37,17 +37,17 @@ export default {
       perPage: 10,
       isBusy: false,
       fields: [
+        { key: 'time', label: 'Date'},
         { key: 'nLockTime', label: 'Status / Unlock Time', sortable: false },
         { key: 'formattedAmount', label: 'Amount' },
-        { key: 'time', label: 'Date'},
         { key: 'txid', label: 'TxID' },
       ],
       // the template dedicated to parent "withdraw"
       // will use the following fields instead
       fieldsWithdraw: [
-        { key: 'nLockTime', label: 'Details', sortable: false },
-        { key: 'formattedAmount', label: 'Amount' },
         { key: 'time', label: 'Date'},
+        { key: 'nLockTime', label: 'Info', sortable: false },
+        { key: 'formattedAmount', label: 'Amount' },
         { key: 'confirmations', label: 'Conf' },
         { key: 'txid', label: 'TxID' },
       ],
