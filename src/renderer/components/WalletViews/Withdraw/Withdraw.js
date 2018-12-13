@@ -78,13 +78,16 @@ export default {
     select: function () {
       console.log("=====================")
       console.log("select:", this.select)
-      // reload transaction history
-      let timestamp = Date.now() // necessary
-      this.reloadTxHistory = [100, timestamp]
+      this.reloadTransactionHistory(100)
     }
   },
 
   methods: {
+    reloadTransactionHistory (milisec) {
+      // reload transaction history
+      let timestamp = Date.now() // necessary
+      this.reloadTxHistory = [milisec, timestamp]
+    },
     onMaxSelected() {
       this.withdraw.amount = this.getBalance;
     },
