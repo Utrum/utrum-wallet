@@ -79,6 +79,12 @@ export default {
   },
 
   methods: {
+    // reload transaction history child component
+    reloadTransactionHistory (milisec) {
+      let timestamp = Date.now() // necessary
+      this.reloadTxHistory = [milisec, timestamp]
+    },
+
     // vue-select stuff
     onTimeChange(selectedOption) {
       if (selectedOption) {
@@ -247,8 +253,7 @@ export default {
           if (!response.data.error) {
             vm.lastTxId = response.data.txid
             // reload transaction history
-            let d = new Date() ; let t = d.getTime() // necessary
-            vm.reloadTxHistory = [1000, t]
+            this.reloadTransactionHistory(1000)
             // boostrap-vue alert
             vm.showAlert("Funds locked successfully!")
           } else {
