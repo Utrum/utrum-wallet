@@ -387,6 +387,11 @@ textarea {
   user-select: none;          /* Likely future */
 }
 
+.table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
 .theadClass {
   text-align: center;
 }

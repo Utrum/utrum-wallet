@@ -38,8 +38,6 @@
 
 
     <b-table  id="txTable"
-              thead-tr-class="theadTrClass"
-              tbody-tr-class="theadClass"
               thead-class="theadClass borderBottom"
               small
               :sort-desc.sync="sortDesc"
@@ -78,12 +76,12 @@
             <span v-else-if="!data.item.isMine && data.item.fromAddr"
                   class="hodlGray">
               From
-              <span style="font-size: small;">{{ data.item.fromAddr }}</span>
+              <span>{{ data.item.fromAddr }}</span>
             </span>
             <span v-else-if="data.item.isMine"
                   class="hodlGray">
               To
-              <span style="font-size: small;">{{ data.item.destAddr }}</span>
+              <span>{{ data.item.destAddr }}</span>
             </span>
             <span v-else-if="!data.item.isMine && !data.item.fromAddr">
               From unknown address
@@ -143,8 +141,6 @@
     <hr class="mb-0"/>
 
     <b-table  id="txTable"
-              thead-tr-class="theadTrClass"
-              tbody-tr-class="theadClass"
               thead-class="theadClass borderBottom"
               small
               :sort-desc.sync="sortDesc"

@@ -18,17 +18,24 @@
   font-size: 0.8em;
 }
 
+#txTable {
+  font-size: smaller;
+  font-weight: 500;
+}
+
 .borderBottom {
   border-bottom: 1px solid rgba(222, 226, 230, 0.5);
 }
 
-.table td, .table th {
-  border: none;
-  vertical-align: middle;
+.btn {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 10px;
+  font-size: inherit;
 }
 
 .btn-tx {
- align-content: flex-end;
+  align-content: flex-end;
 }
 
 #btn-group-tx {
