@@ -290,7 +290,7 @@ export default {
       const dateString = (
         moment(blockchainDateUtc)
         .local()
-        .format('hh:mm A MM/DD/YYYY')
+        .format('DD MMM, hh:mm A')
       )
       return dateString;
     },
