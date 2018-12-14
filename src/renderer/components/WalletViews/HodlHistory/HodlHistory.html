@@ -75,12 +75,10 @@
             </span>
             <span v-else-if="!data.item.isMine && data.item.fromAddr"
                   class="hodlGray">
-              From
               <span>{{ data.item.fromAddr }}</span>
             </span>
             <span v-else-if="data.item.isMine"
                   class="hodlGray">
-              To
               <span>{{ data.item.destAddr }}</span>
             </span>
             <span v-else-if="!data.item.isMine && !data.item.fromAddr">
