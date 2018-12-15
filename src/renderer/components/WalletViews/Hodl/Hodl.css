@@ -195,7 +195,6 @@
 	outline: none;
 	box-shadow: none;
 	text-align: right;
-	height: 41px;
 }
 
 .col-custom {
@@ -257,7 +256,7 @@
 #amount {
 	background-color: transparent;
 	border: none;
-	font-size: 1.65em;
+	font-size: 1.4em;
 	font-weight: 300;
 	color: rgb(151,151,151);
 }
@@ -268,10 +267,10 @@
 }
 
 #number-input {
-	font-size: 1.65em;
+	font-size: 1.4em;
 	color: #687078;
 	font-weight: 200;
-    margin-left: 7px;
+  margin-left: 7px;
 }
 
 .card span {
