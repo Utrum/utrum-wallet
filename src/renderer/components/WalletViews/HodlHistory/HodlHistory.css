@@ -41,8 +41,10 @@
 
 #btn-tx-id {
   border-radius: 10px;
-  width: 90px;
-  font-size: small;
+  width: 80px;
+  font-size: smaller;
+  padding-right: inherit;
+  padding-left: inherit;
 }
 
 #btn-logo {
@@ -116,9 +118,10 @@
 }
 
 .btn-copy-link:hover {
-  color: #619EC6
+  color: #619EC6;
 }
 
 .btn-copy-link {
-  color: #079cd8
+  color: #079cd8;
+  margin-left: 1.5px;
 }
