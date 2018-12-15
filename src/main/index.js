@@ -61,9 +61,9 @@ function createWindow() {
     // transparent: true, frame: false,
     center: true,
     width: 1100,
-    height: 750,
-    minWidth: 1000,
-    minHeight: 600,
+    height: 755,
+    minWidth: 1100,
+    minHeight: 580,
     // nodeIntegration: 'iframe', // and this line
     webPreferences: {
       nodeIntegration: true,

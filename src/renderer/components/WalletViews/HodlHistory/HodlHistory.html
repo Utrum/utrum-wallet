@@ -65,12 +65,10 @@
                   class="btn btn-tx">
               Claim!
             </span>
-            <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
-                  class="hodlLightGray">
+            <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true">
               Hold Complete 🎉
             </span>
-            <span v-else-if="data.item.isHodlSpend === true"
-                  class="hodlLightGray">
+            <span v-else-if="data.item.isHodlSpend === true">
               Reward
             </span>
             <span v-else-if="!data.item.isMine && data.item.fromAddr"
@@ -100,8 +98,7 @@
                  class="hodlOrange">
                 {{ data.item.formattedAmount }}
             </div>
-            <div v-else-if="data.item.isHodlTx"
-                 class="hodlLightGray">
+            <div v-else-if="data.item.isHodlTx">
                 {{ data.item.formattedAmount }}
             </div>
             <div v-else-if="/^\+/.test(data.item.formattedAmount)"
@@ -200,8 +197,7 @@
                  class="hodlGray">
                 {{ data.item.formattedAmount }}
             </div>
-            <div v-else
-                 class="hodlLightGray">
+            <div v-else>
                 {{ data.item.formattedAmount }}
             </div>
         </template>

@@ -195,7 +195,7 @@
 	outline: none;
 	box-shadow: none;
 	text-align: right;
-	height: 41px;
+	display: inline;
 }
 
 .col-custom {
@@ -224,16 +224,16 @@
 }
 
 #sendcoins {
-	border: 1px solid #0C6AA8;
-	border-radius: 4px !important;
-	background-color: transparent;
-	font-size: 1.4em;
-	width: 160px;
-	height: 45px;
-	text-align: center;
-	outline: none;
-	box-shadow: none;
-	color: #0C6AA8;
+  border: 1px solid #0C6AA8;
+  border-radius: 4px !important;
+  background-color: transparent;
+  font-size: 1em;
+  width: 140px;
+  height: 40px;
+  text-align: center;
+  outline: none;
+  box-shadow: none;
+  color: #0C6AA8;
 }
 
 #sendcoins:hover {
@@ -257,7 +257,7 @@
 #amount {
 	background-color: transparent;
 	border: none;
-	font-size: 1.65em;
+	font-size: 1.4em;
 	font-weight: 300;
 	color: rgb(151,151,151);
 }
@@ -268,10 +268,10 @@
 }
 
 #number-input {
-	font-size: 1.65em;
+	font-size: 1.4em;
 	color: #687078;
 	font-weight: 200;
-    margin-left: 7px;
+  margin-left: 1px;
 }
 
 .card span {
@@ -280,13 +280,13 @@
 }
 
 .title-content {
-	font-weight: 400;
+	font-weight: 300;
 	color: #0C6AA8;
 	margin: auto;
 }
 
 .horizontal-line {
-	margin-bottom: 50px;
+	margin-bottom: 30px;
 }
 
 #value-current-balance {

@@ -14,12 +14,8 @@
  *                                                                            *
  ******************************************************************************/
 
-#address {
-  font-size: 0.8em;
-}
-
 #txTable {
-  font-size: smaller;
+  font-size: 0.87rem;
   font-weight: 500;
 }
 
@@ -45,12 +41,15 @@
 
 #btn-tx-id {
   border-radius: 10px;
-  width: 90px;
-  font-size: small;
+  width: 80px;
+  font-size: smaller;
+  padding-right: inherit;
+  padding-left: inherit;
 }
 
 #btn-logo {
   background-color: white;
+  padding: initial;
 }
 
 .btn-tx {
@@ -73,11 +72,6 @@
 .btn-tx:target {
   background-color: #619EC6;
   box-shadow: none;
-}
-
-.hodlLightGray {
-  color: #95989c;
-  font-weight: 400;
 }
 
 .negativeColor {
@@ -109,7 +103,7 @@
 }
 .title-sec span{
   margin: 0;
-  font-weight: 400;
+  font-weight: 300;
   color: #0C6AA8;
 }
 .title-sec .btn-link{
@@ -124,9 +118,10 @@
 }
 
 .btn-copy-link:hover {
-  color: #619EC6
+  color: #619EC6;
 }
 
 .btn-copy-link {
-  color: #079cd8
+  color: #079cd8;
+  margin-left: 1.5px;
 }

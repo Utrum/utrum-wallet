@@ -124,8 +124,9 @@
   border-left-radius: 0px;
   border-top-left-radius: 0px 0px;
   border-bottom-left-radius: 0px 0px;
-  width: 425px;
-  min-width: 425px;
+  width: 370px;
+  min-width: 350px;
+  font-size: 0.9rem;
   text-align: center;
 }
 
@@ -151,6 +152,7 @@
   color: #1EB0DC;
   font-weight: 400;
   text-align: right;
+  font-size: 0.9rem;
 }
 
 hr {
