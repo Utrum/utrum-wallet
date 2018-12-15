@@ -172,8 +172,12 @@ export default {
       var vm = this
 
       // prepare hodl relevant variables
+      let coinExplorer = vm.wallet.coin.explorer
+      if ( coinExplorer.slice(-1) !== '/') {  // add forward slash if needed
+        coinExplorer += '/'
+      }
       var explorerUrl = (
-        vm.wallet.coin.explorer + 'tx/' +
+        coinExplorer + 'tx/' +
         tx.txid
       )
 
