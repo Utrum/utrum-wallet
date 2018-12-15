@@ -75,11 +75,15 @@
             </span>
             <span v-else-if="!data.item.isMine && data.item.fromAddr"
                   class="hodlGray">
-              <span>{{ data.item.fromAddr }}</span>
+              <span>{{ data.item.fromAddr }}</span> <!-- from address -->
+            </span>
+            <span v-else-if="data.item.isMine && data.item.fromAddr === data.item.destAddr"
+                  class="hodlGray">
+              <span>Self</span> <!-- to self -->
             </span>
             <span v-else-if="data.item.isMine"
                   class="hodlGray">
-              <span>{{ data.item.destAddr }}</span>
+              <span>{{ data.item.destAddr }}</span> <!-- to address... -->
             </span>
             <span v-else-if="!data.item.isMine && !data.item.fromAddr">
               From unknown address
