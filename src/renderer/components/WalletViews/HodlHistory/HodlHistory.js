@@ -141,9 +141,7 @@ export default {
             } else if ( !items[item].isToSelf ) {
               items[item].formattedAmount = '+' + items[item].sentAmount
             } else if ( items[item].isToSelf ) {
-              console.log("is to self?", items[item].isToSelf)
               items[item].formattedAmount = String(items[item].sentAmount)
-              console.log(items[item].formattedAmount)
             }
           } else if (items[item].isHodlTx === true) {
             items[item].formattedAmount = items[item].sentAmount
