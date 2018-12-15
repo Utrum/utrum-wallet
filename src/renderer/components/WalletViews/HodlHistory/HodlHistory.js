@@ -178,11 +178,11 @@ export default {
       let destAddr = vm.wallet.address
       let fromAddr = null
       if ( tx.vin.length > 0 ) {
-        if ( vm.wallet.address === tx.vin[0].addr ) {
+        fromAddr = tx.vin[0].addr
+        if ( vm.wallet.address === fromAddr ) {
           isMine = true
           destAddr = tx.vout[0].scriptPubKey.addresses[0] //TODO improve logic
         }
-        fromAddr = tx.vin[0].addr
       }
 
       // get sent amount
