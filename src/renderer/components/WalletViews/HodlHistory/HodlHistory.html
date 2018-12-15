@@ -112,6 +112,10 @@
                  class="hodlRed">
                 {{ data.item.formattedAmount }}
             </div>
+            <div v-else-if="data.item.isToSelf"
+                 class="hodlGray">
+                {{ data.item.formattedAmount }}
+            </div>
         </template>
 
 

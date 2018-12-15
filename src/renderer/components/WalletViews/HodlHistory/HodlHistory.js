@@ -138,8 +138,12 @@ export default {
                items[item].isHodlSpend === false ) {
             if ( this.wallet.address !== items[item].destAddr ) {
               items[item].formattedAmount = String(items[item].sentAmount * -1)
-            } else {
+            } else if ( !items[item].isToSelf ) {
               items[item].formattedAmount = '+' + items[item].sentAmount
+            } else if ( items[item].isToSelf ) {
+              console.log("is to self?", items[item].isToSelf)
+              items[item].formattedAmount = String(items[item].sentAmount)
+              console.log(items[item].formattedAmount)
             }
           } else if (items[item].isHodlTx === true) {
             items[item].formattedAmount = items[item].sentAmount
@@ -187,18 +191,37 @@ export default {
 
       // get sent amount
       let sentAmount = Number(0)
+      let isToSelf = null
       for (var i in tx.vout) {
         try {
           let voutAddr = tx.vout[i].scriptPubKey.addresses[0]
           let voutValue = Number(tx.vout[i].value)
+          let myAddress = vm.wallet.address
           // determine sent amount
-          if ( isMine == true && voutAddr != vm.wallet.address) {
-            sentAmount += voutValue
-          } else if ( isMine == false && voutAddr === vm.wallet.address ) {
-            sentAmount += voutValue
+          if (
+            ( isMine && voutAddr !== myAddress ) ||
+            ( !isMine && voutAddr === myAddress )
+            ) {
+            sentAmount += ( voutValue * 100000000)  // javascript's stupid
+            isToSelf = false  // either case confirms that it's not a "to-self" tx
           }
         } catch (e) { }
       }
+      if ( isToSelf === null ) {
+        for (var i in tx.vout) {
+          try {
+            let voutAddr = tx.vout[i].scriptPubKey.addresses[0]
+            let voutValue = Number(tx.vout[i].value)
+            let myAddress = vm.wallet.address
+            if ( isMine && voutAddr === myAddress ) {
+              sentAmount += ( voutValue * 100000000 )
+              isToSelf = true  // we can confirm that this was a "to-self" tx
+            }
+          } catch (e) { }
+        }
+      }
+      // finally convert back from satoshis
+      sentAmount = sentAmount > 0 ? sentAmount / 100000000 : 0;
 
       // determine if sent to script address instead of normal address
       var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
@@ -217,6 +240,7 @@ export default {
         "isHodlSpend": false,
         "isSpent": isSpent,
         "isMine": isMine,
+        "isToSelf": isToSelf,
         "timeNow": vm.timeNow(),
         "sentAmount": sentAmount
       }
