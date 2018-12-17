@@ -191,13 +191,9 @@ const actions = {
       ;
   },
   broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
-    console.log("broadcastTransaction wallet:")
-    console.log(wallet)
     const builtTx = wallet.buildTx(inputs, outputs, fee, dataScript);
     const txId = builtTx.getId();
 
-    console.log("built transaction:", txId)
-    console.log(builtTx.toHex())
     return wallet.electrum
       .broadcast(builtTx.toHex())
       .then((broadcastedTx) => {
