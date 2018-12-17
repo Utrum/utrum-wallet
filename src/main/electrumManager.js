@@ -14,7 +14,7 @@
  *                                                                            *
  ******************************************************************************/
 
-const coins = require('libwallet-mnz').coins;
+const coins = require('libwallet-utrum').coins;
 const ElectrumClient = require('electrum-client');
 
 export default class ElectrumManager {

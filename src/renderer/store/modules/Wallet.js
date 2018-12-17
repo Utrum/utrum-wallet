@@ -14,7 +14,7 @@
  *                                                                            *
  ******************************************************************************/
 
-import { Wallet, coins, fees } from 'libwallet-mnz';
+import { Wallet, coins, fees } from 'libwallet-utrum';
 import { BigNumber } from 'bignumber.js';
 
 import * as _ from 'lodash';
@@ -48,8 +48,8 @@ const getters = {
     return state.isUpdate;
   },
   getHistoryBuy: (state, getters) => {
-    const mnzTicker = getters.getTickerForExpectedCoin('OOT');
-    const history = getters.getWalletTxs(mnzTicker);
+    const mainTicker = getters.getTickerForExpectedCoin('OOT');
+    const history = getters.getWalletTxs(mainTicker);
     Object.keys(coins).forEach((coin) => {
       const filteredHistory = history.filter(el => el.origin.ticker === coin);
       history.concat(filteredHistory);

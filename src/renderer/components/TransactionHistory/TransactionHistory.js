@@ -17,7 +17,7 @@
 import { BigNumber } from 'bignumber.js';
 
 const moment = require('moment');
-const coins = require('libwallet-mnz').coins;
+const coins = require('libwallet-utrum').coins;
 const electron = require('electron');
 const { clipboard } = require('electron');
 
