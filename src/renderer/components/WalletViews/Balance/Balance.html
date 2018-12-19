@@ -16,7 +16,7 @@
         <div class="float-right" style="margin-top: 6px;">
           <p v-if="rewardsData.rewards > 0" class="d-inline mr-2">{{rewardsData.rewards / satoshiNb}} (KMD)</p>
           <p v-else class="d-inline mr-2">0 (KMD)</p>
-          <b-button variant="outline-gray" size="sm" class="btn-no-focus" :disabled="rewardsData.rewards <= 0.0001" id="btn" @click="onConfirmWithdrawModal" v-b-modal="'confirmWithdraw'">Claim</b-button>
+          <b-button variant="outline-gray" size="sm" class="btn-no-focus" :disabled="rewardsData.rewards <= 0.0001" id="btn" v-b-modal="'confirmWithdraw'">Claim</b-button>
           <b-button variant="outline-gray" size="sm" class="btn-no-focus" @click="getRewardData"><i class="fas fa-sync"></i></b-button>
         </div>
       </div>
