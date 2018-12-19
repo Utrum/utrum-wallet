@@ -295,6 +295,11 @@ export default {
       return dateString;
     },
 
+    // for top message link
+    openLink(link){
+      shell.openExternal(link);
+    },
+
     // boostrap-vue related
     alertCountDownChanged (n) {
       this.dismissAlertCountDown = n
