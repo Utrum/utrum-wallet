@@ -151,7 +151,10 @@ export default {
       })
         .then(() => {
           console.log("updating reward data...")
-          setTimeout(function(){vm.getRewardData();}, 1000);
+          setTimeout(function(){
+            vm.getRewardData();
+            vm.$toasted.show('Claimed! Wait for confirmations.')
+          }, 1000)
         })
     },
   },
