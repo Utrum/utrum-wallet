@@ -18,8 +18,6 @@ import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
 import store from '../../../store';
-import ElectrumService from '../../../lib/electrum';
-import bitcore from 'bitcore-lib';
 import axios from 'axios';
 import BalanceItem from '@/components/WalletViews/BalanceItem/BalanceItem.vue';
 
@@ -89,7 +87,8 @@ export default {
       })
       var url = (
         "https://explorer.utrum.io/" +
-        "kmd-rewards/rewards.php?address=" + this.myKmdAddress
+        "kmd-rewards/rewards.php?address=" +
+        this.kmdWallet.address.toString()
       )
       getJSON(url, (err, data) => {
         if (err !== null) {
@@ -103,10 +102,6 @@ export default {
 
     numberWithSpaces(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
-
-    onConfirmWithdrawModal() {
-      return this.buildTx();
     },
 
     hideModal() {
@@ -129,45 +124,42 @@ export default {
         });
     },
 
-    buildTx () { // To Do: Call for most up to date reward at build
-      var vm = this
-      var locktime = Math.round(new Date().getTime()/1000) - 777
-      var utxos = vm.kmdUtxos
-      var toAddress = vm.myKmdAddress
-      var amount = Math.round(vm.rewardsData.totalBalance)
-      var privateKey = this.$store.getters.getWalletByTicker('KMD').privKey
-      var transaction = new bitcore.Transaction()
-        .fee(vm.kmdFee)
-        .from(utxos)
-        .to(toAddress, amount)
-        .lockUntilDate(locktime)
-        .change(toAddress)
-      transaction.inputs[0].sequenceNumber = 0
-      transaction.sign(privateKey)
-      return transaction;
-    },
-
     claimRewards () {
-      wallet.electrum = new ElectrumService(
-        store, 'KMD', { client: 'Utrum Wallet', version: '1.2' }
-      );
-      this.hideModal();
-      console.log("building transaction...")
-      var transaction = this.buildTx();
-      var opts = { disableMoreOutputThanInput: true }
-      // broadcast
-      console.log("broadcasting serialized transaction...")
-      console.log(wallet.electrum.broadcast(transaction.serialize(opts)))
-      console.log("updating reward data...")
       var vm = this
-      setTimeout(function(){vm.getRewardData();}, 1000);
+      vm.hideModal();
+      console.log("claiming rewards...")
+
+      // prepare transaction
+      let address = vm.kmdWallet.address.toString()
+      let value = Math.round(vm.rewardsData.totalBalance)
+
+      let inputs = []
+      for (let i in vm.kmdUtxos) {
+        let utxo = vm.kmdUtxos[i]
+        inputs.push({
+          "txId": utxo.txid,
+          "value": utxo.satoshis,
+          "vout": utxo.vout
+        })
+      }
+
+      return vm.$store.dispatch('broadcastTransaction', {
+          wallet: vm.kmdWallet,
+          inputs: inputs,
+          outputs: [{"address": address, "value": value}],
+          fee: vm.kmdFee,
+      })
+        .then(() => {
+          console.log("updating reward data...")
+          setTimeout(function(){vm.getRewardData();}, 1000);
+        })
     },
   },
 
   computed: {
 
-    myKmdAddress () {
-      return this.$store.getters.getWalletByTicker('KMD').address.toString();
+    kmdWallet () {
+      return this.$store.getters.getWalletByTicker('KMD')
     },
 
     wallets() {
