@@ -1,3 +1,9 @@
+.h3 {
+    font-weight: 300;
+    font-size: 1.25rem;
+    color: #687078;
+}
+
 .color-purple {
   color: #0C6AA8;
 }
