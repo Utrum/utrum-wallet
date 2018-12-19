@@ -1,6 +1,11 @@
-.h3 {
+h3 {
     font-weight: 300;
     font-size: 1.25rem;
+    color: #687078;
+}
+
+.mt-5 {
+    font-weight: 300;
     color: #687078;
 }
 
@@ -52,8 +57,4 @@
 }
 .github-fc{
   color: #333;
-}
-
-h3{
-  font-weight: 300;
 }
