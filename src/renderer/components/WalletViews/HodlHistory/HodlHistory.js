@@ -400,7 +400,7 @@ export default {
         .then(response => {
           var txid = response.data.txid
           console.log('txid:', txid)
-          vm.showAlert("Hodl deposit and reward unlocked!")
+          vm.showAlert("Hold deposit and reward unlocked!")
           // re-schedule lastTxId timer
           vm.scheduleTxHistoryTimer(vm.dismissSecs * 1000)
         })
