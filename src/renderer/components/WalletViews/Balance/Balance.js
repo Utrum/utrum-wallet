@@ -144,16 +144,17 @@ export default {
       }
 
       return vm.$store.dispatch('broadcastTransaction', {
-          wallet: vm.kmdWallet,
-          inputs: inputs,
-          outputs: [{"address": address, "value": value}],
-          fee: vm.kmdFee,
+        wallet: vm.kmdWallet,
+        inputs: inputs,
+        outputs: [{"address": address, "value": value}],
+        fee: vm.kmdFee,
       })
         .then(() => {
           console.log("updating reward data...")
           setTimeout(function(){
             vm.getRewardData();
-            vm.$toasted.show('Claimed! Wait for confirmations.')
+            vm.$toasted.show("Komodo rewards claimed!\n" +
+              "Please wait for confirmations.")
           }, 1000)
         })
     },
