@@ -373,7 +373,7 @@ const alert = (context, message) => {
           setTimeout(() => {
             context.$toasted.show('Copied !', {
               duration: 1000,
-              icon: 'done',
+              icon: 'check',
             });
           }, 800);
         },
