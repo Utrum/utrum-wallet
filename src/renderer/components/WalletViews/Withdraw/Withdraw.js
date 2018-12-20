@@ -96,7 +96,7 @@ export default {
         .then((tx) => {
           if (tx.inputs == null && tx.outputs == null) {
             this.hideModal();
-            this.$toasted.info("You don't have enough funds for buying (with fees included)");
+            this.$toasted.info("You don't have enough funds for buying (with fees included).");
           } else {
             this.$refs.confirmBuy.show();
           }
@@ -119,9 +119,9 @@ export default {
     onDecode(content) {
       if (this.checkAddress(content)) {
         this.withdraw.address = content;
-        this.$toasted.show('Address inserted !', { icon: 'done' });
+        this.$toasted.show('Address inserted !', { icon: 'check' });
       } else {
-        this.$toasted.error('This address is not valid !', { icon: 'error' });
+        this.$toasted.error('This address is not valid !', { icon: 'exclamation-circle' });
       }
       this.readingQRCode = false;
       this.$root.$emit('bv::hide::modal', 'readerQrcodeModal');
@@ -221,7 +221,7 @@ export default {
           })
           .catch(error => {
             if (error.__type !== null && BigNumber(this.withdraw.amount).comparedTo(21000000) === 1) {
-              this.$toasted.info("You can't send more than 21 million at once");
+              this.$toasted.info("You can't send more than 21 million at once.");
             } else {
               this.$toasted.error(`Can't send transaction: ${error.message}`);
             }
@@ -352,21 +352,21 @@ const decimalsCount = (value) => {
 
 const alert = (context, message) => {
   if (message.error) {
-    context.$toasted.show('Transaction not sent !', { text: message.error });
+    context.$toasted.show('Transaction not sent:', { text: message.error });
     return;
   }
 
   context.$toasted.show('Transaction sent !', {
-    icon: 'done',
+    icon: 'check',
     action: [
       {
-        icon: 'close',
+        icon: 'times',
         onClick: (e, toastObject) => {
           toastObject.goAway(0);
         },
       },
       {
-        icon: 'content_copy',
+        icon: 'copy',
         onClick: (e, toastObject) => {
           toastObject.goAway(0);
           clipboard.writeText(message);

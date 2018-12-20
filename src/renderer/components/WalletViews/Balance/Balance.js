@@ -153,8 +153,8 @@ export default {
           console.log("updating reward data...")
           setTimeout(function(){
             vm.getRewardData();
-            vm.$toasted.show("Komodo rewards claimed!\n" +
-              "Please wait for confirmations.")
+            vm.$toasted.show("Rewards claimed! " +
+              "Waiting for confirmations.")
           }, 1000)
         })
     },
