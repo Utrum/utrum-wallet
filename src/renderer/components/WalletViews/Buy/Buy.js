@@ -330,13 +330,13 @@ const alert = (context, message) => {
     icon: 'done',
     action: [
       {
-        icon: 'close',
+        icon: 'times',
         onClick: (e, toastObject) => {
           toastObject.goAway(0);
         },
       },
       {
-        icon: 'content_copy',
+        icon: 'copy',
         onClick: (e, toastObject) => {
           toastObject.goAway(0);
           clipboard.writeText(message);

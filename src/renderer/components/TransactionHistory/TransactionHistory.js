@@ -62,7 +62,7 @@ export default {
       clipboard.writeText(row.item.tx_hash);
       this.$toasted.show('Copied !', {
         duration: 1000,
-        icon: 'done',
+        icon: 'check',
       });
     },
     myRowClickHandler() {

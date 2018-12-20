@@ -37,8 +37,9 @@ Vue.use(VueQriously);
 Vue.use(VueClipboard);
 Vue.use(VueQrcodeReader);
 Vue.use(Toasted, {
-  iconPack: 'material',
+  iconPack: 'fontawesome',
   position: 'top-right',
+  theme: 'outline',
   duration: 4000,
 });
 Vue.use(VueLoaders);
