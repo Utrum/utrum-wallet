@@ -103,7 +103,7 @@
     "less": "^3.0.1",
     "less-loader": "^4.0.5",
     "lodash": "^4.17.5",
-    "libwallet-utrum": "https://github.com/Utrum/libwallet-oot", 
+    "libwallet-utrum": "https://github.com/Utrum/libwallet-utrum", 
     "moment": "^2.22.0",
     "moment-timezone": "^0.5.14",
     "npm-license-crawler": "^0.1.8",
