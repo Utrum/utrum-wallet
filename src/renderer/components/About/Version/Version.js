@@ -15,6 +15,7 @@
  ******************************************************************************/
 
 const pjson = require('../../../../../package.json');
+const electron = require('electron');
 
 export default {
   name: 'version',
@@ -23,4 +24,9 @@ export default {
       currentVersion: pjson.version,
     };
   },
+  methods: {
+    openLink(link){
+      electron.shell.openExternal(link);
+    },
+  }
 };
