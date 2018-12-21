@@ -22,10 +22,10 @@
         Your Backup Phrase is used to gain access to and restore funds in your Utrum (OOT) wallet.
       </p>
       <p>
-        On the next screen, you will see a set of 24 random words which you will need to write down using a pen and paper. Please keep this Backup Phrase in a secure location and do not share it with anyone who sould not be authorized to access your funds.
+        On the next screen, you will see a set of 24 random words which you will need to write down using a pen and paper. Please keep this Backup Phrase in a secure location and do not share it with anyone who should not be authorized to access your funds.
       </p>
       <p>
-      By creating your Backup phrase you acknowledge that Utrum Foundation is not responsible for transferring, safeguarding, or maintaining the Backup Phrase and/or Digital Currency associated with the Wallet.</p>	
+      By creating your Backup Phrase you acknowledge that Utrum Foundation is not responsible for transferring, safeguarding, or maintaining the Backup Phrase and/or Digital Currency associated with the Wallet.</p>
     </div>
     <div v-if="step2" class="col-custom">
       <p>
@@ -34,9 +34,9 @@
       <div class="passphrase-generated">
         {{ isClipboard ? 'Copied to the clipboard' : getRandomPassphrase()}}
         <div class="cp-btn-wrapper">
-            <b-button 
-            :show="passphraseGenerated != '' && !isClipboard" 
-            variant="link" 
+            <b-button
+            :show="passphraseGenerated != '' && !isClipboard"
+            variant="link"
             class="float-right"
             v-clipboard:copy="getRandomPassphrase()"
             v-clipboard:success="onCopy"
@@ -53,7 +53,7 @@
           <div class="cp-optn-wrapper m-auto" style="width: 80%;">
               <textarea v-on:keyup="checkPassphrase" v-model="passphraseValue" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" class="col-custom" type="text" onPaste="return false" name="input-login" onDrag="return false" onDrop="return false" autocomplete=off
               ></textarea>
-    
+
               <div class="cp-btn-wrapper">
                 <b-button variant="link" @click.prevent="onPaste()" title="Paste">
                   <i class="far fa-clipboard"></i>
