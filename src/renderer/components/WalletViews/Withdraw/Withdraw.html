@@ -36,12 +36,15 @@
 
   </div>
 
-  <div id="select-amount" class="row">
+  <div id="select-amount"
+       class="row"
+       @click="$refs.amount.focus()">
     <div class="w-100">
         <div class="col-custom input-field row">
           <span class="title-content">AMOUNT :</span>
           <input type="number"
                  id="amount"
+                 ref="amount"
                  v-model.number="amount"
                  class="col-custom input-field"
                  placeholder="Enter amount ">
@@ -56,12 +59,14 @@
     <hr id="first-line"/>
   </div>
 
-  <div class="row">
+  <div class="row"
+       @click="$refs.addr.focus()">
     <span class="title-content">{{select}} ADDRESS :</span>
     <input v-model="withdraw.address"
            type="text"
            class="col-custom input-field"
            id="addr"
+           ref="addr"
            placeholder="Enter recipient address ">
     <button id="readerQrcode"
             v-b-modal="'readerQrcodeModal'"
