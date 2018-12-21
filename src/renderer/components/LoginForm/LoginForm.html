@@ -6,11 +6,32 @@
     <div class="margin-auto text-center" style="min-width: 525px;">
       <div class="w-100 input-login" @click="setFocus">
           <form id="login" class="row login" method="POST" enctype="multipart/form-data">
-            <img v-if="typeInput === 'password'" class="icon-mdp" src="~@/assets/icon-mdp-hide.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
-            <img v-if="typeInput === 'text'" class="icon-mdp" src="~@/assets/icon-mdp.svg" alt="icon-show-password" @click="changeTypeInputPassphrase()">
-            <input :type="typeInput" class="col" @keydown.enter.stop.prevent="validatePassPhrase()" v-model="passphrase" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" :id="passphraseId" ref="passphraseInput">
+            <img v-if="typeInput === 'password'"
+                 class="icon-mdp"
+                 src="~@/assets/icon-mdp-hide.svg"
+                 alt="icon-show-password"
+                 @click="changeTypeInputPassphrase()">
+            <img v-if="typeInput === 'text'"
+                 class="icon-mdp"
+                 src="~@/assets/icon-mdp.svg"
+                 alt="icon-show-password"
+                 @click="changeTypeInputPassphrase()">
+            <input :type="typeInput"
+                   class="col"
+                   @keydown.enter.stop.prevent="validatePassPhrase()"
+                   v-model="passphrase"
+                   onblur="this.placeholder = 'Please enter your passphrase'"
+                   onfocus="this.placeholder = ''"
+                   placeholder="Please enter your passphrase"
+                   :id="passphraseId"
+                   ref="passphraseInput">
 
-            <b-button class="login-btn" size="sm" variant="outline-primary" @click.prevent="validatePassPhrase()" :class="btnSendStatus" :disabled="passphrase == ''">
+            <b-button class="login-btn"
+                      size="sm"
+                      variant="outline-primary"
+                      @click.prevent="validatePassPhrase()"
+                      :class="btnSendStatus"
+                      :disabled="passphrase == ''">
                 Login
             </b-button>
           </form>
@@ -21,11 +42,12 @@
     <div class="text-center w-80 margin-auto" style="max-width: 515px;">
       <span id="info-passphrase">For obvious security reasons, we strongly recommend you use at least a 12 words passphrase as enforced by the BIP39 protocol</span>
     </div>
-    
+
     <div class="flex mt-5">
-      <button @click.prevent="createPassphrase()" id="create-passphrase" class="btn-round-light margin-auto">Generate Passphrase</button>
+      <button @click.prevent="createPassphrase()"
+              id="create-passphrase"
+              class="btn-round-light margin-auto">Generate Passphrase</button>
     </div>
   </div>
   <img id="img-background" src="~@/assets/img-login_background.svg">
 </div>
-
