@@ -36,47 +36,48 @@
 
   </div>
 
-  <div id="select-amount"
-       class="row"
-       @click="$refs.amount.focus()">
-    <div class="w-100">
-        <div class="col-custom input-field row">
-          <span class="title-content">AMOUNT :</span>
-          <input type="number"
-                 id="amount"
-                 ref="amount"
-                 v-model.number="amount"
-                 class="col-custom input-field"
-                 placeholder="Enter amount ">
-          <span id="current-coin">{{select}}</span>
+  <div @click="$refs.amount.focus()">
+    <div id="select-amount" class="row">
+      <div class="w-100">
+          <div class="col-custom input-field row">
+            <span class="title-content">AMOUNT :</span>
+            <input type="number"
+                   id="amount"
+                   ref="amount"
+                   v-model.number="amount"
+                   class="col-custom input-field"
+                   placeholder="Enter amount ">
+            <span id="current-coin">{{select}}</span>
+        </div>
       </div>
+      <p class="text-right m-0 w-100">
+        $ {{convertToUSDAmount.toString()}} (USD)
+      </p>
     </div>
-    <p class="text-right m-0 w-100">
-      $ {{convertToUSDAmount.toString()}} (USD)
-    </p>
-  </div>
-  <div class="col-custom horizontal-line">
-    <hr id="first-line"/>
+    <div class="col-custom horizontal-line">
+      <hr id="first-line"/>
+    </div>
   </div>
 
-  <div class="row"
-       @click="$refs.addr.focus()">
-    <span class="title-content">{{select}} ADDRESS :</span>
-    <input v-model="withdraw.address"
-           type="text"
-           class="col-custom input-field"
-           id="addr"
-           ref="addr"
-           placeholder="Enter recipient address ">
-    <button id="readerQrcode"
-            v-b-modal="'readerQrcodeModal'"
-            @click="readingQRCode = !readingQRCode">
-      <img src="~@/assets/icon-scan-qrcode.svg">
-    </button>
+  <div @click="$refs.addr.focus()">
+    <div class="row">
+      <span class="title-content">{{select}} ADDRESS :</span>
+      <input v-model="withdraw.address"
+             type="text"
+             class="col-custom input-field"
+             id="addr"
+             ref="addr"
+             placeholder="Enter recipient address ">
+      <button id="readerQrcode"
+              v-b-modal="'readerQrcodeModal'"
+              @click="readingQRCode = !readingQRCode">
+        <img src="~@/assets/icon-scan-qrcode.svg">
+      </button>
+    </div>
 
-  </div>
-  <div class="col-custom horizontal-line">
-    <hr/>
+    <div class="col-custom horizontal-line">
+      <hr/>
+    </div>
   </div>
 
   <div class="btn-center">
