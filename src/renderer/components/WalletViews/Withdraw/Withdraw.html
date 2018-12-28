@@ -103,12 +103,12 @@
     </transaction-history>
   </div>
 -->
-
   <b-modal size="sm"
            :hide-header="true"
-           :hide-footer="true"
+           :hide-footer="false"
            @hide="readingQRCode = false"
            id="readerQrcodeModal"
+           ref="readerQrcodeModal"
            centered>
     <qrcode-reader id="qrcode"
                    :video-constraints="videoConstraints"
@@ -117,6 +117,9 @@
                    v-if="readingQRCode"
                    @init="onInit">
     </qrcode-reader>
+    <div slot="modal-footer" class="row footerBuyModal">
+      <button @click="hidereaderQrcodeModal" slot="modal-close" id="close" class="col-custom btn-round-light">close</button>     
+    </div>
   </b-modal>
 
   <b-modal @ok="withdrawFunds()"

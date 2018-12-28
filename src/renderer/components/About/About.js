@@ -16,6 +16,13 @@
 
 export default {
   name: 'sidebar',
+  created() {
+    window.addEventListener('keydown', (e) => {
+      if (e.key == 'Escape') {
+        this.$router.push('/login-form');        
+      }
+    });
+  },
   data() {
     return {
     };
@@ -30,6 +37,9 @@ export default {
       } else {
         this.$router.push('login');
       }
+    },
+    backArrow() {
+      this.$router.push('/login-form');            
     },
   },
   computed: {

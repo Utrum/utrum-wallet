@@ -1,8 +1,23 @@
-<div class="content">
+<div class="content" @keydown.esc="something_in_your_methods">
   <div class="header-about">
-    <div class="d-flex justify-content-center">
-      <h5 @click="closeAbout">About <img src="~@/assets/icon-close.svg" alt="close"></h5>
-    </div>
+      <b-row>
+          <b-col>              
+              <div class="w-100 h-100" style="display : flex;
+              align-items : center;" v-on:click="backArrow">
+                  <img src="~@/assets/icon-back.svg">
+                  <p style="    margin-bottom: -5px;
+                  margin-left: 10px;
+                  width: auto;">Back</p>
+              </div>
+          </b-col>
+          <b-col>
+              <div class="d-flex justify-content-center">
+                <h5 @click="closeAbout">About <img src="~@/assets/icon-close.svg" alt="close"></h5>
+              </div>
+          </b-col>
+          <b-col></b-col>
+                              
+      </b-row>   
     <hr/>
   </div>
   <div class="container-about">

@@ -116,6 +116,10 @@ export default {
     hideModal() {
       this.$refs.confirmWithdraw.hide();
     },
+    hidereaderQrcodeModal()
+    {
+      this.$refs.readerQrcodeModal.hide();      
+    },
     onDecode(content) {
       if (this.checkAddress(content)) {
         this.withdraw.address = content;

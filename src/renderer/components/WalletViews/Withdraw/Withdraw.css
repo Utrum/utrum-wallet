@@ -14,7 +14,7 @@
  *                                                                            *
  ******************************************************************************/
 
-#amountTotal {
+ #amountTotal {
   align-self: center;
   text-align: center;
   padding-left: 47px;
@@ -317,4 +317,13 @@
 
 .utrum-dd-search{
   width: 210px;
+}
+
+#readerQrcodeModal .modal-content
+{
+  text-align: center;
+}
+#readerQrcodeModal .footerBuyModal button
+{
+  margin: 0 auto;  
 }
