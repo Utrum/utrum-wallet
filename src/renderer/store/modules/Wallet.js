@@ -53,13 +53,6 @@ const getters = {
     return state.wallets[ticker];
   },
 
-  getWalletTxs: (state, getters) => (ticker) => {
-    if (ticker != null && getters.getWalletByTicker(ticker) != null) {
-      return getters.getWalletByTicker(ticker).txs;
-    }
-    return [];
-  },
-
   getWallets: (state) => {
     return state.wallets;
   },
