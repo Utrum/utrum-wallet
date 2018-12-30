@@ -16,7 +16,6 @@
 
 import Vue from 'vue';
 import Router from 'vue-router';
-import Buy from '@/components/WalletViews/Buy/Buy.vue';
 import Hodl from '@/components/WalletViews/Hodl/Hodl.vue';
 import Chart from '@/components/WalletViews/Chart/Chart.vue';
 import LoginForm from '@/components/LoginForm/LoginForm.vue';
@@ -62,11 +61,6 @@ export default new Router({
           path: '/balance',
           name: 'balance',
           component: Balance,
-        },
-        {
-          path: '/buy',
-          name: 'buy',
-          component: Buy,
         },
         {
           path: '/hodl',
