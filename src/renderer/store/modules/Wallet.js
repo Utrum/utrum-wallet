@@ -49,16 +49,6 @@ const getters = {
     return state.isUpdate;
   },
 
-  getHistoryBuy: (state, getters) => {
-    const mainTicker = getters.getTickerForExpectedCoin('OOT');
-    const history = getters.getWalletTxs(mainTicker);
-    Object.keys(coins).forEach((coin) => {
-      const filteredHistory = history.filter(el => el.origin.ticker === coin);
-      history.concat(filteredHistory);
-    });
-    return history;
-  },
-
   getWalletByTicker: (state) => (ticker) => {
     return state.wallets[ticker];
   },
