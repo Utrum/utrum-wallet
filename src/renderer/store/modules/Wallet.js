@@ -44,9 +44,11 @@ const state = {
 };
 
 const getters = {
+
   isUpdate: (state) => {
     return state.isUpdate;
   },
+
   getHistoryBuy: (state, getters) => {
     const mainTicker = getters.getTickerForExpectedCoin('OOT');
     const history = getters.getWalletTxs(mainTicker);
@@ -56,18 +58,22 @@ const getters = {
     });
     return history;
   },
+
   getWalletByTicker: (state) => (ticker) => {
     return state.wallets[ticker];
   },
+
   getWalletTxs: (state, getters) => (ticker) => {
     if (ticker != null && getters.getWalletByTicker(ticker) != null) {
       return getters.getWalletByTicker(ticker).txs;
     }
     return [];
   },
+
   getWallets: (state) => {
     return state.wallets;
   },
+
   getTotalBalance: (state) => {
     const walletKeys = Object.keys(state.wallets);
     let totalBalanceUsd = BigNumber(0);
@@ -78,12 +84,15 @@ const getters = {
 
     return totalBalanceUsd;
   },
+
   getBalanceByTicker: (state) => (ticker) => {
     return state.wallets[ticker].balance;
   },
+
   enabledCoins: () => {
     return config.func.enabledCoins.map(ticker => coins.get(ticker));
   },
+
   getTickerForExpectedCoin: () => (expectedCoinTicker) => {
     let theTicker;
     config.func.enabledCoins.forEach(ticker => {
@@ -95,37 +104,48 @@ const getters = {
   },
 };
 
+
 const mutations = {
+
   ADD_WALLET(state, wallet) {
     state.wallets[wallet.ticker] = Vue.set(state.wallets, wallet.ticker, wallet);
   },
+
   DESTROY_WALLETS(state) {
     state.wallets = {};
   },
+
   UPDATE_BALANCE(state, wallet) {
     Vue.set(state.wallets, wallet.ticker, wallet);
   },
+
   UPDATE_IS_UPDATE(state, isUpdate) {
     state.isUpate = isUpdate;
   },
+
   ADD_TX(state, { ticker, newTx }) {
     _.remove(state.wallets[ticker].txs, (tx) => {
       return tx.tx_hash === newTx.tx_hash;
     });
     state.wallets[ticker].txs.unshift(newTx);
   },
+
   ADD_TXS(state, { ticker, txs }) {
     state.wallets[ticker].txs = txs;
   },
+
   DELETE_TX(state, { ticker, tx }) {
     state.wallets[ticker].txs.slice(state.wallets[ticker].txs.indexOf(tx), 1);
   },
 };
 
+
 const actions = {
+
   setIsUpdate({ commit }, isUpdate) {
     commit('UPDATE_IS_UPDATE', isUpdate);
   },
+
   initWallets({ commit, dispatch, rootGetters }) {
     if (Object.keys(state.wallets).length > 0) {
       dispatch('destroyWallets');
@@ -159,6 +179,7 @@ const actions = {
       .catch(() => { })
       ;
   },
+
   createTransaction({ commit, rootGetters }, { wallet, amount, address, speed = 'slow', data = null }) {
     let utxos;
 
@@ -190,6 +211,7 @@ const actions = {
       })
       ;
   },
+
   broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
     const builtTx = wallet.buildTx(inputs, outputs, fee, dataScript);
     const txId = builtTx.getId();
@@ -208,9 +230,11 @@ const actions = {
       })
       ;
   },
+
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');
   },
+
   updateBalance({ commit, getters, rootGetters }, wallet) {
     commit('UPDATE_BALANCE', wallet);
     return wallet.electrum
@@ -240,11 +264,13 @@ const actions = {
       })
       ;
   },
+
   startUpdates({ dispatch }) {
     dispatch('setIsUpdate', true);
     dispatch('startUpdateBalances');
     dispatch('startUpdateHistory');
   },
+
   startUpdateBalances({ dispatch, getters }) {
     const min = 20;
     const max = 50;
@@ -258,6 +284,7 @@ const actions = {
       }
     }, rand * 1000);
   },
+
   startUpdateHistory({ dispatch, getters, rootGetters }) {
     const delay = rootGetters.icoIsRunning === true ? 45 : 120;
     const updateHistoryPromise = new Promise((resolve) => {
@@ -282,6 +309,7 @@ const actions = {
   },
 };
 
+
 const getEstimatedFees = (wallet, speed) => {
   if (wallet.ticker.indexOf('KMD') >= 0) {
     return 0.0001;
@@ -291,6 +319,7 @@ const getEstimatedFees = (wallet, speed) => {
     return result;
   });
 };
+
 
 export default {
   state,
