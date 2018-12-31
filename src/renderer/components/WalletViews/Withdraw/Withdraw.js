@@ -16,7 +16,6 @@
 
 import bitcoinjs from 'bitcoinjs-lib';
 import { QrcodeReader } from 'vue-qrcode-reader';
-import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
 import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
@@ -29,7 +28,6 @@ export default {
   name: 'withdraw',
   components: {
     SelectDropdown,
-    'transaction-history': TransactionHistory,
     'hodl-history': HodlHistory,
     'select-awesome': SelectAwesome,
     QrcodeReader
