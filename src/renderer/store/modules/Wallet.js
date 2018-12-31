@@ -153,9 +153,6 @@ const actions = {
 
       return wallet.electrum
         .init()
-        .then(() => {
-          dispatch('buildTxHistory', wallet, { root: true });
-        })
         ;
     });
     return Promise.all(promises)
@@ -251,7 +248,6 @@ const actions = {
   startUpdates({ dispatch }) {
     dispatch('setIsUpdate', true);
     dispatch('startUpdateBalances');
-    dispatch('startUpdateHistory');
   },
 
   startUpdateBalances({ dispatch, getters }) {
@@ -268,28 +264,6 @@ const actions = {
     }, rand * 1000);
   },
 
-  startUpdateHistory({ dispatch, getters, rootGetters }) {
-    const delay = rootGetters.icoIsRunning === true ? 45 : 120;
-    const updateHistoryPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        const promises = [];
-
-        Object.keys(getters.getWallets).forEach((ticker) => {
-          promises.push(dispatch('buildTxHistory', getters.getWallets[ticker], { root: true }));
-        });
-
-        Promise
-          .all(promises)
-          .then(() => {
-            if (getters.isUpdate) {
-              return dispatch('startUpdateHistory');
-            }
-          })
-          .then(() => resolve());
-      }, delay * 1000);
-    });
-    return updateHistoryPromise;
-  },
 };
 
 

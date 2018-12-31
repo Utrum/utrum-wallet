@@ -13,10 +13,10 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
+//import * as bluebird from 'bluebird';
+//import getTxFromRawTx from '../../lib/txtools';
 
-import * as bluebird from 'bluebird';
-import getTxFromRawTx from '../../lib/txtools';
-
+/*
 const actions = {
   buildTxHistory({ commit, dispatch, getters, rootGetters }, wallet) {
     return wallet.electrum
@@ -56,8 +56,8 @@ const decodeTx = (wallet, tx) => {
     })
   ;
 };
-
+*/
 
 export default {
-  actions,
+//  actions,
 };
