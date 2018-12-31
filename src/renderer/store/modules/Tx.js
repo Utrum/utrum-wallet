@@ -27,7 +27,6 @@ const actions = {
             .then((transactionDetail) => {
               // console.log(`Tx: ${transactionDetail.tx_hash}, confirmations: ${transactionDetail.confirmations}`);
               commit('ADD_TX', { ticker: wallet.ticker, newTx: transactionDetail }, { root: true });
-              dispatch('buildSwapList', { root: true });
             })
             .catch(() => { })
           ;
@@ -62,4 +61,3 @@ const decodeTx = (wallet, tx) => {
 export default {
   actions,
 };
-
