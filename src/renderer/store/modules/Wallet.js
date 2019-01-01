@@ -225,21 +225,14 @@ const actions = {
       .then(response => {
         wallet.balance = BigNumber(response.confirmed).dividedBy(satoshiNb);
         wallet.balance_unconfirmed = new BigNumber(response.unconfirmed).dividedBy(satoshiNb);
-        if (wallet.coin.name === 'monaize') {
-          getCmcData('bitcoin')
-            .then(response => {
-              wallet.balance_usd = wallet.balance.multipliedBy(BigNumber(response.data[0].price_usd).dividedBy(15000));
-            })
-            ;
-        } else {
-          getCmcData(wallet.coin.name)
-            .then(response => {
-              response.data.forEach((cmcCoin) => {
-                wallet.rate_in_usd = cmcCoin.price_usd;
-                wallet.balance_usd = wallet.balance.multipliedBy(cmcCoin.price_usd);
-              });
-            })
-            ;
+        getCmcData(wallet.coin.name)
+          .then(response => {
+            response.data.forEach((cmcCoin) => {
+              wallet.rate_in_usd = cmcCoin.price_usd;
+              wallet.balance_usd = wallet.balance.multipliedBy(cmcCoin.price_usd);
+            });
+          })
+          ;
         }
       })
       ;
