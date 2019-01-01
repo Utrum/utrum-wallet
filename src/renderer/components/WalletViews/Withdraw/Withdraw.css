@@ -318,3 +318,10 @@
 .utrum-dd-search{
   width: 210px;
 }
+
+/* Added css to manage button at center of QR model */
+#readerQrcodeModal .footerBuyModal button
+{
+  margin: 0 auto;  
+}
+

@@ -106,9 +106,11 @@
 
   <b-modal size="sm"
            :hide-header="true"
-           :hide-footer="true"
+           :hide-footer="false"
            @hide="readingQRCode = false"
            id="readerQrcodeModal"
+           ref="readerQrcodeModal"
+           class="text-center"
            centered>
     <qrcode-reader id="qrcode"
                    :video-constraints="videoConstraints"
@@ -117,6 +119,11 @@
                    v-if="readingQRCode"
                    @init="onInit">
     </qrcode-reader>
+    <!-- The close button html start for QR model-->
+    <div slot="modal-footer" class="row footerBuyModal">
+      <button @click="hidereaderQrcodeModal" slot="modal-close" id="close" class="col-custom btn-round-light">close</button>     
+    </div>
+    <!-- The close button html end for QR model-->
   </b-modal>
 
   <b-modal @ok="withdrawFunds()"
