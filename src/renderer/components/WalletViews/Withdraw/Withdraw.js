@@ -86,9 +86,11 @@ export default {
       let timestamp = Date.now() // necessary
       this.reloadTxHistory = [milisec, timestamp]
     },
+
     onMaxSelected() {
       this.withdraw.amount = this.getBalance;
     },
+
     onShowBuyModal() {
       return this.prepareTx()
         .then((tx) => {
@@ -101,19 +103,24 @@ export default {
         })
         ;
     },
+
     onChange() {
       this.prepareTx();
     },
+
     onFeeChange(data) {
       this.speed = data.speed;
       this.prepareTx();
     },
+
     onConfirmWithdrawModal() {
       this.prepareTx();
     },
+
     hideModal() {
       this.$refs.confirmWithdraw.hide();
     },
+
     onDecode(content) {
       if (this.checkAddress(content)) {
         this.withdraw.address = content;
@@ -124,6 +131,7 @@ export default {
       this.readingQRCode = false;
       this.$root.$emit('bv::hide::modal', 'readerQrcodeModal');
     },
+
     checkAddress(addr) {
       if (addr) {
         const checkResult = bitcoinjs.address.fromBase58Check(addr);
@@ -136,6 +144,7 @@ export default {
         return false;
       }
     },
+
     async onInit(promise) {
       this.loading = true;
 
@@ -161,6 +170,7 @@ export default {
         this.loading = false;
       }
     },
+
     updateCoin(value) {
       this.withdraw = {
         amount: null,
@@ -169,11 +179,13 @@ export default {
       };
       this.select = value;
     },
+
     updateNewCoin(value) {
       if (value) {
         this.updateCoin(value.ticker)
       }
     },
+
     prepareTx() {
       // Number here because of bitcoinjs incapacity to use Big types.
       const amount = this.getAmountInSatoshis.toNumber();
@@ -201,6 +213,7 @@ export default {
     debounceInfo: _.debounce(function () {
       this.$toasted.info('The address is not valid.');
     }, 500),
+
     withdrawFunds() {
       this.hideModal();
       if (this.canWithdraw === true && this.addressIsValid === true) {
@@ -230,6 +243,7 @@ export default {
       }
     },
   },
+
   computed: {
     amount: {
       get: function () {
@@ -246,6 +260,7 @@ export default {
         }
       },
     },
+
     getAmountInSatoshis() {
       if (this.amount != null) {
         const amountInSatoshis = BigNumber(this.amount).multipliedBy(this.satoshiNb);
@@ -253,12 +268,15 @@ export default {
       }
       return BigNumber(0);
     },
+
     getConfig() {
       return this.$store.getters.getConfig;
     },
+
     coins() {
       return this.$store.getters.enabledCoins.map(coin => coin.ticker ).filter( coin => coin != 'BTC');
     },
+
     coinsNew() {
       return this.$store.getters.enabledCoins.map(coin => {
         let tempObj = {
@@ -274,27 +292,34 @@ export default {
         return tempObj
       });
     },
+
     getTotalPriceWithFee() {
       if (this.getAmountInSatoshis != null && this.estimatedFee != null) {
         return decimalsCount(this.getAmountInSatoshis.plus(this.estimatedFee).dividedBy(this.satoshiNb));
       }
       return '';
     },
+
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
     },
+
     getSatoshisBalance() {
       return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance).multipliedBy(this.satoshiNb);
     },
+
     getBalance() {
       return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance);
     },
+
     getUSDAmount() {
       return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance_usd.toFixed(2));
     },
+
     convertToUSDAmount() {
       return Number( this.amount * this.$store.getters.getWalletByTicker(this.select).rate_in_usd).toFixed(2);
     },
+
     canWithdraw() {
       if (this.withdraw.amount != null) {
         if (this.addressIsValid === false && this.withdraw.address.length === 34) {
@@ -305,6 +330,7 @@ export default {
       }
       return false;
     },
+
     addressIsValid() {
       if (this.withdraw.address) {
         try {
@@ -321,6 +347,7 @@ export default {
         }
       }
     },
+
     canSend(){
       if(
         this.withdraw.amount &&
