@@ -20,6 +20,14 @@ export default {
     return {
     };
   },
+  created() {
+    //The 'addEventListener' created for goes back to login page on the click of Esc key
+    window.addEventListener('keydown', (e) => {
+      if (e.key == 'Escape') {
+        this.$router.push('/login-form');        
+      }
+    });
+  },
   mounted() {
     this.$router.push('version');
   },
@@ -30,6 +38,9 @@ export default {
       } else {
         this.$router.push('login');
       }
+    },
+    backArrow() { //Added for back button functionality, on the click of top left back button.
+      this.$router.push('/login-form');            
     },
   },
   computed: {
