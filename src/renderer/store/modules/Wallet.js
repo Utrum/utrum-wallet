@@ -35,7 +35,6 @@ const state = {
     balance_unconfirmed: 0,
     balance_usd: 0,
     ticker: null,
-    txs: {},
     rate_in_usd: 0
   }],
   coins: [],
@@ -105,21 +104,6 @@ const mutations = {
   UPDATE_IS_UPDATE(state, isUpdate) {
     state.isUpate = isUpdate;
   },
-
-  ADD_TX(state, { ticker, newTx }) {
-    _.remove(state.wallets[ticker].txs, (tx) => {
-      return tx.tx_hash === newTx.tx_hash;
-    });
-    state.wallets[ticker].txs.unshift(newTx);
-  },
-
-  ADD_TXS(state, { ticker, txs }) {
-    state.wallets[ticker].txs = txs;
-  },
-
-  DELETE_TX(state, { ticker, tx }) {
-    state.wallets[ticker].txs.slice(state.wallets[ticker].txs.indexOf(tx), 1);
-  },
 };
 
 
@@ -146,7 +130,6 @@ const actions = {
       wallet.ticker = ticker;
       wallet.balance = 0;
       wallet.balance_usd = 0;
-      wallet.txs = [];
       wallet.privKey = privateKey;
       commit('ADD_WALLET', wallet);
     });
