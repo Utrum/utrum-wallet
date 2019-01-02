@@ -20,7 +20,6 @@ import { BigNumber } from 'bignumber.js';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import store from '../../store';
-import ElectrumService from '../../lib/electrum';
 import axios from 'axios';
 import getCmcData from '../../lib/coinmarketcap';
 import createPrivKey from '../../lib/createPrivKey';
@@ -144,17 +143,12 @@ const actions = {
       const ticker = coin.ticker;
       const isTestMode = ticker.indexOf('TEST') >= 0;
       const wallet = new Wallet(privateKey, coin, isTestMode);
-      wallet.electrum = new ElectrumService(store, ticker, { client: 'Utrum Wallet', version: '1.2' });
       wallet.ticker = ticker;
       wallet.balance = 0;
       wallet.balance_usd = 0;
       wallet.txs = [];
       wallet.privKey = privateKey;
       commit('ADD_WALLET', wallet);
-
-      return wallet.electrum
-        .init()
-        ;
     });
     return Promise.all(promises)
       .catch(() => { })
