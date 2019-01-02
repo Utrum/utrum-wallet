@@ -194,22 +194,31 @@ const actions = {
   },
 
   broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
-    const builtTx = wallet.buildTx(inputs, outputs, fee, dataScript);
-    const txId = builtTx.getId();
-
-    return wallet.electrum
-      .broadcast(builtTx.toHex())
-      .then((broadcastedTx) => {
-        if (txId === broadcastedTx) {
-          return broadcastedTx;
+    // create raw transaction
+    var builtTx = wallet.buildTx(inputs, outputs, fee, dataScript);
+    var txId = builtTx.getId();
+    var rawTx = builtTx.toHex()
+    // prepare url
+    let baseUrl = getExplorerBaseUrl(wallet)
+    let sendUrl = ( baseUrl + "/tx/send" )
+    // make call to api to get utxos
+    return axios
+      .post( sendUrl, {rawtx: rawTx} )
+      .then((response) => {
+        if (txId === response.data.txid) {
+          return response.data.txid
+        } else {
+          return Promise.reject(
+            new Error(
+              `Broadcast tx ${broadcastedTx} not the same as built tx ${txId}`
+            )
+          );
         }
-        return Promise.reject(new Error(`Broadcasted tx ${broadcastedTx} is not the same as built tx ${txId}`));
       })
       .catch((error) => {
-        console.log('BROADCASTED TX ERROR:', error); // eslint-disable-line
+        console.log('Error broadcasting transaction:', error);
         return Promise.reject(error);
       })
-      ;
   },
 
   destroyWallets({ commit }) {
