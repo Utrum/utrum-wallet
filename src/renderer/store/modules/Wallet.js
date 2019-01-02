@@ -271,18 +271,9 @@ const getEstimatedFees = (wallet, speed) => {
 };
 
 const listUnspent = async (wallet) => {
-  // prepare url to query utxos
-  let coinExplorer = wallet.coin.explorer
-  if ( coinExplorer.slice(-1) !== '/') {
-    coinExplorer += '/'
-  }
-  let ticker = wallet.ticker
-  let apiPath = ticker === 'BTC' ? 'api' : 'insight-api-komodo'
-  let utxoUrl = ( coinExplorer +
-    apiPath + "/addrs/" +
-    wallet.address +
-    "/utxo"
-  )
+  // prepare url
+  let baseUrl = getExplorerBaseUrl(wallet)
+  let utxoUrl = ( baseUrl + "/addrs/" + wallet.address + "/utxo" )
   // make call to api to get utxos
   let response = await axios.get(utxoUrl)
   // translate utxos to bitcoinjs format
@@ -300,6 +291,17 @@ const listUnspent = async (wallet) => {
   }
   return output
 };
+
+const getExplorerBaseUrl = (wallet) => {
+  let coinExplorer = wallet.coin.explorer
+  if ( coinExplorer.slice(-1) !== '/') {
+    coinExplorer += '/'
+  }
+  let ticker = wallet.ticker
+  let apiPath = ticker === 'BTC' ? 'api' : 'insight-api-komodo'
+  let baseUrl = coinExplorer + apiPath
+  return baseUrl
+}
 
 export default {
   state,
