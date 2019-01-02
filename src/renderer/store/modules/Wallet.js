@@ -227,14 +227,16 @@ const actions = {
 
   updateBalance({ commit, getters, rootGetters }, wallet) {
     commit('UPDATE_BALANCE', wallet);
-    return wallet.electrum
-      .getBalance(wallet.address)
+    return getBalance(wallet)
       .catch((error) => {
-        return Promise.reject(new Error(`Failed to retrieve ${wallet.ticker} balance\n${error}`));
+        return Promise.reject(
+          new Error(`Failed to retrieve ${wallet.ticker} balance\n${error}`)
+        );
       })
       .then(response => {
-        wallet.balance = BigNumber(response.confirmed).dividedBy(satoshiNb);
-        wallet.balance_unconfirmed = new BigNumber(response.unconfirmed).dividedBy(satoshiNb);
+        console.log(response) // TESTING
+        wallet.balance = BigNumber(response.balance).dividedBy(satoshiNb);
+        wallet.balance_unconfirmed = new BigNumber(response.unconfirmedBalance).dividedBy(satoshiNb);
         getCmcData(wallet.coin.name)
           .then(response => {
             response.data.forEach((cmcCoin) => {
@@ -310,7 +312,23 @@ const getExplorerBaseUrl = (wallet) => {
   let apiPath = ticker === 'BTC' ? 'api' : 'insight-api-komodo'
   let baseUrl = coinExplorer + apiPath
   return baseUrl
-}
+};
+
+const getBalance = async (wallet) => {
+  // prepare url
+  let baseUrl = getExplorerBaseUrl(wallet)
+  let balanceUrl = ( baseUrl + "/addr/" + wallet.address + "/balance" )
+  let unconfirmedBalanceUrl = (
+    baseUrl + "/addr/" + wallet.address + "/unconfirmedBalance"
+  )
+  let balance = await axios.get(balanceUrl)
+  let unconfirmedBalance = await axios.get(unconfirmedBalanceUrl)
+  let output = {
+    balance: Number(balance.data),
+    unconfirmedBalance: Number(unconfirmedBalance.data)
+  }
+  return output
+};
 
 export default {
   state,
