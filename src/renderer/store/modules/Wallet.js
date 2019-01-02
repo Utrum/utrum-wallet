@@ -285,6 +285,7 @@ const listUnspent = async (wallet) => {
   )
   // make call to api to get utxos
   let response = await axios.get(utxoUrl)
+  // translate utxos to bitcoinjs format
   let utxos = response.data
   let output = []
   for ( let u in utxos ) {
