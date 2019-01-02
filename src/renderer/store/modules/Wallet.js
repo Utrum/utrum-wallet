@@ -21,6 +21,7 @@ import * as _ from 'lodash';
 import Vue from 'vue';
 import store from '../../store';
 import ElectrumService from '../../lib/electrum';
+import axios from 'axios';
 import getCmcData from '../../lib/coinmarketcap';
 import createPrivKey from '../../lib/createPrivKey';
 
@@ -163,7 +164,7 @@ const actions = {
   createTransaction({ commit, rootGetters }, { wallet, amount, address, speed = 'slow', data = null }) {
     let utxos;
 
-    return wallet.electrum.listUnspent(wallet.address)
+    return listUnspent(wallet)
       .then((_utxos) => {
         utxos = _utxos;
         return getEstimatedFees(wallet, speed);
@@ -269,6 +270,35 @@ const getEstimatedFees = (wallet, speed) => {
   });
 };
 
+const listUnspent = async (wallet) => {
+  // prepare url to query utxos
+  let coinExplorer = wallet.coin.explorer
+  if ( coinExplorer.slice(-1) !== '/') {
+    coinExplorer += '/'
+  }
+  let ticker = wallet.ticker
+  let apiPath = ticker === 'BTC' ? 'api' : 'insight-api-komodo'
+  let utxoUrl = ( coinExplorer +
+    apiPath + "/addrs/" +
+    wallet.address +
+    "/utxo"
+  )
+  // make call to api to get utxos
+  let response = await axios.get(utxoUrl)
+  let utxos = response.data
+  let output = []
+  for ( let u in utxos ) {
+    let utxo = utxos[u]
+    let newUtxo = {
+      value: utxo.satoshis,
+      height: utxo.height,
+      tx_hash: utxo.txid,
+      tx_pos: utxo.vout
+    }
+    output.push(newUtxo)
+  }
+  return output
+};
 
 export default {
   state,
