@@ -14,7 +14,6 @@
  *                                                                            *
  ******************************************************************************/
 
-import bitcoinjs from 'bitcoinjs-lib';
 import { BigNumber } from 'bignumber.js';
 import bitcore from 'bitcore-lib';
 import axios from 'axios';
