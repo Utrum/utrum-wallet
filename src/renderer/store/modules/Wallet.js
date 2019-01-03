@@ -211,7 +211,6 @@ const actions = {
         );
       })
       .then(response => {
-        console.log(response) // TESTING
         wallet.balance = BigNumber(response.balance).dividedBy(satoshiNb);
         wallet.balance_unconfirmed = new BigNumber(response.unconfirmedBalance).dividedBy(satoshiNb);
         getCmcData(wallet.coin.name)
