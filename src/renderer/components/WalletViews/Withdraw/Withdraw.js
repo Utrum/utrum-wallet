@@ -14,7 +14,6 @@
  *                                                                            *
  ******************************************************************************/
 
-import bitcoinjs from 'bitcoinjs-lib';
 import { QrcodeReader } from 'vue-qrcode-reader';
 import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
@@ -23,6 +22,7 @@ import _ from 'lodash';
 import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
 
 const { clipboard } = require('electron');
+const bitcoinjs = require('bitgo-utxo-lib');
 
 export default {
   name: 'withdraw',
