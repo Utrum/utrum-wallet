@@ -92,7 +92,6 @@
     "electron-license": "^1.0.0",
     "electron-publisher-s3": "^20.8.1",
     "electron-spawn": "^5.0.0",
-    "electrum-client": "https://github.com/Monaize/node-electrum-client.git#electrumx-persistence",
     "elliptic": "^6.4.0",
     "express": "^4.16.3",
     "fs": "^0.0.1-security",
