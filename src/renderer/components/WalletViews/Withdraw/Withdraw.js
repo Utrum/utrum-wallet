@@ -48,14 +48,14 @@ export default {
       ],
       videoConstraints: {
         width: {
-          min: 265,
-          ideal: 265,
-          max: 265,
+          min: 300,
+          ideal: 300,
+          max: 300,
         },
         height: {
-          min: 250,
-          ideal: 250,
-          max: 250,
+          min: 225,
+          ideal: 225,
+          max: 225,
         },
       },
       paused: false,

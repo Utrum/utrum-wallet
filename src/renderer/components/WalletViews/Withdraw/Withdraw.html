@@ -99,8 +99,8 @@
 
 
   <b-modal size="sm"
-           :hide-header="true"
-           :hide-footer="true"
+           :hide-header="false"
+           :hide-footer="false"
            @hide="readingQRCode = false"
            id="readerQrcodeModal"
            centered>
@@ -111,6 +111,11 @@
                    v-if="readingQRCode"
                    @init="onInit">
     </qrcode-reader>
+    <div slot="modal-footer" class="row footerBuyModal">
+      <span style="margin: 0 auto; font-size: smaller; text-align: center;">
+        Please, put the recipient QR code in front of the camera.
+      </span>
+    </div>
   </b-modal>
 
   <b-modal @ok="withdrawFunds()"
