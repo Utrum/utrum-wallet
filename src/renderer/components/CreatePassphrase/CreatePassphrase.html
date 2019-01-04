@@ -53,13 +53,7 @@
           <div class="cp-optn-wrapper m-auto" style="width: 80%;">
               <textarea v-on:keyup="checkPassphrase" v-model="passphraseValue" onblur="this.placeholder = 'Please enter your passphrase'" onfocus="this.placeholder = ''" placeholder="Please enter your passphrase" cols="40" rows="3" class="col-custom" type="text" onPaste="return false" name="input-login" onDrag="return false" onDrop="return false" autocomplete=off
               ></textarea>
-
-              <div class="cp-btn-wrapper">
-                <b-button variant="link" @click.prevent="onPaste()" title="Paste">
-                  <i class="far fa-clipboard"></i>
-                </b-button>
-              </div>
-            </div>
+          </div>
       </div>
     </div>
   </div>
