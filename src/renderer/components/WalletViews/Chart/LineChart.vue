@@ -61,7 +61,7 @@
                   if(tempArrr.length >= 2){
                     return tempArrr[1]
                   }
-                  else{ 
+                  else{
                     return value
                   }
                 }
@@ -92,7 +92,7 @@
               label: (tooltipItem, data) => {
                 let dataset = data.datasets[tooltipItem.datasetIndex]
                 let currentValue = dataset.data[tooltipItem.index]
-                return `💰 ${currentValue.toLocaleString()}`
+                return `💰 ${currentValue.toLocaleString()} USD`
               }
             }
           },
