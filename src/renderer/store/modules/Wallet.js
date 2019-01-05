@@ -20,7 +20,7 @@ import { BigNumber } from 'bignumber.js';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import store from '../../store';
-import ElectrumService from '../../lib/electrum';
+import axios from 'axios';
 import getCmcData from '../../lib/coinmarketcap';
 import createPrivKey from '../../lib/createPrivKey';
 
@@ -35,7 +35,6 @@ const state = {
     balance_unconfirmed: 0,
     balance_usd: 0,
     ticker: null,
-    txs: {},
     rate_in_usd: 0
   }],
   coins: [],
@@ -44,30 +43,19 @@ const state = {
 };
 
 const getters = {
+
   isUpdate: (state) => {
     return state.isUpdate;
   },
-  getHistoryBuy: (state, getters) => {
-    const mainTicker = getters.getTickerForExpectedCoin('OOT');
-    const history = getters.getWalletTxs(mainTicker);
-    Object.keys(coins).forEach((coin) => {
-      const filteredHistory = history.filter(el => el.origin.ticker === coin);
-      history.concat(filteredHistory);
-    });
-    return history;
-  },
+
   getWalletByTicker: (state) => (ticker) => {
     return state.wallets[ticker];
   },
-  getWalletTxs: (state, getters) => (ticker) => {
-    if (ticker != null && getters.getWalletByTicker(ticker) != null) {
-      return getters.getWalletByTicker(ticker).txs;
-    }
-    return [];
-  },
+
   getWallets: (state) => {
     return state.wallets;
   },
+
   getTotalBalance: (state) => {
     const walletKeys = Object.keys(state.wallets);
     let totalBalanceUsd = BigNumber(0);
@@ -78,12 +66,15 @@ const getters = {
 
     return totalBalanceUsd;
   },
+
   getBalanceByTicker: (state) => (ticker) => {
     return state.wallets[ticker].balance;
   },
+
   enabledCoins: () => {
     return config.func.enabledCoins.map(ticker => coins.get(ticker));
   },
+
   getTickerForExpectedCoin: () => (expectedCoinTicker) => {
     let theTicker;
     config.func.enabledCoins.forEach(ticker => {
@@ -95,37 +86,33 @@ const getters = {
   },
 };
 
+
 const mutations = {
+
   ADD_WALLET(state, wallet) {
     state.wallets[wallet.ticker] = Vue.set(state.wallets, wallet.ticker, wallet);
   },
+
   DESTROY_WALLETS(state) {
     state.wallets = {};
   },
+
   UPDATE_BALANCE(state, wallet) {
     Vue.set(state.wallets, wallet.ticker, wallet);
   },
+
   UPDATE_IS_UPDATE(state, isUpdate) {
     state.isUpate = isUpdate;
   },
-  ADD_TX(state, { ticker, newTx }) {
-    _.remove(state.wallets[ticker].txs, (tx) => {
-      return tx.tx_hash === newTx.tx_hash;
-    });
-    state.wallets[ticker].txs.unshift(newTx);
-  },
-  ADD_TXS(state, { ticker, txs }) {
-    state.wallets[ticker].txs = txs;
-  },
-  DELETE_TX(state, { ticker, tx }) {
-    state.wallets[ticker].txs.slice(state.wallets[ticker].txs.indexOf(tx), 1);
-  },
 };
 
+
 const actions = {
+
   setIsUpdate({ commit }, isUpdate) {
     commit('UPDATE_IS_UPDATE', isUpdate);
   },
+
   initWallets({ commit, dispatch, rootGetters }) {
     if (Object.keys(state.wallets).length > 0) {
       dispatch('destroyWallets');
@@ -140,29 +127,21 @@ const actions = {
       const ticker = coin.ticker;
       const isTestMode = ticker.indexOf('TEST') >= 0;
       const wallet = new Wallet(privateKey, coin, isTestMode);
-      wallet.electrum = new ElectrumService(store, ticker, { client: 'Utrum Wallet', version: '1.2' });
       wallet.ticker = ticker;
       wallet.balance = 0;
       wallet.balance_usd = 0;
-      wallet.txs = [];
       wallet.privKey = privateKey;
       commit('ADD_WALLET', wallet);
-
-      return wallet.electrum
-        .init()
-        .then(() => {
-          dispatch('buildTxHistory', wallet, { root: true });
-        })
-        ;
     });
     return Promise.all(promises)
       .catch(() => { })
       ;
   },
+
   createTransaction({ commit, rootGetters }, { wallet, amount, address, speed = 'slow', data = null }) {
     let utxos;
 
-    return wallet.electrum.listUnspent(wallet.address)
+    return listUnspent(wallet)
       .then((_utxos) => {
         utxos = _utxos;
         return getEstimatedFees(wallet, speed);
@@ -190,61 +169,67 @@ const actions = {
       })
       ;
   },
-  broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
-    const builtTx = wallet.buildTx(inputs, outputs, fee, dataScript);
-    const txId = builtTx.getId();
 
-    return wallet.electrum
-      .broadcast(builtTx.toHex())
-      .then((broadcastedTx) => {
-        if (txId === broadcastedTx) {
-          return broadcastedTx;
+  broadcastTransaction({ commit }, { wallet, inputs, outputs, fee, dataScript = null }) {
+    // create raw transaction
+    var builtTx = wallet.buildTx(inputs, outputs, fee, dataScript);
+    var txId = builtTx.getId();
+    var rawTx = builtTx.toHex()
+    // prepare url
+    let baseUrl = getExplorerBaseUrl(wallet)
+    let sendUrl = ( baseUrl + "/tx/send" )
+    // make call to api to get utxos
+    return axios
+      .post( sendUrl, {rawtx: rawTx} )
+      .then((response) => {
+        if (txId === response.data.txid) {
+          return response.data.txid
+        } else {
+          return Promise.reject(
+            new Error(
+              `Broadcast tx ${broadcastedTx} not the same as built tx ${txId}`
+            )
+          );
         }
-        return Promise.reject(new Error(`Broadcasted tx ${broadcastedTx} is not the same as built tx ${txId}`));
       })
       .catch((error) => {
-        console.log('BROADCASTED TX ERROR:', error); // eslint-disable-line
+        console.log('Error broadcasting transaction:', error);
         return Promise.reject(error);
       })
-      ;
   },
+
   destroyWallets({ commit }) {
     commit('DESTROY_WALLETS');
   },
+
   updateBalance({ commit, getters, rootGetters }, wallet) {
     commit('UPDATE_BALANCE', wallet);
-    return wallet.electrum
-      .getBalance(wallet.address)
+    return getBalance(wallet)
       .catch((error) => {
-        return Promise.reject(new Error(`Failed to retrieve ${wallet.ticker} balance\n${error}`));
+        return Promise.reject(
+          new Error(`Failed to retrieve ${wallet.ticker} balance\n${error}`)
+        );
       })
       .then(response => {
-        wallet.balance = BigNumber(response.confirmed).dividedBy(satoshiNb);
-        wallet.balance_unconfirmed = new BigNumber(response.unconfirmed).dividedBy(satoshiNb);
-        if (wallet.coin.name === 'monaize') {
-          getCmcData('bitcoin')
-            .then(response => {
-              wallet.balance_usd = wallet.balance.multipliedBy(BigNumber(response.data[0].price_usd).dividedBy(15000));
-            })
-            ;
-        } else {
-          getCmcData(wallet.coin.name)
-            .then(response => {
-              response.data.forEach((cmcCoin) => {
-                wallet.rate_in_usd = cmcCoin.price_usd;
-                wallet.balance_usd = wallet.balance.multipliedBy(cmcCoin.price_usd);
-              });
-            })
-            ;
-        }
+        wallet.balance = BigNumber(response.balance).dividedBy(satoshiNb);
+        wallet.balance_unconfirmed = new BigNumber(response.unconfirmedBalance).dividedBy(satoshiNb);
+        getCmcData(wallet.coin.name)
+          .then(response => {
+            response.data.forEach((cmcCoin) => {
+              wallet.rate_in_usd = cmcCoin.price_usd;
+              wallet.balance_usd = wallet.balance.multipliedBy(cmcCoin.price_usd);
+            });
+          })
+          ;
       })
       ;
   },
+
   startUpdates({ dispatch }) {
     dispatch('setIsUpdate', true);
     dispatch('startUpdateBalances');
-    dispatch('startUpdateHistory');
   },
+
   startUpdateBalances({ dispatch, getters }) {
     const min = 20;
     const max = 50;
@@ -258,29 +243,9 @@ const actions = {
       }
     }, rand * 1000);
   },
-  startUpdateHistory({ dispatch, getters, rootGetters }) {
-    const delay = rootGetters.icoIsRunning === true ? 45 : 120;
-    const updateHistoryPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        const promises = [];
 
-        Object.keys(getters.getWallets).forEach((ticker) => {
-          promises.push(dispatch('buildTxHistory', getters.getWallets[ticker], { root: true }));
-        });
-
-        Promise
-          .all(promises)
-          .then(() => {
-            if (getters.isUpdate) {
-              return dispatch('startUpdateHistory');
-            }
-          })
-          .then(() => resolve());
-      }, delay * 1000);
-    });
-    return updateHistoryPromise;
-  },
 };
+
 
 const getEstimatedFees = (wallet, speed) => {
   if (wallet.ticker.indexOf('KMD') >= 0) {
@@ -290,6 +255,55 @@ const getEstimatedFees = (wallet, speed) => {
     const result = BigNumber(estimation[speed]).dividedBy(100000000);
     return result;
   });
+};
+
+const listUnspent = async (wallet) => {
+  // prepare url
+  let baseUrl = getExplorerBaseUrl(wallet)
+  let utxoUrl = ( baseUrl + "/addrs/" + wallet.address + "/utxo" )
+  // make call to api to get utxos
+  let response = await axios.get(utxoUrl)
+  // translate utxos to bitcoinjs format
+  let utxos = response.data
+  let output = []
+  for ( let u in utxos ) {
+    let utxo = utxos[u]
+    let newUtxo = {
+      value: utxo.satoshis,
+      height: utxo.height,
+      tx_hash: utxo.txid,
+      tx_pos: utxo.vout
+    }
+    output.push(newUtxo)
+  }
+  return output
+};
+
+const getExplorerBaseUrl = (wallet) => {
+  let coinExplorer = wallet.coin.explorer
+  if ( coinExplorer.slice(-1) !== '/') {
+    coinExplorer += '/'
+  }
+  let ticker = wallet.ticker
+  let apiPath = ticker === 'BTC' ? 'api' : 'insight-api-komodo'
+  let baseUrl = coinExplorer + apiPath
+  return baseUrl
+};
+
+const getBalance = async (wallet) => {
+  // prepare url
+  let baseUrl = getExplorerBaseUrl(wallet)
+  let balanceUrl = ( baseUrl + "/addr/" + wallet.address + "/balance" )
+  let unconfirmedBalanceUrl = (
+    baseUrl + "/addr/" + wallet.address + "/unconfirmedBalance"
+  )
+  let balance = await axios.get(balanceUrl)
+  let unconfirmedBalance = await axios.get(unconfirmedBalanceUrl)
+  let output = {
+    balance: Number(balance.data),
+    unconfirmedBalance: Number(unconfirmedBalance.data)
+  }
+  return output
 };
 
 export default {

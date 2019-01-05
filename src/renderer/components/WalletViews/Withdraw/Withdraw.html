@@ -97,16 +97,10 @@
                 :parent="'withdraw'">
   </hodl-history>
 
-<!--
-  <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">
-    <transaction-history id="transactionHistory" :coin="wallet.coin">
-    </transaction-history>
-  </div>
--->
 
   <b-modal size="sm"
-           :hide-header="true"
-           :hide-footer="true"
+           :hide-header="false"
+           :hide-footer="false"
            @hide="readingQRCode = false"
            id="readerQrcodeModal"
            centered>
@@ -117,6 +111,11 @@
                    v-if="readingQRCode"
                    @init="onInit">
     </qrcode-reader>
+    <div slot="modal-footer" class="row footerBuyModal">
+      <span style="margin: 0 auto; color: gray; text-align: center;">
+        Please, put the recipient's QR code in front of the camera.
+      </span>
+    </div>
   </b-modal>
 
   <b-modal @ok="withdrawFunds()"

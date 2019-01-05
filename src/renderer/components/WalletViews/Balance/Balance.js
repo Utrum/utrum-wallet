@@ -13,7 +13,6 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
-import bitcoinjs from 'bitcoinjs-lib';
 import Select2 from '@/components/Utils/Select2/Select2.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';

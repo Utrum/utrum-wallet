@@ -16,7 +16,6 @@
 
 import Vue from 'vue';
 import Router from 'vue-router';
-import Buy from '@/components/WalletViews/Buy/Buy.vue';
 import Hodl from '@/components/WalletViews/Hodl/Hodl.vue';
 import Chart from '@/components/WalletViews/Chart/Chart.vue';
 import LoginForm from '@/components/LoginForm/LoginForm.vue';
@@ -28,7 +27,6 @@ import Withdraw from '@/components/WalletViews/Withdraw/Withdraw.vue';
 import About from '@/components/About/About.vue';
 import Version from '@/components/About/Version/Version.vue';
 import TermsAndConditions from '@/components/About/TermsAndConditions/TermsAndConditions.vue';
-import Disclamer from '@/components/About/Disclamer/Disclamer.vue';
 import Website from '@/components/About/Website/Website.vue';
 import Library from '@/components/About/Library/Library.vue';
 import Social from '@/components/About/Social/Social.vue';
@@ -62,11 +60,6 @@ export default new Router({
           path: '/balance',
           name: 'balance',
           component: Balance,
-        },
-        {
-          path: '/buy',
-          name: 'buy',
-          component: Buy,
         },
         {
           path: '/hodl',
@@ -103,11 +96,6 @@ export default new Router({
           path: '/terms-and-conditions',
           name: 'terms-and-conditions',
           component: TermsAndConditions,
-        },
-        {
-          path: '/disclamer',
-          name: 'disclamer',
-          component: Disclamer,
         },
         {
           path: '/website',

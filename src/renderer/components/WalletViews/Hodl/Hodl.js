@@ -14,7 +14,6 @@
  *                                                                            *
  ******************************************************************************/
 
-import bitcoinjs from 'bitcoinjs-lib';
 import { BigNumber } from 'bignumber.js';
 import bitcore from 'bitcore-lib';
 import axios from 'axios';
@@ -319,7 +318,7 @@ export default {
   },
 
   computed: {
-    // get bitcoinjs-lib wallet data
+    // get wallet data
     wallet () {
       return this.$store.getters.getWalletByTicker(this.selectedCoin);
     },
