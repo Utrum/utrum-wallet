@@ -105,13 +105,11 @@ export default {
     updateUnlockTime () {
       // convert days to seconds
       var secondsToLock = (this.hodlInput.daysToLock * 86400)
-      //var secondsToLock = (this.hodlInput.daysToLock * 60) // TESTING!
       var unlockTime = (Date.now() / 1000 | 0) + secondsToLock
       this.hodlData.unlockTime = unlockTime
       this.unlockTimeDate = (
         this.dateFormat(unlockTime) + " (in " +
         this.hodlInput.daysToLock + " days)"
-        //this.hodlInput.daysToLock + " minutes)" // TESTING!
       )
     },
 
