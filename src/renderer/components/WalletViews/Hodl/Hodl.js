@@ -60,12 +60,12 @@ export default {
       selectedCoin: 'OOT',
       timeList: [
         {
-          text: '15 minutes',
-          value: 15
+          text: '60 days',
+          value: 60
         },
         {
-          text: '30 minutes',
-          value: 30
+          text: '120 days',
+          value: 120
         },
       ],
       // boostrap-vue related
@@ -104,14 +104,12 @@ export default {
     // update hodl unlock time
     updateUnlockTime () {
       // convert days to seconds
-      //var secondsToLock = (this.hodlInput.daysToLock * 86400) // TESTING!
-      var secondsToLock = (this.hodlInput.daysToLock * 60) // TESTING!
+      var secondsToLock = (this.hodlInput.daysToLock * 86400)
       var unlockTime = (Date.now() / 1000 | 0) + secondsToLock
       this.hodlData.unlockTime = unlockTime
       this.unlockTimeDate = (
         this.dateFormat(unlockTime) + " (in " +
-        //this.hodlInput.daysToLock + " days)" // TESTING!
-        this.hodlInput.daysToLock + " minutes)" // TESTING!
+        this.hodlInput.daysToLock + " days)"
       )
     },
 
@@ -329,7 +327,10 @@ export default {
     },
 
     calculatedReward () {
-      return this.hodlInput.amount * 0.01
+      let daysToLock = this.hodlInput.daysToLock
+      // this logarithmic function returns 1 for 60 days and 2.4 for 120 days
+      let percentage = 2.0197738315 * Math.log(daysToLock) - 7.26965
+      return this.hodlInput.amount * ( percentage * 0.01 )
     },
   }
 }
