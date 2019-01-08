@@ -27,7 +27,7 @@ yarn test
 
 #### Contributions
 
-This wallet is based on the work of the Monaize team.
+This wallet is based on the work of the MNZ team.
 
 If you find a bug or you want to propose a feature, you should create an [issue](https://github.com/Utrum/utrum-wallet/issues/new) on Github.
 
