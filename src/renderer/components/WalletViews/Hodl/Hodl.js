@@ -60,11 +60,11 @@ export default {
       selectedCoin: 'OOT',
       timeList: [
         {
-          text: '60 days',
+          text: '60 days - 1%',
           value: 60
         },
         {
-          text: '120 days',
+          text: '120 days - 2.4%',
           value: 120
         },
       ],
