@@ -266,9 +266,9 @@ body {
 
 p {
   font-size: 1.1em;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.7em;
-  color: #777;
+  color: #999;
 }
 
 a, a:hover, a:focus {

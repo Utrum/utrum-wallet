@@ -47,7 +47,7 @@ h5{
 
 .content h5 {
   font-weight: 300;
-  color: #687078;
+  color: #999;
 }
 
 #totalBalanceUsd img {
@@ -211,6 +211,7 @@ footer {
 
 .balance__title {
   font-size: 1.1em;
+  font-weight: 400 !important;
 }
 
 
