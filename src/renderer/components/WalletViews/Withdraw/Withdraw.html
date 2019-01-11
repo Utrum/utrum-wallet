@@ -1,63 +1,127 @@
 <div class="content">
   <div class="title-amount">
     <div class="row">
-      <h5 class="col-custom sub-title">CHOOSE YOUR CRYPTO</h5>
-      <h5 id="str-current-balances" class="col-custom sub-title">YOUR CURRENT BALANCE</h5>
+      <h6 class="col-custom sub-title">SELECT COIN</h6>
+      <h6 id="str-current-balances" class="col-custom sub-title">CURRENT BALANCE</h6>
     </div>
   </div>
 
   <div class="row">
-    <div id="selector-coin-buy" class="col-custom">
-      <div class="row-header">
-        <div class="btn select-all">
-          <p @click="$root.$emit('select2:open')" id="add-coin">+</p>
-        </div>
-        <div  class="col-custom">
-          <select2 ref='select2' :options="coins" :value="select" @input="updateCoin"></select2>
-        </div>
+
+    <select-dropdown default-text="Select"
+                     v-model="selectNew"
+                     :data="coinsNew"
+                     icon-prop="image_url"
+                     label-prop="label"
+                     unique-key-prop="ticker"
+                     :searchable="false"
+                     @input="updateNewCoin"/>
+
+    <div @click="onMaxSelected()"
+         id="card-current-balance"
+         class="justify-content-end align-items-center float-right">
+      <div v-if="getBalance > 0">
+        <span id="value-current-balance">{{ getBalance.toString().replace(/^(\d+)(\.\d\d?)?(.*)/, '$1$2') }}</span>
+        <span id="extra-decimals">{{ getBalance.toString().replace(/^(\d+)(\.\d\d?)?(.*)/, '$3') }}</span>
+        <span>({{ select }})</span>
+      </div>
+      <div v-else>
+        <span id="value-current-balance">{{ getBalance.toString() }}</span>
+        <span>({{ select }})</span>
+      </div>
+      <div>
+        <span id="us-dollar" class="col-header">$ {{getUSDAmount.toString()}} (USD)</span>
       </div>
     </div>
-    <div @click="onMaxSelected()" id="card-current-balance" class="d-flex justify-content-end align-items-center">
-        <span id="value-current-balance">{{getBalance.toString()}}&nbsp;</span><span>{{select}}</span>
+
+  </div>
+
+  <div @click="$refs.amount.focus()">
+    <div id="select-amount" class="row">
+      <div class="w-100">
+          <div class="col-custom input-field row">
+            <span class="title-content">AMOUNT :</span>
+            <input type="number"
+                   id="amount"
+                   ref="amount"
+                   v-model.number="amount"
+                   class="col-custom input-field"
+                   placeholder="Enter amount ">
+            <span id="current-coin">{{select}}</span>
+        </div>
+      </div>
+      <p class="text-right m-0 w-100">
+        $ {{convertToUSDAmount.toString()}} (USD)
+      </p>
+    </div>
+    <div class="col-custom horizontal-line">
+      <hr id="first-line"/>
     </div>
   </div>
 
-  <div id="select-amount" class="row">
-    <span class="title-content">AMOUNT</span>
-      <div class="col-custom input-field row">
-        <input type="number" id="amount" v-model.number="amount" class="col-custom input-field" placeholder="Amount">
-        <span id="current-coin"> {{select}}</span>
+  <div @click="$refs.addr.focus()">
+    <div class="row">
+      <span class="title-content">{{select}} ADDRESS :</span>
+      <input v-model="withdraw.address"
+             type="text"
+             class="col-custom input-field"
+             id="addr"
+             ref="addr"
+             placeholder="Enter recipient address ">
+      <button id="readerQrcode"
+              v-b-modal="'readerQrcodeModal'"
+              @click="readingQRCode = !readingQRCode">
+        <img src="~@/assets/icon-scan-qrcode.svg">
+      </button>
     </div>
-  </div>
-  <div class="col-custom horizontal-line">
-    <hr id="first-line"/>
-  </div>
 
-  <div class="row">
-    <span class="title-content">{{select}} ADDRESS</span>
-    <input v-model="withdraw.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter reception address">
-    <button id="readerQrcode" v-b-modal="'readerQrcodeModal'" @click="readingQRCode = !readingQRCode">
-      <img src="~@/assets/icon-scan-qrcode.svg">
-    </button>
-
-  </div>
-  <div class="col-custom horizontal-line">
-    <hr/>
+    <div class="col-custom horizontal-line">
+      <hr/>
+    </div>
   </div>
 
   <div class="btn-center">
-    <button @click="onConfirmWithdrawModal" :disabled="!canWithdraw"  v-b-modal="'confirmWithdraw'" id="sendcoins" class="btn sendcoins" type="button">SEND</button>
+    <button :disabled="!canSend"
+            @click="onConfirmWithdrawModal"
+            v-b-modal="'confirmWithdraw'"
+            id="sendcoins"
+            class="btn sendcoins"
+            type="button">SEND</button>
   </div>
 
-  <div v-if="$store.getters.getWalletTxs(wallet.coin.ticker) && $store.getters.getWalletTxs(wallet.coin.ticker).length > 0">
-    <transaction-history id="transactionHistory" :coin="wallet.coin"></transaction-history>
-  </div>
 
-  <b-modal size="sm" :hide-header="true" :hide-footer="true" @hide="readingQRCode = false" id="readerQrcodeModal" centered>
-    <qrcode-reader id="qrcode" :video-constraints="videoConstraints" @decode="onDecode" :paused="paused" v-if="readingQRCode" @init="onInit"></qrcode-reader>
+  <br>
+  <hodl-history id="hodlHistory"
+                :wallet="wallet"
+                :reload="reloadTxHistory"
+                :parent="'withdraw'">
+  </hodl-history>
+
+
+  <b-modal size="sm"
+           :hide-header="false"
+           :hide-footer="false"
+           @hide="readingQRCode = false"
+           id="readerQrcodeModal"
+           centered>
+    <qrcode-reader id="qrcode"
+                   :video-constraints="videoConstraints"
+                   @decode="onDecode"
+                   :paused="paused"
+                   v-if="readingQRCode"
+                   @init="onInit">
+    </qrcode-reader>
+    <div slot="modal-footer" class="row footerBuyModal">
+      <span style="margin: 0 auto; color: gray; text-align: center;">
+        Please, put the recipient's QR code in front of the camera.
+      </span>
+    </div>
   </b-modal>
 
-  <b-modal @ok="withdrawFunds()" ref="confirmWithdraw" id="confirmWithdraw" centered>
+  <b-modal @ok="withdrawFunds()"
+           ref="confirmWithdraw"
+           id="confirmWithdraw"
+           centered>
     <div slot="modal-header" class="headerModalBuy">
       <h2>WITHDRAWAL</h2>
     </div>
@@ -80,7 +144,12 @@
         <div class="row" v-if="wallet.coin.ticker.indexOf('BTC') >= 0">
           <span class="subTitle">Transaction fees</span>
           <div class="col-custom row-main-item">
-            <select-awesome @change="onFeeChange" :value="fees[0].label" :fees="fees" id="selectAwesome" class="col-custom"></select-awesome>
+            <select-awesome @change="onFeeChange"
+                            :value="fees[0].label"
+                            :fees="fees"
+                            id="selectAwesome"
+                            class="col-custom">
+            </select-awesome>
             <div class="col-custom"><hr></div>
           </div>
         </div>
@@ -100,8 +169,14 @@
       </div>
     </div>
     <div slot="modal-footer" class="row footerBuyModal">
-      <button @click="hideModal" slot="modal-cancel" id="cancel" class="col-custom btn-round-light">Cancel</button>
-      <button @click="withdrawFunds()" slot="modal-ok" id="confirm" class="col-custom btn-round-light">Confirm</button>
+      <button @click="hideModal"
+              slot="modal-cancel"
+              id="cancel"
+              class="col-custom btn-round-light">Cancel</button>
+      <button @click="withdrawFunds()"
+              slot="modal-ok"
+              id="confirm"
+              class="col-custom btn-round-light">Confirm</button>
     </div>
   </b-modal>
 </div>

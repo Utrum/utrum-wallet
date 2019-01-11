@@ -1,11 +1,13 @@
 import axios from 'axios'
 import LineChart from '@/components/WalletViews/Chart/LineChart'
-
+import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
+import moment from 'moment'
 export default {
   components: {
     LineChart,
+    SelectDropdown
   },
-  data () {
+  data() {
     return {
       loaded: false,
       loading: false,
@@ -16,23 +18,53 @@ export default {
       errorMessage: 'Please enter a time frame',
       periodStart: '',
       periodEnd: new Date(),
-      day: 'none',
-      week: 'none',
-      month: 'none',
       rawData: '',
-      linePng: null
+      linePng: null,
+      url: 'https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days=',
+      selTime: null,
+      selCoin: null,
+      coins: [{
+          text: 'Utrum (OOT)',
+          value: 'oot',
+          image_url: require(`@/assets/OOT-32x32.png`)
+        },
+        {
+          text: 'Komodo (KMD)',
+          value: 'kmd',
+          image_url: require(`@/assets/KMD-32x32.png`)
+        },
+        {
+          text: 'Bitcoin (BTC)',
+          value: 'btc',
+          image_url: require(`@/assets/BTC-32x32.png`)
+        }
+      ],
+      timeList: [{
+          text: '24 hours',
+          value: 1
+        },
+        {
+          text: '7 days',
+          value: 7
+        },
+        {
+          text: '30 days',
+          value: 30
+        }
+      ]
     }
   },
-
-  mounted () {
-    this.requestData()
+  mounted() {
+    this.selCoin = this.coins.length > 0 ? this.coins[0] : null
+    this.selTime = this.timeList.length > 0 ? this.timeList[2] : null //set default selected time
+    this.requestData(this.selTime.value)
   },
   methods: {
-    resetState () {
+    resetState() {
       this.loaded = false
       this.showError = false
     },
-    fixTime (unix) {
+    fixTime(unix) {
       var a = new Date(unix)
       var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
       var year = a.getFullYear()
@@ -41,22 +73,80 @@ export default {
       var hour = a.getHours()
       var min = a.getMinutes()
       var sec = a.getSeconds()
-      var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec
+      let localDt = new Date(`${year}/${a.getMonth()+1}/${date} ${hour}:${min}:${sec}`)
+      let time = `${localDt}`
       return time
     },
-    requestData (days) {
+    onCoinChange(selected) {
+      if (selected) this.changeCoin(selected.value)
+    },
+    changeCoin(coin) {
+      if (coin == "oot") {
+        this.url = 'https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days='
+      } else if (coin == "kmd") {
+        this.url = 'https://api.coingecko.com/api/v3/coins/komodo/market_chart?vs_currency=usd&days='
+      } else if (coin == "btc") {
+        this.url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days='
+      }
+      this.requestData(this.selTime.value)
+    },
+    onTimeChange(selected) {
+      if (selected) this.requestData(selected.value)
+    },
+    requestData(days) {
       this.resetState()
       this.loading = true
       if (days == null) {
         days = 1
       }
-      this.day = (days == 1) ? 'underline !important' : 'none'
-      this.week = (days == 7) ? 'underline !important' : 'none'
-      this.month = (days == 30) ? 'underline !important' : 'none'
-      axios.get(`https://api.coingecko.com/api/v3/coins/utrum/market_chart?vs_currency=usd&days=` + days)
+
+      axios.get(this.url + days)
         .then(response => {
           this.prices = response.data.prices.map(entry => entry[1])
-          this.labels = response.data.prices.map(entry => this.fixTime(entry[0]))
+          let tempLabels = response.data.prices.map(entry => this.fixTime(entry[0]))
+
+          this.labels = []
+          let prevDt = null;
+          let maxDt = new Date(tempLabels[tempLabels.length - 1])
+          var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+          for (let val of tempLabels) {
+            let curIdxDt = new Date(val)
+            let tempFormat = moment(curIdxDt).format('DD MMM YYYY HH:mm')
+            switch (days) {
+              case 1:
+                {
+                  if (!prevDt) {
+                    prevDt = curIdxDt
+                    val = `${tempFormat};${moment(curIdxDt).format('HH:mm')}`
+                  } else if (curIdxDt.getDate() != prevDt.getDate()) {
+                    val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
+                    prevDt = curIdxDt
+                  } else if (curIdxDt.getHours() != prevDt.getHours()) {
+                    val = `${tempFormat};${moment(curIdxDt).format('HH:mm')}`
+                    prevDt = curIdxDt
+                  } else {
+                    val = `${tempFormat};`
+                  }
+                  break;
+                }
+              default:
+                {
+                  if (!prevDt) {
+                    prevDt = curIdxDt
+                    val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
+                  } else if (curIdxDt.getDate() != prevDt.getDate()) {
+                    val = `${tempFormat};${curIdxDt.getDate()} ${months[curIdxDt.getMonth()]}`
+                    prevDt = curIdxDt
+                  } else {
+                    val = `${tempFormat};`
+                  }
+                  break;
+                }
+            }
+            this.labels.push(val)
+          }
+
           this.loaded = true
           this.loading = false
         })
@@ -65,12 +155,12 @@ export default {
           this.showError = true
         })
     },
-    validateDataRequest () {
+    validateDataRequest() {
       if (this.periodStart !== '') {
-        this.requestData()
+        this.requestData(this.selTime.value)
       }
     },
-    setLinePng (payload) {
+    setLinePng(payload) {
       this.linePng = payload
     }
   }

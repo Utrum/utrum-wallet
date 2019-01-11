@@ -14,330 +14,69 @@
  *                                                                            *
  ******************************************************************************/
 
-#fees-fix {
-	height: 24px;
+#amountTotal {
+	align-self: center;
+  text-align: center;
+  padding-left: 47px;
 }
 
-.border-left {
-	margin-top: auto;
-	margin-bottom: auto;
-	height: 3em;
-	border-left: 2px solid rgba(124,57,138, 0.05)!important;
+.row-total-amount h2 {
+  text-align: center;
 }
 
-.toHighPurchase {
-	color: #b32581 !important;
+
+#address {
+	font-size: 0.75em;
 }
 
-hr {
-	margin-top: 2px !important;
-	margin-bottom: 2px !important;
+#transactionHistory {
+	margin-top: 50px;
 }
 
-.progress-active {
-	height: 6px;
-	border-radius: 1px;
+#readerQrcode {
+	height: 100%;
+	margin-left: 18px;
+	border: 1px solid #0C6AA8;
+	background-color: transparent;
+	border-radius: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	cursor: pointer;
+	outline: none;
 }
 
-#progress-live {
-	padding: 10px;
-	background-color: #b32581;
-	font-weight: 500;
-	color: white;
-	width: 140px;
-	height: 30px;
-	border-radius: 4px;
-}
-
-#progress-time-left {
-	color: #b32581;
-}
-
-#progress-indicator {
-	color: black;
-	padding-left: 50px;
-	font-weight: 500;
-}
-
-#progress-bar-indicator {
-	padding-top: 15px; 
-}
-
-#progress-bar {
-	padding: 50px;
-}
-
-.buy-monaize {
-	background-color: white;
-	padding: 50px;
-	margin-bottom: 25px;
-	box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
-}
-
-#historyMnzBuy {
-	padding: 50px;
-	padding-top: 20px;
-}
-
-#historyMnzBuy h3 {
-	margin-top: 25px;
+#readerQrcodeModal {
 	text-align: center;
+}
+
+.content {
+	padding: 50px;
 	color: rgb(151,151,151);
 }
 
 .row-custom {
 	display: flex;
 	flex-direction: row;
-}
-
-#selector-plus {
-	flex-direction: row;
-}
-
-.selected-tag {
-	position: absolute;
-}
-
-.select-coin {
-	text-align: center;
-}
-
-.center{
-	width: 150px;
-	margin: 40px auto;
-}
-
-.inputmnz {
-}
-
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button {  
-	opacity: 1;
-}
-
-
-.disableBuy {
-	opacity: 0.65; 
-	cursor: not-allowed;
-}
-
-.content-buyview {
-	padding-bottom: 15px;
-	color: rgb(151,151,151);
-}
-
-.content-buyview h3 {
-	font-weight: 300;
-	color: #180d39;
-}
-
-.content-buyview h5 {
-	font-weight: 300;
-	color: #687078;
-}
-
-.col-center img {
-	vertical-align: text-top;
-}
-
-.col {
-	flex-grow: 0;
-}
-.row {
-	margin: 0px;
-	display: flex;
 	justify-content: space-between;
 }
 
-.row-main {
-	margin: 0px;
-	display: flex;
-	justify-content: space-between;
-	flex-direction: column;
+.mt-30{
+	margin-top: 30px;
 }
 
-.col-custom {
-	flex-grow: 1;
+#separator {
+	max-width: 1px;
 }
 
-.div-total-mnz {
-	text-align: right;
-	color: black;
-	font-weight: 500;
-	font-size: 0.8em;
+#selector-coin-buy {
+	max-width: 100%;
 }
 
-#total-mnz {
-	color: black;
+.content h3 {
 	font-weight: 300;
-	font-size: 2.5em;
-}
-
-#line-cut {
-	flex-grow: 11;
-}
-
-#title-crypto-choice {
-	margin: auto;
-	font-weight: 300;
-	color: #180d39;
-}
-
-#crypto-title-line {
-	margin-top: 23px;
-	margin-bottom: 13px;
-}
-
-.select-coin-buy {
-	justify-content: flex-start;
-	flex-direction: row;
-	display: flex;
-}
-
-.select-coin-buy .dropdown {
-	height: 100%;
-}
-
-.select-coin-buy .dropdown-toggle {
-	height: 100%;
-	width: 150px;
-}
-
-.dropdown-toggle button {
-	visibility: hidden;
-}
-
-.dropdown-toggle i {
-	visibility: hidden;
-}
-
-#buy-mnz-box {
-	color: #687078;
-	width: 150px;
-	height: 75px;
-	line-height: 75px;
-	text-align: center;
-	font-size: 1.8em;
-	font-weight: 200;
-	background-color: white;
-}
-
-.row-buy {
-	display: flex;
-	justify-content: space-between;
-}
-
-.arrow-buy {
-	width: 100%;
-	line-height: 75px;
-	text-align: center;
-}
-
-#package-mnz {
-	margin-left: auto;
-	width: 300px;
-	height: 40px;
-	border: 2px solid rgba(124,57,138, 0.05);
-	border-radius: 4px;
-	line-height: 40px;
-	margin-top: 10px;
-	margin-bottom: 15px;
-}
-
-#choose-mnz {
-	text-align: right;
-}
-
-.currency-balance-div {
-	width: 100px;
-}
-
-.col-center {
-	flex-grow: 1;
-	text-align: center;
-}
-
-.minus-plus {
-	color: black;
-}
-
-#package-value {
-	width: 100px;
-	font-size: 1.5em;
-	font-weight: 300;
-	background-color: transparent;
-  border: none;
-  outline: none;
-}
-
-.value {
-	font-size: 1.3em;
-	font-weight: 400;
-	color: #180d39;
-}
-
-#balance-value {
-	font-size: 1.5em;
-	font-weight: 300;
-	color: #687078;
-	margin-top: 10px;
-}
-
-#balance-coin {
-	font-weight: 200;
-	color: #687078;
-}
-
-.title-choose-coin {
-	font-weight: 500;
-}
-
-#choose-coin {
-	margin-top: 25px;
-}
-
-#detail-order-title {
-	color: #180d39;
-	font-weight: 400;
-	max-width: 150px;
-}
-
-.center-text {
-	text-align: center;
-}
-
-#btn-buy {
-	border: 1px solid #7c398a;
-	border-radius: 4px !important;
-	font-size: 1.4em;
-	width: 100px;
-	height: 50px;
-	text-align: center;
-	line-height: 50px;
-	outline: none;
-	box-shadow: none;
-	color: #7c398a;
-	max-width: 100px;
-}
-
-#btn-buy:hover {
-	background-color: #7c398a;
-	color: white;
-}
-
-.center-horizontal {
-	margin: auto;
-}
-
-.title-value {
-	font-weight: 500;
-	color: rgba(0, 0, 0, 0.6);
-	font-size: 0.9em;
-}
-
-.content-swapview {
-	box-shadow: 0px 15px 40px -20px rgba(33,33,33,0.2) inset;
-	background-color: rgba(0,0,0,0.01);
+	color: #0C6AA8;
 }
 
 .title-amount {
@@ -345,14 +84,13 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .sub-title {
-	font-weight: 500;
-	color: #180d39 !important;
+	font-weight: 300;
+	color: #0C6AA8 !important;
 }
 
 .select-header{
-	flex-grow: 1;
 	margin: 50px;
-	border: 1px solid #7c398a;
+	border: 1px solid #0C6AA8;
 	background: transparent;
 	width: 150px;
 	padding: 5px 5px 5px 5px;
@@ -371,6 +109,7 @@ input[type=number]::-webkit-outer-spin-button {
 	color: white;
 }
 
+
 .select-all {
 	background-color: transparent;
 	padding-top: auto;
@@ -378,21 +117,14 @@ input[type=number]::-webkit-outer-spin-button {
 	width: 25px;
 	border-top-left-radius: 4px 4px;
 	border-bottom-left-radius: 4px 4px;
-	border: 1px solid #7c398a;
+	border: 1px solid #0C6AA8;
 	border-width: 1px 0px 1px 1px;
 	text-align: center;
 	color: red;
-	cursor: pointer;
 }
 
 #str-current-balances {
 	text-align: right;
-}
-
-.row {
-	margin: 0px;
-	display: flex;
-	justify-content: space-between;
 }
 
 .row-header {
@@ -419,20 +151,23 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .current-balance {
-	text-align: center;
+	height: 75px;
+	text-align: left;
 	padding-top: 20px;
 	padding-bottom: 20px;
 	cursor: pointer;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
 }
 
 #card-current-balance {
 	text-align: right;
 	font-size: 1.8em;
-	max-width: 300px;
 }
 
 #add-coin {
-	color: #7c398a;
+	color: #0C6AA8 !important;
 	font-size: 1.8em;
 	height: 100%;
 	padding: 0px;
@@ -447,6 +182,11 @@ input[type=number]::-webkit-outer-spin-button {
 	flex-grow: 1;
 }
 
+.content .select2-selection:focus {
+	outline: none;
+	box-shadow: none;
+}
+
 #title {
 	margin-bottom: 40px;
 }
@@ -455,6 +195,11 @@ input[type=number]::-webkit-outer-spin-button {
 	outline: none;
 	box-shadow: none;
 	text-align: right;
+	display: inline;
+}
+
+.col-custom {
+	flex-grow: 1;
 }
 
 #first-line {
@@ -478,26 +223,26 @@ input[type=number]::-webkit-outer-spin-button {
 	background-color: transparent !important;
 }
 
-#buycoins {
-	border: 1px solid #7c398a;
-	border-radius: 4px !important;
-	background-color: transparent;
-	font-size: 1.4em;
-	width: 160px;
-	height: 45px;
-	text-align: center;
-	outline: none;
-	box-shadow: none;
-	color: #7c398a;
+#sendcoins {
+  border: 1px solid #0C6AA8;
+  border-radius: 4px !important;
+  background-color: transparent;
+  font-size: 1em;
+  width: 140px;
+  height: 40px;
+  text-align: center;
+  outline: none;
+  box-shadow: none;
+  color: #0C6AA8;
 }
 
-#buycoins:hover {
-	background-color: #7c398a;
+#sendcoins:hover {
+	background-color: #0C6AA8;
 	color: white;
 }
 
 .disableSendCoins {
-	opacity: 0.65; 
+	opacity: 0.65;
 	cursor: not-allowed;
 }
 
@@ -512,7 +257,7 @@ input[type=number]::-webkit-outer-spin-button {
 #amount {
 	background-color: transparent;
 	border: none;
-	font-size: 1.8em;
+	font-size: 1.4em;
 	font-weight: 300;
 	color: rgb(151,151,151);
 }
@@ -522,10 +267,11 @@ input[type=number]::-webkit-outer-spin-button {
 	font-weight: 200;
 }
 
-#current-coin {
-	font-size: 1.8em;
+#number-input {
+	font-size: 1.4em;
 	color: #687078;
 	font-weight: 200;
+  margin-left: 1px;
 }
 
 .card span {
@@ -534,13 +280,13 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .title-content {
-	font-weight: 400;
-	color: #180d39;
+	font-weight: 300;
+	color: #0C6AA8;
 	margin: auto;
 }
 
 .horizontal-line {
-	margin-bottom: 50px;
+	margin-bottom: 30px;
 }
 
 #value-current-balance {
@@ -548,37 +294,12 @@ input[type=number]::-webkit-outer-spin-button {
 	color: #687078;
 }
 
-#coupon {
-	border: 1px solid rgba(24,13,57,0.1);
-	border-radius: 4px;
-	width: 100px;
-	text-align: center;
+.cardTable {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.01);
+    border-radius: 4px;
+    border: none;
 }
 
-#coupon:focus {
-	outline: none !important;
-	border:1px solid #7c398a;
-}
-
-#warningInfo {
-	font-weight: 400;
-	font-size: 1.1em;
-}
-
-#package-value::-webkit-input-placeholder {
-	font-size: 0.6em;
-}
-
-#monaize-over {
-	text-align: center;
-	margin: auto;
-	width: 100%;
-	height: 100%;
-	font-size: 1.2em;
-	color: #180d39;
-}
-
-#title-monaize-over {
-	font-weight: 500;
-	color: #180d39;
+#qrcode {
+	margin-top: 15px;
 }

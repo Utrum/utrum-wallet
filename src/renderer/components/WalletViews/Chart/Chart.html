@@ -1,20 +1,37 @@
 <div class="content">
-  <h3>OOT Price Chart</h3>
   <div class="error-message" v-if="showError">
-   {{ errorMessage }}
+    {{ errorMessage }}
   </div>
   <div v-if="loading" class="loading">
-    🔧  Building Charts ...
+    <i class="fas fa-cogs" style="color: #687078"/>  building charts...
   </div>
-  <div class="Chart__container" v-if="loaded" style="width:95%">
-    <div class="Chart__content">
-      <div class="date-selectors">
-        <a v-bind:style="{'text-decoration': day}" v-on:click="requestData(1)">Today</a>
-        <a v-bind:style="{'text-decoration': week}" v-on:click="requestData(7)">This Week</a>
-        <a v-bind:style="{'text-decoration': month}" v-on:click="requestData(30)">This Month</a>
-      </div>
-      <line-chart chart-id="line-daily" v-if="loaded" :chart-data="prices" :chart-labels="labels" @generate="setLinePng"/>
+  <div class="Chart__container" style="width:95%" v-show="loaded">
+    <b-container style="margin-bottom: 7rem;">
+      <b-row>
+        <b-col>
+          <select-dropdown default-text="Select"
+                           v-model="selCoin"
+                           :data="coins"
+                           icon-prop="image_url"
+                           label-prop="text"
+                           :searchable="false"
+                           @input="onCoinChange"/>
+        </b-col>
+        <b-col>
+          <select-dropdown default-text="Select"
+                           v-model="selTime"
+                           :data="timeList"
+                           label-prop="text"
+                           :searchable="false"
+                           @input="onTimeChange"/>
+        </b-col>
+      </b-row>
+    </b-container>
+    <div class="Chart__content" v-if="loaded">
+      <line-chart chart-id="line-daily"
+                  :chart-data="prices"
+                  :chart-labels="labels"
+                  @generate="setLinePng"/>
     </div>
-  </div>
   </div>
 </div>

@@ -15,9 +15,6 @@
  ******************************************************************************/
 
 import { app, BrowserWindow, Menu, shell } from 'electron';
-import ElectrumManager from './electrumManager';
-
-const electrumManager = new ElectrumManager();
 
 require('electron-debug')({ showDevTools: true });
 const path = require('path');
@@ -61,9 +58,9 @@ function createWindow() {
     // transparent: true, frame: false,
     center: true,
     width: 1100,
-    height: 650,
-    minWidth: 1000,
-    minHeight: 600,
+    height: 755,
+    minWidth: 1100,
+    minHeight: 580,
     // nodeIntegration: 'iframe', // and this line
     webPreferences: {
       nodeIntegration: true,
@@ -101,28 +98,6 @@ function createWindow() {
   ipc.on('app', function (ev, msg) {
     const args = [].slice.call(arguments, 2);
     ev.returnValue = [app[msg].apply(app, args)];
-  });
-
-  ipc.on('electrum.init', (event, payload) => {
-    electrumManager.initClient(payload.ticker, payload.electrumConfig)
-      .then((response) => {
-        event.sender.send(`electrum.init.${payload.ticker}.${payload.tag}`, response);
-      })
-      .catch((error) => {
-        event.sender.send(`electrum.init.${payload.ticker}.${payload.tag}`, {error});
-      })
-    ;
-  });
-
-  ipc.on('electrum.call', (event, payload) => {
-    electrumManager.requestClient(payload.ticker, payload.method, payload.params)
-      .then((response) => {
-        event.sender.send(`electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`, response);
-      })
-      .catch((error) => {
-        event.sender.send(`electrum.call.${payload.method}.${payload.ticker}.${payload.tag}`, {error});
-      })
-    ;
   });
 
   mainWindow.loadURL(winURL);

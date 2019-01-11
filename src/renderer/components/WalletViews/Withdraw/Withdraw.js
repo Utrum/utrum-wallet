@@ -14,23 +14,23 @@
  *                                                                            *
  ******************************************************************************/
 
-import bitcoinjs from 'bitcoinjs-lib';
 import { QrcodeReader } from 'vue-qrcode-reader';
-import Select2 from '@/components/Utils/Select2/Select2.vue';
-import TransactionHistory from '@/components/TransactionHistory/TransactionHistory.vue';
+import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';
 import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
+import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
 
 const { clipboard } = require('electron');
+const bitcoinjs = require('bitgo-utxo-lib');
 
 export default {
   name: 'withdraw',
   components: {
-    select2: Select2,
-    'transaction-history': TransactionHistory,
+    SelectDropdown,
+    'hodl-history': HodlHistory,
     'select-awesome': SelectAwesome,
-    QrcodeReader,
+    QrcodeReader
   },
   created() {
     this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
@@ -48,66 +48,90 @@ export default {
       ],
       videoConstraints: {
         width: {
-          min: 265,
-          ideal: 265,
-          max: 265,
+          min: 300,
+          ideal: 300,
+          max: 300,
         },
         height: {
-          min: 250,
-          ideal: 250,
-          max: 250,
+          min: 225,
+          ideal: 225,
+          max: 225,
         },
       },
       paused: false,
       readingQRCode: false,
-      select: '',
+      select: null,
+      selectNew: null,
       withdraw: {
         amount: null,
         address: '',
         coin: 'OOT',
       },
       history: [],
+      reloadTxHistory: null
     };
   },
+
+  watch: {
+    select: function () {
+      console.log("=====================")
+      console.log("select:", this.select)
+      this.reloadTransactionHistory(100)
+    }
+  },
+
   methods: {
+    reloadTransactionHistory (milisec) {
+      // reload transaction history
+      let timestamp = Date.now() // necessary
+      this.reloadTxHistory = [milisec, timestamp]
+    },
+
     onMaxSelected() {
       this.withdraw.amount = this.getBalance;
     },
+
     onShowBuyModal() {
       return this.prepareTx()
         .then((tx) => {
           if (tx.inputs == null && tx.outputs == null) {
             this.hideModal();
-            this.$toasted.info("You don't have enough funds for buying (with fees included)");
+            this.$toasted.info("You don't have enough funds for buying (with fees included).");
           } else {
             this.$refs.confirmBuy.show();
           }
         })
         ;
     },
+
     onChange() {
       this.prepareTx();
     },
+
     onFeeChange(data) {
       this.speed = data.speed;
       this.prepareTx();
     },
+
     onConfirmWithdrawModal() {
       this.prepareTx();
     },
+
     hideModal() {
       this.$refs.confirmWithdraw.hide();
     },
+
     onDecode(content) {
       if (this.checkAddress(content)) {
         this.withdraw.address = content;
-        this.$toasted.show('Address inserted !', { icon: 'done' });
+        this.$toasted.show('Address inserted !', { icon: 'check' });
       } else {
-        this.$toasted.error('This address is not valid !', { icon: 'error' });
+        this.$toasted.error('This address is not valid !', { icon: 'exclamation-circle' });
       }
       this.readingQRCode = false;
       this.$root.$emit('bv::hide::modal', 'readerQrcodeModal');
     },
+
     checkAddress(addr) {
       if (addr) {
         const checkResult = bitcoinjs.address.fromBase58Check(addr);
@@ -120,6 +144,7 @@ export default {
         return false;
       }
     },
+
     async onInit(promise) {
       this.loading = true;
 
@@ -145,6 +170,7 @@ export default {
         this.loading = false;
       }
     },
+
     updateCoin(value) {
       this.withdraw = {
         amount: null,
@@ -153,6 +179,13 @@ export default {
       };
       this.select = value;
     },
+
+    updateNewCoin(value) {
+      if (value) {
+        this.updateCoin(value.ticker)
+      }
+    },
+
     prepareTx() {
       // Number here because of bitcoinjs incapacity to use Big types.
       const amount = this.getAmountInSatoshis.toNumber();
@@ -180,6 +213,7 @@ export default {
     debounceInfo: _.debounce(function () {
       this.$toasted.info('The address is not valid.');
     }, 500),
+
     withdrawFunds() {
       this.hideModal();
       if (this.canWithdraw === true && this.addressIsValid === true) {
@@ -194,18 +228,22 @@ export default {
             this.withdraw.amount = null;
             this.withdraw.address = '';
             alert(this, response);
+            this.reloadTransactionHistory(700);
           })
           .catch(error => {
             if (error.__type !== null && BigNumber(this.withdraw.amount).comparedTo(21000000) === 1) {
-              this.$toasted.info("You can't send more than 21 million at once");
+              this.$toasted.info("You can't send more than 21 million at once.");
             } else {
               this.$toasted.error(`Can't send transaction: ${error.message}`);
             }
           })
           ;
+      } else if (this.canWithdraw === false){
+        this.$toasted.error('Not enough balance including fees.');
       }
     },
   },
+
   computed: {
     amount: {
       get: function () {
@@ -222,6 +260,7 @@ export default {
         }
       },
     },
+
     getAmountInSatoshis() {
       if (this.amount != null) {
         const amountInSatoshis = BigNumber(this.amount).multipliedBy(this.satoshiNb);
@@ -229,27 +268,58 @@ export default {
       }
       return BigNumber(0);
     },
+
     getConfig() {
       return this.$store.getters.getConfig;
     },
+
     coins() {
-      return this.$store.getters.enabledCoins.map(coin => coin.ticker);
+      return this.$store.getters.enabledCoins.map(coin => coin.ticker ).filter( coin => coin != 'BTC');
     },
+
+    coinsNew() {
+      return this.$store.getters.enabledCoins.map(coin => {
+        let tempObj = {
+          ticker: coin.ticker,
+          // icon: coin.ticker,
+          label: `${coin.name} (${coin.ticker})`,
+          image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
+        }
+        if(!this.selectNew && coin.ticker == 'OOT'){
+          this.select = coin.ticker
+          this.selectNew = tempObj
+        }
+        return tempObj
+      });
+    },
+
     getTotalPriceWithFee() {
       if (this.getAmountInSatoshis != null && this.estimatedFee != null) {
         return decimalsCount(this.getAmountInSatoshis.plus(this.estimatedFee).dividedBy(this.satoshiNb));
       }
       return '';
     },
+
     wallet() {
       return this.$store.getters.getWalletByTicker(this.select);
     },
+
     getSatoshisBalance() {
       return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance).multipliedBy(this.satoshiNb);
     },
+
     getBalance() {
       return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance);
     },
+
+    getUSDAmount() {
+      return BigNumber(this.$store.getters.getWalletByTicker(this.select).balance_usd.toFixed(2));
+    },
+
+    convertToUSDAmount() {
+      return Number( this.amount * this.$store.getters.getWalletByTicker(this.select).rate_in_usd).toFixed(2);
+    },
+
     canWithdraw() {
       if (this.withdraw.amount != null) {
         if (this.addressIsValid === false && this.withdraw.address.length === 34) {
@@ -260,6 +330,7 @@ export default {
       }
       return false;
     },
+
     addressIsValid() {
       if (this.withdraw.address) {
         try {
@@ -276,6 +347,21 @@ export default {
         }
       }
     },
+
+    canSend(){
+      if(
+        this.withdraw.amount &&
+        this.withdraw.address &&
+        this.withdraw.amount != "" &&
+        this.withdraw.address.trim() != "" &&
+        this.withdraw.amount > 0
+      ){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
   },
 };
 
@@ -291,28 +377,28 @@ const decimalsCount = (value) => {
 
 const alert = (context, message) => {
   if (message.error) {
-    context.$toasted.show('Transaction not sent !', { text: message.error });
+    context.$toasted.show('Transaction not sent:', { text: message.error });
     return;
   }
 
   context.$toasted.show('Transaction sent !', {
-    icon: 'done',
+    icon: 'check',
     action: [
       {
-        icon: 'close',
+        icon: 'times',
         onClick: (e, toastObject) => {
           toastObject.goAway(0);
         },
       },
       {
-        icon: 'content_copy',
+        icon: 'copy',
         onClick: (e, toastObject) => {
           toastObject.goAway(0);
           clipboard.writeText(message);
           setTimeout(() => {
             context.$toasted.show('Copied !', {
               duration: 1000,
-              icon: 'done',
+              icon: 'check',
             });
           }, 800);
         },

@@ -1,7 +1,60 @@
+h3 {
+    font-weight: 300;
+    font-size: 1.25rem;
+    color: #687078;
+}
+
+.mt-5 {
+    font-weight: 300;
+    color: #687078;
+}
+
 .color-purple {
   color: #0C6AA8;
 }
 
 .link {
   color: #000000;
+}
+
+.flex{
+  display: flex;
+}
+
+.img-icon-btn{
+  position: relative;
+  padding-left: 35px;
+}
+.img-icon-btn .flex{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 35px;
+}
+.img-icon-btn img{
+  max-width: 16px;
+  margin: auto;
+}
+.img-icon-btn i{
+  margin: auto;
+}
+
+.telegram-fc{
+  color: #0088cc;
+}
+.fb-fc{
+  color: #3b5998;
+}
+.rddit-fc{
+  color: #ff4500;
+}
+.twitter-fc{
+  color: #1da1f2;
+}
+.discord-fc{
+  color: #7289da;
+}
+.github-fc{
+  color: #333;
 }

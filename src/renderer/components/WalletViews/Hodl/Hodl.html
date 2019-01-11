@@ -1,33 +1,124 @@
-<div class="d-flex flex-column content-buyview"">
-  <div class="buy-monaize" >
-		<div class="col-custom">
-			<div class="row">
-				<div class="col-custom title-buy-mnz">
-					<h3>not working yet, experimenting</h3>
-				</div>
-			</div>
+<div class="content">
 
-			<div class="row">
-		    <span class="title-content">{{select}} ADDRESS</span>
-		    <input v-model="hodl.address" type="text" class="col-custom input-field" id="addr" placeholder="Enter hodl address">
-		  </div>
+  <!-- bootstrap-vue alerts -->
+  <div>
+    <b-alert variant="danger"
+             dismissible
+             fade
+             :show="dismissErrorCountDown"
+             @dismissed="dismissErrorCountDown=0"
+             @dismiss-count-down="errorCountDownChanged">
+      {{errorText}}
+    </b-alert>
+    <b-alert variant="success"
+             dismissible
+             fade
+             :show="dismissAlertCountDown"
+             @dismissed="dismissAlertCountDown=0"
+             @dismiss-count-down="alertCountDownChanged">
+      {{alertText}}
+    </b-alert>
+  </div>
 
-			<div id="select-amount" class="row">
-		    <span class="title-content">AMOUNT</span>
-		      <div class="col-custom input-field row">
-		        <input type="number" id="amount" v-model.number="hodl.amount" class="col-custom input-field" placeholder="Amount">
-		        <span id="current-coin"> {{select}}</span>
-		    </div>
-		  </div>
+  <div style="text-align: center; font-size: 0.9rem;">
+    <span>
+      Please read
+      <a @click="openLink('https://helpdesk.utrum.io/en-us/article/how-does-oot-holding-reward-ohr-work-nprkfb/')"
+         style="color: #0C6AA8;"
+         href="#">
+        Hold rules
+      </a>
+      carefully before locking your funds.
+    </span>
+  </div><br>
 
-			<div id="select-block" class="row">
-		    <span class="title-content">BLOCK HEIGHT</span>
-		      <div class="col-custom input-field row">
-		        <input type="number" id="amount" v-model.number="hodl.block" class="col-custom input-field" placeholder="Block">
-		    </div>
-		  </div>
+  <div id="select-amount" class="row">
+    <span class="title-content">BALANCE :</span>
+    <div class="col-custom input-field row" style="justify-content: flex-end;">
+      <span id="number-input">{{ ( wallet.balance.toFixed(2) || 0 ) }} (OOT)</span>
+    </div>
+  </div>
 
-		</div>
-	</b-modal>
-	</div>
+  <div id="select-amount" class="row mt-30">
+    <span class="title-content">LOCK AMOUNT :</span>
+    <div class="col-custom input-field row">
+      <input @keydown="rawtx = null"
+             @keyup.enter="getTx"
+             type="number"
+             id="amount"
+             v-model.number="hodlInput.amount"
+             class="col-custom input-field"
+             placeholder="Enter amount ">
+        <span id="number-input">{{ selectedCoin }}</span>
+      </input>
+    </div>
+  </div>
+
+  <div id="select-amount" class="row mt-30">
+    <span class="title-content">TIME PERIOD :</span>
+    <div class="utrum-select col-custom input-field row"
+         style="justify-content: flex-end;">
+      <select-dropdown default-text="Select"
+                       :value="timeList[0]"
+                       :data="timeList"
+                       label-prop="text"
+                       :searchable="false"
+                       @input="onTimeChange"/>
+    </div>
+  </div>
+
+  <div id="select-amount" class="row mt-30">
+    <span class="title-content">EXPECTED REWARD :&nbsp;</span>
+    <div id="unlockTimeDate"
+         class="col-custom input-field row"
+         style="line-height: 41px">
+      <span v-if="hodlInput.amount || rawtx || lastTxId">
+        {{ calculatedReward > 0 ? parseFloat(calculatedReward).toFixed(8) : 0 }}
+      </span>
+      <span id="unlockTimeDate" v-else>0</span>
+    </div>
+  </div>
+
+  <div class="col-custom horizontal-line">
+    <hr id="first-line"/>
+  </div>
+
+  <div class="btn-center">
+    <button v-on:click="getTx"
+            :disabled="rawtx && !lastTxId || (calculatedReward == 0)"
+            id="sendcoins"
+            class="btn sendcoins"
+            type="button">
+      LOCK FUNDS
+    </button>
+  </div>
+
+  <br>
+  <div v-if="rawtx && !lastTxId">
+
+    <div id="select-block" class="row">
+      <span class="title-content">UNLOCK TIME :&nbsp;</span>
+      <div class="col-custom row">
+        <span id="unlockTimeDate">{{ unlockTimeDate }}</span>
+      </div>
+    </div>
+
+    <hr id="second-line"/>
+    <div class="btn-center">
+      <button v-on:click="submitTx"
+              :disabled="!rawtx"
+              id="sendcoins"
+              class="btn sendcoins"
+              type="button">
+        Confirm
+      </button>
+    </div><br>
+
+  </div> <!-- conditional rendering -->
+
+  <hodl-history id="hodlHistory"
+                :wallet="wallet"
+                :reload="reloadTxHistory">
+  </hodl-history>
+
 </div>

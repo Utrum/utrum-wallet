@@ -1,0 +1,47 @@
+.utrum-dd-search{
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+.utrum-dd-search .dropdown-toggle{
+  width: 100%;
+  background: transparent !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #687078;
+  text-transform: capitalize;
+}
+.utrum-dd-search img{
+  width: 25px;
+  max-height: 25px;
+}
+.utrum-dd-search input{
+  min-width: 200px;
+  width: 100%;
+}
+.utrum-dd-search .btn.focus, .utrum-dd-search .btn:focus{
+ box-shadow: none !important;
+}
+.utrum-dd-search .dropdown-menu{
+  padding: 0px;
+  margin-top: 0px;
+  left: -2px !important;
+  min-width: calc(100% + 4px);
+}
+.utrum-dd-search .dropdown-header, .utrum-dd-search .dropdown-item{
+  padding: 0.75rem 1rem !important;
+}
+.utrum-dd-search .dropdown-item{
+  color: #687078 !important;
+  text-transform: capitalize;
+}
+.dropdown-item.active, .dropdown-item:active{
+  background-color: #eaeaea !important;
+  color: #4a4a4a !important;
+}
+.utrum-dd-search .dropdown-item:focus,
+.utrum-dd-search .dropdown-item:hover{
+  outline: none !important;
+  color: #fff !important;
+  background-color: #5897fb !important;
+}

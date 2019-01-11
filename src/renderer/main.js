@@ -21,7 +21,6 @@ import VueQrcodeReader from 'vue-qrcode-reader';
 import Vue from 'vue';
 import axios from 'axios';
 import Toasted from 'vue-toasted';
-import Vue2Filters from 'vue2-filters';
 import 'vue-loaders/dist/vue-loaders.css';
 import * as VueLoaders from 'vue-loaders';
 
@@ -30,16 +29,17 @@ import router from './router';
 import store from './store';
 
 require('bootstrap/dist/css/bootstrap.min.css');
+require('@fortawesome/fontawesome-free/css/all.min.css');
 const vueElectron = require('vue-electron');
 
 Vue.use(BootstrapVue);
 Vue.use(VueQriously);
 Vue.use(VueClipboard);
 Vue.use(VueQrcodeReader);
-Vue.use(Vue2Filters);
 Vue.use(Toasted, {
-  iconPack: 'material',
+  iconPack: 'fontawesome',
   position: 'top-right',
+  theme: 'outline',
   duration: 4000,
 });
 Vue.use(VueLoaders);

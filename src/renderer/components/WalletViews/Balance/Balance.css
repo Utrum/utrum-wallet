@@ -17,6 +17,16 @@
 @import '~typeface-montserrat';
 .content .text-right {
   margin: 0;
+  line-height: normal;
+}
+
+.mb-5 {
+  margin-bottom: 2rem!important;
+}
+
+h5{
+  font-weight: 300;
+  color: #0D0032;
 }
 
 .col-custom {
@@ -26,16 +36,18 @@
 .content {
   padding: 50px;
   color: rgb(151,151,151);
+  font-size: 0.9rem;
 }
 
 .content h3 {
   font-weight: 300;
-  color: #0D0032;
+  font-size: 1.25rem;
+  color: #687078;
 }
 
 .content h5 {
   font-weight: 300;
-  color: #687078;
+  color: #999;
 }
 
 #totalBalanceUsd img {
@@ -50,8 +62,8 @@
 
 
 #totalBalanceUsd {
-  color: black;
-  font-size: 2.3em;
+  color: #687078;
+  font-size: 2rem;
   font-weight: 300
 }
 
@@ -75,8 +87,12 @@
   border-color: #430961;
 }
 
-.btn:hover {
+.btn:not(:disabled):hover {
   color: white;
+}
+
+.btn.disabled, .btn:disabled {
+  cursor: not-allowed;
 }
 
 .loader{
@@ -193,6 +209,11 @@ footer {
   border-color: #430961;
 }
 
+.balance__title {
+  font-size: 1.1em;
+  font-weight: 400 !important;
+}
+
 
 .right{
   float:right;
@@ -213,4 +234,16 @@ footer {
 .row-footer p {
   font-weight: 300;
   color: #0D0032;
+}
+
+.balance__wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 250px);
+}
+
+.balance__item {
+  border-top: 1px solid rgba(0, 0, 0, .1);
+  flex-grow: 1;
+  padding: 1rem 0;
 }

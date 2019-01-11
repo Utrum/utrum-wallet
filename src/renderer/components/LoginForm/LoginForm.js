@@ -56,5 +56,8 @@ export default {
         this.typeInput = 'password';
       }
     },
+    setFocus(){
+      this.$refs.passphraseInput.focus()
+    }
   },
 };

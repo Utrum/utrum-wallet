@@ -19,19 +19,46 @@ export default {
   name: 'social',
   data() {
     return {
-      mnzTelegramUrl: 'https://t.me/utrumdotio',
-      mnzDiscordUrl: 'https://discord.gg/tyf8Mqx',
+      utrumTelegramUrl: 'https://t.me/utrumdotio',
+      utrumDiscordUrl: 'https://discord.gg/tyf8Mqx',
+      utrumTwitterUrl: 'https://twitter.com/utrumdotio',
+      utrumFacebookUrl: 'https://www.facebook.com/utrumdotio',
+      utrumRedditUrl: 'https://www.reddit.com/r/Utrumdotio/',
+      utrumTwitterURl: 'https://twitter.com/utrumdotio',
+      utrumBlogURl: 'https://medium.com/utrum',
+      utrumGithub: 'https://github.com/utrum'
     };
   },
   mounted() {
   },
   methods: {
-    openMnzTelegram() {
-      electron.shell.openExternal(this.mnzTelegramUrl);
+    openUtrumTelegram() {
+      electron.shell.openExternal(this.utrumTelegramUrl);
     },
-    openMnzDiscord() {
-      electron.shell.openExternal(this.mnzDiscordUrl);
+    openUtrumDiscord() {
+      electron.shell.openExternal(this.utrumDiscordUrl);
     },
+    openUtrumTwitter() {
+      electron.shell.openExternal(this.utrumTwitterUrl);
+    },
+    openUtrumFacebook() {
+      electron.shell.openExternal(this.utrumFacebookUrl);
+    },
+    openUtrumReddit() {
+      electron.shell.openExternal(this.utrumRedditUrl);
+    },
+    openUtrumTwitter() {
+      electron.shell.openExternal(this.utrumTwitterURl);
+    },
+    openUtrumGithub() {
+      electron.shell.openExternal(this.utrumGithub);
+    },
+    openUtrumBlog(link){
+      electron.shell.openExternal(this.utrumBlogURl);
+    },
+    openLink(link){
+      electron.shell.openExternal(link);
+    }
   },
   computed: {
   },

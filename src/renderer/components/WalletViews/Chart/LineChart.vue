@@ -33,10 +33,38 @@
               }
             }],
             xAxes: [ {
+              id:'xAxis1',
+              display: false,
               gridLines: {
                 display: true,
                 color: '#EEF0F4',
                 borderDash: [5, 15]
+              },
+              ticks:{
+                callback:function(value){
+                  return value.split(";")[0]
+                }
+              }
+            },
+            {
+              id:'xAxis2',
+              type:"category",
+               gridLines: {
+                display: true,
+                drawOnChartArea: false, // only want the grid lines for one axis to show up
+                borderDash: [5, 15]
+              },
+              ticks:{
+                autoSkip:false,
+                callback:function(value){
+                  let tempArrr = value.split(";")
+                  if(tempArrr.length >= 2){
+                    return tempArrr[1]
+                  }
+                  else{
+                    return value
+                  }
+                }
               }
             }]
           },
@@ -64,7 +92,7 @@
               label: (tooltipItem, data) => {
                 let dataset = data.datasets[tooltipItem.datasetIndex]
                 let currentValue = dataset.data[tooltipItem.index]
-                return `💰 ${currentValue.toLocaleString()}`
+                return `💰 ${currentValue.toLocaleString()} USD`
               }
             }
           },
@@ -81,9 +109,9 @@
         .getContext('2d')
         .createLinearGradient(0, 0, 0, 450)
 
-      this.gradient.addColorStop(0, 'rgba(52, 217, 221, 0.6)')
-      this.gradient.addColorStop(0.5, 'rgba(52, 217, 221, 0.25)')
-      this.gradient.addColorStop(1, 'rgba(52, 217, 221, 0)')
+      this.gradient.addColorStop(0, 'rgba(7, 156, 216, 1)')
+      this.gradient.addColorStop(0.5, 'rgba(7, 156, 216, 0.25)')
+      this.gradient.addColorStop(1, 'rgba(7, 156, 216, 0)')
 
       this.renderChart({
         labels: this.chartLabels,
@@ -100,26 +128,31 @@
             pointHoverBorderWidth: 1,
             borderWidth: 1,
             backgroundColor: this.gradient,
-            data: this.chartData
+            data: this.chartData,
+            xAxisID:'xAxis1'
           }
         ]
       }, this.options)
     },
     methods: {
       formatNumber (num) {
-        let numString = Math.round(num).toString()
-        let numberFormatMapping = [[6, 'm'], [3, 'k']]
-        for (let [numberOfDigits, replacement] of numberFormatMapping) {
-          if (numString.length > numberOfDigits) {
-            let decimal = ''
-            if (numString[numString.length - numberOfDigits] !== '0') {
-              decimal = '.' + numString[numString.length - numberOfDigits]
+        if (num > 999) {
+          let numString = Math.round(num).toString()
+          let numberFormatMapping = [[6, 'm'], [3, 'k']]
+          for (let [numberOfDigits, replacement] of numberFormatMapping) {
+            if (numString.length > numberOfDigits) {
+              let decimal = ''
+              if (numString[numString.length - numberOfDigits] !== '0') {
+                decimal = '.' + numString[numString.length - numberOfDigits]
+              }
+              numString = numString.substr(0, numString.length - numberOfDigits) + decimal + replacement
+              break
             }
-            numString = numString.substr(0, numString.length - numberOfDigits) + decimal + replacement
-            break
           }
+          return numString
+        } else {
+          return num
         }
-        return numString
       }
     }
   }
