@@ -1,6 +1,6 @@
 # Utrum Wallet
 
-Official "Utrum (OOT) Wallet" based on Electrum.
+Official "Utrum (OOT) Wallet"
 
 OOT/ KMD / BTC wallet with basic features: balances, withdrawals & history.
 
