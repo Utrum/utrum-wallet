@@ -472,16 +472,26 @@ export default {
 
   computed: {
     txsUrlBase () {
-      let coinExplorer = this.wallet.coin.explorer
-      if ( coinExplorer.slice(-1) !== '/') {
-        coinExplorer += '/'
-      }
       let ticker = this.wallet.ticker
-      let apiPath = ticker === 'BTC' ? 'api' : 'insight-api-komodo'
-      return ( coinExplorer +
-      apiPath + "/addrs/" +
-      this.wallet.address +
-      "/txs")
+      // use special endpoint and API path for the HOLD tab
+      if (this.$route.name == "hodl") {
+        var coinExplorer = 'http://hodl-history:5000'
+        var apiPath = ''
+      } else {
+        var coinExplorer = this.wallet.coin.explorer
+        var apiPath = ticker === 'BTC' ? 'api' : 'insight-api-komodo'
+        // fix the url if missing slash
+        if ( coinExplorer.slice(-1) !== '/') {
+          coinExplorer += '/'
+        }
+      }
+      // return built url
+      return(
+        coinExplorer +
+        apiPath + "/addrs/" +
+        this.wallet.address +
+        "/txs"
+      )
     },
 
     txsUrl () {
