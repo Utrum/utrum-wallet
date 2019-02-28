@@ -158,10 +158,7 @@ export default {
           }
         }
         // calculate number of pages
-        console.log("response.data.totalItems:", response.data.totalItems)
-        console.log("response.data.items.length:", response.data.items.length)
         vm.totalRows = response.data.totalItems || response.data.items.length
-        console.log("this.totalRows:", this.totalRows)
         // update shared data if needed
         if (this.parent !== 'withdraw') {
           vm.transactions = items
