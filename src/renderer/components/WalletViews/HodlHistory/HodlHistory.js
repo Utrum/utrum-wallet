@@ -26,9 +26,18 @@ const satoshiNb = 100000000;
 
 export default {
   name: 'hodl-history',
+
   props: ['wallet', 'reload', 'parent'],
+
+  mounted () {
+    if (this.parent !== 'withdraw') {
+      this.txHistory()
+    }
+  },
+
   data() {
     return {
+      transactions: [],
       totalRows: 0,
       sortBy: '',
       sortDesc: true,
@@ -153,6 +162,10 @@ export default {
         console.log("response.data.items.length:", response.data.items.length)
         vm.totalRows = response.data.totalItems || response.data.items.length
         console.log("this.totalRows:", this.totalRows)
+        // update shared data if needed
+        if (this.parent !== 'withdraw') {
+          vm.transactions = items
+        }
         //schedule to refresh after next one min
         this.scheduleTxHistoryTimer()
         // return data
