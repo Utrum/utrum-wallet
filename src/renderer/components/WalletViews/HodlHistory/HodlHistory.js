@@ -474,7 +474,7 @@ export default {
     txsUrlBase () {
       let ticker = this.wallet.ticker
       // use special endpoint and API path for the HOLD tab
-      if (this.$route.name == "hodl") {
+      if (this.parent !== 'withdraw') {
         var coinExplorer = 'http://hodl-history:5000'
         var apiPath = ''
       } else {
