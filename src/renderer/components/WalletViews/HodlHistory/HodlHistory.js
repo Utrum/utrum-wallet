@@ -29,8 +29,7 @@ export default {
   props: ['wallet', 'reload', 'parent'],
   data() {
     return {
-      totalRows: 10,
-      transactions: [],
+      totalRows: 0,
       sortBy: '',
       sortDesc: true,
       currentPage: 1,
@@ -150,9 +149,10 @@ export default {
           }
         }
         // calculate number of pages
-        vm.totalRows = response.data.totalItems
-        // update shared data
-        vm.transactions = items
+        console.log("response.data.totalItems:", response.data.totalItems)
+        console.log("response.data.items.length:", response.data.items.length)
+        vm.totalRows = response.data.totalItems || response.data.items.length
+        console.log("this.totalRows:", this.totalRows)
         //schedule to refresh after next one min
         this.scheduleTxHistoryTimer()
         // return data
