@@ -46,8 +46,8 @@
               :fields="fieldsWithdraw"
               :current-page="currentPage"
               :per-page="perPage"
-              ref="txTable"
-              :busy.sync="isBusy">
+              :busy.sync="isBusy"
+              ref="txTable">
 
 
         <template slot="time" slot-scope="row">
@@ -148,12 +148,12 @@
               small
               :sort-desc.sync="sortDesc"
               :sort-by.sync="sortBy"
-              :fields="fields"
               :items="txHistory"
+              :fields="fields"
               :current-page="currentPage"
               :per-page="perPage"
-              ref="txTable"
-              :busy.sync="isBusy">
+              :busy.sync="isBusy"
+              ref="txTable">
 
         <template slot="time" slot-scope="row">
             <span>{{dateFormat(row.value)}}</span>
