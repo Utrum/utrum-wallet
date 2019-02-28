@@ -221,13 +221,9 @@
 
   </div> <!-- conditional rendering -->
 
-<!--
-:number-of-pages="Math.round(this.totalRows/perPage)"
-:link-gen="linkGen"
-class="my-0"
--->
-
-  <b-pagination align="center"
+  <b-pagination class="my-0"
+                :link-gen="linkGen"
+                align="center"
                 :total-rows="totalRows"
                 v-model="currentPage"
                 :per-page="perPage"/>
