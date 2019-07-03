@@ -16,7 +16,17 @@
 
 import axios from 'axios';
 
-export default (currency) => {
-  return axios.get(`https://api.coinmarketcap.com/v1/ticker/${currency}/`);
+export default (ticker, currency, provider) => {
+  let tickerlc = ticker.toLowerCase();
+  if (!provider) {
+    // default
+    provider = "coingecko";
+  }
+  if (provider === "coinpaprika") {
+    return axios.get(`https://api.coinpaprika.com/v1/ticker/${tickerlc}-${currency}/`);
+  } else if (provider === "coingecko") {
+    return axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${currency}&vs_currencies=usd`);
+  } else if (provider === "coinmarketcap") {
+    return axios.get(`https://api.coinmarketcap.com/v1/ticker/${currency}/`);
+  }
 };
-

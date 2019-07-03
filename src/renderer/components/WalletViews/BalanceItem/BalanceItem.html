@@ -1,9 +1,7 @@
 <div class="row-main-item">
   <div class="row-title">
     <h4 id="coin-item">
-      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'KMD'" src="~@/assets/KMD-32x32.png"/>
-      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'OOT'" src="~@/assets/OOT-32x32.png"/>
-      <img class="margin-auto sel-icon" v-if="wallet.ticker == 'BTC'" src="~@/assets/BTC-32x32.png"/>
+      <img class="margin-auto sel-icon" v-bind:src="`/src/renderer/assets/${wallet.ticker}-32x32.png`"/>
       {{wallet.ticker}}
     </h4>
     <h4 v-if="wallet.ticker == 'BTC'" id="balance-item">
@@ -24,7 +22,7 @@
       <button v-b-modal="wallet.ticker" :id="wallet.ticker" type="button" class="btn qrcode">SEE YOUR QR CODE<img src="~@/assets/icon-qrcode-select.svg"></button>
     </div>
   </div>
-  <div class="row-footer" v-bind:class="{kmd: wallet.ticker == 'KMD', oot: wallet.ticker == 'OOT', btc: wallet.ticker == 'BTC'}">
+  <div class="row-footer" v-bind:class="wallet.ticker.toLowerCase()">
     <p class="col-header">Your {{wallet.coin.name}} address :</p>
     <div class="card">
       <button
