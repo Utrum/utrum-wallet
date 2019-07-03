@@ -330,10 +330,9 @@ export default {
       if (this.withdraw.address) {
         try {
           const versionBase58 = bitcoinjs.address.fromBase58Check(this.withdraw.address).version;
-          if (this.select === this.$store.getters.getTickerForExpectedCoin('BTC')) {
-            return versionBase58 === 111 || versionBase58 === 0;
-          } else if (this.select === this.$store.getters.getTickerForExpectedCoin('KMD')
-            || this.select === this.$store.getters.getTickerForExpectedCoin('OOT')) {
+          if (this.select === 'BTC') {
+            return versionBase58 === 5 || versionBase58 === 0;
+          } else {
             return versionBase58 === 60;
           }
           return false;
