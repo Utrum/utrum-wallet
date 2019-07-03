@@ -32,9 +32,7 @@ export default {
     'select-awesome': SelectAwesome,
     QrcodeReader
   },
-  created() {
-    this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
-  },
+
   data() {
     return {
       satoshiNb: 100000000,
@@ -65,7 +63,7 @@ export default {
       withdraw: {
         amount: null,
         address: '',
-        coin: 'OOT',
+        coin: '',
       },
       history: [],
       reloadTxHistory: null
@@ -137,7 +135,8 @@ export default {
         const checkResult = bitcoinjs.address.fromBase58Check(addr);
         if (this.wallet.ticker.indexOf('BTC') >= 0) {
           return checkResult.version === 0;
-        } else if (this.wallet.ticker.indexOf('KMD') >= 0 || this.wallet.ticker.indexOf('OOT') >= 0) {
+//        } else if (this.wallet.ticker.indexOf('KMD') >= 0 || this.wallet.ticker.indexOf('OOT') >= 0) {
+        } else {
           return checkResult.version === 60;
         }
       } else {
@@ -171,18 +170,14 @@ export default {
       }
     },
 
-    updateCoin(value) {
-      this.withdraw = {
-        amount: null,
-        address: '',
-        coin: value,
-      };
-      this.select = value;
-    },
-
     updateNewCoin(value) {
       if (value) {
-        this.updateCoin(value.ticker)
+        this.withdraw = {
+          amount: null,
+          address: '',
+          coin: value,
+        };
+        this.select = value.ticker;
       }
     },
 
