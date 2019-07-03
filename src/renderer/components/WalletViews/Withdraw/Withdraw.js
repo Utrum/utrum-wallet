@@ -135,7 +135,6 @@ export default {
         const checkResult = bitcoinjs.address.fromBase58Check(addr);
         if (this.wallet.ticker.indexOf('BTC') >= 0) {
           return checkResult.version === 0;
-//        } else if (this.wallet.ticker.indexOf('KMD') >= 0 || this.wallet.ticker.indexOf('OOT') >= 0) {
         } else {
           return checkResult.version === 60;
         }
