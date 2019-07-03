@@ -267,7 +267,7 @@ export default {
       return this.$store.getters.getConfig;
     },
 
-    coinsNew() {
+    coins() {
       return this.$store.getters.enabledCoins.map(coin => {
         let tempObj = {
           ticker: coin.ticker,
