@@ -267,10 +267,6 @@ export default {
       return this.$store.getters.getConfig;
     },
 
-    coins() {
-      return this.$store.getters.enabledCoins.map(coin => coin.ticker ).filter( coin => coin != 'BTC');
-    },
-
     coinsNew() {
       return this.$store.getters.enabledCoins.map(coin => {
         let tempObj = {
