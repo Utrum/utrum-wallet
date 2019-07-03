@@ -275,7 +275,6 @@ export default {
       return this.$store.getters.enabledCoins.map(coin => {
         let tempObj = {
           ticker: coin.ticker,
-          // icon: coin.ticker,
           label: `${coin.name} (${coin.ticker})`,
           image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
         }
