@@ -59,7 +59,7 @@ export default {
       paused: false,
       readingQRCode: false,
       select: 'OOT',
-      selectNew: {
+      selectedCoin: {
         ticker: 'OOT',
         label: `Utrum (OOT)`,
         image_url: require(`@/assets/OOT-32x32.png`)
