@@ -58,8 +58,12 @@ export default {
       },
       paused: false,
       readingQRCode: false,
-      select: null,
-      selectNew: null,
+      select: 'OOT',
+      selectNew: {
+        ticker: 'OOT',
+        label: `Utrum (OOT)`,
+        image_url: require(`@/assets/OOT-32x32.png`)
+      },
       withdraw: {
         amount: null,
         address: '',
@@ -269,16 +273,11 @@ export default {
 
     coins() {
       return this.$store.getters.enabledCoins.map(coin => {
-        let tempObj = {
+        return {
           ticker: coin.ticker,
           label: `${coin.name} (${coin.ticker})`,
           image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
         }
-        if(!this.selectNew && coin.ticker == 'OOT'){
-          this.select = coin.ticker
-          this.selectNew = tempObj
-        }
-        return tempObj
       });
     },
 
