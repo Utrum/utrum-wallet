@@ -58,12 +58,9 @@ export default {
       },
       paused: false,
       readingQRCode: false,
-      select: 'OOT',
-      selectedCoin: {
-        ticker: 'OOT',
-        label: `Utrum (OOT)`,
-        image_url: require(`@/assets/OOT-32x32.png`)
-      },
+      coins: [],
+      select: '',
+      selectedCoin: {},
       withdraw: {
         amount: null,
         address: '',
@@ -72,6 +69,18 @@ export default {
       history: [],
       reloadTxHistory: null
     };
+  },
+
+  created () {
+    this.coins = this.$store.getters.enabledCoins.map(coin => {
+      return {
+        ticker: coin.ticker,
+        label: `${coin.name} (${coin.ticker})`,
+        image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
+      }
+    });
+    this.selectedCoin = this.coins[0]
+    this.select = this.coins[0].ticker
   },
 
   watch: {
@@ -269,16 +278,6 @@ export default {
 
     getConfig() {
       return this.$store.getters.getConfig;
-    },
-
-    coins() {
-      return this.$store.getters.enabledCoins.map(coin => {
-        return {
-          ticker: coin.ticker,
-          label: `${coin.name} (${coin.ticker})`,
-          image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
-        }
-      });
     },
 
     getTotalPriceWithFee() {
