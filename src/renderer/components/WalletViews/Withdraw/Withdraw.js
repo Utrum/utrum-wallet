@@ -27,10 +27,10 @@ const bitcoinjs = require('bitgo-utxo-lib');
 export default {
   name: 'withdraw',
   components: {
-    SelectDropdown,
+    'select-dropdown': SelectDropdown,
     'hodl-history': HodlHistory,
     'select-awesome': SelectAwesome,
-    QrcodeReader
+    'qrcode-reader': QrcodeReader,
   },
 
   data() {
