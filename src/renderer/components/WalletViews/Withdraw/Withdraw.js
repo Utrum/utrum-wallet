@@ -29,7 +29,7 @@ export default {
   components: {
     'select-dropdown': SelectDropdown,
     'hodl-history': HodlHistory,
-    'select-awesome': SelectAwesome,
+    'select-awesome': SelectAwesome, // TODO: remove unnecessary dependency
     'qrcode-reader': QrcodeReader,
   },
 
