@@ -173,7 +173,7 @@ export default {
       }
     },
 
-    updateNewCoin(value) {
+    updateCoin(value) {
       if (value) {
         this.withdraw = {
           amount: null,
