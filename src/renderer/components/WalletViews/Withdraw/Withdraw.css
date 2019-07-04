@@ -188,11 +188,6 @@
   flex-grow: 1;
 }
 
-.content .select2-selection:focus {
-  outline: none;
-  box-shadow: none;
-}
-
 #title {
   margin-bottom: 40px;
 }
