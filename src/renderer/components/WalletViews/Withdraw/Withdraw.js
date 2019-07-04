@@ -59,7 +59,6 @@ export default {
       paused: false,
       readingQRCode: false,
       coins: [],
-      select: '',
       selectedCoin: {},
       withdraw: {
         amount: null,
@@ -72,6 +71,7 @@ export default {
   },
 
   created () {
+    // populate coin list
     this.coins = this.$store.getters.enabledCoins.map(coin => {
       return {
         ticker: coin.ticker,
@@ -79,8 +79,8 @@ export default {
         image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
       }
     });
+    // set first coin on the list as default
     this.selectedCoin = this.coins[0]
-    this.select = this.coins[0].ticker
   },
 
   watch: {
@@ -189,7 +189,7 @@ export default {
           address: '',
           coin: value,
         };
-        this.select = value.ticker;
+        this.selectedCoin = value;
       }
     },
 
@@ -252,6 +252,11 @@ export default {
   },
 
   computed: {
+
+    select() {
+      return this.selectedCoin.ticker
+    },
+
     amount: {
       get: function () {
         if (this.withdraw.amount != null) {
