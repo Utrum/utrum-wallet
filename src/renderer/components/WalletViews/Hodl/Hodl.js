@@ -57,7 +57,8 @@ export default {
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
-      selectedCoin: 'OOT',
+      coins: [],
+      selectedCoin: {},
       timeList: [
         {
           text: '60 days - 1%',
@@ -77,7 +78,32 @@ export default {
     };
   },
 
+  created () {
+    // populate coin list
+    this.coins = this.$store.getters.enabledCoins.map(coin => {
+      return {
+        ticker: coin.ticker,
+        label: `${coin.name} (${coin.ticker})`,
+        image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
+      }
+    });
+    // set first coin on the list as default
+    this.selectedCoin = this.coins[0]
+  },
+
   methods: {
+
+    updateCoin(value) {
+      if (value) {
+        this.withdraw = {
+          amount: null,
+          address: '',
+          coin: value,
+        };
+        this.selectedCoin = value;
+      }
+    },
+
     // reload transaction history child component
     reloadTransactionHistory (milisec) {
       let timestamp = Date.now() // necessary
@@ -318,7 +344,7 @@ export default {
   computed: {
     // get wallet data
     wallet () {
-      return this.$store.getters.getWalletByTicker(this.selectedCoin);
+      return this.$store.getters.getWalletByTicker(this.selectedCoin.ticker);
     },
 
     // get explorer url

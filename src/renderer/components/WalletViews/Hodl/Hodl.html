@@ -30,12 +30,27 @@
       </a>
       carefully before locking your funds.
     </span>
-  </div><br>
+  </div>
 
-  <div id="select-amount" class="row">
+  <div id="select-amount" class="row mt-30">
+    <span class="title-content">SELECT COIN :</span>
+    <div class="utrum-select col-custom input-field row"
+         style="justify-content: flex-end;">
+      <select-dropdown default-text="Select"
+                       v-model="selectedCoin"
+                       :data="coins"
+                       icon-prop="image_url"
+                       label-prop="label"
+                       unique-key-prop="ticker"
+                       :searchable="false"
+                       @input="updateCoin"/>
+    </div>
+  </div>
+
+  <div id="select-amount" class="row mt-30">
     <span class="title-content">BALANCE :</span>
     <div class="col-custom input-field row" style="justify-content: flex-end;">
-      <span id="number-input">{{ ( wallet.balance.toFixed(2) || 0 ) }} ({{selectedCoin}})</span>
+      <span id="number-input">{{ ( wallet.balance.toFixed(2) || 0 ) }} ({{selectedCoin.ticker}})</span>
     </div>
   </div>
 
@@ -49,7 +64,7 @@
              v-model.number="hodlInput.amount"
              class="col-custom input-field"
              placeholder="Enter amount ">
-        <span id="number-input">{{ selectedCoin }}</span>
+        <span id="number-input">{{ selectedCoin.ticker }}</span>
       </input>
     </div>
   </div>
