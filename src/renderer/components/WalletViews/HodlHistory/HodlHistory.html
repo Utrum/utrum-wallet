@@ -222,7 +222,7 @@
   </div> <!-- conditional rendering -->
 
   <b-pagination-nav align="center"
-                    :number-of-pages="Math.round(this.totalRows/perPage)"
+                    :number-of-pages="Math.round(this.totalRows/perPage) || 1"
                     v-model="currentPage"
                     :link-gen="linkGen"
                     class="my-0"/>
