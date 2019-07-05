@@ -80,11 +80,13 @@ export default {
 
   created () {
     // populate coin list
-    this.coins = this.$store.getters.enabledCoins.map(coin => {
-      return {
-        ticker: coin.ticker,
-        label: `${coin.name} (${coin.ticker})`,
-        image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
+    this.$store.getters.enabledCoins.map(coin => {
+      if (coin.hasHodlProgram === true) {
+        this.coins.push({
+          ticker: coin.ticker,
+          label: `${coin.name} (${coin.ticker})`,
+          image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
+        })
       }
     });
     // set first coin on the list as default
