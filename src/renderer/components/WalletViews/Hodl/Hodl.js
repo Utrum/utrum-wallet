@@ -95,12 +95,8 @@ export default {
 
     updateCoin(value) {
       if (value) {
-        this.withdraw = {
-          amount: null,
-          address: '',
-          coin: value,
-        };
         this.selectedCoin = value;
+        this.reloadTransactionHistory(100)
       }
     },
 
