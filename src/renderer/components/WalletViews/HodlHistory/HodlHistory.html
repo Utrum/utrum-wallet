@@ -62,7 +62,7 @@
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === false"
                   @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
-                  class="btn btn-tx">
+                  class="btn btn-tx pointer">
               Claim!
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true">
@@ -167,7 +167,7 @@
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === false"
                   @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
-                  class="btn btn-tx">
+                  class="btn btn-tx pointer">
               Claim!
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
