@@ -375,6 +375,10 @@ textarea {
 }
 
 
+.table {
+  color: darkgray;
+}
+
 .table thead th {
   border: none;
   font-weight: 300;
@@ -390,6 +394,10 @@ textarea {
 .table td {
   vertical-align: middle;
   text-align: center;
+}
+
+.table.b-table[aria-busy="true"] {
+  opacity: 0.55;
 }
 
 .theadClass {

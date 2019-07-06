@@ -64,5 +64,8 @@ export default {
       }
       return this.wallet.balance_unconfirmed.comparedTo(0) === 0 ? 'row-custom' : '';
     },
+    icon () {
+      return require(`@/assets/${this.wallet.ticker.toUpperCase()}-32x32.png`)
+    },
   },
 };

@@ -57,7 +57,9 @@ export default {
       }
     },
     setFocus(){
-      this.$refs.passphraseInput.focus()
+      if (this.$refs.passphraseInput){
+        this.$refs.passphraseInput.focus()
+      }
     }
   },
 };

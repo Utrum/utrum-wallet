@@ -1,7 +1,7 @@
 <div class="row-main-item">
   <div class="row-title">
     <h4 id="coin-item">
-      <img class="margin-auto sel-icon" v-bind:src="`/src/renderer/assets/${wallet.ticker}-32x32.png`"/>
+      <img class="margin-auto sel-icon" v-bind:src="icon"/>
       {{wallet.ticker}}
     </h4>
     <h4 v-if="wallet.ticker == 'BTC'" id="balance-item">

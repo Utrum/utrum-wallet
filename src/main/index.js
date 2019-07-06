@@ -64,7 +64,7 @@ function createWindow() {
     // nodeIntegration: 'iframe', // and this line
     webPreferences: {
       nodeIntegration: true,
-      webSecurity: false,
+      webSecurity: true,
     },
   });
 
