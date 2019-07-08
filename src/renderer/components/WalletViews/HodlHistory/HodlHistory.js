@@ -223,7 +223,11 @@ export default {
         }
       }
       // finally convert back from satoshis
-      sentAmount = sentAmount > 0 ? (sentAmount / 100000000).toFixed(8) : 0;
+      if (sentAmount > 0) {
+        sentAmount = Number( // eliminates superfluous zeroes
+          (sentAmount/100000000).toFixed(8) // ensures not more than 8 decimals
+        )
+      }
 
       // determine if sent to script address instead of normal address
       var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
