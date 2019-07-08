@@ -204,7 +204,7 @@ export default {
             ( isMine && voutAddr !== myAddress ) ||
             ( !isMine && voutAddr === myAddress )
             ) {
-            sentAmount += ( voutValue * 100000000)  // javascript's stupid
+            sentAmount += ( voutValue * 100000000 )  // javascript's stupid
             isToSelf = false  // either case confirms that it's not a "to-self" tx
           }
         } catch (e) { }
@@ -223,7 +223,7 @@ export default {
         }
       }
       // finally convert back from satoshis
-      sentAmount = sentAmount > 0 ? sentAmount / 100000000 : 0;
+      sentAmount = sentAmount > 0 ? (sentAmount / 100000000).toFixed(8) : 0;
 
       // determine if sent to script address instead of normal address
       var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
