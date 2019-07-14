@@ -330,7 +330,7 @@ export default {
           if (this.select === 'BTC') {
             return versionBase58 === 5 || versionBase58 === 0;
           } else {
-            return versionBase58 === 60;
+            return versionBase58 === 60 || versionBase58 === 85;
           }
           return false;
         } catch (error) {
