@@ -75,6 +75,10 @@ export default {
       this.chartState = false;
       this.aboutState = true;
     },
+    logoutClicked() {
+      this.$store.dispatch('logout')
+      this.$router.push('login');
+    },
   },
   computed: {
   },
