@@ -65,6 +65,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       webSecurity: true,
+      enableRemoteModule: false,
     },
   });
 
@@ -120,6 +121,13 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+// SECURITY: disallow navigation
+app.on('web-contents-created', (event, contents) => {
+  contents.on('will-navigate', (event, navigationUrl) => {
+    event.preventDefault()
+  })
+})
 
 /**
  * Auto Updater
