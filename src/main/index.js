@@ -122,7 +122,7 @@ app.on('activate', () => {
   }
 });
 
-// SECURITY: disallow navigation
+// SECURITY: disable creation of new windows
 app.on('web-contents-created', (event, contents) => {
   contents.on('will-navigate', (event, navigationUrl) => {
     event.preventDefault()
