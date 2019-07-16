@@ -129,7 +129,7 @@ app.on('web-contents-created', (event, contents) => {
   })
   contents.on('new-window', async (event, navigationUrl) => {
     event.preventDefault()
-  }
+  })
 })
 
 /**
