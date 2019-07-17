@@ -84,7 +84,6 @@
     "bootstrap-vue": "^2.0.0-rc.6",
     "chart.js": "^2.7.2",
     "coinselect": "^3.1.11",
-    "devtron": "^1.4.0",
     "electron-debug": "^1.4.0",
     "js-sha256": "^0.9.0",
     "libwallet-utrum": "https://github.com/Utrum/libwallet-utrum.git",
@@ -127,6 +126,7 @@
     "vue-template-compiler": "^2.4.2",
     "webpack": "^3.5.2",
     "webpack-dev-server": "^2.7.1",
-    "webpack-hot-middleware": "^2.18.2"
+    "webpack-hot-middleware": "^2.18.2",
+    "devtron": "^1.4.0"
   }
 }
