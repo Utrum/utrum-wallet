@@ -19,11 +19,8 @@ import { app, BrowserWindow, Menu, shell } from 'electron';
 require('electron-debug')({ showDevTools: true });
 const path = require('path');
 const ipc = require('electron').ipcMain;
-//const { ipcRenderer } = require('electron');
 const { protocol } = require('electron');
 const { session } = require('electron')
-//const http = require('http');
-//const pkg = require('../../package.json');
 
 /**
  * Set `__static` path to static files in production
