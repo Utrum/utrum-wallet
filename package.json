@@ -90,6 +90,7 @@
     "lodash": "4.17.13",
     "moment": "^2.22.0",
     "moment-timezone": "^0.5.14",
+    "multispinner": "^0.2.1",
     "typeface-montserrat": "0.0.54",
     "vue": "^2.3.3",
     "vue-chartjs": "^3.4.0",
@@ -114,6 +115,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.4",
+    "devtron": "^1.4.0",
     "electron": "^1.8.4",
     "electron-devtools-installer": "^2.2.0",
     "extract-text-webpack-plugin": "^3.0.0",
@@ -126,7 +128,6 @@
     "vue-template-compiler": "^2.4.2",
     "webpack": "^3.5.2",
     "webpack-dev-server": "^2.7.1",
-    "webpack-hot-middleware": "^2.18.2",
-    "devtron": "^1.4.0"
+    "webpack-hot-middleware": "^2.18.2"
   }
 }
