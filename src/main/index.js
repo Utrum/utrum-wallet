@@ -19,9 +19,11 @@ import { app, BrowserWindow, Menu, shell } from 'electron';
 require('electron-debug')({ showDevTools: true });
 const path = require('path');
 const ipc = require('electron').ipcMain;
-const {ipcRenderer} = require('electron');
-const http = require('http');
-const pkg = require('../../package.json');
+//const { ipcRenderer } = require('electron');
+const { protocol } = require('electron');
+const { session } = require('electron')
+//const http = require('http');
+//const pkg = require('../../package.json');
 
 /**
  * Set `__static` path to static files in production
@@ -108,7 +110,31 @@ function createWindow() {
   });
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+  // SECURITY: block unexpected requests
+  session.defaultSession.webRequest.onBeforeRequest({urls:['*']}, (details, callback) => {
+    var url = details.url;
+    var trustedUrlList = [
+      'http://localhost:9080',
+      'chrome-devtools://',
+      'chrome-extension://',
+      'https://explorer.utrum.io/',
+      'https://api.coingecko.com/'
+    ];
+    var output = {cancel: true}  // blocked by default
+    for (var i = 0; i < trustedUrlList.length; i++) {
+      var trustedUrl = trustedUrlList[i];
+      if (url.startsWith(trustedUrl)){
+        output = {cancel: false};  // allowed
+      }
+    }
+    if (output.cancel === true) {
+      console.log("PLEASE REPORT IMMEDIATELY - Blocked url:", url)
+    }
+    callback(output);
+  })
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
