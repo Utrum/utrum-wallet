@@ -116,6 +116,7 @@ app.on('ready', () => {
       'http://localhost:9080',
       'chrome-devtools://',
       'chrome-extension://',
+      'file://',
       'https://explorer.utrum.io/',
       'https://api.coingecko.com/'
     ];
