@@ -21,6 +21,7 @@ const path = require('path');
 const ipc = require('electron').ipcMain;
 const { protocol } = require('electron');
 const { session } = require('electron')
+const { coins } = require('libwallet-utrum')
 
 /**
  * Set `__static` path to static files in production
@@ -107,19 +108,24 @@ function createWindow() {
   });
 }
 
+// create a list of trusted url's
+let urlList = [
+  'http://localhost:9080/',
+  'chrome-devtools://',
+  'chrome-extension://',
+  'file://'
+];
+let allCoins = coins.all;
+for (let i = 0; i < allCoins.length; i++) {
+  urlList.push(allCoins[i].explorer);
+}
+const trustedUrlList = urlList;
+
 app.on('ready', () => {
   createWindow();
   // SECURITY: block unexpected requests
   session.defaultSession.webRequest.onBeforeRequest({urls:['*']}, (details, callback) => {
     let url = details.url;
-    let trustedUrlList = [
-      'http://localhost:9080',
-      'chrome-devtools://',
-      'chrome-extension://',
-      'file://',
-      'https://explorer.utrum.io/',
-      'https://api.coingecko.com/'
-    ];
     let output = {cancel: true}  // blocked by default
     for (var i = 0; i < trustedUrlList.length; i++) {
       let trustedUrl = trustedUrlList[i];
