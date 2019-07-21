@@ -113,7 +113,10 @@ let urlList = [
   'http://localhost:9080/',
   'chrome-devtools://',
   'chrome-extension://',
-  'file://'
+  'file://',
+  'https://api.coinmarketcap.com/',
+  'https://api.coingecko.com/',
+  'https://api.coinpaprika.com/'
 ];
 let allCoins = coins.all;
 for (let i = 0; i < allCoins.length; i++) {
