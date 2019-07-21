@@ -111,8 +111,8 @@ app.on('ready', () => {
   createWindow();
   // SECURITY: block unexpected requests
   session.defaultSession.webRequest.onBeforeRequest({urls:['*']}, (details, callback) => {
-    var url = details.url;
-    var trustedUrlList = [
+    let url = details.url;
+    let trustedUrlList = [
       'http://localhost:9080',
       'chrome-devtools://',
       'chrome-extension://',
@@ -120,9 +120,9 @@ app.on('ready', () => {
       'https://explorer.utrum.io/',
       'https://api.coingecko.com/'
     ];
-    var output = {cancel: true}  // blocked by default
+    let output = {cancel: true}  // blocked by default
     for (var i = 0; i < trustedUrlList.length; i++) {
-      var trustedUrl = trustedUrlList[i];
+      let trustedUrl = trustedUrlList[i];
       if (url.startsWith(trustedUrl)){
         output = {cancel: false};  // allowed
       }
