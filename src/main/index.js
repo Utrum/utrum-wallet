@@ -116,7 +116,9 @@ let urlList = [
   'file://',
   'https://api.coinmarketcap.com/',
   'https://api.coingecko.com/',
-  'https://api.coinpaprika.com/'
+  'https://api.coinpaprika.com/',
+  'https://api.blockcypher.com/',
+  'https://bitcoinfees.earn.com/'
 ];
 let allCoins = coins.all;
 for (let i = 0; i < allCoins.length; i++) {
