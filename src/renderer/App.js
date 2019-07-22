@@ -15,7 +15,6 @@
  ******************************************************************************/
 
 import LoginForm from '@/components/LoginForm/LoginForm.vue';
-import VersionUpdate from '@/components/VersionUpdate/VersionUpdate.vue';
 import moment from 'moment';
 
 const pjson = require('../../package.json');
@@ -24,7 +23,6 @@ const { ipcRenderer } = require('electron');
 export default {
   components: {
     'login-form': LoginForm,
-    'version-update': VersionUpdate,
   },
   name: 'vue-dico',
   mounted() {
