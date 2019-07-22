@@ -17,7 +17,6 @@
 import LoginForm from '@/components/LoginForm/LoginForm.vue';
 import moment from 'moment';
 
-const pjson = require('../../package.json');
 const { ipcRenderer } = require('electron');
 
 export default {
@@ -45,12 +44,6 @@ export default {
       if (((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) && this.hasPlannedIco) {
         return 'bannerMargin';
       }
-    },
-    isClientUpdated() {
-      //if (this.$store.getters.getConfig != null && this.$store.getters.getConfig.client != null) {
-        //return this.$store.getters.getConfig.client.version === Number(pjson.version.split('.')[0]);
-      //}
-      return true;
     },
     userLoggedIn() {
       return this.$store.state.User.loggedIn;
