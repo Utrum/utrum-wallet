@@ -18,7 +18,11 @@ const _        = require('lodash');
 
 const env      = process.env.WALLET_ENV || 'dev';
 
-const func  = require(`../../../config/func/${env}`);
+const func  = {
+  "updateLink" : "https://utrum.io/",
+  "minConfirmations": 3,
+  "enabledCoins": ["OOT", "KMD", "BTC"]
+}
 
 var bitcore    = require('bitcore-lib');
 bitcore.Networks.add({
