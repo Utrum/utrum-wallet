@@ -23,7 +23,7 @@ export default {
   components: {
     'login-form': LoginForm,
   },
-  name: 'vue-dico',
+  name: 'vue-wallet-app',
   mounted() {
     ipcRenderer.on('aboutView', () => {
       this.$router.replace({ path: 'about', meta: this.$route.path });
@@ -37,30 +37,5 @@ export default {
     };
   },
   computed: {
-    hasPlannedIco() {
-      return this.$store.getters.hasPlannedIco;
-    },
-    icoBannerActive() {
-      if (((!this.icoIsRunning && !this.icoWillBegin) || this.icoWillBegin) && this.hasPlannedIco) {
-        return 'bannerMargin';
-      }
-    },
-    userLoggedIn() {
-      return this.$store.state.User.loggedIn;
-    },
-    icoStartDate() {
-      const startDate = this.$store.getters.icoStartDate;
-      if (startDate == null) {
-        return null;
-      }
-      moment.locale('en_us');
-      return moment.unix(startDate).toNow(true);
-    },
-    icoIsRunning() {
-      return this.$store.getters.icoIsRunning;
-    },
-    icoWillBegin() {
-      return this.$store.getters.icoWillBegin;
-    },
   },
 };
