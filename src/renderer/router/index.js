@@ -101,11 +101,6 @@ export default new Router({
           name: 'website',
           component: Website,
         },
-        {
-          path: '/library',
-          name: 'library',
-          component: Library,
-        },
       ],
     },
     {
