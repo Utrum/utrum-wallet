@@ -39,5 +39,4 @@ bitcore.Networks.defaultNetwork = bitcore.Networks.get('ootnet');
 
 module.exports = {
   func,
-  env,
 };
