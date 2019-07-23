@@ -14,7 +14,7 @@
  *                                                                            *
  ******************************************************************************/
 
-const func  = {
+export const func  = {
   "updateLink" : "https://utrum.io/",
   "minConfirmations": 3,
   "enabledCoins": ["OOT", "KMD", "BTC"]
@@ -36,7 +36,3 @@ bitcore.Networks.add({
   ]
 });
 bitcore.Networks.defaultNetwork = bitcore.Networks.get('ootnet');
-
-module.exports = {
-  func,
-};
