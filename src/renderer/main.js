@@ -43,8 +43,7 @@ Vue.use(Toasted, {
   duration: 4000,
 });
 Vue.use(VueLoaders);
-
-if (!process.env.IS_WEB) Vue.use(vueElectron);
+Vue.use(vueElectron);  // disable for web version
 
 axios.config =  axios.create({
   timeout: 10000,
