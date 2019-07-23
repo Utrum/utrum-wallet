@@ -14,10 +14,6 @@
  *                                                                            *
  ******************************************************************************/
 
-const _        = require('lodash');
-
-const env      = process.env.WALLET_ENV || 'dev';
-
 const func  = {
   "updateLink" : "https://utrum.io/",
   "minConfirmations": 3,
