@@ -23,8 +23,8 @@
     node-fetch "^2.3.0"
 
 "@types/node@^8.0.24":
-  version "8.10.50"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.50.tgz#f3d68482b1f54b5f4fba8daaac385db12bb6a706"
+  version "8.10.51"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.51.tgz#80600857c0a47a8e8bafc2dae6daed6db58e3627"
 
 abbrev@1:
   version "1.1.1"
@@ -6823,10 +6823,6 @@ vue-clipboard2@0.0.8:
   dependencies:
     clipboard "^1.5.16"
     vue "^2.0.0"
-
-vue-electron@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/vue-electron/-/vue-electron-1.0.6.tgz#e798e03180b8933539defe31f92e53b9242b9406"
 
 vue-functional-data-merge@^3.1.0:
   version "3.1.0"
