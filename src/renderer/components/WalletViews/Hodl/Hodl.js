@@ -19,8 +19,8 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
 
-const { clipboard } = require('electron');
-const { shell } = require('electron');
+const { clipboard } = {} // require('electron');
+const { shell } = {} // require('electron');
 const moment = require('moment');
 
 import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';

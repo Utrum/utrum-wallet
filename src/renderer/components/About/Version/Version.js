@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 const pjson = require('../../../../../package.json');
-const electron = require('electron');
+const electron = {} // require('electron');
 
 export default {
   name: 'version',

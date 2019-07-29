@@ -19,8 +19,8 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 
 const moment = require('moment');
-const { shell } = require('electron');
-const { clipboard } = require('electron');
+const { shell } = {} // require('electron');
+const { clipboard } = {} // require('electron');
 const satoshiNb = 100000000;
 
 

@@ -17,7 +17,7 @@
 import LoginForm from '@/components/LoginForm/LoginForm.vue';
 import moment from 'moment';
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = {} // require('electron');
 
 export default {
   components: {
@@ -25,9 +25,11 @@ export default {
   },
   name: 'vue-wallet-app',
   mounted() {
+/*
     ipcRenderer.on('aboutView', () => {
       this.$router.replace({ path: 'about', meta: this.$route.path });
     });
+*/
   },
   created() {
   },
