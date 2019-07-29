@@ -62,12 +62,12 @@ function createWindow() {
     minWidth: 1100,
     minHeight: 580,
     webPreferences: {
-      //preload: path.resolve(__dirname, "..", "..", "src", "main", "preload.js"),
-      nodeIntegration: false,
-      contextIsolation: true,
-      webSecurity: true,
-      allowRunningInsecureContent: false,
-      enableRemoteModule: false,
+      //preload: path.resolve(__dirname, "..", "..", "src", "main", "preload.js"), // TODO: experiment
+      nodeIntegration: false,  // SECURITY: don't change!
+      contextIsolation: true,  // SECURITY: don't change!
+      webSecurity: true,  // SECURITY: don't change!
+      allowRunningInsecureContent: false,  // SECURITY: don't change!
+      enableRemoteModule: false,  // SECURITY: don't change!
     },
   });
 
