@@ -61,10 +61,12 @@ function createWindow() {
     height: 755,
     minWidth: 1100,
     minHeight: 580,
-    // nodeIntegration: 'iframe', // and this line
     webPreferences: {
-      nodeIntegration: true,
+      //preload: path.resolve(__dirname, "..", "..", "src", "main", "preload.js"),
+      nodeIntegration: false,
+      contextIsolation: true,
       webSecurity: true,
+      allowRunningInsecureContent: false,
       enableRemoteModule: false,
     },
   });
