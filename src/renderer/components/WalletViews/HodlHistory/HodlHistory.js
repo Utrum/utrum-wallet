@@ -471,7 +471,6 @@ export default {
           duration: 1000,
           icon: 'done',
         });
-        console.log("toasted")
       }, function (e) {
         alert('Error: Could not copy.')
         console.log(e)
