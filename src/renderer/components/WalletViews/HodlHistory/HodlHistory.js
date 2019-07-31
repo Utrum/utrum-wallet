@@ -104,7 +104,7 @@ export default {
     },
 
     copyToClipboard (row) {
-      clipboard.writeText(row.item.txid);
+      //clipboard.writeText(row.item.txid);
       this.$toasted.show('Copied !', {
         duration: 1000,
         icon: 'done',
@@ -470,6 +470,17 @@ export default {
     showError(msg) {
       this.dismissErrorCountDown = this.dismissSecs
       this.errorText = msg
+    },
+
+    // clipboard function
+    doCopy: function (message) {
+      this.$copyText(message).then(function (e) {
+        alert('Copied')
+        console.log(e)
+      }, function (e) {
+        alert('Can not copy')
+        console.log(e)
+      })
     }
 
   },
