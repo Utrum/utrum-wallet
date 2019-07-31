@@ -111,25 +111,28 @@ function createWindow() {
 }
 
 // create a list of trusted url's
-let urlList = [
-  'http://localhost:9080/',
-  'chrome-devtools://',
-  'chrome-extension://',
-  'file://',
-  'https://api.coinmarketcap.com/',
-  'https://api.coingecko.com/',
-  'https://api.coinpaprika.com/',
-  'https://api.blockcypher.com/',
-  'https://bitcoinfees.earn.com/'
-];
-let allCoins = coins.all;
-for (let i = 0; i < allCoins.length; i++) {
-  urlList.push(allCoins[i].explorer);
+function getTrustedUrlList () {
+  let urlList = [
+    'http://localhost:9080/',
+    'chrome-devtools://',
+    'chrome-extension://',
+    'file://',
+    'https://api.coinmarketcap.com/',
+    'https://api.coingecko.com/',
+    'https://api.coinpaprika.com/',
+    'https://api.blockcypher.com/',
+    'https://bitcoinfees.earn.com/'
+  ];
+  let allCoins = coins.all;
+  for (let i = 0; i < allCoins.length; i++) {
+    urlList.push(allCoins[i].explorer);
+  }
+  return urlList;
 }
-const trustedUrlList = urlList;
 
 app.on('ready', () => {
   createWindow();
+  const trustedUrlList = getTrustedUrlList();
   // SECURITY: block unexpected requests
   session.defaultSession.webRequest.onBeforeRequest({urls:['*']}, (details, callback) => {
     let url = details.url;
