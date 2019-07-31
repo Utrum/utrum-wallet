@@ -20,7 +20,6 @@ import axios from 'axios';
 
 const moment = require('moment');
 const { shell } = {} // require('electron');
-const { clipboard } = {} // require('electron');
 const satoshiNb = 100000000;
 
 
@@ -474,11 +473,15 @@ export default {
 
     // clipboard function
     doCopy: function (message) {
+      var vm = this
       this.$copyText(message).then(function (e) {
-        alert('Copied')
-        console.log(e)
+        vm.$toasted.show('Copied !', {
+          duration: 1000,
+          icon: 'done',
+        });
+        console.log("toasted")
       }, function (e) {
-        alert('Can not copy')
+        alert('Error: Could not copy.')
         console.log(e)
       })
     }
