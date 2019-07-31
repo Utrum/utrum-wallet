@@ -102,14 +102,6 @@ export default {
       shell.openExternal(row.item.explorerUrl)
     },
 
-    copyToClipboard (row) {
-      //clipboard.writeText(row.item.txid);
-      this.$toasted.show('Copied !', {
-        duration: 1000,
-        icon: 'done',
-      });
-    },
-
     dateFormat (time) {
       const blockchainDateUtc = moment.utc(time * 1000)
       const dateString = moment(blockchainDateUtc)
