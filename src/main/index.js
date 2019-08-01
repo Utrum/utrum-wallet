@@ -52,6 +52,7 @@ function createWindow() {
   /**
    * Initial window options
    */
+  const environment = process.env.NODE_ENV;
   mainWindow = new BrowserWindow({
     // useContentSize: true,
     // titleBarStyle: 'hidden',
@@ -65,6 +66,7 @@ function createWindow() {
       //preload: path.resolve(__dirname, "..", "..", "src", "main", "preload.js"), // TODO: experiment
       nodeIntegration: false,  // SECURITY: don't change!
       contextIsolation: true,  // SECURITY: don't change!
+      sandbox: environment === 'development' ? false : true,  // SECURITY: don't change!
       webSecurity: true,  // SECURITY: don't change!
       allowRunningInsecureContent: false,  // SECURITY: don't change!
       enableRemoteModule: false,  // SECURITY: don't change!
