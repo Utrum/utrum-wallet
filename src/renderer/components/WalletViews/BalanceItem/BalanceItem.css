@@ -96,6 +96,9 @@
 .row-footer.oot button{
 	background-color: #27aae0;
 }
+.row-footer.dp button{
+	background-color: #e41e26;
+}
 .row-footer.kmd button{
 	background-color: #316465;
 }
