@@ -17,7 +17,7 @@
 export const func  = {
   "updateLink" : "https://utrum.io/",
   "minConfirmations": 3,
-  "enabledCoins": ["OOT", "KMD", "BTC"]
+  "enabledCoins": ["DP", "OOT", "KMD", "BTC"]
 }
 
 var bitcore    = require('bitcore-lib');
