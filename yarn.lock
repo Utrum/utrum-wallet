@@ -4104,7 +4104,7 @@ lcid@^1.0.0:
 
 "libwallet-utrum@https://github.com/Utrum/libwallet-utrum.git":
   version "4.0.0"
-  resolved "https://github.com/Utrum/libwallet-utrum.git#92b084e8079cd780861b10cdc6b69e604fcf17d8"
+  resolved "https://github.com/Utrum/libwallet-utrum.git#7015760f01ed41fc0edebb28c002cda242ebbaca"
   dependencies:
     axios "0.18.0"
     bitgo-utxo-lib "1.2.1"
