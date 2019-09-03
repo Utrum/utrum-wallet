@@ -61,12 +61,16 @@ export default {
       selectedCoin: {},
       timeList: [
         {
-          text: '60 days - 1%',
-          value: 60
+          // text: '60 days - 1%',
+          // value: 60
+          text: '6 minutes - 1%', /// TESTING
+          value: 6 /// TESTING
         },
         {
-          text: '120 days - 2.4%',
-          value: 120
+          // text: '120 days - 2.4%',
+          // value: 120
+          text: '12 minutes - 2.4%', /// TESTING
+          value: 12 /// TESTING
         },
       ],
       // boostrap-vue related
@@ -128,7 +132,8 @@ export default {
     // update hodl unlock time
     updateUnlockTime () {
       // convert days to seconds
-      var secondsToLock = (this.hodlInput.daysToLock * 86400)
+      // var secondsToLock = (this.hodlInput.daysToLock * 86400)
+      var secondsToLock = (this.hodlInput.daysToLock * 60)  // TESTING
       var unlockTime = (Date.now() / 1000 | 0) + secondsToLock
       this.hodlData.unlockTime = unlockTime
       this.unlockTimeDate = (
@@ -353,7 +358,8 @@ export default {
     calculatedReward () {
       let daysToLock = this.hodlInput.daysToLock
       // this logarithmic function returns 1 for 60 days and 2.4 for 120 days
-      let percentage = 2.0197738315 * Math.log(daysToLock) - 7.26965
+      // let percentage = 2.0197738315 * Math.log(daysToLock) - 7.26965
+      let percentage = 2.0197738315 * Math.log(daysToLock * 10) - 7.26965 /// TESTING
       return this.hodlInput.amount * ( percentage * 0.01 )
     },
   }
