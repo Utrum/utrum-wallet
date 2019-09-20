@@ -62,7 +62,7 @@
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === false"
                   @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
-                  class="btn btn-tx">
+                  class="btn btn-tx pointer">
               Claim!
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true">
@@ -130,7 +130,7 @@
                     {{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
                 <button class="btn btn-tx pointer"
                         id="btn-logo"
-                        @click.prevent="copyToClipboard(row)">
+                        @click="doCopy(row.item.txid)">
                   <i class="far fa-copy btn-copy-link"></i>
                 </button>
             </div>
@@ -167,7 +167,7 @@
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === false"
                   @click="spendHodlUtxos(data.item.destAddr, data.item.redeemScript, data.item.nLockTime)"
-                  class="btn btn-tx">
+                  class="btn btn-tx pointer">
               Claim!
             </span>
             <span v-else-if="data.item.nLockTime < data.item.timeNow && data.item.isSpent === true"
@@ -212,7 +212,7 @@
                     {{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
                 <button class="btn btn-tx pointer"
                         id="btn-logo"
-                        @click.prevent="copyToClipboard(row)">
+                        @click="doCopy(row.item.txid)">
                   <i class="far fa-copy btn-copy-link"></i>
                 </button>
             </div>
@@ -222,7 +222,7 @@
   </div> <!-- conditional rendering -->
 
   <b-pagination-nav align="center"
-                    :number-of-pages="Math.round(this.totalRows/perPage)"
+                    :number-of-pages="Math.round(totalRows/perPage) || 1"
                     v-model="currentPage"
                     :link-gen="linkGen"
                     class="my-0"/>

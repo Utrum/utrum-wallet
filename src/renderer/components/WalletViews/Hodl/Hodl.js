@@ -19,8 +19,8 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
 
-const { clipboard } = require('electron');
-const { shell } = require('electron');
+const { clipboard } = {} // require('electron');
+const { shell } = {} // require('electron');
 const moment = require('moment');
 
 import HodlHistory from '@/components/WalletViews/HodlHistory/HodlHistory.vue';
@@ -57,7 +57,8 @@ export default {
       isClipboard: false,
       satoshiNb: 100000000,
       blocks: 1,
-      selectedCoin: 'OOT',
+      coins: [],
+      selectedCoin: {},
       timeList: [
         {
           text: '60 days - 1%',
@@ -77,7 +78,30 @@ export default {
     };
   },
 
+  created () {
+    // populate coin list
+    this.$store.getters.enabledCoins.map(coin => {
+      if (coin.hasHodlProgram === true) {
+        this.coins.push({
+          ticker: coin.ticker,
+          label: `${coin.name} (${coin.ticker})`,
+          image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
+        })
+      }
+    });
+    // set first coin on the list as default
+    this.selectedCoin = this.coins[0]
+  },
+
   methods: {
+
+    updateCoin(value) {
+      if (value) {
+        this.selectedCoin = value;
+        this.reloadTransactionHistory(100)
+      }
+    },
+
     // reload transaction history child component
     reloadTransactionHistory (milisec) {
       let timestamp = Date.now() // necessary
@@ -318,7 +342,7 @@ export default {
   computed: {
     // get wallet data
     wallet () {
-      return this.$store.getters.getWalletByTicker(this.selectedCoin);
+      return this.$store.getters.getWalletByTicker(this.selectedCoin.ticker);
     },
 
     // get explorer url

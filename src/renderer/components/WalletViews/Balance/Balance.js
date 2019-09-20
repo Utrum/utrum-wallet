@@ -13,8 +13,6 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
-import Select2 from '@/components/Utils/Select2/Select2.vue';
-import SelectAwesome from '@/components/Utils/SelectAwesome/SelectAwesome.vue';
 import { BigNumber } from 'bignumber.js';
 import store from '../../../store';
 import axios from 'axios';
@@ -25,8 +23,6 @@ export default {
   name: 'balance',
   components: {
     'balance-item': BalanceItem,
-    select2: Select2,
-    'select-awesome': SelectAwesome,
   },
 
   mounted() {

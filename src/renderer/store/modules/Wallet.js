@@ -213,12 +213,10 @@ const actions = {
       .then(response => {
         wallet.balance = BigNumber(response.balance).dividedBy(satoshiNb);
         wallet.balance_unconfirmed = new BigNumber(response.unconfirmedBalance).dividedBy(satoshiNb);
-        getCmcData(wallet.coin.name)
+        getCmcData(wallet.coin.ticker, wallet.coin.name)
           .then(response => {
-            response.data.forEach((cmcCoin) => {
-              wallet.rate_in_usd = cmcCoin.price_usd;
-              wallet.balance_usd = wallet.balance.multipliedBy(cmcCoin.price_usd);
-            });
+            wallet.rate_in_usd = response.price_usd || response.data[wallet.coin.name]['usd'];
+            wallet.balance_usd = wallet.balance.multipliedBy(wallet.rate_in_usd);
           })
           ;
       })
@@ -231,8 +229,8 @@ const actions = {
   },
 
   startUpdateBalances({ dispatch, getters }) {
-    const min = 20;
-    const max = 50;
+    const min = 100;
+    const max = 150;
     const rand = Math.floor(Math.random() * (((max - min) + 1) + min));
     setTimeout(() => {
       Object.keys(getters.getWallets).forEach((ticker) => {

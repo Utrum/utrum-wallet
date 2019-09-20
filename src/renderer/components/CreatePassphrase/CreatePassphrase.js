@@ -16,7 +16,7 @@
 
 import bip39 from 'bip39';
 
-const { clipboard } = require('electron');
+const { clipboard } = {} // require('electron');
 
 export default {
   name: 'create-passphrase',

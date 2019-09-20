@@ -21,20 +21,18 @@ import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
 import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
 
-const { clipboard } = require('electron');
+const { clipboard } = {} // require('electron');
 const bitcoinjs = require('bitgo-utxo-lib');
 
 export default {
   name: 'withdraw',
   components: {
-    SelectDropdown,
+    'select-dropdown': SelectDropdown,
     'hodl-history': HodlHistory,
-    'select-awesome': SelectAwesome,
-    QrcodeReader
+    'select-awesome': SelectAwesome, // TODO: remove unnecessary dependency
+    'qrcode-reader': QrcodeReader,
   },
-  created() {
-    this.select = this.$store.getters.getTickerForExpectedCoin('OOT');
-  },
+
   data() {
     return {
       satoshiNb: 100000000,
@@ -60,16 +58,29 @@ export default {
       },
       paused: false,
       readingQRCode: false,
-      select: null,
-      selectNew: null,
+      coins: [],
+      selectedCoin: {},
       withdraw: {
         amount: null,
         address: '',
-        coin: 'OOT',
+        coin: '',
       },
       history: [],
       reloadTxHistory: null
     };
+  },
+
+  created () {
+    // populate coin list
+    this.coins = this.$store.getters.enabledCoins.map(coin => {
+      return {
+        ticker: coin.ticker,
+        label: `${coin.name} (${coin.ticker})`,
+        image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
+      }
+    });
+    // set first coin on the list as default
+    this.selectedCoin = this.coins[0]
   },
 
   watch: {
@@ -137,7 +148,7 @@ export default {
         const checkResult = bitcoinjs.address.fromBase58Check(addr);
         if (this.wallet.ticker.indexOf('BTC') >= 0) {
           return checkResult.version === 0;
-        } else if (this.wallet.ticker.indexOf('KMD') >= 0 || this.wallet.ticker.indexOf('OOT') >= 0) {
+        } else {
           return checkResult.version === 60;
         }
       } else {
@@ -172,17 +183,13 @@ export default {
     },
 
     updateCoin(value) {
-      this.withdraw = {
-        amount: null,
-        address: '',
-        coin: value,
-      };
-      this.select = value;
-    },
-
-    updateNewCoin(value) {
       if (value) {
-        this.updateCoin(value.ticker)
+        this.withdraw = {
+          amount: null,
+          address: '',
+          coin: value,
+        };
+        this.selectedCoin = value;
       }
     },
 
@@ -245,6 +252,11 @@ export default {
   },
 
   computed: {
+
+    select() {
+      return this.selectedCoin.ticker
+    },
+
     amount: {
       get: function () {
         if (this.withdraw.amount != null) {
@@ -271,26 +283,6 @@ export default {
 
     getConfig() {
       return this.$store.getters.getConfig;
-    },
-
-    coins() {
-      return this.$store.getters.enabledCoins.map(coin => coin.ticker ).filter( coin => coin != 'BTC');
-    },
-
-    coinsNew() {
-      return this.$store.getters.enabledCoins.map(coin => {
-        let tempObj = {
-          ticker: coin.ticker,
-          // icon: coin.ticker,
-          label: `${coin.name} (${coin.ticker})`,
-          image_url: require(`@/assets/${coin.ticker.toUpperCase()}-32x32.png`)
-        }
-        if(!this.selectNew && coin.ticker == 'OOT'){
-          this.select = coin.ticker
-          this.selectNew = tempObj
-        }
-        return tempObj
-      });
     },
 
     getTotalPriceWithFee() {
@@ -335,11 +327,10 @@ export default {
       if (this.withdraw.address) {
         try {
           const versionBase58 = bitcoinjs.address.fromBase58Check(this.withdraw.address).version;
-          if (this.select === this.$store.getters.getTickerForExpectedCoin('BTC')) {
-            return versionBase58 === 111 || versionBase58 === 0;
-          } else if (this.select === this.$store.getters.getTickerForExpectedCoin('KMD')
-            || this.select === this.$store.getters.getTickerForExpectedCoin('OOT')) {
-            return versionBase58 === 60;
+          if (this.select === 'BTC') {
+            return versionBase58 === 5 || versionBase58 === 0;
+          } else {
+            return versionBase58 === 60 || versionBase58 === 85;
           }
           return false;
         } catch (error) {

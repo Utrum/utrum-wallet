@@ -19,8 +19,7 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 
 const moment = require('moment');
-const { shell } = require('electron');
-const { clipboard } = require('electron');
+const { shell } = {} // require('electron');
 const satoshiNb = 100000000;
 
 
@@ -101,14 +100,6 @@ export default {
     openTxExplorer (row) {
       var txid = row.item.txid
       shell.openExternal(row.item.explorerUrl)
-    },
-
-    copyToClipboard (row) {
-      clipboard.writeText(row.item.txid);
-      this.$toasted.show('Copied !', {
-        duration: 1000,
-        icon: 'done',
-      });
     },
 
     dateFormat (time) {
@@ -204,7 +195,7 @@ export default {
             ( isMine && voutAddr !== myAddress ) ||
             ( !isMine && voutAddr === myAddress )
             ) {
-            sentAmount += ( voutValue * 100000000)  // javascript's stupid
+            sentAmount += ( voutValue * 100000000 )  // javascript's stupid
             isToSelf = false  // either case confirms that it's not a "to-self" tx
           }
         } catch (e) { }
@@ -223,7 +214,11 @@ export default {
         }
       }
       // finally convert back from satoshis
-      sentAmount = sentAmount > 0 ? sentAmount / 100000000 : 0;
+      if (sentAmount > 0) {
+        sentAmount = Number( // eliminates superfluous zeroes
+          (sentAmount/100000000).toFixed(8) // ensures not more than 8 decimals
+        )
+      }
 
       // determine if sent to script address instead of normal address
       var isSentToScript = destAddr.substring(0,1) == 'b' ? true : false
@@ -466,6 +461,20 @@ export default {
     showError(msg) {
       this.dismissErrorCountDown = this.dismissSecs
       this.errorText = msg
+    },
+
+    // clipboard function
+    doCopy: function (message) {
+      var vm = this
+      this.$copyText(message).then(function (e) {
+        vm.$toasted.show('Copied !', {
+          duration: 1000,
+          icon: 'done',
+        });
+      }, function (e) {
+        alert('Error: Could not copy.')
+        console.log(e)
+      })
     }
 
   },

@@ -1,5 +1,5 @@
 {
-  "updateLink" : "http://mnz.monaize.com/downloads/",
+  "updateLink" : "https://utrum.io/",
   "minConfirmations": 3,
   "enabledCoins": ["OOT", "KMD", "BTC"]
 }

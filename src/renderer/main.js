@@ -30,7 +30,6 @@ import store from './store';
 
 require('bootstrap/dist/css/bootstrap.min.css');
 require('@fortawesome/fontawesome-free/css/all.min.css');
-const vueElectron = require('vue-electron');
 
 Vue.use(BootstrapVue);
 Vue.use(VueQriously);
@@ -43,8 +42,6 @@ Vue.use(Toasted, {
   duration: 4000,
 });
 Vue.use(VueLoaders);
-
-if (!process.env.IS_WEB) Vue.use(vueElectron);
 
 axios.config =  axios.create({
   timeout: 10000,

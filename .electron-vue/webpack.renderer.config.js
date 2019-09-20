@@ -104,6 +104,9 @@ let rendererConfig = {
     __filename: process.env.NODE_ENV !== "production"
   },
   plugins: [
+    new webpack.LoaderOptionsPlugin({
+      debug: true,
+    }),
     new webpack.DefinePlugin({
       "process.env": {
         WALLET_ENV: JSON.stringify(process.env.WALLET_ENV),
@@ -114,7 +117,8 @@ let rendererConfig = {
     }),
     new webpack.ProvidePlugin({
       $: "jquery",
-      jQuery: "jquery"
+      jQuery: "jquery",
+      Popper: 'popper.js/dist/umd/popper.js'
     }),
     new ExtractTextPlugin("styles.css"),
     new HtmlWebpackPlugin({
@@ -152,7 +156,7 @@ let rendererConfig = {
   ],
   output: {
     filename: "[name].js",
-    libraryTarget: "commonjs2",
+    libraryTarget: "var",
     path: path.join(__dirname, "../dist/electron")
   },
   resolve: {
@@ -162,7 +166,8 @@ let rendererConfig = {
     },
     extensions: [".js", ".vue", ".json", ".css", ".node"]
   },
-  target: "electron-renderer"
+  target: "web",
+  externals: []  // required
 };
 
 /**
@@ -183,7 +188,6 @@ if (process.env.NODE_ENV === "production") {
   rendererConfig.devtool = "";
 
   rendererConfig.plugins.push(
-    new BabiliWebpackPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.join(__dirname, "../static"),
