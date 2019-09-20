@@ -28,7 +28,6 @@ import About from '@/components/About/About.vue';
 import Version from '@/components/About/Version/Version.vue';
 import TermsAndConditions from '@/components/About/TermsAndConditions/TermsAndConditions.vue';
 import Website from '@/components/About/Website/Website.vue';
-import Library from '@/components/About/Library/Library.vue';
 import Social from '@/components/About/Social/Social.vue';
 
 Vue.use(Router);
@@ -101,11 +100,6 @@ export default new Router({
           path: '/website',
           name: 'website',
           component: Website,
-        },
-        {
-          path: '/library',
-          name: 'library',
-          component: Library,
         },
       ],
     },

@@ -19,9 +19,9 @@ import { app, BrowserWindow, Menu, shell } from 'electron';
 require('electron-debug')({ showDevTools: true });
 const path = require('path');
 const ipc = require('electron').ipcMain;
-const {ipcRenderer} = require('electron');
-const http = require('http');
-const pkg = require('../../package.json');
+const { protocol } = require('electron');
+const { session } = require('electron')
+const { coins } = require('libwallet-utrum')
 
 /**
  * Set `__static` path to static files in production
@@ -52,6 +52,7 @@ function createWindow() {
   /**
    * Initial window options
    */
+  const environment = process.env.NODE_ENV;
   mainWindow = new BrowserWindow({
     // useContentSize: true,
     // titleBarStyle: 'hidden',
@@ -61,11 +62,14 @@ function createWindow() {
     height: 755,
     minWidth: 1100,
     minHeight: 580,
-    // nodeIntegration: 'iframe', // and this line
     webPreferences: {
-      nodeIntegration: true,
-      webSecurity: true,
-      enableRemoteModule: false,
+      //preload: path.resolve(__dirname, "..", "..", "src", "main", "preload.js"), // TODO: experiment
+      nodeIntegration: false,  // SECURITY: don't change!
+      contextIsolation: true,  // SECURITY: don't change!
+      sandbox: environment === 'development' ? false : true,  // SECURITY: don't change!
+      webSecurity: true,  // SECURITY: don't change!
+      allowRunningInsecureContent: false,  // SECURITY: don't change!
+      enableRemoteModule: false,  // SECURITY: don't change!
     },
   });
 
@@ -108,7 +112,55 @@ function createWindow() {
   });
 }
 
-app.on('ready', createWindow);
+// create a list of trusted url's
+function getTrustedUrlList () {
+  let urlList = [
+    'http://localhost:9080/',
+    'chrome-devtools://',
+    'chrome-extension://',
+    'file://',
+    'https://api.coinmarketcap.com/',
+    'https://api.coingecko.com/',
+    'https://api.coinpaprika.com/',
+    'https://api.blockcypher.com/',
+    'https://bitcoinfees.earn.com/'
+  ];
+  let allCoins = coins.all;
+  for (let i = 0; i < allCoins.length; i++) {
+    urlList.push(allCoins[i].explorer);
+  }
+  return urlList;
+}
+
+app.on('ready', () => {
+  createWindow();
+  const trustedUrlList = getTrustedUrlList();
+  // SECURITY: block unexpected requests
+  session.defaultSession.webRequest.onBeforeRequest({urls:['*']}, (details, callback) => {
+    let url = details.url;
+    let output = {cancel: true}  // blocked by default
+    for (var i = 0; i < trustedUrlList.length; i++) {
+      let trustedUrl = trustedUrlList[i];
+      if (url.startsWith(trustedUrl)){
+        output = {cancel: false};  // allowed
+      }
+    }
+    if (output.cancel === true) {
+      console.log("PLEASE REPORT IMMEDIATELY - Blocked url:", url)
+    }
+    callback(output);
+  })
+});
+
+// SECURITY: disable navigation and creation of new windows
+app.on('web-contents-created', (event, contents) => {
+  contents.on('will-navigate', (event, navigationUrl) => {
+    event.preventDefault()
+  })
+  contents.on('new-window', async (event, navigationUrl) => {
+    event.preventDefault()
+  })
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -121,30 +173,3 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-// SECURITY: disallow navigation
-app.on('web-contents-created', (event, contents) => {
-  contents.on('will-navigate', (event, navigationUrl) => {
-    event.preventDefault()
-  })
-})
-
-/**
- * Auto Updater
- *
- * Uncomment the following code below and install `electron-updater` to
- * support auto updating. Code Signing with a valid certificate is required.
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
- */
-
-/*
-import { autoUpdater } from 'electron-updater'
-
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
-})
-
-app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
-})
- */

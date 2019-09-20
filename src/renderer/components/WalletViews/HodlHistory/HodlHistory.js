@@ -19,8 +19,7 @@ import bitcore from 'bitcore-lib';
 import axios from 'axios';
 
 const moment = require('moment');
-const { shell } = require('electron');
-const { clipboard } = require('electron');
+const { shell } = {} // require('electron');
 const satoshiNb = 100000000;
 
 
@@ -101,14 +100,6 @@ export default {
     openTxExplorer (row) {
       var txid = row.item.txid
       shell.openExternal(row.item.explorerUrl)
-    },
-
-    copyToClipboard (row) {
-      clipboard.writeText(row.item.txid);
-      this.$toasted.show('Copied !', {
-        duration: 1000,
-        icon: 'done',
-      });
     },
 
     dateFormat (time) {
@@ -470,6 +461,20 @@ export default {
     showError(msg) {
       this.dismissErrorCountDown = this.dismissSecs
       this.errorText = msg
+    },
+
+    // clipboard function
+    doCopy: function (message) {
+      var vm = this
+      this.$copyText(message).then(function (e) {
+        vm.$toasted.show('Copied !', {
+          duration: 1000,
+          icon: 'done',
+        });
+      }, function (e) {
+        alert('Error: Could not copy.')
+        console.log(e)
+      })
     }
 
   },

@@ -13,7 +13,7 @@
  * Removal or modification of this copyright notice is prohibited.            *
  *                                                                            *
  ******************************************************************************/
-const electron = require('electron');
+const electron = {} // require('electron');
 
 export default {
   name: 'website',

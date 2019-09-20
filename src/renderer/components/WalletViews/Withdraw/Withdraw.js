@@ -21,7 +21,7 @@ import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
 import SelectDropdown from '@/components/SelectDropdown/SelectDropdown.vue'
 
-const { clipboard } = require('electron');
+const { clipboard } = {} // require('electron');
 const bitcoinjs = require('bitgo-utxo-lib');
 
 export default {

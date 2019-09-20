@@ -130,7 +130,7 @@
                     {{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
                 <button class="btn btn-tx pointer"
                         id="btn-logo"
-                        @click.prevent="copyToClipboard(row)">
+                        @click="doCopy(row.item.txid)">
                   <i class="far fa-copy btn-copy-link"></i>
                 </button>
             </div>
@@ -212,7 +212,7 @@
                     {{row.value.substring(0,4)}}...{{row.value.substring(row.value.length-4,row.value.length)}}</button>
                 <button class="btn btn-tx pointer"
                         id="btn-logo"
-                        @click.prevent="copyToClipboard(row)">
+                        @click="doCopy(row.item.txid)">
                   <i class="far fa-copy btn-copy-link"></i>
                 </button>
             </div>

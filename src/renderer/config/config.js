@@ -14,18 +14,11 @@
  *                                                                            *
  ******************************************************************************/
 
-const _        = require('lodash');
-
-const env      = process.env.WALLET_ENV || 'dev';
-
-const techBase = require('../../../config/tech/base');
-const funcBase = require('../../../config/func/base');
-
-const techExt  = require(`../../../config/tech/${env}`);
-const funcExt  = require(`../../../config/func/${env}`);
-
-const tech     = _.merge(techBase, techExt);
-const func     = _.merge(funcBase, funcExt);
+export const func  = {
+  "updateLink" : "https://utrum.io/",
+  "minConfirmations": 3,
+  "enabledCoins": ["OOT", "KMD", "BTC"]
+}
 
 var bitcore    = require('bitcore-lib');
 bitcore.Networks.add({
@@ -43,9 +36,3 @@ bitcore.Networks.add({
   ]
 });
 bitcore.Networks.defaultNetwork = bitcore.Networks.get('ootnet');
-
-module.exports = {
-  tech,
-  func,
-  env,
-};
