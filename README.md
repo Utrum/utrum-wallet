@@ -6,7 +6,7 @@ OOT/ KMD / BTC wallet with basic features: balances, withdrawals & history.
 
 Web Wallet for Web and Mobile users - https://utrum.gitlab.io/wallet/#/
 
-HOLD feature for earning rewards of OOT coin. Holding $OOT for 60 days earns 1% reward and holding for 120 days earns 2.4% reward. Learn more about the reward process - https://helpdesk.utrum.io/en-us/article/how-does-oot-holding-reward-ohr-work-nprkfb/
+HOLD feature for earning rewards of OOT coin. Holding $OOT for 60 days earns 1% reward and holding for 120 days earns 2.4% reward. Learn more about the reward process - https://utrum.freshdesk.com/support/solutions/articles/77000376791-how-does-oot-hold-reward-work
 
 #### Quick start.
 
