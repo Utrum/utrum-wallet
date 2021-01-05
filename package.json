@@ -75,7 +75,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.4.1",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "bignumber.js": "^6.0.0",
     "bip39": "^2.5.0",
     "bitcore-lib": "^0.15.0",
