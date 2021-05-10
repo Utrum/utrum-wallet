@@ -86,7 +86,7 @@
     "js-sha256": "^0.9.0",
     "js-yaml": "^3.13.1",
     "libwallet-utrum": "https://github.com/Utrum/libwallet-utrum.git",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "vue": "^2.3.3",
     "vue-chartjs": "^3.4.0",
     "vue-clipboard2": "0.0.8",
