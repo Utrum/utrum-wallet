@@ -121,7 +121,7 @@
     "jquery": "^3.3.1",
     "lodash.merge": "^4.6.2",
     "mem": "^4.0.0",
-    "moment": "^2.22.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.14",
     "multispinner": "^0.2.1",
     "popper.js": "^1.15.0",
