@@ -1238,9 +1238,10 @@ bitgo-utxo-lib@1.2.1:
   dependencies:
     nanoassert "^1.0.0"
 
-"blake2b@git+https://github.com/BitGo/blake2b.git#6268e6dd678661e0acc4359e9171b97eb1ebf8ac":
+"blake2b@https://github.com/BitGo/blake2b#6268e6dd678661e0acc4359e9171b97eb1ebf8ac":
   version "2.1.3"
-  resolved "git+https://github.com/BitGo/blake2b.git#6268e6dd678661e0acc4359e9171b97eb1ebf8ac"
+  uid "6268e6dd678661e0acc4359e9171b97eb1ebf8ac"
+  resolved "https://github.com/BitGo/blake2b#6268e6dd678661e0acc4359e9171b97eb1ebf8ac"
   dependencies:
     blake2b-wasm "https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b"
     nanoassert "^1.0.0"
@@ -4669,9 +4670,9 @@ mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@
   dependencies:
     minimist "0.0.8"
 
-moment-timezone@^0.5.14:
-  version "0.5.26"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.26.tgz#c0267ca09ae84631aa3dc33f65bedbe6e8e0d772"
+moment-timezone@^0.5.35:
+  version "0.5.35"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.35.tgz#6fa2631bdbe8ff04f6b8753f7199516be6dc9839"
   dependencies:
     moment ">= 2.9.0"
 
